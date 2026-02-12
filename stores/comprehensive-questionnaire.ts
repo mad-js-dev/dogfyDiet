@@ -41,9 +41,9 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   // Helper function to get required questions for each step
   const getStepRequirements = (step: number): string[] => {
     const requirements: Record<number, string[]> = {
-      0: ['pet_count'], // Pet Count
+      0: ['pet_race'], // Pet Race
       1: ['pet_name'], // Pet Names (at least one pet name)
-      2: ['pet_race'] // Pet Race
+      2: ['pet_gender'] // Pet Gender
     }
     return requirements[step] || []
   }

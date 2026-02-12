@@ -51,7 +51,9 @@ const getStepClass = (stepId: number) => {
 
 const navigateToStep = (stepId: number) => {
   if (stepId <= props.currentStep) {
-    router.push(`/step/${stepId}`)
+    // Convert 0-based internal to 1-based URL
+    const urlStep = stepId + 1
+    router.push(`/step/${urlStep}`)
   }
 }
 </script>

@@ -23,12 +23,13 @@ import type { QuestionConfig } from '~/types/questionnaire'
 interface Props {
   config: QuestionConfig
   modelValue?: string
+  petId?: string
   disabled?: boolean
 }
 
 interface Emits {
   (e: 'update:modelValue', value: string): void
-  (e: 'answer', questionId: string, value: string): void
+  (e: 'answer', questionId: string, value: string, petId?: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -97,6 +98,9 @@ const handleInput = (event: Event) => {
   inputValue.value = value
   emit('update:modelValue', value)
   
+  // Emit answer immediately for real-time updates
+  emit('answer', value, props.config.id, props.petId)
+  
   if (isTouched.value) {
     validateInput(value)
   }
@@ -105,7 +109,8 @@ const handleInput = (event: Event) => {
 const handleBlur = () => {
   isTouched.value = true
   validateInput(inputValue.value)
-  emit('answer', props.config.id, inputValue.value)
+  // Also emit on blur for consistency
+  emit('answer', inputValue.value, props.config.id, props.petId)
 }
 
 // Watch for external changes

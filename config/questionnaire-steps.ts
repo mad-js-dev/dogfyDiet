@@ -3,14 +3,14 @@ import { questionnaireQuestions } from './questionnaire-questions'
 
 export const questionnaireSteps: StepConfig[] = [
   {
-    id: 0,
-    title: 'Pet Count',
-    description: 'How many pets do you have?',
-    questions: ['pet_count'],
+    id: 0, // Internal 0-based ID
+    title: 'Pet Race',
+    description: 'What is your pet\'s race?',
+    questions: ['pet_race'],
     canSkip: false
   },
   {
-    id: 1,
+    id: 1, // Internal 0-based ID
     title: 'Pet Names',
     description: 'Tell us your pets\' names',
     questions: ['pet_name'],
@@ -18,10 +18,10 @@ export const questionnaireSteps: StepConfig[] = [
     dependsOn: [0]
   },
   {
-    id: 2,
-    title: 'Pet Race',
-    description: 'What is your pet\'s race?',
-    questions: ['pet_race'],
+    id: 2, // Internal 0-based ID
+    title: 'Pet Gender',
+    description: 'What is your pet\'s gender?',
+    questions: ['pet_gender'],
     canSkip: false,
     dependsOn: [1]
   }
@@ -78,4 +78,15 @@ export const canProceedToStep = (stepId: number, allAnswers: any[]): boolean => 
     const answer = allAnswers.find(a => a.questionId === qId)
     return answer && answer.value !== null && answer.value !== undefined && answer.value !== ''
   })
+}
+
+// Helper functions for URL conversion
+export const urlToInternalStep = (urlStep: number): number => {
+  // Convert 1-based URL to 0-based internal
+  return urlStep - 1
+}
+
+export const internalToUrlStep = (internalStep: number): number => {
+  // Convert 0-based internal to 1-based URL
+  return internalStep + 1
 }

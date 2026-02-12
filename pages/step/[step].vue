@@ -8,19 +8,25 @@
         <p v-if="currentStep?.description">{{ currentStep.description }}</p>
       </div>
 
-      <!-- Pet Count Step -->
-      <div v-if="currentStepId === 0" class="pet-count-section">
-        <h2>How many pets do you have?</h2>
-        <div class="pet-count-options">
-          <button 
-            v-for="count in [1, 2]" 
-            :key="count"
-            @click="setPetCount(count)"
-            :class="{ selected: petCount === count }"
-            class="pet-count-btn"
+      <!-- Pet Race Step -->
+      <div v-if="currentStepId === 0" class="pet-race-section">
+        <h2>What is your pet's race?</h2>
+        <div class="breed-selection">
+          <label class="breed-label">Select your pet's breed:</label>
+          <select 
+            v-model="selectedBreed"
+            class="breed-select"
+            @change="handleBreedSelection"
           >
-            {{ count }} {{ count === 1 ? 'Pet' : 'Pets' }}
-          </button>
+            <option value="" disabled>Select a breed...</option>
+            <option 
+              v-for="breed in allBreeds" 
+              :key="breed"
+              :value="breed"
+            >
+              {{ breed }}
+            </option>
+          </select>
         </div>
       </div>
 
@@ -30,36 +36,56 @@
         <div v-for="petNum in petCount" :key="petNum" class="pet-section">
           <h3>Pet {{ petNum }}</h3>
           <QuestionRenderer 
-            :question="{ 
-              ...questionnaireQuestions.find(q => q.id === 'pet_name'), 
+            :question="{
               id: `pet_name_pet_${petNum}`,
               type: 'text',
               question: `What is Pet ${petNum}'s name?`,
               appliesTo: 'individual',
-              required: true
+              required: true,
+              validation: [
+                {
+                  type: 'required',
+                  message: 'Pet name is required'
+                },
+                {
+                  type: 'minLength',
+                  value: 2,
+                  message: 'Pet name must be at least 2 characters'
+                }
+              ]
             }"
             :pet-id="`pet_${petNum}`"
-            :model-value="getAnswerValue(`pet_name_pet_${petNum}`)"
+            :model-value="getAnswerValue(`pet_name_pet_${petNum}`, `pet_${petNum}`)"
             @answer="handleAnswer"
           />
         </div>
       </div>
 
-      <!-- Pet Race Step -->
-      <div v-else-if="currentStepId === 2" class="pet-race-section">
-        <h2>What is your pet's race?</h2>
-        <QuestionRenderer 
-          :question="questionnaireQuestions.find(q => q.id === 'pet_race') || {
-            id: 'pet_race',
-            type: 'select',
-            question: 'What is your pet\'s race?',
-            appliesTo: 'all',
-            required: true,
-            options: ['Dog', 'Cat', 'Bird', 'Rabbit', 'Hamster', 'Fish', 'Other']
-          }"
-          :model-value="getAnswerValue('pet_race')"
-          @answer="handleAnswer"
-        />
+      <!-- Pet Gender Step -->
+      <div v-else-if="currentStepId === 2" class="pet-gender-section">
+        <h2>What is your pet's gender?</h2>
+        <div v-for="petNum in petCount" :key="petNum" class="pet-section">
+          <h3>Pet {{ petNum }}</h3>
+          <QuestionRenderer 
+            :question="{
+              id: `pet_gender_pet_${petNum}`,
+              type: 'select',
+              question: `What is Pet ${petNum}'s gender?`,
+              appliesTo: 'individual',
+              required: true,
+              options: ['Male', 'Female'],
+              validation: [
+                {
+                  type: 'required',
+                  message: 'Pet gender is required'
+                }
+              ]
+            }"
+            :pet-id="`pet_${petNum}`"
+            :model-value="getAnswerValue(`pet_gender_pet_${petNum}`, `pet_${petNum}`)"
+            @answer="handleAnswer"
+          />
+        </div>
       </div>
 
       <!-- Navigation -->
@@ -86,7 +112,7 @@
 
 <script setup lang="ts">
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
-import { questionnaireSteps, getStepQuestions, shouldShowQuestion } from '~/config/questionnaire-steps'
+import { questionnaireSteps, getStepQuestions, shouldShowQuestion, urlToInternalStep, internalToUrlStep } from '~/config/questionnaire-steps'
 import { questionnaireQuestions } from '~/config/questionnaire-questions'
 import QuestionRenderer from '~/components/QuestionRenderer.vue'
 import StepNavigation from '~/components/StepNavigation.vue'
@@ -95,10 +121,59 @@ const questionnaire = useComprehensiveQuestionnaireStore()
 const route = useRoute()
 const router = useRouter()
 
-// Get step from URL parameter
+// Breed selection state
+const selectedBreed = ref('')
+
+const allBreeds = [
+  // Dog Breeds
+  'Labrador Retriever',
+  'German Shepherd', 
+  'Golden Retriever',
+  'French Bulldog',
+  'Bulldog',
+  'Poodle',
+  'Beagle',
+  'Rottweiler',
+  'German Shorthaired Pointer',
+  'Yorkshire Terrier',
+  'Dachshund',
+  'Siberian Husky',
+  'Great Dane',
+  'Boxer',
+  'Chihuahua',
+  // Cat Breeds
+  'Persian',
+  'Maine Coon',
+  'British Shorthair',
+  'Siamese',
+  'American Shorthair',
+  'Ragdoll',
+  'Bengal',
+  'Russian Blue',
+  'Scottish Fold',
+  'Birman',
+  'Oriental Shorthair',
+  'Devon Rex',
+  'Himalayan',
+  'American Curl',
+  'Selkirk Rex'
+]
+
+const handleBreedSelection = () => {
+  if (selectedBreed.value) {
+    // Set pet count to 1 if not set
+    if (questionnaire.petCount === 0) {
+      questionnaire.setPetCount(1)
+    }
+    handleAnswer('pet_race', selectedBreed.value)
+  }
+}
+
+// Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
-  const stepParam = parseInt(route.params.step as string) || 0
-  return Math.max(0, Math.min(stepParam, 2)) // Clamp between 0 and 2
+  const urlStep = parseInt(route.params.step as string) || 1
+  const internalStep = urlToInternalStep(urlStep)
+  return Math.max(0, Math.min(internalStep, 2)) // Clamp between 0 and 2
 })
 
 // State
@@ -109,23 +184,43 @@ const answers = computed(() => questionnaire.answers)
 
 // Computed
 const canProceed = computed(() => {
+  console.log('canProceed - currentStepId:', currentStepId.value)
+  console.log('canProceed - answers.value:', answers.value)
+  console.log('canProceed - petCount.value:', petCount.value)
+  
   if (currentStepId.value === 0) {
-    return petCount.value > 0
+    // Race step - need race selection
+    const answer = answers.value.find(a => a.questionId === 'pet_race')
+    console.log('canProceed - race step - answer:', answer)
+    const result = answer && answer.value !== null && answer.value !== undefined && answer.value !== ''
+    console.log('canProceed - race step - result:', result)
+    return result
   }
   
   if (currentStepId.value === 1) {
-    // Check if all pets have names
+    // Names step - need pet names (default to 1 pet if not set)
+    const currentPetCount = petCount.value || 1
+    console.log('canProceed - names step - currentPetCount:', currentPetCount)
     const petNames = answers.value.filter(a => 
       a.questionId.startsWith('pet_name_pet_') && 
       a.value && 
       a.value.trim() !== ''
     )
-    return petNames.length === petCount.value
+    console.log('canProceed - names step - petNames:', petNames)
+    const result = petNames.length === currentPetCount
+    console.log('canProceed - names step - result:', result)
+    return result
   }
   
   if (currentStepId.value === 2) {
-    const answer = answers.value.find(a => a.questionId === 'pet_race')
-    return answer && answer.value !== null && answer.value !== undefined && answer.value !== ''
+    // Gender step - need gender for each pet
+    const currentPetCount = petCount.value || 1
+    const petGenders = answers.value.filter(a => 
+      a.questionId.startsWith('pet_gender_pet_') && 
+      a.value && 
+      a.value.trim() !== ''
+    )
+    return petGenders.length === currentPetCount
   }
   
   return false
@@ -136,25 +231,28 @@ const setPetCount = (count: number) => {
   questionnaire.setPetCount(count)
 }
 
-const getAnswerValue = (questionId: string) => {
-  const answer = questionnaire.getAnswer(questionId)
+const getAnswerValue = (questionId: string, petId?: string) => {
+  // For pet-specific questions, include petId in the search
+  const answer = questionnaire.getAnswer(questionId, petId)
   return answer ? answer.value : null
 }
 
-const handleAnswer = (questionId: string, value: any, petId?: string) => {
+const handleAnswer = (value: any, questionId: string, petId?: string) => {
   questionnaire.addAnswer(questionId, value, petId)
 }
 
 const previousStep = () => {
   if (currentStepId.value > 0) {
-    router.push(`/step/${currentStepId.value - 1}`)
+    const prevUrlStep = internalToUrlStep(currentStepId.value - 1)
+    router.push(`/step/${prevUrlStep}`)
   }
 }
 
 const nextStep = () => {
   if (canProceed.value) {
     if (currentStepId.value < 2) {
-      router.push(`/step/${currentStepId.value + 1}`)
+      const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
+      router.push(`/step/${nextUrlStep}`)
     } else {
       // Submit questionnaire
       submitQuestionnaire()
@@ -172,8 +270,9 @@ const submitQuestionnaire = () => {
 
 // Watch for step parameter changes
 watch(() => route.params.step, (newStep) => {
-  const stepId = parseInt(newStep as string) || 0
-  questionnaire.setStep(Math.max(0, Math.min(stepId, 2)))
+  const urlStep = parseInt(newStep as string) || 1
+  const internalStep = urlToInternalStep(urlStep)
+  questionnaire.setStep(Math.max(0, Math.min(internalStep, 2)))
 }, { immediate: true })
 
 // Page metadata
@@ -215,45 +314,44 @@ definePageMeta({
   font-size: 1.1rem;
 }
 
-.pet-count-section h2 {
+.pet-race-section h2,
+.pet-names-section h2,
+.pet-gender-section h2 {
   color: #333;
   margin-bottom: 1rem;
   text-align: center;
 }
 
-.pet-count-options {
+.breed-selection {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2rem;
 }
 
-.pet-count-btn {
-  padding: 1rem 2rem;
+.breed-label {
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+}
+
+.breed-select {
+  padding: 0.75rem 1rem;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
+  font-size: 1rem;
   background: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 1.1rem;
 }
 
-.pet-count-btn:hover {
+.breed-select:focus {
+  outline: none;
   border-color: #0066cc;
-  background: rgba(0, 102, 204, 0.05);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
-.pet-count-btn.selected {
+.breed-select:hover {
   border-color: #0066cc;
-  background: #0066cc;
-  color: white;
-}
-
-.pet-names-section h2,
-.pet-race-section h2 {
-  color: #333;
-  margin-bottom: 1rem;
-  text-align: center;
 }
 
 .pet-section {
@@ -313,16 +411,6 @@ definePageMeta({
 @media (max-width: 768px) {
   .step-content {
     padding: 1.5rem;
-  }
-  
-  .pet-count-options {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .pet-count-btn {
-    width: 100%;
-    max-width: 200px;
   }
   
   .navigation {

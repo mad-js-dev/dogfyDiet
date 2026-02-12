@@ -11,8 +11,7 @@
         :config="question"
         :model-value="currentAnswer"
         :pet-id="petId"
-        @update:model-value="handleAnswer"
-        @answer="handleAnswer"
+        @answer="(value: any) => $emit('answer', value, question.id, petId)"
       />
       
       <div v-if="error" class="error-message">
@@ -55,12 +54,6 @@ const answerComponent = computed(() => {
 const currentAnswer = computed(() => {
   return props.modelValue
 })
-
-// Handle answer changes
-const handleAnswer = (value: any) => {
-  emit('update:modelValue', value)
-  emit('answer', props.question.id, value, props.petId)
-}
 
 // Error state (could be passed from parent)
 const error = computed(() => {

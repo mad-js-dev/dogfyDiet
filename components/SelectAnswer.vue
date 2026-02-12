@@ -36,7 +36,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:modelValue', value: string | string[]): void
-  (e: 'answer', questionId: string, value: string | string[]): void
+  (e: 'answer', value: string | string[], questionId: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -71,7 +71,7 @@ const handleBlur = () => {
 // Watch for changes in selectedValue and emit to parent
 watch(selectedValue, (newValue) => {
   emit('update:modelValue', newValue)
-  emit('answer', props.config.id, newValue)
+  emit('answer', newValue, props.config.id)
   
   if (isTouched.value) {
     validateInput(newValue)
