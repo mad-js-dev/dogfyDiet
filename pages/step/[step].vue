@@ -165,7 +165,7 @@ const handleBreedSelection = () => {
     if (questionnaire.petCount === 0) {
       questionnaire.setPetCount(1)
     }
-    handleAnswer('pet_race', selectedBreed.value)
+    handleAnswer(selectedBreed.value, 'pet_breed_pet_1', 'pet_1')
   }
 }
 
@@ -184,31 +184,45 @@ const answers = computed(() => questionnaire.answers)
 
 // Computed
 const canProceed = computed(() => {
-  console.log('canProceed - currentStepId:', currentStepId.value)
-  console.log('canProceed - answers.value:', answers.value)
-  console.log('canProceed - petCount.value:', petCount.value)
-  
   if (currentStepId.value === 0) {
-    // Race step - need race selection
-    const answer = answers.value.find(a => a.questionId === 'pet_race')
-    console.log('canProceed - race step - answer:', answer)
-    const result = answer && answer.value !== null && answer.value !== undefined && answer.value !== ''
-    console.log('canProceed - race step - result:', result)
-    return result
+    // Race step - need breed selection for each pet
+    if (petCount.value === 1) {
+      // Single pet mode - check for shared breed answer
+      const breedAnswer = questionnaire.getAnswer('pet_breed_pet_1', 'pet_1')
+      const singlePetResult = breedAnswer && breedAnswer.value && breedAnswer.value.trim() !== ''
+      return singlePetResult
+    } else {
+      // Multiple pets mode - check for individual breed answers
+      const currentPetCount = petCount.value || 1
+      const breedAnswers = answers.value.filter(a => 
+        a.questionId.startsWith('pet_breed_pet_') && 
+          a.petId && 
+          a.value && 
+          a.value.trim() !== ''
+      )
+      
+      // Allow proceeding if first pet has breed, even if new pets don't have breeds yet
+      const firstPetHasBreed = answers.value.some(a => 
+        a.questionId === 'pet_breed_pet_1' && 
+        a.petId === 'pet_1' && 
+        a.value && 
+        a.value.trim() !== ''
+      )
+      
+      const result = firstPetHasBreed || breedAnswers.length === currentPetCount
+      return result
+    }
   }
   
   if (currentStepId.value === 1) {
     // Names step - need pet names (default to 1 pet if not set)
     const currentPetCount = petCount.value || 1
-    console.log('canProceed - names step - currentPetCount:', currentPetCount)
     const petNames = answers.value.filter(a => 
       a.questionId.startsWith('pet_name_pet_') && 
-      a.value && 
-      a.value.trim() !== ''
+        a.value && 
+        a.value.trim() !== ''
     )
-    console.log('canProceed - names step - petNames:', petNames)
     const result = petNames.length === currentPetCount
-    console.log('canProceed - names step - result:', result)
     return result
   }
   
@@ -217,10 +231,11 @@ const canProceed = computed(() => {
     const currentPetCount = petCount.value || 1
     const petGenders = answers.value.filter(a => 
       a.questionId.startsWith('pet_gender_pet_') && 
-      a.value && 
-      a.value.trim() !== ''
+        a.value && 
+        a.value.trim() !== ''
     )
-    return petGenders.length === currentPetCount
+    const result = petGenders.length === currentPetCount
+    return result
   }
   
   return false
@@ -238,6 +253,7 @@ const getAnswerValue = (questionId: string, petId?: string) => {
 }
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {
+  console.log('handleAnswer called with:', { value, questionId, petId })
   questionnaire.addAnswer(questionId, value, petId)
 }
 
@@ -262,7 +278,6 @@ const nextStep = () => {
 
 const submitQuestionnaire = () => {
   const result = questionnaire.submitQuestionnaire()
-  console.log('Questionnaire submitted:', result)
   
   // Navigate to results page
   router.push('/results')

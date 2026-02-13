@@ -27,10 +27,10 @@ export default defineNuxtRouteMiddleware((to) => {
   
   // Check if user can access this step
   if (internalStep > 0) {
-    // For step 1 (names), need race selection
+    // For step 1 (names), need breed selection
     if (internalStep === 1) {
-      const raceAnswer = questionnaire.answers.find(a => a.questionId === 'pet_race')
-      if (!raceAnswer || !raceAnswer.value) {
+      const breedAnswer = questionnaire.answers.find(a => a.questionId === 'pet_breed_pet_1')
+      if (!breedAnswer || !breedAnswer.value) {
         return navigateTo('/step/1')
       }
     }

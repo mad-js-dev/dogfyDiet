@@ -2,9 +2,9 @@ import type { QuestionConfig } from '~/types/questionnaire'
 
 export const questionnaireQuestions: QuestionConfig[] = [
   {
-    id: 'pet_race',
+    id: 'pet_breed',
     type: 'select',
-    question: 'What is your pet\'s race?',
+    question: 'What is your pet\'s breed?',
     appliesTo: 'all',
     required: true,
     options: [

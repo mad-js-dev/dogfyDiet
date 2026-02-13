@@ -5,7 +5,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   const currentStep = ref(0)
   const answers = ref<Array<any>>([])
   const isCompleted = ref(false)
-  const petCount = ref(0)
+  const petCount = ref(1)
 
   // Getters
   const answeredQuestions = computed(() => {
@@ -41,7 +41,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   // Helper function to get required questions for each step
   const getStepRequirements = (step: number): string[] => {
     const requirements: Record<number, string[]> = {
-      0: ['pet_race'], // Pet Race
+      0: ['pet_breed'], // Pet Breed
       1: ['pet_name'], // Pet Names (at least one pet name)
       2: ['pet_gender'] // Pet Gender
     }
@@ -79,7 +79,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
 
   const getAnswer = (questionId: string, petId?: string) => {
     return answers.value.find(a => 
-      a.questionId === questionId && a.petId === petId
+      a.questionId === questionId && (petId ? a.petId === petId : !a.petId)
     )
   }
 
