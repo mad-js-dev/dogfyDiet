@@ -185,15 +185,35 @@ const canProceed = computed(() => {
   
   if (currentStepId.value === 1) {
     // Names step - need pet names (always individual since names are unique)
+    // and breeds for pets 2+ (pet 1 breed is from step 1)
     const currentPetCount = Math.max(petCount.value, 1) // Ensure at least 1
+    
+    // Check pet names
     const petNames = answers.value.filter(a => 
       a.questionId === 'pet_name' && 
         a.petId && 
         a.value && 
         a.value.trim() !== ''
     )
-    const result = petNames.length === currentPetCount
-    return result
+    
+    // Check breeds for pets 2+
+    const petBreeds = answers.value.filter(a => 
+      a.questionId === 'pet_breed' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+    )
+    
+    // For single pet: just need name (breed from step 1)
+    if (currentPetCount === 1) {
+      return petNames.length === currentPetCount
+    }
+    
+    // For multiple pets: need names for all + breeds for pets 2+
+    const hasAllNames = petNames.length === currentPetCount
+    const hasBreedsForPets2Plus = petBreeds.length >= (currentPetCount - 1)
+    
+    return hasAllNames && hasBreedsForPets2Plus
   }
   
   if (currentStepId.value === 2) {

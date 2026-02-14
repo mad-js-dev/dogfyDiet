@@ -32,6 +32,25 @@
             :model-value="getAnswerValue(petNum)"
             @answer="handleIndividualAnswer"
           />
+          
+          <!-- Breed selection for pets 2+ (only for pet name step) -->
+          <div v-if="props.question.id === 'pet_name' && petNum > 1" class="breed-selection">
+            <label class="breed-label">Breed:</label>
+            <select 
+              :value="getBreedValue(petNum)"
+              @change="handleBreedChange(petNum, $event.target.value)"
+              class="breed-select"
+            >
+              <option value="" disabled>Select a breed...</option>
+              <option 
+                v-for="breed in breedOptions" 
+                :key="breed"
+                :value="breed"
+              >
+                {{ breed }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
       
@@ -67,6 +86,82 @@ const answerMode = ref<'shared' | 'individual'>(
 )
 
 const petCount = computed(() => questionnaire.petCount)
+
+// Breed options (same as step 1)
+const breedOptions = [
+  // Dog Breeds
+  'Labrador Retriever',
+  'German Shepherd',
+  'Golden Retriever',
+  'French Bulldog',
+  'Bulldog',
+  'Poodle',
+  'Beagle',
+  'Rottweiler',
+  'German Shorthaired Pointer',
+  'Yorkshire Terrier',
+  'Dachshund',
+  'Siberian Husky',
+  'Great Dane',
+  'Boxer',
+  'Pembroke Welsh Corgi',
+  'Australian Shepherd',
+  'Doberman Pinscher',
+  'Cavalier King Charles Spaniel',
+  'Shih Tzu',
+  'Boston Terrier',
+  'Pomeranian',
+  'Havanese',
+  'Shetland Sheepdog',
+  'Brittany',
+  'Cocker Spaniel',
+  'English Springer Spaniel',
+  'Border Collie',
+  'Bichon Frise',
+  'West Highland White Terrier',
+  'Basset Hound',
+  'Mastiff',
+  'Bernese Mountain Dog',
+  'Cairn Terrier',
+  'Scottish Terrier',
+  'Papillon',
+  'Bull Terrier',
+  'Chihuahua',
+  'Maltese',
+  'Pekingese',
+  'Miniature Schnauzer',
+  'Chinese Shar-Pei',
+  'Bouviers des Flandres',
+  'Bloodhound',
+  'Brussels Griffon',
+  'Dandie Dinmont Terrier',
+  'Lhasa Apso',
+  'Lowchen',
+  'Norfolk Terrier',
+  'Norwich Terrier',
+  'Puli',
+  'Sealyham Terrier',
+  'Skye Terrier',
+  'Soft Coated Wheaten Terrier',
+  'Vizsla',
+  'Wirehaired Pointing Griffon',
+  // Cat Breeds
+  'Persian',
+  'Maine Coon',
+  'British Shorthair',
+  'Siamese',
+  'American Shorthair',
+  'Ragdoll',
+  'Bengal',
+  'Russian Blue',
+  'Scottish Fold',
+  'Birman',
+  'Oriental Shorthair',
+  'Devon Rex',
+  'Himalayan',
+  'American Curl',
+  'Selkirk Rex'
+]
 
 // Computed properties
 const showDifferentiationButton = computed(() => {
@@ -109,6 +204,14 @@ const getQuestionForPet = (petNum: number): QuestionConfig => {
 
 const getAnswerValue = (petNum: number) => {
   return questionnaire.getAnswer(props.question.id, `pet_${petNum}`)?.value || null
+}
+
+const getBreedValue = (petNum: number) => {
+  return questionnaire.getAnswer('pet_breed', `pet_${petNum}`)?.value || ''
+}
+
+const handleBreedChange = (petNum: number, breedValue: string) => {
+  questionnaire.addAnswer('pet_breed', breedValue, `pet_${petNum}`)
 }
 
 const handleSharedAnswer = (value: any) => {
@@ -225,6 +328,39 @@ watch([
   margin-bottom: 1rem;
   font-size: 1.1rem;
   font-weight: 600;
+}
+
+.breed-selection {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breed-label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.breed-select {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.breed-select:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+}
+
+.breed-select:hover {
+  border-color: #0066cc;
 }
 
 .answer-actions {
