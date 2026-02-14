@@ -7,14 +7,6 @@
         :model-value="sharedAnswerValue"
         @answer="handleSharedAnswer"
       />
-      
-      <button 
-        v-if="showDifferentiationButton"
-        @click="switchToIndividual"
-        class="differentiate-btn"
-      >
-        Are your pets different in this aspect?
-      </button>
     </div>
 
     <!-- Individual Answer Mode -->
@@ -53,16 +45,25 @@
           </div>
         </div>
       </div>
+    </div>
+    
+    <!-- Add Pet/Differentiate Button - Shows in both modes -->
+    <div class="answer-actions">
+      <button 
+        v-if="showDifferentiationButton"
+        @click="handleButtonClick"
+        class="differentiate-btn"
+      >
+        {{ isPetNameQuestion ? '+ Add Pet' : 'Are your pets different in this aspect?' }}
+      </button>
       
-      <div class="answer-actions">
-        <button 
-          @click="switchToShared"
-          class="merge-btn"
-          v-if="canMergeAnswers"
-        >
-          Apply same answer to all pets
-        </button>
-      </div>
+      <button 
+        v-if="canMergeAnswers"
+        @click="switchToShared"
+        class="merge-btn"
+      >
+        Apply same answer to all pets
+      </button>
     </div>
   </div>
 </template>
@@ -82,7 +83,7 @@ const props = defineProps<Props>()
 const questionnaire = useComprehensiveQuestionnaireStore()
 
 const answerMode = ref<'shared' | 'individual'>(
-  props.initialMode || (questionnaire.petCount > 1 ? 'shared' : 'individual')
+  props.initialMode || 'individual' // Always start in individual mode for pet names
 )
 
 const petCount = computed(() => questionnaire.petCount)
@@ -164,7 +165,14 @@ const breedOptions = [
 ]
 
 // Computed properties
+const isPetNameQuestion = computed(() => props.question.id === 'pet_name')
+
 const showDifferentiationButton = computed(() => {
+  // For pet name question: always show + Add Pet button
+  if (isPetNameQuestion.value) {
+    return true
+  }
+  // For other questions: show differentiate button normally
   return petCount.value > 1 && answerMode.value === 'shared'
 })
 
@@ -228,6 +236,17 @@ const handleIndividualAnswer = (value: any, questionId: string, petId?: string) 
     }
     // Use the base question ID for storage
     questionnaire.addAnswer(props.question.id, value, petId)
+  }
+}
+
+const handleButtonClick = () => {
+  if (isPetNameQuestion.value) {
+    // For pet name question: add a new pet
+    const newPetCount = petCount.value + 1
+    questionnaire.setPetCount(newPetCount)
+  } else {
+    // For other questions: switch to individual mode
+    switchToIndividual()
   }
 }
 

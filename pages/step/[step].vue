@@ -54,15 +54,6 @@
           }"
           :initial-mode="'individual'"
         />
-        
-        <div class="add-pet-section">
-          <button 
-            @click="addPet"
-            class="add-pet-btn"
-          >
-            + Add Another Pet
-          </button>
-        </div>
       </div>
 
       <!-- Pet Gender Step -->
@@ -244,11 +235,6 @@ const setPetCount = (count: number) => {
   questionnaire.setPetCount(count)
 }
 
-const addPet = () => {
-  const newPetCount = petCount.value + 1
-  questionnaire.setPetCount(newPetCount)
-}
-
 const getAnswerValue = (questionId: string, petId?: string) => {
   // For pet-specific questions, include petId in the search
   const answer = questionnaire.getAnswer(questionId, petId)
@@ -256,7 +242,6 @@ const getAnswerValue = (questionId: string, petId?: string) => {
 }
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {
-  console.log('handleAnswer called with:', { value, questionId, petId })
   questionnaire.addAnswer(questionId, value, petId)
 }
 
@@ -353,37 +338,11 @@ definePageMeta({
   background: #f8f9fa;
 }
 
-.pet-section h3 {
+.pet-answer-section h3 {
   color: #0066cc;
   margin-bottom: 1rem;
-}
-
-.add-pet-section {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.add-pet-btn {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #28a745, #20c997);
-  border: none;
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-}
-
-.add-pet-btn:hover {
-  background: linear-gradient(135deg, #218838, #1ea085);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-}
-
-.add-pet-btn:active {
-  transform: translateY(0);
 }
 
 .navigation {

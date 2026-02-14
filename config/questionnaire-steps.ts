@@ -5,7 +5,7 @@ export const questionnaireSteps: StepConfig[] = [
   {
     id: 0, // Internal 0-based ID
     title: 'Pet Race',
-    description: 'What is your pet\'s race?',
+    description: 'What is your pet\'s breed?',
     questions: ['pet_breed'],
     canSkip: false
   },
