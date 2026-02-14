@@ -426,6 +426,110 @@
         </div>
       </div>
 
+          <!-- Pet Pathology Step -->
+      <div v-else-if="currentStepId === 6" class="pet-pathology-section">
+        <h2>Does your pet{{ Math.max(petCount, 1) > 1 ? 's' : '' }} have any pathology?</h2>
+        
+        <!-- Shared Pathology Mode (Default) -->
+        <div v-if="!showIndividualPathologies" class="shared-pathology-mode">
+          <div class="pathology-inputs">
+            <div class="pathology-field">
+              <label>Does your pet have any pathology?</label>
+              <select v-model="sharedHasPathology" @change="handleSharedPathologyChange" class="pathology-bool-select">
+                <option value="" disabled>Select option</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            
+            <div v-if="sharedHasPathology === 'Yes'" class="pathology-field">
+              <label>Select pathology that applies to your pet:</label>
+              <select v-model="sharedPathology" @change="handleSharedPathologyChange" class="pathology-select">
+                <option value="" disabled>Select pathology</option>
+                <option value="Food allergies and intolerances">Food allergies and intolerances</option>
+                <option value="Sensitive digestions">Sensitive digestions</option>
+                <option value="Skin problems">Skin problems</option>
+                <option value="Joint problems">Joint problems</option>
+                <option value="Dental problems">Dental problems</option>
+                <option value="Diabetes">Diabetes</option>
+                <option value="Epilepsy">Epilepsy</option>
+                <option value="Otitis">Otitis</option>
+                <option value="Cushing's syndrome">Cushing's syndrome</option>
+                <option value="Hypothyroidism">Hypothyroidism</option>
+              </select>
+            </div>
+          </div>
+          
+          <button 
+            v-if="Math.max(petCount, 1) > 1"
+            @click="showIndividualPathologies = true"
+            class="differentiate-btn"
+          >
+            Are your pets different in this aspect?
+          </button>
+        </div>
+        
+        <!-- Individual Pathology Mode -->
+        <div v-else class="individual-pathology-mode">
+          <div class="pet-answers-grid">
+            <div 
+              v-for="petNum in Math.max(petCount, 1)" 
+              :key="petNum" 
+              class="pet-answer-section"
+            >
+              <h3>{{ petDisplayName(petNum) }}</h3>
+              
+              <!-- Pathology Yes/No Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_has_pathology',
+                  type: 'select',
+                  question: 'Does ' + petDisplayName(petNum) + ' have any pathology?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: ['No', 'Yes'],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Pathology information is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_has_pathology', petNum)"
+                @answer="handleAnswer"
+              />
+              
+              <!-- Conditional Pathology Select -->
+              <div v-if="getAnswerValue('pet_has_pathology', petNum) === 'Yes'" class="pathology-select">
+                <label>Select pathology that applies to your pet:</label>
+                <select :value="getAnswerValue('pet_pathology', petNum)" @input="handlePathologySelect($event, petNum)" class="pathology-select">
+                  <option value="" disabled>Select pathology</option>
+                  <option value="Food allergies and intolerances">Food allergies and intolerances</option>
+                  <option value="Sensitive digestions">Sensitive digestions</option>
+                  <option value="Skin problems">Skin problems</option>
+                  <option value="Joint problems">Joint problems</option>
+                  <option value="Dental problems">Dental problems</option>
+                  <option value="Diabetes">Diabetes</option>
+                  <option value="Epilepsy">Epilepsy</option>
+                  <option value="Otitis">Otitis</option>
+                  <option value="Cushing's syndrome">Cushing's syndrome</option>
+                  <option value="Hypothyroidism">Hypothyroidism</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <button 
+            v-if="Math.max(petCount, 1) > 1"
+            @click="showIndividualPathologies = false"
+            class="differentiate-btn"
+          >
+            Apply same pathology to all pets
+          </button>
+        </div>
+      </div>
+
       <!-- Navigation -->
       <div class="navigation">
         <button 
@@ -441,14 +545,14 @@
           :disabled="!canProceed"
           class="nav-btn primary"
         >
-          {{ currentStepId === 5 ? 'Submit' : 'Next' }}
+          {{ currentStepId === 6 ? 'Submit' : 'Next' }}
         </button>
       </div>
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import { questionnaireSteps, getStepQuestions, shouldShowQuestion, urlToInternalStep, internalToUrlStep } from '~/config/questionnaire-steps'
 import { questionnaireQuestions } from '~/config/questionnaire-questions'
@@ -524,11 +628,16 @@ const sharedWeight = ref('')
 const showIndividualActivityLevels = ref(false)
 const sharedActivityLevel = ref('')
 
+// Pathology mode state
+const showIndividualPathologies = ref(false)
+const sharedHasPathology = ref('')
+const sharedPathology = ref('')
+
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
   const urlStep = parseInt(route.params.step as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  return Math.max(0, Math.min(internalStep, 5)) // Clamp between 0 and 5
+  return Math.max(0, Math.min(internalStep, 6)) // Clamp between 0 and 6
 })
 
 // State
@@ -715,6 +824,29 @@ const canProceed = computed(() => {
     return hasAllActivityLevels
   }
   
+  if (currentStepId.value === 6) {
+    // Pathology step - check for pathology answers
+    const currentPetCount = Math.max(petCount.value, 1)
+    
+    // Check pathology boolean answers
+    const petHasPathology = answers.value.filter(a => 
+      a.questionId === 'pet_has_pathology' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+    )
+    
+    const hasAllPathologyAnswers = petHasPathology.length === currentPetCount
+    
+    // For shared mode: just need shared value to be set
+    if (!showIndividualPathologies.value) {
+      return sharedHasPathology.value !== ''
+    }
+    
+    // For individual mode: need all pets to have answers
+    return hasAllPathologyAnswers
+  }
+  
   return false
 })
 
@@ -793,6 +925,16 @@ const handleSharedActivityLevelChange = () => {
   }
 }
 
+const handleSharedPathologyChange = () => {
+  const currentPetCount = Math.max(petCount.value, 1)
+  for (let i = 1; i <= currentPetCount; i++) {
+    questionnaire.addAnswer('pet_has_pathology', sharedHasPathology.value, `pet_${i}`)
+    if (sharedHasPathology.value === 'Yes' && sharedPathology.value) {
+      questionnaire.addAnswer('pet_pathology', sharedPathology.value, `pet_${i}`)
+    }
+  }
+}
+
 const shouldShowExpectingQuestion = (petNum: number) => {
   const genderAnswer = questionnaire.getAnswer('pet_gender', `pet_${petNum}`)
   const neuteredAnswer = questionnaire.getAnswer('pet_neutered', `pet_${petNum}`)
@@ -805,6 +947,11 @@ const getAnswerValue = (questionId: string, petNum: number) => {
   // For pet-specific questions, include petId in the search
   const answer = questionnaire.getAnswer(questionId, `pet_${petNum}`)
   return answer ? answer.value : null
+}
+
+const handlePathologySelect = (event: Event, petNum: number) => {
+  const target = event.target as HTMLSelectElement
+  questionnaire.addAnswer('pet_pathology', target.value, `pet_${petNum}`)
 }
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {
@@ -820,7 +967,7 @@ const previousStep = () => {
 
 const nextStep = () => {
   if (canProceed.value) {
-    if (currentStepId.value < 5) {
+    if (currentStepId.value < 6) {
       const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
       router.push(`/step/${nextUrlStep}`)
     } else {
@@ -841,7 +988,7 @@ const submitQuestionnaire = () => {
 watch(() => route.params.step, (newStep) => {
   const urlStep = parseInt(newStep as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  questionnaire.setStep(Math.max(0, Math.min(internalStep, 5)))
+  questionnaire.setStep(Math.max(0, Math.min(internalStep, 6)))
   
   // Ensure pet count is at least 1 when starting questionnaire
   if (questionnaire.petCount === 0) {
@@ -1135,6 +1282,53 @@ definePageMeta({
 
 .nav-btn.secondary:hover:not(:disabled) {
   background: #545b62;
+}
+
+/* Pathology Step Styles */
+.pathology-bool-select,
+.pathology-select {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  width: 100%;
+  min-width: 200px;
+}
+
+.pathology-bool-select:focus,
+.pathology-select:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+
+.pathology-field {
+  margin-bottom: 1rem;
+}
+
+.pathology-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.shared-pathology-mode {
+  text-align: center;
+  padding: 2rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  margin-bottom: 2rem;
+}
+
+.pathology-inputs {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.individual-pathology-mode .pathology-select {
+  margin-top: 1rem;
 }
 
 @media (max-width: 768px) {

@@ -48,6 +48,14 @@ export const questionnaireSteps: StepConfig[] = [
     questions: ['pet_activity_level'],
     canSkip: false,
     dependsOn: [4]
+  },
+  {
+    id: 6, // Internal 0-based ID
+    title: 'Pet Pathology',
+    description: 'Does your pet have any pathology?',
+    questions: ['pet_has_pathology', 'pet_pathology'],
+    canSkip: false,
+    dependsOn: [5]
   }
 ]
 

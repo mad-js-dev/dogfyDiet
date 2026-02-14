@@ -202,5 +202,51 @@ export const questionnaireQuestions: QuestionConfig[] = [
         message: 'Activity level is required'
       }
     ]
+  },
+  {
+    id: 'pet_has_pathology',
+    type: 'select',
+    question: 'Does your pet have any pathology?',
+    appliesTo: 'individual',
+    required: true,
+    options: ['No', 'Yes'],
+    validation: [
+      {
+        type: 'required',
+        message: 'Pathology information is required'
+      }
+    ]
+  },
+  {
+    id: 'pet_pathology',
+    type: 'select',
+    question: 'Select pathology that applies to your pet:',
+    appliesTo: 'individual',
+    required: false,
+    dependencies: [
+      {
+        questionId: 'pet_has_pathology',
+        operator: 'equals',
+        value: 'Yes',
+        action: 'show'
+      }
+    ],
+    options: [
+      'Food allergies and intolerances',
+      'Sensitive digestions',
+      'Skin problems',
+      'Joint problems',
+      'Dental problems',
+      'Diabetes',
+      'Epilepsy',
+      'Otitis',
+      "Cushing's syndrome"
+    ],
+    validation: [
+      {
+        type: 'required',
+        message: 'Pathology selection is required when pet has pathology'
+      }
+    ]
   }
 ]
