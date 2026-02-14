@@ -171,5 +171,23 @@ export const questionnaireQuestions: QuestionConfig[] = [
         message: 'Body shape is required'
       }
     ]
+  },
+  {
+    id: 'pet_activity_level',
+    type: 'select',
+    question: 'What is your pet\'s activity level?',
+    appliesTo: 'individual',
+    required: true,
+    options: [
+      'Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm',
+      'Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest',
+      'Energy tornado - Daily walks of more than 2h. Don\'t let that energy tornado stop!'
+    ],
+    validation: [
+      {
+        type: 'required',
+        message: 'Activity level is required'
+      }
+    ]
   }
 ]

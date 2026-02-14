@@ -315,6 +315,86 @@
         </div>
       </div>
 
+      <!-- Pet Activity Level Step -->
+      <div v-else-if="currentStepId === 5" class="pet-activity-level-section">
+        <h2>What is your pet{{ Math.max(petCount, 1) > 1 ? 's\'' : '' }} activity level?</h2>
+        
+        <!-- Shared Activity Level Mode (Default) -->
+        <div v-if="!showIndividualActivityLevels" class="shared-activity-level-mode">
+          <div class="activity-level-inputs">
+            <div class="activity-level-field">
+              <label>Select activity level for all pets:</label>
+              <select v-model="sharedActivityLevel" @change="handleSharedActivityLevelChange" class="activity-level-select">
+                <option value="" disabled>Select activity level</option>
+                <option value="Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm">
+                  Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm
+                </option>
+                <option value="Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest">
+                  Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest
+                </option>
+                <option value="Energy tornado - Daily walks of more than 2h. Don't let that energy tornado stop!">
+                  Energy tornado - Daily walks of more than 2h. Don't let that energy tornado stop!
+                </option>
+              </select>
+            </div>
+          </div>
+          
+          <button 
+            v-if="Math.max(petCount, 1) > 1"
+            @click="showIndividualActivityLevels = true"
+            class="differentiate-btn"
+          >
+            Are your pets different in this aspect?
+          </button>
+        </div>
+        
+        <!-- Individual Activity Level Mode -->
+        <div v-else class="individual-activity-level-mode">
+          <div class="pet-answers-grid">
+            <div 
+              v-for="petNum in Math.max(petCount, 1)" 
+              :key="petNum" 
+              class="pet-answer-section"
+            >
+              <h3>{{ petDisplayName(petNum) }}</h3>
+              
+              <!-- Activity Level Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_activity_level',
+                  type: 'select',
+                  question: 'What is ' + petDisplayName(petNum) + '\'s activity level?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: [
+                    'Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm',
+                    'Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest',
+                    'Energy tornado - Daily walks of more than 2h. Don\'t let that energy tornado stop!'
+                  ],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Activity level is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_activity_level', petNum)"
+                @answer="handleAnswer"
+              />
+            </div>
+          </div>
+          
+          <button 
+            v-if="Math.max(petCount, 1) > 1"
+            @click="showIndividualActivityLevels = false"
+            class="merge-btn"
+          >
+            Apply same activity level to all pets
+          </button>
+        </div>
+      </div>
+
       <!-- Navigation -->
       <div class="navigation">
         <button 
@@ -330,7 +410,7 @@
           :disabled="!canProceed"
           class="nav-btn primary"
         >
-          {{ currentStepId === 4 ? 'Submit' : 'Next' }}
+          {{ currentStepId === 5 ? 'Submit' : 'Next' }}
         </button>
       </div>
     </div>
@@ -408,11 +488,15 @@ const sharedBirthMonth = ref('')
 const showIndividualBodyShapes = ref(false)
 const sharedBodyShape = ref('')
 
+// Activity level mode state
+const showIndividualActivityLevels = ref(false)
+const sharedActivityLevel = ref('')
+
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
   const urlStep = parseInt(route.params.step as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  return Math.max(0, Math.min(internalStep, 4)) // Clamp between 0 and 4
+  return Math.max(0, Math.min(internalStep, 5)) // Clamp between 0 and 5
 })
 
 // State
@@ -567,6 +651,29 @@ const canProceed = computed(() => {
     return hasAllBodyShapes
   }
   
+  if (currentStepId.value === 5) {
+    // Activity level step - check for activity level answers
+    const currentPetCount = Math.max(petCount.value, 1)
+    
+    // Check activity level answers
+    const petActivityLevels = answers.value.filter(a => 
+      a.questionId === 'pet_activity_level' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+    )
+    
+    const hasAllActivityLevels = petActivityLevels.length === currentPetCount
+    
+    // For shared mode: just need shared value to be set
+    if (!showIndividualActivityLevels.value) {
+      return sharedActivityLevel.value !== ''
+    }
+    
+    // For individual mode: need all pets to have answers
+    return hasAllActivityLevels
+  }
+  
   return false
 })
 
@@ -625,6 +732,16 @@ const handleSharedBodyShapeChange = () => {
   }
 }
 
+const handleSharedActivityLevelChange = () => {
+  if (sharedActivityLevel.value) {
+    // Apply shared activity level to all pets
+    const currentPetCount = Math.max(petCount.value, 1)
+    for (let i = 1; i <= currentPetCount; i++) {
+      questionnaire.addAnswer('pet_activity_level', sharedActivityLevel.value, `pet_${i}`)
+    }
+  }
+}
+
 const shouldShowExpectingQuestion = (petNum: number) => {
   const genderAnswer = questionnaire.getAnswer('pet_gender', `pet_${petNum}`)
   const neuteredAnswer = questionnaire.getAnswer('pet_neutered', `pet_${petNum}`)
@@ -652,7 +769,7 @@ const previousStep = () => {
 
 const nextStep = () => {
   if (canProceed.value) {
-    if (currentStepId.value < 4) {
+    if (currentStepId.value < 5) {
       const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
       router.push(`/step/${nextUrlStep}`)
     } else {
@@ -673,7 +790,7 @@ const submitQuestionnaire = () => {
 watch(() => route.params.step, (newStep) => {
   const urlStep = parseInt(newStep as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  questionnaire.setStep(Math.max(0, Math.min(internalStep, 4)))
+  questionnaire.setStep(Math.max(0, Math.min(internalStep, 5)))
   
   // Ensure pet count is at least 1 when starting questionnaire
   if (questionnaire.petCount === 0) {
@@ -725,6 +842,7 @@ definePageMeta({
 .pet-gender-section h2,
 .pet-birth-date-section h2,
 .pet-body-shape-section h2,
+.pet-activity-level-section h2,
 .pet-sterilization-section h2 {
   color: #0066cc;
   margin-bottom: 1.5rem;
@@ -833,6 +951,49 @@ definePageMeta({
   border-radius: 8px;
   background: #f8f9fa;
   margin-bottom: 2rem;
+}
+
+.shared-activity-level-mode {
+  text-align: center;
+  padding: 2rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  margin-bottom: 2rem;
+}
+
+.activity-level-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.activity-level-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 300px;
+}
+
+.activity-level-field label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.activity-level-select {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  width: 100%;
+}
+
+.activity-level-select:focus {
+  outline: none;
+  border-color: #0066cc;
 }
 
 .body-shape-inputs {
