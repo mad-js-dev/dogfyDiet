@@ -19,8 +19,8 @@ export default defineNuxtRouteMiddleware((to) => {
   const urlStep = parseInt(stepParam) || 1
   const internalStep = urlToInternalStep(urlStep)
   
-  // Validate step range (0-3 internally, 1-4 in URL)
-  if (internalStep < 0 || internalStep > 3) {
+  // Validate step range (0-4 internally, 1-5 in URL)
+  if (internalStep < 0 || internalStep > 4) {
     // Redirect to first step if invalid
     return navigateTo('/step/1')
   }
@@ -60,6 +60,20 @@ export default defineNuxtRouteMiddleware((to) => {
       )
       if (petGenders.length !== currentPetCount) {
         return navigateTo('/step/3')
+      }
+    }
+    
+    // For step 4 (body shape), need birth date answers
+    if (internalStep === 4) {
+      const currentPetCount = questionnaire.petCount || 1
+      const petBirthYears = questionnaire.answers.filter(a => 
+        a.questionId === 'pet_birth_year' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+      )
+      if (petBirthYears.length !== currentPetCount) {
+        return navigateTo('/step/4')
       }
     }
   }

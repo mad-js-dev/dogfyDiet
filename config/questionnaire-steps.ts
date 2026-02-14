@@ -32,6 +32,14 @@ export const questionnaireSteps: StepConfig[] = [
     questions: ['pet_birth_year', 'pet_birth_month'],
     canSkip: false,
     dependsOn: [2]
+  },
+  {
+    id: 4, // Internal 0-based ID
+    title: 'Pet Body Shape',
+    description: 'Which silhouette best represents your pet?',
+    questions: ['pet_body_shape'],
+    canSkip: false,
+    dependsOn: [3]
   }
 ]
 

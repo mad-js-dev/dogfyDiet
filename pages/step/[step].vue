@@ -163,6 +163,7 @@
           </div>
           
           <button 
+            v-if="Math.max(petCount, 1) > 1"
             @click="showIndividualBirthDates = true"
             class="differentiate-btn"
           >
@@ -225,10 +226,91 @@
           </div>
           
           <button 
+            v-if="Math.max(petCount, 1) > 1"
             @click="showIndividualBirthDates = false"
             class="merge-btn"
           >
             Apply same birth date to all pets
+          </button>
+        </div>
+      </div>
+
+      <!-- Pet Body Shape Step -->
+      <div v-else-if="currentStepId === 4" class="pet-body-shape-section">
+        <h2>Which silhouette best represents your pet{{ Math.max(petCount, 1) > 1 ? 's' : '' }}?</h2>
+        
+        <!-- Shared Body Shape Mode (Default) -->
+        <div v-if="!showIndividualBodyShapes" class="shared-body-shape-mode">
+          <div class="body-shape-inputs">
+            <div class="body-shape-field">
+              <label>Select body shape for all pets:</label>
+              <select v-model="sharedBodyShape" @change="handleSharedBodyShapeChange" class="body-shape-select">
+                <option value="" disabled>Select body shape</option>
+                <option value="A bit thin - Narrow waist and ribs are clearly visible">
+                  A bit thin - Narrow waist and ribs are clearly visible
+                </option>
+                <option value="In good shape - Waist is visible and ribs are easy to feel">
+                  In good shape - Waist is visible and ribs are easy to feel
+                </option>
+                <option value="A bit chubby - Waist is not visible and ribs are hard to feel">
+                  A bit chubby - Waist is not visible and ribs are hard to feel
+                </option>
+              </select>
+            </div>
+          </div>
+          
+          <button 
+            v-if="Math.max(petCount, 1) > 1"
+            @click="showIndividualBodyShapes = true"
+            class="differentiate-btn"
+          >
+            Are your pets different in this aspect?
+          </button>
+        </div>
+        
+        <!-- Individual Body Shape Mode -->
+        <div v-else class="individual-body-shape-mode">
+          <div class="pet-answers-grid">
+            <div 
+              v-for="petNum in Math.max(petCount, 1)" 
+              :key="petNum" 
+              class="pet-answer-section"
+            >
+              <h3>{{ petDisplayName(petNum) }}</h3>
+              
+              <!-- Body Shape Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_body_shape',
+                  type: 'select',
+                  question: 'Which silhouette best represents ' + petDisplayName(petNum) + '?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: [
+                    'A bit thin - Narrow waist and ribs are clearly visible',
+                    'In good shape - Waist is visible and ribs are easy to feel',
+                    'A bit chubby - Waist is not visible and ribs are hard to feel'
+                  ],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Body shape is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_body_shape', petNum)"
+                @answer="handleAnswer"
+              />
+            </div>
+          </div>
+          
+          <button 
+            v-if="Math.max(petCount, 1) > 1"
+            @click="showIndividualBodyShapes = false"
+            class="merge-btn"
+          >
+            Apply same body shape to all pets
           </button>
         </div>
       </div>
@@ -248,7 +330,7 @@
           :disabled="!canProceed"
           class="nav-btn primary"
         >
-          {{ currentStepId === 3 ? 'Submit' : 'Next' }}
+          {{ currentStepId === 4 ? 'Submit' : 'Next' }}
         </button>
       </div>
     </div>
@@ -322,11 +404,15 @@ const showIndividualBirthDates = ref(false)
 const sharedBirthYear = ref('')
 const sharedBirthMonth = ref('')
 
+// Body shape mode state
+const showIndividualBodyShapes = ref(false)
+const sharedBodyShape = ref('')
+
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
   const urlStep = parseInt(route.params.step as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  return Math.max(0, Math.min(internalStep, 3)) // Clamp between 0 and 3
+  return Math.max(0, Math.min(internalStep, 4)) // Clamp between 0 and 4
 })
 
 // State
@@ -458,6 +544,29 @@ const canProceed = computed(() => {
     return hasAllBirthYears && hasAllBirthMonths
   }
   
+  if (currentStepId.value === 4) {
+    // Body shape step - check for body shape answers
+    const currentPetCount = Math.max(petCount.value, 1)
+    
+    // Check body shape answers
+    const petBodyShapes = answers.value.filter(a => 
+      a.questionId === 'pet_body_shape' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+    )
+    
+    const hasAllBodyShapes = petBodyShapes.length === currentPetCount
+    
+    // For shared mode: just need shared value to be set
+    if (!showIndividualBodyShapes.value) {
+      return sharedBodyShape.value !== ''
+    }
+    
+    // For individual mode: need all pets to have answers
+    return hasAllBodyShapes
+  }
+  
   return false
 })
 
@@ -506,6 +615,16 @@ const handleSharedBirthDateChange = () => {
   }
 }
 
+const handleSharedBodyShapeChange = () => {
+  if (sharedBodyShape.value) {
+    // Apply shared body shape to all pets
+    const currentPetCount = Math.max(petCount.value, 1)
+    for (let i = 1; i <= currentPetCount; i++) {
+      questionnaire.addAnswer('pet_body_shape', sharedBodyShape.value, `pet_${i}`)
+    }
+  }
+}
+
 const shouldShowExpectingQuestion = (petNum: number) => {
   const genderAnswer = questionnaire.getAnswer('pet_gender', `pet_${petNum}`)
   const neuteredAnswer = questionnaire.getAnswer('pet_neutered', `pet_${petNum}`)
@@ -533,7 +652,7 @@ const previousStep = () => {
 
 const nextStep = () => {
   if (canProceed.value) {
-    if (currentStepId.value < 3) {
+    if (currentStepId.value < 4) {
       const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
       router.push(`/step/${nextUrlStep}`)
     } else {
@@ -554,7 +673,7 @@ const submitQuestionnaire = () => {
 watch(() => route.params.step, (newStep) => {
   const urlStep = parseInt(newStep as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  questionnaire.setStep(Math.max(0, Math.min(internalStep, 3)))
+  questionnaire.setStep(Math.max(0, Math.min(internalStep, 4)))
   
   // Ensure pet count is at least 1 when starting questionnaire
   if (questionnaire.petCount === 0) {
@@ -605,6 +724,7 @@ definePageMeta({
 .pet-names-section h2,
 .pet-gender-section h2,
 .pet-birth-date-section h2,
+.pet-body-shape-section h2,
 .pet-sterilization-section h2 {
   color: #0066cc;
   margin-bottom: 1.5rem;
@@ -704,6 +824,49 @@ definePageMeta({
   border-radius: 8px;
   background: #f8f9fa;
   margin-bottom: 2rem;
+}
+
+.shared-body-shape-mode {
+  text-align: center;
+  padding: 2rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  margin-bottom: 2rem;
+}
+
+.body-shape-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.body-shape-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 300px;
+}
+
+.body-shape-field label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.body-shape-select {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  width: 100%;
+}
+
+.body-shape-select:focus {
+  outline: none;
+  border-color: #0066cc;
 }
 
 .navigation {

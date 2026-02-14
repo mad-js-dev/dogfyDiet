@@ -153,5 +153,23 @@ export const questionnaireQuestions: QuestionConfig[] = [
         message: 'Birth month is required'
       }
     ]
+  },
+  {
+    id: 'pet_body_shape',
+    type: 'select',
+    question: 'Which silhouette best represents your pet?',
+    appliesTo: 'individual',
+    required: true,
+    options: [
+      'A bit thin - Narrow waist and ribs are clearly visible',
+      'In good shape - Waist is visible and ribs are easy to feel',
+      'A bit chubby - Waist is not visible and ribs are hard to feel'
+    ],
+    validation: [
+      {
+        type: 'required',
+        message: 'Body shape is required'
+      }
+    ]
   }
 ]
