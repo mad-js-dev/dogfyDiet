@@ -77,7 +77,7 @@ export default defineNuxtRouteMiddleware((to) => {
       }
     }
     
-    // For step 5 (activity level), need body shape answers
+    // For step 5 (activity level), need body shape and weight answers
     if (internalStep === 5) {
       const currentPetCount = questionnaire.petCount || 1
       const petBodyShapes = questionnaire.answers.filter(a => 

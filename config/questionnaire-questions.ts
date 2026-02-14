@@ -173,6 +173,19 @@ export const questionnaireQuestions: QuestionConfig[] = [
     ]
   },
   {
+    id: 'pet_weight',
+    type: 'text',
+    question: 'What is your pet\'s weight?',
+    appliesTo: 'individual',
+    required: true,
+    validation: [
+      {
+        type: 'required',
+        message: 'Weight is required'
+      }
+    ]
+  },
+  {
     id: 'pet_activity_level',
     type: 'select',
     question: 'What is your pet\'s activity level?',

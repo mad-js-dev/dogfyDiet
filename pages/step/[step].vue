@@ -257,6 +257,17 @@
                 </option>
               </select>
             </div>
+            
+            <div class="body-shape-field">
+              <label>Enter weight for all pets:</label>
+              <input 
+                v-model="sharedWeight" 
+                @input="handleSharedWeightChange" 
+                type="text" 
+                placeholder="Enter weight (e.g., 25 kg or 55 lbs)"
+                class="weight-input"
+              />
+            </div>
           </div>
           
           <button 
@@ -300,6 +311,26 @@
                 }"
                 :pet-id="`pet_${petNum}`"
                 :model-value="getAnswerValue('pet_body_shape', petNum)"
+                @answer="handleAnswer"
+              />
+              
+              <!-- Pet Weight Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_weight',
+                  type: 'text',
+                  question: 'What is ' + petDisplayName(petNum) + '\'s weight?',
+                  appliesTo: 'individual',
+                  required: true,
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Weight is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_weight', petNum)"
                 @answer="handleAnswer"
               />
             </div>
@@ -487,6 +518,7 @@ const sharedBirthMonth = ref('')
 // Body shape mode state
 const showIndividualBodyShapes = ref(false)
 const sharedBodyShape = ref('')
+const sharedWeight = ref('')
 
 // Activity level mode state
 const showIndividualActivityLevels = ref(false)
@@ -629,7 +661,7 @@ const canProceed = computed(() => {
   }
   
   if (currentStepId.value === 4) {
-    // Body shape step - check for body shape answers
+    // Body shape step - check for body shape and weight answers
     const currentPetCount = Math.max(petCount.value, 1)
     
     // Check body shape answers
@@ -640,15 +672,24 @@ const canProceed = computed(() => {
         a.value.trim() !== ''
     )
     
-    const hasAllBodyShapes = petBodyShapes.length === currentPetCount
+    // Check weight answers
+    const petWeights = answers.value.filter(a => 
+      a.questionId === 'pet_weight' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+    )
     
-    // For shared mode: just need shared value to be set
+    const hasAllBodyShapes = petBodyShapes.length === currentPetCount
+    const hasAllWeights = petWeights.length === currentPetCount
+    
+    // For shared mode: just need shared values to be set
     if (!showIndividualBodyShapes.value) {
-      return sharedBodyShape.value !== ''
+      return sharedBodyShape.value !== '' && sharedWeight.value !== ''
     }
     
     // For individual mode: need all pets to have answers
-    return hasAllBodyShapes
+    return hasAllBodyShapes && hasAllWeights
   }
   
   if (currentStepId.value === 5) {
@@ -728,6 +769,16 @@ const handleSharedBodyShapeChange = () => {
     const currentPetCount = Math.max(petCount.value, 1)
     for (let i = 1; i <= currentPetCount; i++) {
       questionnaire.addAnswer('pet_body_shape', sharedBodyShape.value, `pet_${i}`)
+    }
+  }
+}
+
+const handleSharedWeightChange = () => {
+  if (sharedWeight.value) {
+    // Apply shared weight to all pets
+    const currentPetCount = Math.max(petCount.value, 1)
+    for (let i = 1; i <= currentPetCount; i++) {
+      questionnaire.addAnswer('pet_weight', sharedWeight.value, `pet_${i}`)
     }
   }
 }
@@ -1028,6 +1079,21 @@ definePageMeta({
 .body-shape-select:focus {
   outline: none;
   border-color: #0066cc;
+}
+
+.weight-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.weight-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
 .navigation {
