@@ -134,6 +134,105 @@
         </div>
       </div>
 
+      <!-- Pet Birth Date Step -->
+      <div v-else-if="currentStepId === 3" class="pet-birth-date-section">
+        <h2>When was your pet{{ Math.max(petCount, 1) > 1 ? 's' : '' }} born?</h2>
+        
+        <!-- Shared Birth Date Mode (Default) -->
+        <div v-if="!showIndividualBirthDates" class="shared-birth-date-mode">
+          <div class="birth-date-inputs">
+            <div class="birth-date-field">
+              <label>Year:</label>
+              <select v-model="sharedBirthYear" @change="handleSharedBirthDateChange" class="birth-date-select">
+                <option value="" disabled>Year</option>
+                <option v-for="year in yearOptions" :key="year" :value="year">
+                  {{ year }}
+                </option>
+              </select>
+            </div>
+            
+            <div class="birth-date-field">
+              <label>Month:</label>
+              <select v-model="sharedBirthMonth" @change="handleSharedBirthDateChange" class="birth-date-select">
+                <option value="" disabled>Month</option>
+                <option v-for="month in monthOptions" :key="month" :value="month">
+                  {{ month }}
+                </option>
+              </select>
+            </div>
+          </div>
+          
+          <button 
+            @click="showIndividualBirthDates = true"
+            class="differentiate-btn"
+          >
+            Are your pets different in this aspect?
+          </button>
+        </div>
+        
+        <!-- Individual Birth Date Mode -->
+        <div v-else class="individual-birth-date-mode">
+          <div class="pet-answers-grid">
+            <div 
+              v-for="petNum in Math.max(petCount, 1)" 
+              :key="petNum" 
+              class="pet-answer-section"
+            >
+              <h3>{{ petDisplayName(petNum) }}</h3>
+              
+              <!-- Birth Year Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_birth_year',
+                  type: 'select',
+                  question: 'What year was ' + petDisplayName(petNum) + ' born?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: yearOptions,
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Birth year is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_birth_year', petNum)"
+                @answer="handleAnswer"
+              />
+              
+              <!-- Birth Month Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_birth_month',
+                  type: 'select',
+                  question: 'What month was ' + petDisplayName(petNum) + ' born?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: monthOptions,
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Birth month is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_birth_month', petNum)"
+                @answer="handleAnswer"
+              />
+            </div>
+          </div>
+          
+          <button 
+            @click="showIndividualBirthDates = false"
+            class="merge-btn"
+          >
+            Apply same birth date to all pets
+          </button>
+        </div>
+      </div>
+
       <!-- Navigation -->
       <div class="navigation">
         <button 
@@ -149,7 +248,7 @@
           :disabled="!canProceed"
           class="nav-btn primary"
         >
-          {{ currentStepId === 2 ? 'Submit' : 'Next' }}
+          {{ currentStepId === 3 ? 'Submit' : 'Next' }}
         </button>
       </div>
     </div>
@@ -203,11 +302,31 @@ const allBreeds = [
   'Selkirk Rex'
 ]
 
+// Birth date options
+const yearOptions = computed(() => {
+  const currentYear = new Date().getFullYear()
+  const years = []
+  for (let year = currentYear; year >= currentYear - 20; year--) {
+    years.push(year.toString())
+  }
+  return years
+})
+
+const monthOptions = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+]
+
+// Birth date mode state
+const showIndividualBirthDates = ref(false)
+const sharedBirthYear = ref('')
+const sharedBirthMonth = ref('')
+
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
   const urlStep = parseInt(route.params.step as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  return Math.max(0, Math.min(internalStep, 2)) // Clamp between 0 and 2
+  return Math.max(0, Math.min(internalStep, 3)) // Clamp between 0 and 3
 })
 
 // State
@@ -307,6 +426,38 @@ const canProceed = computed(() => {
     return hasAllGenders && hasAllNeutered && hasRequiredExpecting
   }
   
+  if (currentStepId.value === 3) {
+    // Birth date step - check for birth year and month answers
+    const currentPetCount = Math.max(petCount.value, 1)
+    
+    // Check birth year answers
+    const petBirthYears = answers.value.filter(a => 
+      a.questionId === 'pet_birth_year' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+    )
+    
+    // Check birth month answers
+    const petBirthMonths = answers.value.filter(a => 
+      a.questionId === 'pet_birth_month' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+    )
+    
+    const hasAllBirthYears = petBirthYears.length === currentPetCount
+    const hasAllBirthMonths = petBirthMonths.length === currentPetCount
+    
+    // For shared mode: just need shared values to be set
+    if (!showIndividualBirthDates.value) {
+      return sharedBirthYear.value !== '' && sharedBirthMonth.value !== ''
+    }
+    
+    // For individual mode: need all pets to have answers
+    return hasAllBirthYears && hasAllBirthMonths
+  }
+  
   return false
 })
 
@@ -318,6 +469,41 @@ const setPetCount = (count: number) => {
 const petDisplayName = (petNum: number) => {
   const petNameAnswer = questionnaire.getAnswer('pet_name', `pet_${petNum}`)
   return petNameAnswer ? petNameAnswer.value : `Pet ${petNum}`
+}
+
+const calculatePetAge = (petNum: number) => {
+  const yearAnswer = questionnaire.getAnswer('pet_birth_year', `pet_${petNum}`)
+  const monthAnswer = questionnaire.getAnswer('pet_birth_month', `pet_${petNum}`)
+  
+  if (!yearAnswer?.value || !monthAnswer?.value) return null
+  
+  const birthYear = parseInt(yearAnswer.value)
+  const birthMonth = new Date(monthAnswer.value + ' 1').getMonth() + 1
+  
+  const currentDate = new Date()
+  const currentYear = currentDate.getFullYear()
+  const currentMonth = currentDate.getMonth() + 1
+  
+  let years = currentYear - birthYear
+  let months = currentMonth - birthMonth
+  
+  if (months < 0) {
+    years--
+    months += 12
+  }
+  
+  return { years, months }
+}
+
+const handleSharedBirthDateChange = () => {
+  if (sharedBirthYear.value && sharedBirthMonth.value) {
+    // Apply shared birth date to all pets
+    const currentPetCount = Math.max(petCount.value, 1)
+    for (let i = 1; i <= currentPetCount; i++) {
+      questionnaire.addAnswer('pet_birth_year', sharedBirthYear.value, `pet_${i}`)
+      questionnaire.addAnswer('pet_birth_month', sharedBirthMonth.value, `pet_${i}`)
+    }
+  }
 }
 
 const shouldShowExpectingQuestion = (petNum: number) => {
@@ -347,7 +533,7 @@ const previousStep = () => {
 
 const nextStep = () => {
   if (canProceed.value) {
-    if (currentStepId.value < 2) {
+    if (currentStepId.value < 3) {
       const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
       router.push(`/step/${nextUrlStep}`)
     } else {
@@ -368,7 +554,7 @@ const submitQuestionnaire = () => {
 watch(() => route.params.step, (newStep) => {
   const urlStep = parseInt(newStep as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  questionnaire.setStep(Math.max(0, Math.min(internalStep, 2)))
+  questionnaire.setStep(Math.max(0, Math.min(internalStep, 3)))
   
   // Ensure pet count is at least 1 when starting questionnaire
   if (questionnaire.petCount === 0) {
@@ -418,6 +604,7 @@ definePageMeta({
 .pet-race-section h2,
 .pet-names-section h2,
 .pet-gender-section h2,
+.pet-birth-date-section h2,
 .pet-sterilization-section h2 {
   color: #0066cc;
   margin-bottom: 1.5rem;
@@ -457,6 +644,66 @@ definePageMeta({
   margin-bottom: 1rem;
   font-size: 1.1rem;
   font-weight: 600;
+}
+
+.birth-date-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.birth-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.birth-date-field label {
+  font-weight: 600;
+  color: #333;
+}
+
+.birth-date-select {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  min-width: 150px;
+}
+
+.birth-date-select:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+
+.differentiate-btn,
+.merge-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 auto;
+  display: block;
+}
+
+.differentiate-btn:hover,
+.merge-btn:hover {
+  background: #545b62;
+}
+
+.shared-birth-date-mode {
+  text-align: center;
+  padding: 2rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  margin-bottom: 2rem;
 }
 
 .navigation {

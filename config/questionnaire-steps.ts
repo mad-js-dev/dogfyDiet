@@ -24,6 +24,14 @@ export const questionnaireSteps: StepConfig[] = [
     questions: ['pet_gender', 'pet_neutered', 'pet_expecting'],
     canSkip: false,
     dependsOn: [1]
+  },
+  {
+    id: 3, // Internal 0-based ID
+    title: 'Pet Birth Date',
+    description: 'When was your pet born?',
+    questions: ['pet_birth_year', 'pet_birth_month'],
+    canSkip: false,
+    dependsOn: [2]
   }
 ]
 

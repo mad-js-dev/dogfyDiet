@@ -115,5 +115,43 @@ export const questionnaireQuestions: QuestionConfig[] = [
         action: 'show'
       }
     ]
+  },
+  {
+    id: 'pet_birth_year',
+    type: 'select',
+    question: 'What year was {petName} born?',
+    appliesTo: 'individual',
+    required: true,
+    options: (() => {
+      const currentYear = new Date().getFullYear()
+      const years = []
+      for (let year = currentYear; year >= currentYear - 20; year--) {
+        years.push(year.toString())
+      }
+      return years
+    })(),
+    validation: [
+      {
+        type: 'required',
+        message: 'Birth year is required'
+      }
+    ]
+  },
+  {
+    id: 'pet_birth_month',
+    type: 'select',
+    question: 'What month was {petName} born?',
+    appliesTo: 'individual',
+    required: true,
+    options: [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ],
+    validation: [
+      {
+        type: 'required',
+        message: 'Birth month is required'
+      }
+    ]
   }
 ]
