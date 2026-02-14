@@ -73,5 +73,47 @@ export const questionnaireQuestions: QuestionConfig[] = [
         message: 'Pet gender is required'
       }
     ]
+  },
+  {
+    id: 'pet_neutered',
+    type: 'select',
+    question: 'Is {petName} neutered/spayed?',
+    appliesTo: 'individual',
+    required: true,
+    options: ['Yes', 'No'],
+    validation: [
+      {
+        type: 'required',
+        message: 'Neutered status is required'
+      }
+    ]
+  },
+  {
+    id: 'pet_expecting',
+    type: 'select',
+    question: 'Is {petName} expecting?',
+    appliesTo: 'individual',
+    required: true,
+    options: ['Yes', 'No'],
+    validation: [
+      {
+        type: 'required',
+        message: 'Expecting status is required'
+      }
+    ],
+    dependencies: [
+      {
+        questionId: 'pet_gender',
+        operator: 'equals',
+        value: 'Female',
+        action: 'show'
+      },
+      {
+        questionId: 'pet_neutered',
+        operator: 'equals',
+        value: 'No',
+        action: 'show'
+      }
+    ]
   }
 ]

@@ -1,4 +1,4 @@
-import type { StepConfig } from '~/config/steps'
+import type { StepConfig } from '~/types/questionnaire'
 import { questionnaireQuestions } from './questionnaire-questions'
 
 export const questionnaireSteps: StepConfig[] = [
@@ -21,7 +21,7 @@ export const questionnaireSteps: StepConfig[] = [
     id: 2, // Internal 0-based ID
     title: 'Pet Gender',
     description: 'What is your pet\'s gender?',
-    questions: ['pet_gender'],
+    questions: ['pet_gender', 'pet_neutered', 'pet_expecting'],
     canSkip: false,
     dependsOn: [1]
   }

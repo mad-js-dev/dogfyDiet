@@ -1,4 +1,13 @@
 // Core types for the questionnaire system
+export interface StepConfig {
+  id: number
+  title: string
+  description: string
+  questions: string[]
+  canSkip?: boolean
+  dependsOn?: number[]
+}
+
 export interface QuestionConfig {
   id: string
   type: 'text' | 'select' | 'bool' | 'age' | 'range'
