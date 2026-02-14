@@ -58,7 +58,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     addAnswer('pet_count', count)
   }
 
-  const addAnswer = (questionId: string, value: any, petId?: string) => {
+  const addAnswer = (questionId: string, value: any, petId?: string | null) => {
     const existingIndex = answers.value.findIndex(
       a => a.questionId === questionId && a.petId === petId
     )
@@ -77,7 +77,59 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     }
   }
 
-  const getAnswer = (questionId: string, petId?: string) => {
+  const addSmartAnswer = (questionId: string, value: any, petId?: string | null) => {
+    if (!petId && petCount.value > 1) {
+      // Single answer for multiple pets - store as shared
+      addAnswer(questionId, value, null)
+    } else {
+      // Pet-specific answer
+      addAnswer(questionId, value, petId)
+    }
+  }
+
+  const differentiateAnswers = (questionId: string) => {
+    const sharedAnswer = answers.value.find(a => a.questionId === questionId && !a.petId)
+    if (sharedAnswer) {
+      // Propagate to all pets
+      for (let i = 1; i <= petCount.value; i++) {
+        const existingPetAnswer = answers.value.find(a => a.questionId === questionId && a.petId === `pet_${i}`)
+        if (!existingPetAnswer) {
+          addAnswer(questionId, sharedAnswer.value, `pet_${i}`)
+        }
+      }
+      // Remove shared answer
+      const sharedIndex = answers.value.findIndex(a => a.questionId === questionId && !a.petId)
+      if (sharedIndex >= 0) {
+        answers.value.splice(sharedIndex, 1)
+      }
+    }
+  }
+
+  const getAnswerForPet = (questionId: string, petId: string) => {
+    // Check for pet-specific answer first
+    const specific = answers.value.find(a => a.questionId === questionId && a.petId === petId)
+    if (specific) return specific
+    
+    // Fall back to shared answer
+    return answers.value.find(a => a.questionId === questionId && !a.petId)
+  }
+
+  const hasSharedAnswer = (questionId: string) => {
+    return answers.value.some(a => a.questionId === questionId && !a.petId)
+  }
+
+  const hasIndividualAnswers = (questionId: string) => {
+    return answers.value.some(a => a.questionId === questionId && a.petId)
+  }
+
+  const removeAnswer = (questionId: string, petId?: string | null) => {
+    const index = answers.value.findIndex(a => a.questionId === questionId && a.petId === petId)
+    if (index >= 0) {
+      answers.value.splice(index, 1)
+    }
+  }
+
+  const getAnswer = (questionId: string, petId?: string | null) => {
     return answers.value.find(a => 
       a.questionId === questionId && (petId ? a.petId === petId : !a.petId)
     )
@@ -123,7 +175,13 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     setStep,
     setPetCount,
     addAnswer,
+    addSmartAnswer,
+    differentiateAnswers,
     getAnswer,
+    getAnswerForPet,
+    hasSharedAnswer,
+    hasIndividualAnswers,
+    removeAnswer,
     getPetAnswers,
     getGlobalAnswers,
     clearAnswers,

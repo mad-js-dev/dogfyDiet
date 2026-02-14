@@ -29,7 +29,7 @@ export default defineNuxtRouteMiddleware((to) => {
   if (internalStep > 0) {
     // For step 1 (names), need breed selection
     if (internalStep === 1) {
-      const breedAnswer = questionnaire.answers.find(a => a.questionId === 'pet_breed_pet_1')
+      const breedAnswer = questionnaire.answers.find(a => a.questionId === 'pet_breed' && a.petId)
       if (!breedAnswer || !breedAnswer.value) {
         return navigateTo('/step/1')
       }
@@ -39,7 +39,8 @@ export default defineNuxtRouteMiddleware((to) => {
     if (internalStep === 2) {
       const currentPetCount = questionnaire.petCount || 1
       const petNames = questionnaire.answers.filter(a => 
-        a.questionId.startsWith('pet_name_pet_') && 
+        a.questionId === 'pet_name' && 
+        a.petId && 
         a.value && 
         a.value.trim() !== ''
       )

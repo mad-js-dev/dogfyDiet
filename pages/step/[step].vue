@@ -11,81 +11,79 @@
       <!-- Pet Race Step -->
       <div v-if="currentStepId === 0" class="pet-race-section">
         <h2>What is your pet's race?</h2>
-        <div class="breed-selection">
-          <label class="breed-label">Select your pet's breed:</label>
-          <select 
-            v-model="selectedBreed"
-            class="breed-select"
-            @change="handleBreedSelection"
-          >
-            <option value="" disabled>Select a breed...</option>
-            <option 
-              v-for="breed in allBreeds" 
-              :key="breed"
-              :value="breed"
-            >
-              {{ breed }}
-            </option>
-          </select>
-        </div>
+        <ConditionalAnswerRenderer 
+          :question="{
+            id: 'pet_breed',
+            type: 'select',
+            question: 'What is your pet\'s breed?',
+            appliesTo: 'individual',
+            required: true,
+            options: allBreeds,
+            validation: [
+              {
+                type: 'required',
+                message: 'Pet breed is required'
+              }
+            ]
+          }"
+          :initial-mode="'individual'"
+        />
       </div>
 
       <!-- Pet Names Step -->
       <div v-else-if="currentStepId === 1" class="pet-names-section">
         <h2>What are your pets' names?</h2>
-        <div v-for="petNum in petCount" :key="petNum" class="pet-section">
-          <h3>Pet {{ petNum }}</h3>
-          <QuestionRenderer 
-            :question="{
-              id: `pet_name_pet_${petNum}`,
-              type: 'text',
-              question: `What is Pet ${petNum}'s name?`,
-              appliesTo: 'individual',
-              required: true,
-              validation: [
-                {
-                  type: 'required',
-                  message: 'Pet name is required'
-                },
-                {
-                  type: 'minLength',
-                  value: 2,
-                  message: 'Pet name must be at least 2 characters'
-                }
-              ]
-            }"
-            :pet-id="`pet_${petNum}`"
-            :model-value="getAnswerValue(`pet_name_pet_${petNum}`, `pet_${petNum}`)"
-            @answer="handleAnswer"
-          />
+        <ConditionalAnswerRenderer 
+          :question="{
+            id: 'pet_name',
+            type: 'text',
+            question: 'What is your pet\'s name?',
+            appliesTo: 'individual',
+            required: true,
+            validation: [
+              {
+                type: 'required',
+                message: 'Pet name is required'
+              },
+              {
+                type: 'minLength',
+                value: 2,
+                message: 'Pet name must be at least 2 characters'
+              }
+            ]
+          }"
+          :initial-mode="'individual'"
+        />
+        
+        <div class="add-pet-section">
+          <button 
+            @click="addPet"
+            class="add-pet-btn"
+          >
+            + Add Another Pet
+          </button>
         </div>
       </div>
 
       <!-- Pet Gender Step -->
       <div v-else-if="currentStepId === 2" class="pet-gender-section">
         <h2>What is your pet's gender?</h2>
-        <div v-for="petNum in petCount" :key="petNum" class="pet-section">
-          <h3>Pet {{ petNum }}</h3>
-          <QuestionRenderer 
-            :question="{
-              id: `pet_gender_pet_${petNum}`,
-              type: 'select',
-              question: `What is Pet ${petNum}'s gender?`,
-              appliesTo: 'individual',
-              required: true,
-              options: ['Male', 'Female'],
-              validation: [
-                {
-                  type: 'required',
-                  message: 'Pet gender is required'
-                }
-              ]
-            }"
-            :pet-id="`pet_${petNum}`"
-            :model-value="getAnswerValue(`pet_gender_pet_${petNum}`, `pet_${petNum}`)"
-            @answer="handleAnswer"
-          />
-        </div>
+        <ConditionalAnswerRenderer 
+          :question="{
+            id: 'pet_gender',
+            type: 'select',
+            question: 'What is your pet\'s gender?',
+            appliesTo: 'individual',
+            required: true,
+            options: ['Male', 'Female'],
+            validation: [
+              {
+                type: 'required',
+                message: 'Pet gender is required'
+              }
+            ]
+          }"
+        />
       </div>
 
       <!-- Navigation -->
@@ -116,13 +114,11 @@ import { questionnaireSteps, getStepQuestions, shouldShowQuestion, urlToInternal
 import { questionnaireQuestions } from '~/config/questionnaire-questions'
 import QuestionRenderer from '~/components/QuestionRenderer.vue'
 import StepNavigation from '~/components/StepNavigation.vue'
+import ConditionalAnswerRenderer from '~/components/ConditionalAnswerRenderer.vue'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
 const route = useRoute()
 const router = useRouter()
-
-// Breed selection state
-const selectedBreed = ref('')
 
 const allBreeds = [
   // Dog Breeds
@@ -159,16 +155,6 @@ const allBreeds = [
   'Selkirk Rex'
 ]
 
-const handleBreedSelection = () => {
-  if (selectedBreed.value) {
-    // Set pet count to 1 if not set
-    if (questionnaire.petCount === 0) {
-      questionnaire.setPetCount(1)
-    }
-    handleAnswer(selectedBreed.value, 'pet_breed_pet_1', 'pet_1')
-  }
-}
-
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
   const urlStep = parseInt(route.params.step as string) || 1
@@ -185,40 +171,24 @@ const answers = computed(() => questionnaire.answers)
 // Computed
 const canProceed = computed(() => {
   if (currentStepId.value === 0) {
-    // Race step - need breed selection for each pet
-    if (petCount.value === 1) {
-      // Single pet mode - check for shared breed answer
-      const breedAnswer = questionnaire.getAnswer('pet_breed_pet_1', 'pet_1')
-      const singlePetResult = breedAnswer && breedAnswer.value && breedAnswer.value.trim() !== ''
-      return singlePetResult
-    } else {
-      // Multiple pets mode - check for individual breed answers
-      const currentPetCount = petCount.value || 1
-      const breedAnswers = answers.value.filter(a => 
-        a.questionId.startsWith('pet_breed_pet_') && 
-          a.petId && 
-          a.value && 
-          a.value.trim() !== ''
-      )
-      
-      // Allow proceeding if first pet has breed, even if new pets don't have breeds yet
-      const firstPetHasBreed = answers.value.some(a => 
-        a.questionId === 'pet_breed_pet_1' && 
-        a.petId === 'pet_1' && 
-        a.value && 
-        a.value.trim() !== ''
-      )
-      
-      const result = firstPetHasBreed || breedAnswers.length === currentPetCount
-      return result
-    }
+    // Breed step - check for breed answers
+    const currentPetCount = Math.max(petCount.value, 1)
+    const breedAnswers = answers.value.filter(a => 
+      a.questionId === 'pet_breed' && 
+      a.petId && 
+      a.value && 
+      a.value.trim() !== ''
+    )
+    const result = breedAnswers.length === currentPetCount
+    return result
   }
   
   if (currentStepId.value === 1) {
-    // Names step - need pet names (default to 1 pet if not set)
-    const currentPetCount = petCount.value || 1
+    // Names step - need pet names (always individual since names are unique)
+    const currentPetCount = Math.max(petCount.value, 1) // Ensure at least 1
     const petNames = answers.value.filter(a => 
-      a.questionId.startsWith('pet_name_pet_') && 
+      a.questionId === 'pet_name' && 
+        a.petId && 
         a.value && 
         a.value.trim() !== ''
     )
@@ -227,12 +197,20 @@ const canProceed = computed(() => {
   }
   
   if (currentStepId.value === 2) {
-    // Gender step - need gender for each pet
+    // Gender step - check for either shared answer or individual answers
+    const hasSharedGender = questionnaire.hasSharedAnswer('pet_gender')
+    
+    if (hasSharedGender) {
+      return true // Shared answer is sufficient
+    }
+    
+    // Check individual answers
     const currentPetCount = petCount.value || 1
     const petGenders = answers.value.filter(a => 
-      a.questionId.startsWith('pet_gender_pet_') && 
-        a.value && 
-        a.value.trim() !== ''
+      a.questionId === 'pet_gender' && 
+      a.petId && 
+      a.value && 
+      a.value.trim() !== ''
     )
     const result = petGenders.length === currentPetCount
     return result
@@ -244,6 +222,11 @@ const canProceed = computed(() => {
 // Methods
 const setPetCount = (count: number) => {
   questionnaire.setPetCount(count)
+}
+
+const addPet = () => {
+  const newPetCount = petCount.value + 1
+  questionnaire.setPetCount(newPetCount)
 }
 
 const getAnswerValue = (questionId: string, petId?: string) => {
@@ -288,6 +271,11 @@ watch(() => route.params.step, (newStep) => {
   const urlStep = parseInt(newStep as string) || 1
   const internalStep = urlToInternalStep(urlStep)
   questionnaire.setStep(Math.max(0, Math.min(internalStep, 2)))
+  
+  // Ensure pet count is at least 1 when starting questionnaire
+  if (questionnaire.petCount === 0) {
+    questionnaire.setPetCount(1)
+  }
 }, { immediate: true })
 
 // Page metadata
@@ -337,38 +325,6 @@ definePageMeta({
   text-align: center;
 }
 
-.breed-selection {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.breed-label {
-  font-weight: 600;
-  color: #333;
-  text-align: left;
-}
-
-.breed-select {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.breed-select:focus {
-  outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-}
-
-.breed-select:hover {
-  border-color: #0066cc;
-}
-
 .pet-section {
   margin-bottom: 2rem;
   padding: 1.5rem;
@@ -380,6 +336,34 @@ definePageMeta({
 .pet-section h3 {
   color: #0066cc;
   margin-bottom: 1rem;
+}
+
+.add-pet-section {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.add-pet-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.add-pet-btn:hover {
+  background: linear-gradient(135deg, #218838, #1ea085);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.add-pet-btn:active {
+  transform: translateY(0);
 }
 
 .navigation {
