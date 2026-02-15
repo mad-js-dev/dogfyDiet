@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import { questionnaireSteps } from '~/config/questionnaire-steps'
 
 export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-questionnaire', () => {
   // State
@@ -14,7 +16,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   })
 
   const progressPercentage = computed(() => {
-    const totalSteps = 3 // Total number of steps (0-2)
+    const totalSteps = questionnaireSteps.length // Total number of steps
     return Math.round((currentStep.value / (totalSteps - 1)) * 100)
   })
 

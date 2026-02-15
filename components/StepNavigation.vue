@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { questionnaireSteps } from '~/config/questionnaire-steps'
 
 interface Props {
@@ -36,7 +37,7 @@ const router = useRouter()
 const steps = computed(() => questionnaireSteps)
 
 const progressPercentage = computed(() => {
-  const totalSteps = 3
+  const totalSteps = questionnaireSteps.length
   return Math.round((props.currentStep / (totalSteps - 1)) * 100)
 })
 

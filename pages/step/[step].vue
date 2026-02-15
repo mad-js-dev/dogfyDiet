@@ -530,6 +530,86 @@
         </div>
       </div>
 
+      <!-- Pet Gastronomic Profile Step -->
+      <div v-else-if="currentStepId === 7" class="pet-gastronomic-profile-section">
+        <h2>What is your pet{{ Math.max(petCount, 1) > 1 ? 's' : '' }} gastronomic profile?</h2>
+        
+        <!-- Shared Gastronomic Profile Mode (Default) -->
+        <div v-if="!showIndividualGastronomicProfiles" class="shared-gastronomic-profile-mode">
+          <div class="gastronomic-profile-inputs">
+            <div class="gastronomic-profile-field">
+              <label>Select gastronomic profile for all pets:</label>
+              <select v-model="sharedGastronomicProfile" @change="handleSharedGastronomicProfileChange" class="gastronomic-profile-select">
+                <option value="" disabled>Select gastronomic profile</option>
+                <option value="The selective one: has a demanding palate, often struggles to finish their portion and gets tired of food">
+                  The selective one: has a demanding palate, often struggles to finish their portion and gets tired of food
+                </option>
+                <option value="The gourmet: loves to try new flavors, but isn't satisfied with just anything">
+                  The gourmet: loves to try new flavors, but isn't satisfied with just anything
+                </option>
+                <option value="The glutton: devours all types of food as if they'll never taste another bite again">
+                  The glutton: devours all types of food as if they'll never taste another bite again
+                </option>
+              </select>
+            </div>
+          </div>
+          
+          <button 
+            v-if="Math.max(petCount, 1) > 1"
+            @click="showIndividualGastronomicProfiles = true"
+            class="differentiate-btn"
+          >
+            Are your pets different in this aspect?
+          </button>
+        </div>
+        
+        <!-- Individual Gastronomic Profile Mode -->
+        <div v-else class="individual-gastronomic-profile-mode">
+          <div class="pet-answers-grid">
+            <div 
+              v-for="petNum in Math.max(petCount, 1)" 
+              :key="petNum" 
+              class="pet-answer-section"
+            >
+              <h3>{{ petDisplayName(petNum) }}</h3>
+              
+              <!-- Gastronomic Profile Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_gastronomic_profile',
+                  type: 'select',
+                  question: 'What is ' + petDisplayName(petNum) + '\'s gastronomic profile?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: [
+                    'The selective one: has a demanding palate, often struggles to finish their portion and gets tired of food',
+                    'The gourmet: loves to try new flavors, but isn\'t satisfied with just anything',
+                    'The glutton: devours all types of food as if they\'ll never taste another bite again'
+                  ],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Gastronomic profile is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_gastronomic_profile', petNum)"
+                @answer="handleAnswer"
+              />
+            </div>
+          </div>
+          
+          <button 
+            v-if="Math.max(petCount, 1) > 1"
+            @click="showIndividualGastronomicProfiles = false"
+            class="merge-btn"
+          >
+            Apply same gastronomic profile to all pets
+          </button>
+        </div>
+      </div>
+
       <!-- Navigation -->
       <div class="navigation">
         <button 
@@ -545,7 +625,7 @@
           :disabled="!canProceed"
           class="nav-btn primary"
         >
-          {{ currentStepId === 6 ? 'Submit' : 'Next' }}
+          {{ currentStepId === 7 ? 'Submit' : 'Next' }}
         </button>
       </div>
     </div>
@@ -633,11 +713,15 @@ const showIndividualPathologies = ref(false)
 const sharedHasPathology = ref('')
 const sharedPathology = ref('')
 
+// Gastronomic profile mode state
+const showIndividualGastronomicProfiles = ref(false)
+const sharedGastronomicProfile = ref('')
+
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
   const urlStep = parseInt(route.params.step as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  return Math.max(0, Math.min(internalStep, 6)) // Clamp between 0 and 6
+  return Math.max(0, Math.min(internalStep, 7)) // Clamp between 0 and 7
 })
 
 // State
@@ -847,6 +931,29 @@ const canProceed = computed(() => {
     return hasAllPathologyAnswers
   }
   
+  if (currentStepId.value === 7) {
+    // Gastronomic profile step - check for gastronomic profile answers
+    const currentPetCount = Math.max(petCount.value, 1)
+    
+    // Check gastronomic profile answers
+    const petGastronomicProfiles = answers.value.filter(a => 
+      a.questionId === 'pet_gastronomic_profile' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+    )
+    
+    const hasAllGastronomicProfileAnswers = petGastronomicProfiles.length === currentPetCount
+    
+    // For shared mode: just need shared value to be set
+    if (!showIndividualGastronomicProfiles.value) {
+      return sharedGastronomicProfile.value !== ''
+    }
+    
+    // For individual mode: need all pets to have answers
+    return hasAllGastronomicProfileAnswers
+  }
+  
   return false
 })
 
@@ -935,6 +1042,16 @@ const handleSharedPathologyChange = () => {
   }
 }
 
+const handleSharedGastronomicProfileChange = () => {
+  if (sharedGastronomicProfile.value) {
+    // Apply shared gastronomic profile to all pets
+    const currentPetCount = Math.max(petCount.value, 1)
+    for (let i = 1; i <= currentPetCount; i++) {
+      questionnaire.addAnswer('pet_gastronomic_profile', sharedGastronomicProfile.value, `pet_${i}`)
+    }
+  }
+}
+
 const shouldShowExpectingQuestion = (petNum: number) => {
   const genderAnswer = questionnaire.getAnswer('pet_gender', `pet_${petNum}`)
   const neuteredAnswer = questionnaire.getAnswer('pet_neutered', `pet_${petNum}`)
@@ -967,11 +1084,11 @@ const previousStep = () => {
 
 const nextStep = () => {
   if (canProceed.value) {
-    if (currentStepId.value < 6) {
+    if (currentStepId.value < 7) {
       const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
       router.push(`/step/${nextUrlStep}`)
     } else {
-      // Submit questionnaire
+      // Gastronomic profile is the last step, submit questionnaire
       submitQuestionnaire()
     }
   }
@@ -988,7 +1105,7 @@ const submitQuestionnaire = () => {
 watch(() => route.params.step, (newStep) => {
   const urlStep = parseInt(newStep as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  questionnaire.setStep(Math.max(0, Math.min(internalStep, 6)))
+  questionnaire.setStep(Math.max(0, Math.min(internalStep, 7)))
   
   // Ensure pet count is at least 1 when starting questionnaire
   if (questionnaire.petCount === 0) {
@@ -1328,6 +1445,51 @@ definePageMeta({
 }
 
 .individual-pathology-mode .pathology-select {
+  margin-top: 1rem;
+}
+
+/* Gastronomic Profile Step Styles */
+.gastronomic-profile-select {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  width: 100%;
+  min-width: 300px;
+}
+
+.gastronomic-profile-select:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+
+.gastronomic-profile-field {
+  margin-bottom: 1rem;
+}
+
+.gastronomic-profile-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.shared-gastronomic-profile-mode {
+  text-align: center;
+  padding: 2rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  margin-bottom: 2rem;
+}
+
+.gastronomic-profile-inputs {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.individual-gastronomic-profile-mode .gastronomic-profile-select {
   margin-top: 1rem;
 }
 

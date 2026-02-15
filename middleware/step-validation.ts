@@ -20,7 +20,7 @@ export default defineNuxtRouteMiddleware((to) => {
   const internalStep = urlToInternalStep(urlStep)
   
   // Validate step range (0-6 internally, 1-7 in URL)
-  if (internalStep < 0 || internalStep > 6) {
+  if (internalStep < 0 || internalStep > 7) {
     // Redirect to first step if invalid
     return navigateTo('/step/1')
   }
@@ -102,6 +102,20 @@ export default defineNuxtRouteMiddleware((to) => {
       )
       if (petActivityLevels.length !== currentPetCount) {
         return navigateTo('/step/6')
+      }
+    }
+    
+    // For step 7 (gastronomic profile), need pathology answers
+    if (internalStep === 7) {
+      const currentPetCount = questionnaire.petCount || 1
+      const petHasPathology = questionnaire.answers.filter(a => 
+        a.questionId === 'pet_has_pathology' && 
+        a.petId && 
+        a.value && 
+        a.value.trim() !== ''
+      )
+      if (petHasPathology.length !== currentPetCount) {
+        return navigateTo('/step/7')
       }
     }
   }

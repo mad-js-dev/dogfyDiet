@@ -95,7 +95,7 @@
           :disabled="!canProceed"
           class="nav-btn primary"
         >
-          {{ currentStepId === 2 ? 'Submit' : 'Next' }}
+          {{ currentStepId === questionnaireSteps.length - 1 ? 'Submit' : 'Next' }}
         </button>
       </div>
     </div>
@@ -103,6 +103,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import { questionnaireSteps, getStepQuestions, shouldShowQuestion } from '~/config/questionnaire-steps'
 import { questionnaireQuestions } from '~/config/questionnaire-questions'
@@ -121,7 +122,7 @@ const answers = computed(() => questionnaire.answers)
 const globalAnswers = computed(() => answers.value.filter(a => !a.petId))
 
 const progressPercentage = computed(() => {
-  const totalSteps = 3 // Total number of steps (0-2)
+  const totalSteps = questionnaireSteps.length // Total number of steps
   return Math.round((currentStepId.value / (totalSteps - 1)) * 100)
 })
 
@@ -192,11 +193,11 @@ const previousStep = () => {
 
 const nextStep = () => {
   if (canProceed.value) {
-    if (currentStepId.value < 2) {
+    if (currentStepId.value < questionnaireSteps.length - 1) {
       questionnaire.setStep(currentStepId.value + 1)
     } else {
       // Submit questionnaire
-      submitQuestionnaire()
+      questionnaire.submitQuestionnaire()
     }
   }
 }
