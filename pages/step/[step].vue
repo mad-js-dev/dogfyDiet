@@ -59,78 +59,165 @@
       <!-- Pet Gender Step -->
       <div v-else-if="currentStepId === 2" class="pet-gender-section">
         <h2>What is your pet's gender?</h2>
-        <div class="pet-answers-grid">
-          <div 
-            v-for="petNum in Math.max(petCount, 1)" 
-            :key="petNum" 
-            class="pet-answer-section"
-          >
-            <h3>{{ petDisplayName(petNum) }}</h3>
-            
-            <!-- Gender Question -->
-            <QuestionRenderer 
-              :question="{
-                id: 'pet_gender',
-                type: 'select',
-                question: 'What is your pet\'s gender?',
-                appliesTo: 'individual',
-                required: true,
-                options: ['Male', 'Female'],
-                validation: [
-                  {
-                    type: 'required',
-                    message: 'Pet gender is required'
-                  }
-                ]
-              }"
-              :pet-id="`pet_${petNum}`"
-              :model-value="getAnswerValue('pet_gender', petNum)"
-              @answer="handleAnswer"
-            />
-            
-            <!-- Neutered Question -->
-            <QuestionRenderer 
-              :question="{
-                id: 'pet_neutered',
-                type: 'select',
-                question: 'Is ' + petDisplayName(petNum) + ' neutered/spayed?',
-                appliesTo: 'individual',
-                required: true,
-                options: ['Yes', 'No'],
-                validation: [
-                  {
-                    type: 'required',
-                    message: 'Neutered status is required'
-                  }
-                ]
-              }"
-              :pet-id="`pet_${petNum}`"
-              :model-value="getAnswerValue('pet_neutered', petNum)"
-              @answer="handleAnswer"
-            />
-            
-            <!-- Expecting Question - Conditional -->
-            <QuestionRenderer 
-              v-if="shouldShowExpectingQuestion(petNum)"
-              :question="{
-                id: 'pet_expecting',
-                type: 'select',
-                question: 'Is ' + petDisplayName(petNum) + ' expecting?',
-                appliesTo: 'individual',
-                required: true,
-                options: ['Yes', 'No'],
-                validation: [
-                  {
-                    type: 'required',
-                    message: 'Expecting status is required'
-                  }
-                ]
-              }"
-              :pet-id="`pet_${petNum}`"
-              :model-value="getAnswerValue('pet_expecting', petNum)"
-              @answer="handleAnswer"
-            />
+        
+        <!-- Shared Mode -->
+        <div v-if="!showIndividualGenders" class="shared-answer-mode">
+          <!-- Gender Question -->
+          <QuestionRenderer 
+            :question="{
+              id: 'pet_gender',
+              type: 'select',
+              question: 'What is your pet\'s gender?',
+              appliesTo: 'all',
+              required: true,
+              options: ['Male', 'Female'],
+              validation: [
+                {
+                  type: 'required',
+                  message: 'Pet gender is required'
+                }
+              ]
+            }"
+            :model-value="getAnswerValue('pet_gender')"
+            @answer="handleAnswer"
+          />
+          
+          <!-- Shared Neutered Question -->
+          <QuestionRenderer 
+            :question="{
+              id: 'pet_neutered',
+              type: 'select',
+              question: 'Are your pets neutered/spayed?',
+              appliesTo: 'all',
+              required: true,
+              options: ['Yes', 'No'],
+              validation: [
+                {
+                  type: 'required',
+                  message: 'Neutered status is required'
+                }
+              ]
+            }"
+            :model-value="getAnswerValue('pet_neutered')"
+            @answer="handleAnswer"
+          />
+          
+          <!-- Shared Expecting Question (only if gender is female and neutered is no) -->
+          <QuestionRenderer 
+            v-if="shouldShowSharedExpectingQuestion()"
+            :question="{
+              id: 'pet_expecting',
+              type: 'select',
+              question: 'Are your pets expecting?',
+              appliesTo: 'all',
+              required: true,
+              options: ['Yes', 'No'],
+              validation: [
+                {
+                  type: 'required',
+                  message: 'Expecting status is required'
+                }
+              ]
+            }"
+            :model-value="getAnswerValue('pet_expecting')"
+            @answer="handleAnswer"
+          />
+        </div>
+        
+        <!-- Individual Mode -->
+        <div v-else class="individual-answer-mode">
+          <div class="pet-answers-grid">
+            <div 
+              v-for="petNum in petCount" 
+              :key="petNum" 
+              class="pet-answer-section"
+            >
+              <h3>{{ petDisplayName(petNum) }}</h3>
+              
+              <!-- Gender Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_gender',
+                  type: 'select',
+                  question: 'What is ' + petDisplayName(petNum) + '\'s gender?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: ['Male', 'Female'],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Pet gender is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_gender', petNum)"
+                @answer="handleAnswer"
+              />
+              
+              <!-- Neutered Question -->
+              <QuestionRenderer 
+                :question="{
+                  id: 'pet_neutered',
+                  type: 'select',
+                  question: 'Is ' + petDisplayName(petNum) + ' neutered/spayed?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: ['Yes', 'No'],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Neutered status is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_neutered', petNum)"
+                @answer="handleAnswer"
+              />
+              
+              <!-- Expecting Question - Conditional -->
+              <QuestionRenderer 
+                v-if="shouldShowExpectingQuestion(petNum)"
+                :question="{
+                  id: 'pet_expecting',
+                  type: 'select',
+                  question: 'Is ' + petDisplayName(petNum) + ' expecting?',
+                  appliesTo: 'individual',
+                  required: true,
+                  options: ['Yes', 'No'],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Expecting status is required'
+                    }
+                  ]
+                }"
+                :pet-id="`pet_${petNum}`"
+                :model-value="getAnswerValue('pet_expecting', petNum)"
+                @answer="handleAnswer"
+              />
+            </div>
           </div>
+        </div>
+        
+        <!-- Differentiate Button -->
+        <div class="answer-actions" v-if="petCount > 1">
+          <button 
+            v-if="!showIndividualGenders"
+            @click="switchToIndividualGenders"
+            class="differentiate-btn"
+          >
+            Are your pets different in this aspect?
+          </button>
+          
+          <button 
+            v-else
+            @click="switchToSharedGenders"
+            class="merge-btn"
+          >
+            Apply same answer to all pets
+          </button>
         </div>
       </div>
 
@@ -773,6 +860,9 @@ const monthOptions = [
   'July', 'August', 'September', 'October', 'November', 'December'
 ]
 
+// Gender mode state
+const showIndividualGenders = ref(false)
+
 // Birth date mode state
 const showIndividualBirthDates = ref(false)
 const sharedBirthYear = ref('')
@@ -813,7 +903,7 @@ const answers = computed(() => questionnaire.answers)
 const canProceed = computed(() => {
   if (currentStepId.value === 0) {
     // Breed step - check for breed answers
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     const breedAnswers = answers.value.filter(a => 
       a.questionId === 'pet_breed' && 
       a.petId && 
@@ -826,8 +916,8 @@ const canProceed = computed(() => {
   
   if (currentStepId.value === 1) {
     // Names step - need pet names (always individual since names are unique)
-    // and breeds for pets 2+ (pet 1 breed is from step 1)
-    const currentPetCount = Math.max(petCount.value, 1) // Ensure at least 1
+    // and breeds for pet 2 (pet 1 breed is from step 1)
+    const currentPetCount = petCount.value
     
     // Check pet names
     const petNames = answers.value.filter(a => 
@@ -837,72 +927,84 @@ const canProceed = computed(() => {
         a.value.trim() !== ''
     )
     
-    // Check breeds for pets 2+
-    const petBreeds = answers.value.filter(a => 
-      a.questionId === 'pet_breed' && 
-        a.petId && 
-        a.value && 
-        a.value.trim() !== ''
-    )
-    
     // For single pet: just need name (breed from step 1)
     if (currentPetCount === 1) {
-      return petNames.length === currentPetCount
+      return petNames.length === 1
     }
     
-    // For multiple pets: need names for all + breeds for pets 2+
-    const hasAllNames = petNames.length === currentPetCount
-    const hasBreedsForPets2Plus = petBreeds.length >= (currentPetCount - 1)
+    // For two pets: need names for both + breed for pet 2
+    const hasBothNames = petNames.length === 2
     
-    return hasAllNames && hasBreedsForPets2Plus
+    // Check breed for pet 2
+    const pet2Breed = answers.value.find(a => 
+      a.questionId === 'pet_breed' && 
+      a.petId === 'pet_2' && 
+      a.value && 
+      a.value.trim() !== ''
+    )
+    
+    const hasPet2Breed = !!pet2Breed
+    
+    return hasBothNames && hasPet2Breed
   }
   
   if (currentStepId.value === 2) {
     // Gender step - check for gender, neutered, and expecting answers
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     
-    // Check gender answers
-    const petGenders = answers.value.filter(a => 
-      a.questionId === 'pet_gender' && 
+    if (!showIndividualGenders.value) {
+      // Shared mode: check for shared answers
+      const genderAnswer = questionnaire.getAnswer('pet_gender')
+      const neuteredAnswer = questionnaire.getAnswer('pet_neutered')
+      const hasGenderAnswer = genderAnswer && genderAnswer.value && genderAnswer.value.trim() !== ''
+      const hasNeuteredAnswer = neuteredAnswer && neuteredAnswer.value && neuteredAnswer.value.trim() !== ''
+      
+      // Check expecting answer only if gender is female and neutered is no
+      let hasExpectingAnswer = true
+      if (shouldShowSharedExpectingQuestion()) {
+        const expectingAnswer = questionnaire.getAnswer('pet_expecting')
+        hasExpectingAnswer = expectingAnswer && expectingAnswer.value && expectingAnswer.value.trim() !== ''
+      }
+      
+      return hasGenderAnswer && hasNeuteredAnswer && hasExpectingAnswer
+    } else {
+      // Individual mode: check for individual answers
+      const petGenders = answers.value.filter(a => 
+        a.questionId === 'pet_gender' && 
         a.petId && 
         a.value && 
         a.value.trim() !== ''
-    )
-    
-    // Check neutered answers
-    const petNeutered = answers.value.filter(a => 
-      a.questionId === 'pet_neutered' && 
+      )
+      
+      const petNeutered = answers.value.filter(a => 
+        a.questionId === 'pet_neutered' && 
         a.petId && 
         a.value && 
         a.value.trim() !== ''
-    )
-    
-    // Check expecting answers (only for female pets that are not neutered)
-    const petExpecting = answers.value.filter(a => 
-      a.questionId === 'pet_expecting' && 
-        a.petId && 
-        a.value && 
-        a.value.trim() !== ''
-    )
-    
-    const hasAllGenders = petGenders.length === currentPetCount
-    const hasAllNeutered = petNeutered.length === currentPetCount
-    
-    // For expecting: only check female pets that are not neutered
-    const femaleNotNeuteredCount = answers.value.filter(a => 
-      a.questionId === 'pet_gender' && 
-        a.petId && 
-        a.value === 'Female'
-    ).length
-    
-    const hasRequiredExpecting = petExpecting.length === femaleNotNeuteredCount
-    
-    return hasAllGenders && hasAllNeutered && hasRequiredExpecting
+      )
+      
+      const hasAllGenders = petGenders.length === currentPetCount
+      const hasAllNeutered = petNeutered.length === currentPetCount
+      
+      // Check expecting answers only for pets that need them
+      let hasRequiredExpecting = true
+      for (let i = 1; i <= currentPetCount; i++) {
+        if (shouldShowExpectingQuestion(i)) {
+          const expectingAnswer = questionnaire.getAnswer('pet_expecting', `pet_${i}`)
+          if (!expectingAnswer || !expectingAnswer.value || expectingAnswer.value.trim() === '') {
+            hasRequiredExpecting = false
+            break
+          }
+        }
+      }
+      
+      return hasAllGenders && hasAllNeutered && hasRequiredExpecting
+    }
   }
   
   if (currentStepId.value === 3) {
     // Birth date step - check for birth year and month answers
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     
     // Check birth year answers
     const petBirthYears = answers.value.filter(a => 
@@ -934,7 +1036,7 @@ const canProceed = computed(() => {
   
   if (currentStepId.value === 4) {
     // Body shape step - check for body shape and weight answers
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     
     // Check body shape answers
     const petBodyShapes = answers.value.filter(a => 
@@ -966,7 +1068,7 @@ const canProceed = computed(() => {
   
   if (currentStepId.value === 5) {
     // Activity level step - check for activity level answers
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     
     // Check activity level answers
     const petActivityLevels = answers.value.filter(a => 
@@ -989,7 +1091,7 @@ const canProceed = computed(() => {
   
   if (currentStepId.value === 6) {
     // Pathology step - check for pathology answers
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     
     // Check pathology boolean answers
     const petHasPathology = answers.value.filter(a => 
@@ -1012,7 +1114,7 @@ const canProceed = computed(() => {
   
   if (currentStepId.value === 7) {
     // Gastronomic profile step - check for gastronomic profile answers
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     
     // Check gastronomic profile answers
     const petGastronomicProfiles = answers.value.filter(a => 
@@ -1085,7 +1187,7 @@ const calculatePetAge = (petNum: number) => {
 const handleSharedBirthDateChange = () => {
   if (sharedBirthYear.value && sharedBirthMonth.value) {
     // Apply shared birth date to all pets
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     for (let i = 1; i <= currentPetCount; i++) {
       questionnaire.addAnswer('pet_birth_year', sharedBirthYear.value, `pet_${i}`)
       questionnaire.addAnswer('pet_birth_month', sharedBirthMonth.value, `pet_${i}`)
@@ -1096,7 +1198,7 @@ const handleSharedBirthDateChange = () => {
 const handleSharedBodyShapeChange = () => {
   if (sharedBodyShape.value) {
     // Apply shared body shape to all pets
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     for (let i = 1; i <= currentPetCount; i++) {
       questionnaire.addAnswer('pet_body_shape', sharedBodyShape.value, `pet_${i}`)
     }
@@ -1106,7 +1208,7 @@ const handleSharedBodyShapeChange = () => {
 const handleSharedWeightChange = () => {
   if (sharedWeight.value) {
     // Apply shared weight to all pets
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     for (let i = 1; i <= currentPetCount; i++) {
       questionnaire.addAnswer('pet_weight', sharedWeight.value, `pet_${i}`)
     }
@@ -1116,7 +1218,7 @@ const handleSharedWeightChange = () => {
 const handleSharedActivityLevelChange = () => {
   if (sharedActivityLevel.value) {
     // Apply shared activity level to all pets
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     for (let i = 1; i <= currentPetCount; i++) {
       questionnaire.addAnswer('pet_activity_level', sharedActivityLevel.value, `pet_${i}`)
     }
@@ -1124,7 +1226,7 @@ const handleSharedActivityLevelChange = () => {
 }
 
 const handleSharedPathologyChange = () => {
-  const currentPetCount = Math.max(petCount.value, 1)
+  const currentPetCount = petCount.value
   for (let i = 1; i <= currentPetCount; i++) {
     questionnaire.addAnswer('pet_has_pathology', sharedHasPathology.value, `pet_${i}`)
     if (sharedHasPathology.value === 'Yes' && sharedPathology.value) {
@@ -1136,7 +1238,7 @@ const handleSharedPathologyChange = () => {
 const handleSharedGastronomicProfileChange = () => {
   if (sharedGastronomicProfile.value) {
     // Apply shared gastronomic profile to all pets
-    const currentPetCount = Math.max(petCount.value, 1)
+    const currentPetCount = petCount.value
     for (let i = 1; i <= currentPetCount; i++) {
       questionnaire.addAnswer('pet_gastronomic_profile', sharedGastronomicProfile.value, `pet_${i}`)
     }
@@ -1151,7 +1253,86 @@ const shouldShowExpectingQuestion = (petNum: number) => {
   return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
 }
 
-const getAnswerValue = (questionId: string, petNum: number) => {
+const shouldShowSharedExpectingQuestion = () => {
+  const genderAnswer = questionnaire.getAnswer('pet_gender')
+  const neuteredAnswer = questionnaire.getAnswer('pet_neutered')
+  
+  // Show expecting question only for female pets that are not neutered
+  return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
+}
+
+const switchToIndividualGenders = () => {
+  showIndividualGenders.value = true
+  
+  // Migrate shared answers to individual mode
+  const sharedGender = questionnaire.getAnswer('pet_gender')
+  const sharedNeutered = questionnaire.getAnswer('pet_neutered')
+  const sharedExpecting = questionnaire.getAnswer('pet_expecting')
+  
+  // Set answers for pet 1 (keep existing shared answers)
+  if (sharedGender) {
+    questionnaire.addAnswer('pet_gender', sharedGender.value, 'pet_1')
+  }
+  if (sharedNeutered) {
+    questionnaire.addAnswer('pet_neutered', sharedNeutered.value, 'pet_1')
+  }
+  if (sharedExpecting) {
+    questionnaire.addAnswer('pet_expecting', sharedExpecting.value, 'pet_1')
+  }
+  
+  // Remove shared answers (they're now individual)
+  questionnaire.removeAnswer('pet_gender')
+  questionnaire.removeAnswer('pet_neutered')
+  questionnaire.removeAnswer('pet_expecting')
+  
+  // Note: Pet 2+ will start with empty answers (as expected)
+}
+
+const switchToSharedGenders = () => {
+  console.log('switchToSharedGenders called')
+  
+  // Always switch to shared mode using first pet's answers
+  // User understands this may overwrite individual differences
+  showIndividualGenders.value = false
+  
+  const firstPetGender = questionnaire.getAnswer('pet_gender', 'pet_1')
+  const firstPetNeutered = questionnaire.getAnswer('pet_neutered', 'pet_1')
+  const firstPetExpecting = questionnaire.getAnswer('pet_expecting', 'pet_1')
+  
+  console.log('Using pet 1 answers:', {
+    gender: firstPetGender?.value,
+    neutered: firstPetNeutered?.value,
+    expecting: firstPetExpecting?.value
+  })
+  
+  // Set shared answers from pet 1
+  if (firstPetGender) {
+    questionnaire.addAnswer('pet_gender', firstPetGender.value)
+  }
+  if (firstPetNeutered) {
+    questionnaire.addAnswer('pet_neutered', firstPetNeutered.value)
+  }
+  if (firstPetExpecting) {
+    questionnaire.addAnswer('pet_expecting', firstPetExpecting.value)
+  }
+  
+  // Remove all individual answers
+  for (let i = 1; i <= petCount.value; i++) {
+    questionnaire.removeAnswer('pet_gender', `pet_${i}`)
+    questionnaire.removeAnswer('pet_neutered', `pet_${i}`)
+    questionnaire.removeAnswer('pet_expecting', `pet_${i}`)
+  }
+  
+  console.log('Switched to shared mode successfully')
+}
+
+const getAnswerValue = (questionId: string, petNum?: number) => {
+  // For user-level questions (no pet), get answer without petId
+  if (!petNum) {
+    const answer = questionnaire.getAnswer(questionId)
+    return answer ? answer.value : null
+  }
+  
   // For pet-specific questions, include petId in the search
   const answer = questionnaire.getAnswer(questionId, `pet_${petNum}`)
   return answer ? answer.value : null

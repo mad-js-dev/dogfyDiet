@@ -13,7 +13,7 @@
     <div v-else class="individual-answer-mode">
       <div class="pet-answers-grid">
         <div 
-          v-for="petNum in Math.max(petCount, 1)" 
+          v-for="petNum in petCount" 
           :key="petNum" 
           class="pet-answer-section"
         >
@@ -54,7 +54,7 @@
         @click="handleButtonClick"
         class="differentiate-btn"
       >
-        {{ isPetNameQuestion ? '+ Add Pet' : 'Are your pets different in this aspect?' }}
+        {{ isPetNameQuestion ? (petCount === 1 ? '+ Add Second Pet' : 'Maximum 2 pets reached') : 'Are your pets different in this aspect?' }}
       </button>
       
       <button 
@@ -168,9 +168,9 @@ const breedOptions = [
 const isPetNameQuestion = computed(() => props.question.id === 'pet_name')
 
 const showDifferentiationButton = computed(() => {
-  // For pet name question: always show + Add Pet button
+  // For pet name question: show + Add Pet button only if less than 2 pets
   if (isPetNameQuestion.value) {
-    return true
+    return petCount.value < 2
   }
   // For other questions: show differentiate button normally
   return petCount.value > 1 && answerMode.value === 'shared'
@@ -241,9 +241,11 @@ const handleIndividualAnswer = (value: any, questionId: string, petId?: string) 
 
 const handleButtonClick = () => {
   if (isPetNameQuestion.value) {
-    // For pet name question: add a new pet
-    const newPetCount = petCount.value + 1
-    questionnaire.setPetCount(newPetCount)
+    // For pet name question: add a new pet only if less than 2
+    if (petCount.value < 2) {
+      const newPetCount = petCount.value + 1
+      questionnaire.setPetCount(newPetCount)
+    }
   } else {
     // For other questions: switch to individual mode
     switchToIndividual()

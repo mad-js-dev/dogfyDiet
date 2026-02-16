@@ -126,7 +126,31 @@ const progressPercentage = computed(() => {
   return Math.round((currentStepId.value / (totalSteps - 1)) * 100)
 })
 
-const canProceed = computed(() => questionnaire.canProceedToNext)
+const canProceed = computed(() => {
+  // Get current step questions
+  const stepQuestions = getCurrentStepQuestions()
+  
+  // Check if all required questions have answers
+  return stepQuestions.every(question => {
+    if (!question.required) return true
+    
+    // For individual questions, check all pets have answers
+    if (question.appliesTo === 'individual') {
+      const currentPetCount = petCount.value || 1
+      for (let i = 1; i <= currentPetCount; i++) {
+        const answer = questionnaire.getAnswer(question.id, `pet_${i}`)
+        if (!answer || !answer.value || answer.value.toString().trim() === '') {
+          return false
+        }
+      }
+      return true
+    }
+    
+    // For shared questions, check single answer
+    const answer = questionnaire.getAnswer(question.id)
+    return answer && answer.value !== null && answer.value !== undefined && answer.value.toString().trim() !== ''
+  })
+})
 
 // Methods
 const setPetCount = (count: number) => {

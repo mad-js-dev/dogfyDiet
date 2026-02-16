@@ -20,44 +20,15 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     return Math.round((currentStep.value / (totalSteps - 1)) * 100)
   })
 
-  const canProceedToNext = computed(() => {
-    // Check if current step has required answers
-    const stepRequirements = getStepRequirements(currentStep.value)
-    return stepRequirements.every(qId => {
-      // For pet names step, check if all pets have names
-      if (qId === 'pet_name') {
-        const petNames = answers.value.filter(a => 
-          a.questionId.startsWith('pet_name_pet_') && 
-          a.value && 
-          a.value.trim() !== ''
-        )
-        return petNames.length === petCount.value
-      }
-      
-      // For other questions, check normally
-      const answer = answers.value.find(a => a.questionId === qId)
-      return answer && answer.value !== null && answer.value !== undefined && answer.value !== ''
-    })
-  })
-
-  // Helper function to get required questions for each step
-  const getStepRequirements = (step: number): string[] => {
-    const requirements: Record<number, string[]> = {
-      0: ['pet_breed'], // Pet Breed
-      1: ['pet_name'], // Pet Names (at least one pet name)
-      2: ['pet_gender'] // Pet Gender
-    }
-    return requirements[step] || []
-  }
-
   // Actions
   const setStep = (step: number) => {
     currentStep.value = step
   }
 
   const setPetCount = (count: number) => {
-    petCount.value = count
-    addAnswer('pet_count', count)
+    const validCount = Math.max(1, Math.min(2, count)) // Ensure between 1-2 pets
+    petCount.value = validCount
+    addAnswer('pet_count', validCount)
   }
 
   const addAnswer = (questionId: string, value: any, petId?: string | null) => {
@@ -171,7 +142,6 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     // Getters
     answeredQuestions,
     progressPercentage,
-    canProceedToNext,
     
     // Actions
     setStep,
