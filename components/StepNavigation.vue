@@ -10,7 +10,7 @@
             class="step-dot"
             @click="navigateToStep(step.id)"
           >
-            <span class="step-number">{{ step.id + 1 }}</span>
+            <span class="step-number">{{ getUrlStepFromInternal(step.id, excludeActivityLevel) }}</span>
             <span class="step-title">{{ step.title }}</span>
           </div>
         </div>
