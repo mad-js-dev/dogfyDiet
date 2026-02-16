@@ -610,6 +610,85 @@
         </div>
       </div>
 
+      <!-- User Contact Information Step -->
+      <div v-else-if="currentStepId === 8" class="user-contact-section">
+        <h2>Please provide your contact information</h2>
+        <div class="contact-form">
+          <div class="contact-field">
+            <QuestionRenderer 
+              :question="{
+                id: 'user_name',
+                type: 'text',
+                question: 'What is your name?',
+                appliesTo: 'all',
+                required: true,
+                validation: [
+                  {
+                    type: 'required',
+                    message: 'Your name is required'
+                  },
+                  {
+                    type: 'minLength',
+                    value: 2,
+                    message: 'Name must be at least 2 characters'
+                  }
+                ]
+              }"
+              :model-value="getAnswerValue('user_name')"
+              @answer="handleAnswer"
+            />
+          </div>
+
+          <div class="contact-field">
+            <QuestionRenderer 
+              :question="{
+                id: 'user_email',
+                type: 'email',
+                question: 'What is your email address?',
+                appliesTo: 'all',
+                required: true,
+                validation: [
+                  {
+                    type: 'required',
+                    message: 'Email address is required'
+                  },
+                  {
+                    type: 'email',
+                    message: 'Please enter a valid email address'
+                  }
+                ]
+              }"
+              :model-value="getAnswerValue('user_email')"
+              @answer="handleAnswer"
+            />
+          </div>
+
+          <div class="contact-field">
+            <QuestionRenderer 
+              :question="{
+                id: 'user_phone',
+                type: 'tel',
+                question: 'What is your phone number?',
+                appliesTo: 'all',
+                required: true,
+                validation: [
+                  {
+                    type: 'required',
+                    message: 'Phone number is required'
+                  },
+                  {
+                    type: 'phone',
+                    message: 'Please enter a valid phone number'
+                  }
+                ]
+              }"
+              :model-value="getAnswerValue('user_phone')"
+              @answer="handleAnswer"
+            />
+          </div>
+        </div>
+      </div>
+
       <!-- Navigation -->
       <div class="navigation">
         <button 
@@ -625,7 +704,7 @@
           :disabled="!canProceed"
           class="nav-btn primary"
         >
-          {{ currentStepId === 7 ? 'Submit' : 'Next' }}
+          {{ currentStepId === 8 ? 'Submit' : 'Next' }}
         </button>
       </div>
     </div>
@@ -721,7 +800,7 @@ const sharedGastronomicProfile = ref('')
 const currentStepId = computed(() => {
   const urlStep = parseInt(route.params.step as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  return Math.max(0, Math.min(internalStep, 7)) // Clamp between 0 and 7
+  return Math.max(0, Math.min(internalStep, 8)) // Clamp between 0 and 8
 })
 
 // State
@@ -954,6 +1033,18 @@ const canProceed = computed(() => {
     return hasAllGastronomicProfileAnswers
   }
   
+  if (currentStepId.value === 8) {
+    // User contact step - check for contact information
+    const userName = answers.value.find(a => a.questionId === 'user_name')
+    const userEmail = answers.value.find(a => a.questionId === 'user_email')
+    const userPhone = answers.value.find(a => a.questionId === 'user_phone')
+    
+    return userName?.value && userEmail?.value && userPhone?.value &&
+           userName.value.trim() !== '' && 
+           userEmail.value.trim() !== '' && 
+           userPhone.value.trim() !== ''
+  }
+  
   return false
 })
 
@@ -1084,11 +1175,11 @@ const previousStep = () => {
 
 const nextStep = () => {
   if (canProceed.value) {
-    if (currentStepId.value < 7) {
+    if (currentStepId.value < 8) {
       const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
       router.push(`/step/${nextUrlStep}`)
     } else {
-      // Gastronomic profile is the last step, submit questionnaire
+      // User contact is the last step, submit questionnaire
       submitQuestionnaire()
     }
   }
@@ -1105,7 +1196,7 @@ const submitQuestionnaire = () => {
 watch(() => route.params.step, (newStep) => {
   const urlStep = parseInt(newStep as string) || 1
   const internalStep = urlToInternalStep(urlStep)
-  questionnaire.setStep(Math.max(0, Math.min(internalStep, 7)))
+  questionnaire.setStep(Math.max(0, Math.min(internalStep, 8)))
   
   // Ensure pet count is at least 1 when starting questionnaire
   if (questionnaire.petCount === 0) {
@@ -1158,7 +1249,8 @@ definePageMeta({
 .pet-birth-date-section h2,
 .pet-body-shape-section h2,
 .pet-activity-level-section h2,
-.pet-sterilization-section h2 {
+.pet-sterilization-section h2,
+.user-contact-section h2 {
   color: #0066cc;
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
@@ -1491,6 +1583,20 @@ definePageMeta({
 
 .individual-gastronomic-profile-mode .gastronomic-profile-select {
   margin-top: 1rem;
+}
+
+/* User Contact Step Styles */
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.contact-field {
+  margin-bottom: 1.5rem;
 }
 
 @media (max-width: 768px) {

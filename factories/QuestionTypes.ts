@@ -101,3 +101,41 @@ export class RangeQuestion extends BaseQuestion {
     return RangeAnswer
   }
 }
+
+export class EmailQuestion extends BaseQuestion {
+  constructor(config: QuestionConfig) {
+    super(config)
+  }
+
+  validate(value: any): boolean {
+    if (!this.config.required) return true
+    if (!value || value.trim() === '') return false
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(value)
+  }
+
+  getAnswerComponent() {
+    return TextAnswer // Use TextAnswer component for email input
+  }
+}
+
+export class TelQuestion extends BaseQuestion {
+  constructor(config: QuestionConfig) {
+    super(config)
+  }
+
+  validate(value: any): boolean {
+    if (!this.config.required) return true
+    if (!value || value.trim() === '') return false
+    
+    // Basic phone validation - allow digits, spaces, dashes, parentheses, plus
+    const phoneRegex = /^[\d\s\-\(\)\+]+$/
+    return phoneRegex.test(value) && value.replace(/\D/g, '').length >= 7
+  }
+
+  getAnswerComponent() {
+    return TextAnswer // Use TextAnswer component for phone input
+  }
+}

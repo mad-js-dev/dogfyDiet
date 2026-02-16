@@ -43,7 +43,14 @@ const error = ref('')
 const isTouched = ref(false)
 
 const inputType = computed(() => {
-  // Check if this is an email field
+  // Use the config.type if it's email or tel, otherwise default to text
+  if (props.config.type === 'email') {
+    return 'email'
+  }
+  if (props.config.type === 'tel') {
+    return 'tel'
+  }
+  // Check if this is an email field based on validation pattern (legacy support)
   if (props.config.validation?.some(v => v.type === 'pattern' && v.value?.includes('@'))) {
     return 'email'
   }
@@ -80,6 +87,20 @@ const validateInput = (value: string): boolean => {
       case 'pattern':
         const regex = new RegExp(rule.value)
         if (!regex.test(value)) {
+          error.value = rule.message
+          return false
+        }
+        break
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(value)) {
+          error.value = rule.message
+          return false
+        }
+        break
+      case 'phone':
+        const phoneRegex = /^[\d\s\-\(\)\+]+$/
+        if (!phoneRegex.test(value) || value.replace(/\D/g, '').length < 7) {
           error.value = rule.message
           return false
         }

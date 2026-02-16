@@ -64,6 +64,14 @@ export const questionnaireSteps: StepConfig[] = [
     questions: ['pet_gastronomic_profile'],
     canSkip: false,
     dependsOn: [6]
+  },
+  {
+    id: 8, // Internal 0-based ID
+    title: 'User Contact Information',
+    description: 'Please provide your contact information',
+    questions: ['user_name', 'user_email', 'user_phone'],
+    canSkip: false,
+    dependsOn: [7]
   }
 ]
 

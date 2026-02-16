@@ -248,5 +248,57 @@ export const questionnaireQuestions: QuestionConfig[] = [
         message: 'Pathology selection is required when pet has pathology'
       }
     ]
+  },
+  {
+    id: 'user_name',
+    type: 'text',
+    question: 'What is your name?',
+    appliesTo: 'all',
+    required: true,
+    validation: [
+      {
+        type: 'required',
+        message: 'Your name is required'
+      },
+      {
+        type: 'minLength',
+        value: 2,
+        message: 'Name must be at least 2 characters'
+      }
+    ]
+  },
+  {
+    id: 'user_email',
+    type: 'email',
+    question: 'What is your email address?',
+    appliesTo: 'all',
+    required: true,
+    validation: [
+      {
+        type: 'required',
+        message: 'Email address is required'
+      },
+      {
+        type: 'email',
+        message: 'Please enter a valid email address'
+      }
+    ]
+  },
+  {
+    id: 'user_phone',
+    type: 'tel',
+    question: 'What is your phone number?',
+    appliesTo: 'all',
+    required: true,
+    validation: [
+      {
+        type: 'required',
+        message: 'Phone number is required'
+      },
+      {
+        type: 'phone',
+        message: 'Please enter a valid phone number'
+      }
+    ]
   }
 ]

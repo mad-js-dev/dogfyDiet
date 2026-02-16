@@ -10,7 +10,7 @@ export interface StepConfig {
 
 export interface QuestionConfig {
   id: string
-  type: 'text' | 'select' | 'bool' | 'age' | 'range'
+  type: 'text' | 'select' | 'bool' | 'age' | 'range' | 'email' | 'tel'
   question: string
   appliesTo: 'all' | 'individual'
   options?: string[] // for select questions
@@ -28,7 +28,7 @@ export interface RangeOption {
 }
 
 export interface ValidationRule {
-  type: 'required' | 'minLength' | 'maxLength' | 'pattern'
+  type: 'required' | 'minLength' | 'maxLength' | 'pattern' | 'email' | 'phone'
   value?: any
   message: string
 }
