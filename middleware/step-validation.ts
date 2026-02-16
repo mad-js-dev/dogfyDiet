@@ -52,14 +52,25 @@ export default defineNuxtRouteMiddleware((to) => {
     // For step 3 (birth date), need gender answers
     if (internalStep === 3) {
       const currentPetCount = questionnaire.petCount || 1
-      const petGenders = questionnaire.answers.filter(a => 
-        a.questionId === 'pet_gender' && 
-        a.petId && 
-        a.value && 
-        a.value.trim() !== ''
-      )
-      if (petGenders.length !== currentPetCount) {
-        return navigateTo('/step/3')
+      
+      // Check for shared gender answer first
+      const sharedGender = questionnaire.answers.find(a => a.questionId === 'pet_gender' && !a.petId)
+      
+      if (sharedGender && sharedGender.value) {
+        // Shared mode - gender answer exists, allow access
+        console.log('Middleware: Found shared gender answer, allowing access to step 3')
+      } else {
+        // Individual mode - check for individual gender answers
+        const petGenders = questionnaire.answers.filter(a => 
+          a.questionId === 'pet_gender' && 
+          a.petId && 
+          a.value && 
+          a.value.trim() !== ''
+        )
+        if (petGenders.length !== currentPetCount) {
+          console.log('Middleware: Missing individual gender answers, redirecting to step 3')
+          return navigateTo('/step/3')
+        }
       }
     }
     

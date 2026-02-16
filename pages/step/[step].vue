@@ -951,6 +951,8 @@ const canProceed = computed(() => {
   if (currentStepId.value === 2) {
     // Gender step - check for gender, neutered, and expecting answers
     const currentPetCount = petCount.value
+    console.log('Gender step validation - petCount:', currentPetCount)
+    console.log('Gender step validation - showIndividualGenders:', showIndividualGenders.value)
     
     if (!showIndividualGenders.value) {
       // Shared mode: check for shared answers
@@ -959,16 +961,27 @@ const canProceed = computed(() => {
       const hasGenderAnswer = genderAnswer && genderAnswer.value && genderAnswer.value.trim() !== ''
       const hasNeuteredAnswer = neuteredAnswer && neuteredAnswer.value && neuteredAnswer.value.trim() !== ''
       
+      console.log('Shared mode validation:')
+      console.log('- genderAnswer:', genderAnswer?.value)
+      console.log('- neuteredAnswer:', neuteredAnswer?.value)
+      console.log('- hasGenderAnswer:', hasGenderAnswer)
+      console.log('- hasNeuteredAnswer:', hasNeuteredAnswer)
+      
       // Check expecting answer only if gender is female and neutered is no
       let hasExpectingAnswer = true
       if (shouldShowSharedExpectingQuestion()) {
         const expectingAnswer = questionnaire.getAnswer('pet_expecting')
         hasExpectingAnswer = expectingAnswer && expectingAnswer.value && expectingAnswer.value.trim() !== ''
+        console.log('- expectingAnswer (conditional):', expectingAnswer?.value)
+        console.log('- hasExpectingAnswer:', hasExpectingAnswer)
       }
       
-      return hasGenderAnswer && hasNeuteredAnswer && hasExpectingAnswer
+      const result = hasGenderAnswer && hasNeuteredAnswer && hasExpectingAnswer
+      console.log('Final validation result:', result)
+      return result
     } else {
       // Individual mode: check for individual answers
+      console.log('Individual mode validation (should not happen with 1 pet)')
       const petGenders = answers.value.filter(a => 
         a.questionId === 'pet_gender' && 
         a.petId && 
@@ -1345,6 +1358,19 @@ const handlePathologySelect = (event: Event, petNum: number) => {
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {
   questionnaire.addAnswer(questionId, value, petId)
+  
+  // Auto-clear expecting answer when neutered is set to Yes
+  if (questionId === 'pet_neutered' && value === 'Yes') {
+    if (petId) {
+      // Individual mode - clear expecting for this specific pet
+      questionnaire.removeAnswer('pet_expecting', petId)
+      console.log(`Cleared expecting answer for ${petId} because neutered is Yes`)
+    } else {
+      // Shared mode - clear shared expecting answer
+      questionnaire.removeAnswer('pet_expecting')
+      console.log('Cleared shared expecting answer because neutered is Yes')
+    }
+  }
 }
 
 const previousStep = () => {
@@ -1355,14 +1381,23 @@ const previousStep = () => {
 }
 
 const nextStep = () => {
+  console.log('nextStep called')
+  console.log('canProceed.value:', canProceed.value)
+  console.log('currentStepId.value:', currentStepId.value)
+  
   if (canProceed.value) {
+    console.log('Can proceed, navigating to next step')
     if (currentStepId.value < 8) {
       const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
+      console.log('Navigating to:', `/step/${nextUrlStep}`)
       router.push(`/step/${nextUrlStep}`)
     } else {
       // User contact is the last step, submit questionnaire
+      console.log('Submitting questionnaire')
       submitQuestionnaire()
     }
+  } else {
+    console.log('Cannot proceed - validation failed')
   }
 }
 
