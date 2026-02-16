@@ -1,4 +1,6 @@
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
+import { useAbTestingStore } from '~/stores/ab-testing'
+import { getInternalStepFromUrl } from '~/config/questionnaire-steps'
 
 // Helper functions for URL conversion
 const urlToInternalStep = (urlStep: number): number => {
@@ -11,17 +13,39 @@ const internalToUrlStep = (internalStep: number): number => {
   return internalStep + 1
 }
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware((to, from) => {
   const questionnaire = useComprehensiveQuestionnaireStore()
+  const abTesting = useAbTestingStore()
+  
+  console.log('=== Middleware Navigation ===')
+  console.log('From:', from.path)
+  console.log('To:', to.path)
   
   // Get the step parameter from the route (1-based URL)
   const stepParam = to.params.step as string
   const urlStep = parseInt(stepParam) || 1
-  const internalStep = urlToInternalStep(urlStep)
   
-  // Validate step range (0-8 internally, 1-9 in URL)
-  if (internalStep < 0 || internalStep > 8) {
-    // Redirect to first step if invalid
+  // Check if user is in test group (Activity Level removed)
+  const excludeActivityLevel = abTesting.isInTestGroup('activity_level_removal')
+  
+  // Convert URL step to internal step considering A/B testing
+  console.log('Before getInternalStepFromUrl:', { urlStep, excludeActivityLevel })
+  const internalStep = getInternalStepFromUrl(urlStep, excludeActivityLevel)
+  console.log('After getInternalStepFromUrl:', { internalStep })
+  
+  console.log('Middleware validation:', {
+    urlStep,
+    internalStep,
+    excludeActivityLevel,
+    group: abTesting.getExperimentGroup('activity_level_removal')
+  })
+  
+  // Validate step range (0-7 for test group, 0-8 for control group)
+  // Note: Even though test group has 8 steps, the internal step IDs go up to 8
+  const maxStep = excludeActivityLevel ? 8 : 8 // Both groups allow up to internal step 8
+  console.log('Step range validation:', { internalStep, maxStep, excludeActivityLevel, condition: internalStep > maxStep })
+  if (internalStep < 0 || internalStep > maxStep) {
+    console.log('Invalid step range, redirecting to step 1')
     return navigateTo('/step/1')
   }
   
@@ -31,6 +55,7 @@ export default defineNuxtRouteMiddleware((to) => {
     if (internalStep === 1) {
       const breedAnswer = questionnaire.answers.find(a => a.questionId === 'pet_breed' && a.petId)
       if (!breedAnswer || !breedAnswer.value) {
+        console.log('Missing breed answer, redirecting to step 1')
         return navigateTo('/step/1')
       }
     }
@@ -45,6 +70,7 @@ export default defineNuxtRouteMiddleware((to) => {
         a.value.trim() !== ''
       )
       if (petNames.length !== currentPetCount) {
+        console.log('Missing pet names, redirecting to step 2')
         return navigateTo('/step/2')
       }
     }
@@ -68,7 +94,7 @@ export default defineNuxtRouteMiddleware((to) => {
           a.value.trim() !== ''
         )
         if (petGenders.length !== currentPetCount) {
-          console.log('Middleware: Missing individual gender answers, redirecting to step 3')
+          console.log('Missing individual gender answers, redirecting to step 3')
           return navigateTo('/step/3')
         }
       }
@@ -84,12 +110,14 @@ export default defineNuxtRouteMiddleware((to) => {
         a.value.trim() !== ''
       )
       if (petBirthYears.length !== currentPetCount) {
+        console.log('Missing birth date answers, redirecting to step 4')
         return navigateTo('/step/4')
       }
     }
     
-    // For step 5 (activity level), need body shape and weight answers
-    if (internalStep === 5) {
+    // Activity Level Step (only exists in control group)
+    if (!excludeActivityLevel && internalStep === 5) {
+      // For step 5 (activity level), need body shape and weight answers
       const currentPetCount = questionnaire.petCount || 1
       const petBodyShapes = questionnaire.answers.filter(a => 
         a.questionId === 'pet_body_shape' && 
@@ -98,26 +126,49 @@ export default defineNuxtRouteMiddleware((to) => {
         a.value.trim() !== ''
       )
       if (petBodyShapes.length !== currentPetCount) {
+        console.log('Missing body shape answers for activity level, redirecting to step 5')
         return navigateTo('/step/5')
       }
     }
     
-    // For step 6 (pathology), need activity level answers
-    if (internalStep === 6) {
+    // Pathology Step (step 5 in test group, step 6 in control group)
+    const pathologyStep = excludeActivityLevel ? 6 : 6 // Both use internal step 6, but different URL steps
+    if (internalStep === pathologyStep) {
+      console.log('Validating pathology step:', { internalStep, pathologyStep, excludeActivityLevel })
+      // For pathology step, need previous step answers
       const currentPetCount = questionnaire.petCount || 1
-      const petActivityLevels = questionnaire.answers.filter(a => 
-        a.questionId === 'pet_activity_level' && 
-        a.petId && 
-        a.value && 
-        a.value.trim() !== ''
-      )
-      if (petActivityLevels.length !== currentPetCount) {
-        return navigateTo('/step/6')
+      
+      if (excludeActivityLevel) {
+        // Test group: need body shape answers
+        const petBodyShapes = questionnaire.answers.filter(a => 
+          a.questionId === 'pet_body_shape' && 
+          a.petId && 
+          a.value && 
+          a.value.trim() !== ''
+        )
+        console.log('Test group pathology validation:', { bodyShapeCount: petBodyShapes.length, petCount: currentPetCount })
+        if (petBodyShapes.length !== currentPetCount) {
+          console.log('Missing body shape answers for pathology, redirecting to step', pathologyStep)
+          return navigateTo(`/step/6`) // Always redirect to URL step 6 for pathology
+        }
+      } else {
+        // Control group: need activity level answers
+        const petActivityLevels = questionnaire.answers.filter(a => 
+          a.questionId === 'pet_activity_level' && 
+          a.petId && 
+          a.value && 
+          a.value.trim() !== ''
+        )
+        if (petActivityLevels.length !== currentPetCount) {
+          console.log('Missing activity level answers for pathology, redirecting to step', pathologyStep)
+          return navigateTo(`/step/6`)
+        }
       }
     }
     
-    // For step 7 (gastronomic profile), need pathology answers
-    if (internalStep === 7) {
+    // Gastronomic Profile Step (step 6 in test group, step 7 in control group)
+    const gastronomicStep = excludeActivityLevel ? 7 : 7 // Both use internal step 7, but different URL steps
+    if (internalStep === gastronomicStep) {
       const currentPetCount = questionnaire.petCount || 1
       const petHasPathology = questionnaire.answers.filter(a => 
         a.questionId === 'pet_has_pathology' && 
@@ -126,11 +177,14 @@ export default defineNuxtRouteMiddleware((to) => {
         a.value.trim() !== ''
       )
       if (petHasPathology.length !== currentPetCount) {
-        return navigateTo('/step/7')
+        console.log('Missing pathology answers for gastronomic, redirecting to step', excludeActivityLevel ? 6 : 7)
+        return navigateTo(`/step/${excludeActivityLevel ? 6 : 7}`)
       }
     }
-  // For step 8 (user contact), need gastronomic profile answers
-    if (internalStep === 8) {
+    
+    // User Contact Step (step 7 in test group, step 8 in control group)
+    const contactStep = excludeActivityLevel ? 8 : 8 // Both use internal step 8, but different URL steps
+    if (internalStep === contactStep) {
       const currentPetCount = questionnaire.petCount || 1
       const petGastronomicProfiles = questionnaire.answers.filter(a => 
         a.questionId === 'pet_gastronomic_profile' && 
@@ -139,10 +193,13 @@ export default defineNuxtRouteMiddleware((to) => {
         a.value.trim() !== ''
       )
       if (petGastronomicProfiles.length !== currentPetCount) {
-        return navigateTo('/step/8')
+        console.log('Missing gastronomic answers for contact, redirecting to step', excludeActivityLevel ? 7 : 8)
+        return navigateTo(`/step/${excludeActivityLevel ? 7 : 8}`)
       }
     }
   }
+  
+  console.log('Middleware validation passed, allowing access')
   
   // Update store with current step (0-based internally)
   questionnaire.setStep(internalStep)

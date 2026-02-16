@@ -25,7 +25,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { questionnaireSteps } from '~/config/questionnaire-steps'
+import { getQuestionnaireSteps, getTotalSteps, getUrlStepFromInternal } from '~/config/questionnaire-steps'
+import { useAbTestingStore } from '~/stores/ab-testing'
 
 interface Props {
   currentStep: number
@@ -33,11 +34,15 @@ interface Props {
 
 const props = defineProps<Props>()
 const router = useRouter()
+const abTesting = useAbTestingStore()
 
-const steps = computed(() => questionnaireSteps)
+// Check if user is in test group (Activity Level removed)
+const excludeActivityLevel = computed(() => abTesting.isInTestGroup('activity_level_removal'))
+
+const steps = computed(() => getQuestionnaireSteps(excludeActivityLevel.value))
 
 const progressPercentage = computed(() => {
-  const totalSteps = questionnaireSteps.length
+  const totalSteps = getTotalSteps(excludeActivityLevel.value)
   return Math.round((props.currentStep / (totalSteps - 1)) * 100)
 })
 
@@ -52,8 +57,8 @@ const getStepClass = (stepId: number) => {
 
 const navigateToStep = (stepId: number) => {
   if (stepId <= props.currentStep) {
-    // Convert 0-based internal to 1-based URL
-    const urlStep = stepId + 1
+    // Convert internal step ID to URL step using A/B testing aware function
+    const urlStep = getUrlStepFromInternal(stepId, excludeActivityLevel.value)
     router.push(`/step/${urlStep}`)
   }
 }

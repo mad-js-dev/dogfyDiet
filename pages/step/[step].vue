@@ -434,7 +434,7 @@
       </div>
 
       <!-- Pet Activity Level Step -->
-      <div v-else-if="currentStepId === 5" class="pet-activity-level-section">
+      <div v-else-if="!excludeActivityLevel && currentStepId === 5" class="pet-activity-level-section">
         <h2>What is your pet{{ Math.max(petCount, 1) > 1 ? 's\'' : '' }} activity level?</h2>
         
         <!-- Shared Activity Level Mode (Default) -->
@@ -791,7 +791,7 @@
           :disabled="!canProceed"
           class="nav-btn primary"
         >
-          {{ currentStepId === 8 ? 'Submit' : 'Next' }}
+          {{ currentStepIndex === (getTotalSteps(excludeActivityLevel) - 1) ? 'Submit' : 'Next' }}
         </button>
       </div>
     </div>
@@ -800,15 +800,53 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
-import { questionnaireSteps, getStepQuestions, shouldShowQuestion, urlToInternalStep, internalToUrlStep } from '~/config/questionnaire-steps'
+import { useAbTestingStore } from '~/stores/ab-testing'
+import { getQuestionnaireSteps, getStepQuestions, shouldShowQuestion, urlToInternalStep, internalToUrlStep, getTotalSteps, getInternalStepFromUrl, getUrlStepFromInternal } from '~/config/questionnaire-steps'
 import { questionnaireQuestions } from '~/config/questionnaire-questions'
 import QuestionRenderer from '~/components/QuestionRenderer.vue'
 import StepNavigation from '~/components/StepNavigation.vue'
 import ConditionalAnswerRenderer from '~/components/ConditionalAnswerRenderer.vue'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
+const abTesting = useAbTestingStore()
 const route = useRoute()
 const router = useRouter()
+
+// A/B Testing: Check if user is in test group (Activity Level removed)
+const excludeActivityLevel = computed(() => {
+  // Check for manual override via URL parameter first
+  const urlGroup = route.query.group as string
+  if (urlGroup === 'test') {
+    abTesting.assignUserToGroup('activity_level_removal', 'test')
+    return true
+  }
+  if (urlGroup === 'control') {
+    abTesting.assignUserToGroup('activity_level_removal', 'control')
+    return false
+  }
+  
+  // Fall back to normal A/B testing logic
+  return abTesting.isInTestGroup('activity_level_removal')
+})
+
+// Track experiment assignment
+if (excludeActivityLevel.value !== null) {
+  abTesting.trackEvent('activity_level_removal', 'questionnaire_started', {
+    exclude_activity_level: excludeActivityLevel.value
+  })
+  
+  // Add visual indicator for development (client-side only)
+  if (process.dev) {
+    console.log(`🧪 A/B Test Group: ${excludeActivityLevel.value ? 'TEST (8 steps)' : 'CONTROL (9 steps)'}`)
+  }
+}
+
+// Client-side logging for URL
+onMounted(() => {
+  if (process.dev && typeof window !== 'undefined') {
+    console.log(`📊 URL: ${window.location.pathname}?group=${excludeActivityLevel.value ? 'test' : 'control'}`)
+  }
+})
 
 const allBreeds = [
   // Dog Breeds
@@ -889,13 +927,31 @@ const sharedGastronomicProfile = ref('')
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
   const urlStep = parseInt(route.params.step as string) || 1
-  const internalStep = urlToInternalStep(urlStep)
-  return Math.max(0, Math.min(internalStep, 8)) // Clamp between 0 and 8
+  const internalStep = getInternalStepFromUrl(urlStep, excludeActivityLevel.value)
+  const maxStep = 8 // Both groups allow up to internal step 8 (User Contact)
+  const result = Math.max(0, Math.min(internalStep, maxStep))
+  
+  console.log('currentStepId calculation:', {
+    urlStep,
+    internalStep,
+    maxStep,
+    result,
+    excludeActivityLevel: excludeActivityLevel.value,
+    route: route.path
+  })
+  
+  return result
 })
 
+// Make sure the computed property updates when route changes
+watch(() => route.params.step, () => {
+  console.log('Route parameter changed:', route.params.step)
+}, { immediate: true })
+
 // State
-const steps = computed(() => questionnaireSteps)
+const steps = computed(() => getQuestionnaireSteps(excludeActivityLevel.value))
 const currentStep = computed(() => steps.value[currentStepId.value])
+const currentStepIndex = computed(() => steps.value.findIndex(step => step.id === currentStepId.value))
 const petCount = computed(() => questionnaire.petCount)
 const answers = computed(() => questionnaire.answers)
 
@@ -1079,7 +1135,7 @@ const canProceed = computed(() => {
     return hasAllBodyShapes && hasAllWeights
   }
   
-  if (currentStepId.value === 5) {
+  if (currentStepId.value === 5 && !excludeActivityLevel.value) {
     // Activity level step - check for activity level answers
     const currentPetCount = petCount.value
     
@@ -1387,13 +1443,47 @@ const nextStep = () => {
   
   if (canProceed.value) {
     console.log('Can proceed, navigating to next step')
-    if (currentStepId.value < 8) {
-      const nextUrlStep = internalToUrlStep(currentStepId.value + 1)
-      console.log('Navigating to:', `/step/${nextUrlStep}`)
+    const steps = getQuestionnaireSteps(excludeActivityLevel.value)
+    const currentStepIndex = steps.findIndex(step => step.id === currentStepId.value)
+    const totalSteps = getTotalSteps(excludeActivityLevel.value)
+    
+    console.log('Navigation debug:', {
+      currentStepId: currentStepId.value,
+      currentStepIndex,
+      totalSteps,
+      steps: steps.map(s => ({ id: s.id, title: s.title })),
+      excludeActivityLevel: excludeActivityLevel.value
+    })
+    
+    if (currentStepIndex < totalSteps - 1) {
+      // Get the next step by index, not by ID
+      const nextStep = steps[currentStepIndex + 1]
+      const nextUrlStep = getUrlStepFromInternal(nextStep.id, excludeActivityLevel.value)
+      console.log('Next step details:', {
+        nextStepId: nextStep.id,
+        nextStepTitle: nextStep.title,
+        nextUrlStep,
+        nextUrl: `/step/${nextUrlStep}`
+      })
+      
+      // Track step completion for A/B testing
+      abTesting.trackEvent('activity_level_removal', 'step_completed', {
+        step_id: currentStepId.value,
+        step_url: nextUrlStep,
+        exclude_activity_level: excludeActivityLevel.value
+      })
+      
       router.push(`/step/${nextUrlStep}`)
     } else {
       // User contact is the last step, submit questionnaire
       console.log('Submitting questionnaire')
+      
+      // Track questionnaire completion for A/B testing
+      abTesting.trackEvent('activity_level_removal', 'questionnaire_completed', {
+        total_steps: totalSteps,
+        exclude_activity_level: excludeActivityLevel.value
+      })
+      
       submitQuestionnaire()
     }
   } else {
@@ -1411,8 +1501,9 @@ const submitQuestionnaire = () => {
 // Watch for step parameter changes
 watch(() => route.params.step, (newStep) => {
   const urlStep = parseInt(newStep as string) || 1
-  const internalStep = urlToInternalStep(urlStep)
-  questionnaire.setStep(Math.max(0, Math.min(internalStep, 8)))
+  const internalStep = getInternalStepFromUrl(urlStep, excludeActivityLevel.value)
+  const maxStep = excludeActivityLevel.value ? 7 : 8 // Max internal step (0-based)
+  questionnaire.setStep(Math.max(0, Math.min(internalStep, maxStep)))
   
   // Ensure pet count is at least 1 when starting questionnaire
   if (questionnaire.petCount === 0) {

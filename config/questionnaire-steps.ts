@@ -75,6 +75,77 @@ export const questionnaireSteps: StepConfig[] = [
   }
 ]
 
+// A/B Testing: Dynamic step generation
+export const getQuestionnaireSteps = (excludeActivityLevel = false) => {
+  if (excludeActivityLevel) {
+    return questionnaireSteps.filter(step => step.id !== 5) // Remove Activity Level (id: 5)
+  }
+  return questionnaireSteps
+}
+
+export const getTotalSteps = (excludeActivityLevel = false) => {
+  return excludeActivityLevel ? 8 : 9 // 8 steps without Activity Level, 9 with
+}
+
+export const getStepMapping = (excludeActivityLevel = false) => {
+  // Maps URL step numbers to internal step IDs
+  const mapping: Record<number, number> = {}
+  const steps = getQuestionnaireSteps(excludeActivityLevel)
+  
+  steps.forEach((step, index) => {
+    // URL steps are 1-based, internal steps are 0-based
+    mapping[index + 1] = step.id
+  })
+  
+  return mapping
+}
+
+export const getInternalStepFromUrl = (urlStep: number, excludeActivityLevel = false) => {
+  const steps = getQuestionnaireSteps(excludeActivityLevel)
+  
+  console.log('getInternalStepFromUrl:', {
+    urlStep,
+    excludeActivityLevel,
+    steps: steps.map(s => ({ id: s.id, title: s.title })),
+    stepCount: steps.length
+  })
+  
+  // URL steps are 1-based, so subtract 1 to get array index
+  const stepIndex = urlStep - 1
+  
+  // Check if the index is valid
+  if (stepIndex < 0 || stepIndex >= steps.length) {
+    console.warn(`URL step ${urlStep} is out of range for questionnaire steps`)
+    return 0 // Fallback to first step
+  }
+  
+  // Return the internal step ID at this index
+  const internalStep = steps[stepIndex].id
+  console.log('Mapping result:', { 
+    urlStep, 
+    stepIndex, 
+    internalStep,
+    stepTitle: steps[stepIndex].title,
+    expectedMapping: 'URL 6 should be Internal 5 (Pathology) for test group'
+  })
+  
+  return internalStep
+}
+
+export const getUrlStepFromInternal = (internalStep: number, excludeActivityLevel = false) => {
+  const steps = getQuestionnaireSteps(excludeActivityLevel)
+  const stepIndex = steps.findIndex(step => step.id === internalStep)
+  
+  // If step not found, return 1 as fallback
+  if (stepIndex === -1) {
+    console.warn(`Step ID ${internalStep} not found in questionnaire steps`)
+    return 1
+  }
+  
+  // URL steps are 1-based, so add 1 to the index
+  return stepIndex + 1
+}
+
 export const getStepQuestions = (stepId: number): any[] => {
   const step = questionnaireSteps.find(s => s.id === stepId)
   if (!step) return []
