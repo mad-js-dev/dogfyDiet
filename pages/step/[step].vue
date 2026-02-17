@@ -1112,6 +1112,15 @@ const canProceed = computed(() => {
     // Activity level step - check for activity level answers
     const currentPetCount = petCount.value
     
+    console.log('Activity level validation check:', {
+      currentStepId: currentStepId.value,
+      excludeActivityLevel: excludeActivityLevel.value,
+      currentPetCount,
+      showIndividualActivityLevels: showIndividualActivityLevels.value,
+      sharedActivityLevel: sharedActivityLevel.value,
+      allAnswers: answers.value
+    })
+    
     // Check activity level answers
     const petActivityLevels = answers.value.filter(a => 
       a.questionId === 'pet_activity_level' && 
@@ -1122,12 +1131,21 @@ const canProceed = computed(() => {
     
     const hasAllActivityLevels = petActivityLevels.length === currentPetCount
     
+    console.log('Activity level validation results:', {
+      petActivityLevels: petActivityLevels.map(a => ({ questionId: a.questionId, petId: a.petId, value: a.value })),
+      hasAllActivityLevels,
+      petActivityLevelsLength: petActivityLevels.length
+    })
+    
     // For shared mode: just need shared value to be set
     if (!showIndividualActivityLevels.value) {
-      return sharedActivityLevel.value !== ''
+      const result = sharedActivityLevel.value !== ''
+      console.log('Shared mode validation result:', { sharedActivityLevel: sharedActivityLevel.value, result })
+      return result
     }
     
     // For individual mode: need all pets to have answers
+    console.log('Individual mode validation result:', { hasAllActivityLevels })
     return hasAllActivityLevels
   }
   
@@ -1283,10 +1301,12 @@ const handleSharedWeightChange = () => {
 }
 
 const handleSharedActivityLevelChange = (value: string, questionId: string) => {
+  console.log('handleSharedActivityLevelChange called:', { value, questionId, sharedActivityLevel: sharedActivityLevel.value })
   sharedActivityLevel.value = value
   if (sharedActivityLevel.value) {
     // Apply shared activity level to all pets
     const currentPetCount = petCount.value
+    console.log('Adding activity level answers to pets:', { currentPetCount, value })
     for (let i = 1; i <= currentPetCount; i++) {
       questionnaire.addAnswer('pet_activity_level', sharedActivityLevel.value, `pet_${i}`)
     }
