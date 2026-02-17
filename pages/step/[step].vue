@@ -25,127 +25,17 @@
 
       <!-- Pet Birth Date Step -->
       <div v-else-if="currentStepId === 3" class="pet-birth-date-section">
-        <h2>When {{ Math.max(petCount, 1) > 1 ? 'were' : 'was' }} your pet{{ Math.max(petCount, 1) > 1 ? 's' : '' }} born?</h2>
-        
-        <!-- Shared Birth Date Mode (Default) -->
-        <div v-if="!showIndividualBirthDates" class="shared-birth-date-mode">
-          <div class="birth-date-inputs">
-            <div class="birth-date-field">
-              <QuestionRenderer 
-                :question="{
-                  id: 'shared_birth_year',
-                  type: 'select',
-                  question: '',
-                  appliesTo: 'all',
-                  required: true,
-                  options: yearOptions,
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Birth year is required'
-                    }
-                  ]
-                }"
-                :model-value="sharedBirthYear"
-                @answer="handleSharedBirthYearChange"
-              />
-            </div>
-            
-            <div class="birth-date-field">
-              <QuestionRenderer 
-                :question="{
-                  id: 'shared_birth_month',
-                  type: 'select',
-                  question: '',
-                  appliesTo: 'all',
-                  required: true,
-                  options: monthOptions,
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Birth month is required'
-                    }
-                  ]
-                }"
-                :model-value="sharedBirthMonth"
-                @answer="handleSharedBirthMonthChange"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <div 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualBirthDates = true"
-              class="differentiate-btn"
-            >
-              Are your pets different in this aspect?
-            </div>
-          </div>
-        </div>
-        
-        <!-- Individual Birth Date Mode -->
-        <div v-else class="individual-birth-date-mode">
-          <div class="pet-answers-grid">
-            <div 
-              v-for="petNum in Math.max(petCount, 1)" 
-              :key="petNum" 
-              class="pet-answer-section"
-            >              
-              <!-- Birth Year Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_birth_year',
-                  type: 'select',
-                  question: '',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: yearOptions,
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Birth year is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_birth_year', petNum)"
-                @answer="handleAnswer"
-              />
-              
-              <!-- Birth Month Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_birth_month',
-                  type: 'select',
-                  question: '',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: monthOptions,
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Birth month is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_birth_month', petNum)"
-                @answer="handleAnswer"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <button 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualBirthDates = false"
-              class="merge-btn"
-            >
-              Apply same birth date to all pets
-            </button>
-          </div>
-        </div>
+        <PetBirthDateStep 
+          :show-individual-birth-dates="showIndividualBirthDates"
+          :pet-count="petCount"
+          :shared-birth-year="sharedBirthYear"
+          :shared-birth-month="sharedBirthMonth"
+          :get-answer-value="getAnswerValue"
+          @toggle-individual-birth-dates="showIndividualBirthDates = $event"
+          @handle-shared-birth-year-change="handleSharedBirthYearChange"
+          @handle-shared-birth-month-change="handleSharedBirthMonthChange"
+          @handle-answer="handleAnswer"
+        />
       </div>
 
       <!-- Pet Body Shape Step -->
@@ -706,6 +596,7 @@ import SegmentedButtons from '~/components/segmented-buttons/SegmentedButtons.vu
 import PetBreedStep from '~/components/steps/PetBreedStep.vue'
 import PetNamesStep from '~/components/steps/PetNamesStep.vue'
 import PetGenderStep from '~/components/steps/PetGenderStep.vue'
+import PetBirthDateStep from '~/components/steps/PetBirthDateStep.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
