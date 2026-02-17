@@ -1379,10 +1379,17 @@ const shouldShowExpectingQuestion = (petNum: number) => {
 }
 
 const shouldShowSharedExpectingQuestion = () => {
-  const genderAnswer = questionnaire.getAnswer('pet_gender')
-  const neuteredAnswer = questionnaire.getAnswer('pet_neutered')
+  // For single pet, check individual answers since they're stored with petId
+  const genderAnswer = petCount.value === 1 
+    ? questionnaire.getAnswer('pet_gender', 'pet_1')
+    : questionnaire.getAnswer('pet_gender')
+  
+  const neuteredAnswer = petCount.value === 1
+    ? questionnaire.getAnswer('pet_neutered', 'pet_1')
+    : questionnaire.getAnswer('pet_neutered')
   
   console.log('shouldShowSharedExpectingQuestion:', {
+    petCount: petCount.value,
     genderAnswer: genderAnswer?.value,
     neuteredAnswer: neuteredAnswer?.value,
     shouldShow: genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
