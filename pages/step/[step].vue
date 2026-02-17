@@ -481,7 +481,6 @@
 
           <!-- Pet Pathology Step -->
       <div v-else-if="currentStepId === 6" class="pet-pathology-section">
-        <h2>Does your pet{{ Math.max(petCount, 1) > 1 ? 's' : '' }} have any pathology?</h2>
         
         <!-- Shared Pathology Mode (Default) -->
         <div v-if="!showIndividualPathologies" class="shared-pathology-mode">
@@ -616,9 +615,7 @@
       </div>
 
       <!-- Pet Gastronomic Profile Step -->
-      <div v-else-if="currentStepId === 7" class="pet-gastronomic-profile-section">
-        <h2>What is your pet{{ Math.max(petCount, 1) > 1 ? 's' : '' }} gastronomic profile?</h2>
-        
+      <div v-else-if="currentStepId === 7" class="pet-gastronomic-profile-section">        
         <!-- Shared Gastronomic Profile Mode (Default) -->
         <div v-if="!showIndividualGastronomicProfiles" class="shared-gastronomic-profile-mode">
           <div class="gastronomic-profile-inputs">
@@ -710,7 +707,6 @@
 
       <!-- User Contact Information Step -->
       <div v-else-if="currentStepId === 8" class="user-contact-section">
-        <h2>Please provide your contact information</h2>
         <div class="contact-form">
           <div class="contact-field">
             <QuestionRenderer 
@@ -1917,11 +1913,6 @@ definePageMeta({
 
 .shared-pathology-mode {
   text-align: center;
-  padding: 2rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  background: #f8f9fa;
-  margin-bottom: 2rem;
 }
 
 .pathology-inputs {
@@ -1962,11 +1953,6 @@ definePageMeta({
 
 .shared-gastronomic-profile-mode {
   text-align: center;
-  padding: 2rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  background: #f8f9fa;
-  margin-bottom: 2rem;
 }
 
 .gastronomic-profile-inputs {
@@ -1982,10 +1968,6 @@ definePageMeta({
 .contact-form {
   max-width: 600px;
   margin: 0 auto;
-  padding: 2rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  background: #f8f9fa;
 }
 
 .contact-field {
