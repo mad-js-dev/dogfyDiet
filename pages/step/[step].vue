@@ -63,65 +63,46 @@
         <!-- Shared Mode -->
         <div v-if="!showIndividualGenders" class="shared-answer-mode">
           <!-- Gender Question -->
-          <QuestionRenderer 
-            :question="{
-              id: 'pet_gender',
-              type: 'select',
-              question: 'What is your pet\'s gender?',
-              appliesTo: 'all',
-              required: true,
-              options: ['Male', 'Female'],
-              validation: [
-                {
-                  type: 'required',
-                  message: 'Pet gender is required'
-                }
-              ]
-            }"
-            :model-value="getAnswerValue('pet_gender')"
-            @answer="handleAnswer"
-          />
+          <div class="gender-field">
+            <label>What is your pet's gender?</label>
+            <SegmentedButtons
+              :model-value="getAnswerValue('pet_gender')"
+              :options="[
+                { value: 'Male', label: 'Male' },
+                { value: 'Female', label: 'Female' }
+              ]"
+              name="shared-pet-gender"
+              @update:model-value="(value) => handleAnswer(value, 'pet_gender')"
+            />
+          </div>
           
           <!-- Shared Neutered Question -->
-          <QuestionRenderer 
-            :question="{
-              id: 'pet_neutered',
-              type: 'select',
-              question: 'Are your pets neutered/spayed?',
-              appliesTo: 'all',
-              required: true,
-              options: ['Yes', 'No'],
-              validation: [
-                {
-                  type: 'required',
-                  message: 'Neutered status is required'
-                }
-              ]
-            }"
-            :model-value="getAnswerValue('pet_neutered')"
-            @answer="handleAnswer"
-          />
+          <div class="neutered-field">
+            <label>Are your pets neutered/spayed?</label>
+            <SegmentedButtons
+              :model-value="getAnswerValue('pet_neutered')"
+              :options="[
+                { value: 'Yes', label: 'Yes' },
+                { value: 'No', label: 'No' }
+              ]"
+              name="shared-pet-neutered"
+              @update:model-value="(value) => handleAnswer(value, 'pet_neutered')"
+            />
+          </div>
           
           <!-- Shared Expecting Question (only if gender is female and neutered is no) -->
-          <QuestionRenderer 
-            v-if="shouldShowSharedExpectingQuestion()"
-            :question="{
-              id: 'pet_expecting',
-              type: 'select',
-              question: 'Are your pets expecting?',
-              appliesTo: 'all',
-              required: true,
-              options: ['Yes', 'No'],
-              validation: [
-                {
-                  type: 'required',
-                  message: 'Expecting status is required'
-                }
-              ]
-            }"
-            :model-value="getAnswerValue('pet_expecting')"
-            @answer="handleAnswer"
-          />
+          <div v-if="shouldShowSharedExpectingQuestion()" class="expecting-field">
+            <label>Are your pets expecting?</label>
+            <SegmentedButtons
+              :model-value="getAnswerValue('pet_expecting')"
+              :options="[
+                { value: 'Yes', label: 'Yes' },
+                { value: 'No', label: 'No' }
+              ]"
+              name="shared-pet-expecting"
+              @update:model-value="(value) => handleAnswer(value, 'pet_expecting')"
+            />
+          </div>
         </div>
         
         <!-- Individual Mode -->
@@ -135,68 +116,46 @@
               <h3>{{ petDisplayName(petNum) }}</h3>
               
               <!-- Gender Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_gender',
-                  type: 'select',
-                  question: 'What is ' + petDisplayName(petNum) + '\'s gender?',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: ['Male', 'Female'],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Pet gender is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_gender', petNum)"
-                @answer="handleAnswer"
-              />
+              <div class="gender-field">
+                <label>What is your pet's gender?</label>
+                <SegmentedButtons
+                  :model-value="getAnswerValue('pet_gender', petNum)"
+                  :options="[
+                    { value: 'Male', label: 'Male' },
+                    { value: 'Female', label: 'Female' }
+                  ]"
+                  :name="`pet-gender-${petNum}`"
+                  @update:model-value="(value) => handleAnswer(value, 'pet_gender', `pet_${petNum}`)"
+                />
+              </div>
               
               <!-- Neutered Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_neutered',
-                  type: 'select',
-                  question: 'Is ' + petDisplayName(petNum) + ' neutered/spayed?',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: ['Yes', 'No'],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Neutered status is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_neutered', petNum)"
-                @answer="handleAnswer"
-              />
+              <div class="neutered-field">
+                <label>Is {{ petDisplayName(petNum) }} neutered/spayed?</label>
+                <SegmentedButtons
+                  :model-value="getAnswerValue('pet_neutered', petNum)"
+                  :options="[
+                    { value: 'Yes', label: 'Yes' },
+                    { value: 'No', label: 'No' }
+                  ]"
+                  :name="`pet-neutered-${petNum}`"
+                  @update:model-value="(value) => handleAnswer(value, 'pet_neutered', `pet_${petNum}`)"
+                />
+              </div>
               
               <!-- Expecting Question - Conditional -->
-              <QuestionRenderer 
-                v-if="shouldShowExpectingQuestion(petNum)"
-                :question="{
-                  id: 'pet_expecting',
-                  type: 'select',
-                  question: 'Is ' + petDisplayName(petNum) + ' expecting?',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: ['Yes', 'No'],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Expecting status is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_expecting', petNum)"
-                @answer="handleAnswer"
-              />
+              <div v-if="shouldShowExpectingQuestion(petNum)" class="expecting-field">
+                <label>Is {{ petDisplayName(petNum) }} expecting?</label>
+                <SegmentedButtons
+                  :model-value="getAnswerValue('pet_expecting', petNum)"
+                  :options="[
+                    { value: 'Yes', label: 'Yes' },
+                    { value: 'No', label: 'No' }
+                  ]"
+                  :name="`pet-expecting-${petNum}`"
+                  @update:model-value="(value) => handleAnswer(value, 'pet_expecting', `pet_${petNum}`)"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -587,19 +546,23 @@
               <!-- Conditional Pathology Select -->
               <div v-if="getAnswerValue('pet_has_pathology', petNum) === 'Yes'" class="pathology-select">
                 <label>Select pathology that applies to your pet:</label>
-                <select :value="getAnswerValue('pet_pathology', petNum)" @input="handlePathologySelect($event, petNum)" class="pathology-select">
-                  <option value="" disabled>Select pathology</option>
-                  <option value="Food allergies and intolerances">Food allergies and intolerances</option>
-                  <option value="Sensitive digestions">Sensitive digestions</option>
-                  <option value="Skin problems">Skin problems</option>
-                  <option value="Joint problems">Joint problems</option>
-                  <option value="Dental problems">Dental problems</option>
-                  <option value="Diabetes">Diabetes</option>
-                  <option value="Epilepsy">Epilepsy</option>
-                  <option value="Otitis">Otitis</option>
-                  <option value="Cushing's syndrome">Cushing's syndrome</option>
-                  <option value="Hypothyroidism">Hypothyroidism</option>
-                </select>
+                <SegmentedButtons
+                  :model-value="getAnswerValue('pet_pathology', petNum)"
+                  :options="[
+                    { value: 'Food allergies and intolerances', label: 'Food allergies' },
+                    { value: 'Sensitive digestions', label: 'Sensitive digestion' },
+                    { value: 'Skin problems', label: 'Skin problems' },
+                    { value: 'Joint problems', label: 'Joint problems' },
+                    { value: 'Dental problems', label: 'Dental problems' },
+                    { value: 'Diabetes', label: 'Diabetes' },
+                    { value: 'Epilepsy', label: 'Epilepsy' },
+                    { value: 'Otitis', label: 'Otitis' },
+                    { value: 'Cushing\'s syndrome', label: 'Cushing\'s' },
+                    { value: 'Hypothyroidism', label: 'Hypothyroidism' }
+                  ]"
+                  :name="`pet-pathology-${petNum}`"
+                  @update:model-value="(value) => handlePathologySelect({ target: { value } }, petNum)"
+                />
               </div>
             </div>
           </div>

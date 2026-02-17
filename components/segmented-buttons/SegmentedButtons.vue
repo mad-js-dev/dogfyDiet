@@ -81,9 +81,8 @@ const selectOption = (value: string) => {
 
   &__container {
     display: inline-flex;
-    box-shadow: inset 0 0 1px #0f0;
-
     border-radius: var(--radius);
+    box-shadow: inset 0 0 2px var(--secondary-color), inset 0 0 2px var(--secondary-color), inset 0 0 2px var(--secondary-color), inset 0 0 2px var(--secondary-color);
   }
 
   &__button {
