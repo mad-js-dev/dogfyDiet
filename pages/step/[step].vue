@@ -491,20 +491,35 @@
             </div>
             
             <div v-if="sharedHasPathology === 'Yes'" class="pathology-field">
-              <label>Select pathology that applies to your pet:</label>
-              <select v-model="sharedPathology" @change="handleSharedPathologyChange" class="pathology-select">
-                <option value="" disabled>Select pathology</option>
-                <option value="Food allergies and intolerances">Food allergies and intolerances</option>
-                <option value="Sensitive digestions">Sensitive digestions</option>
-                <option value="Skin problems">Skin problems</option>
-                <option value="Joint problems">Joint problems</option>
-                <option value="Dental problems">Dental problems</option>
-                <option value="Diabetes">Diabetes</option>
-                <option value="Epilepsy">Epilepsy</option>
-                <option value="Otitis">Otitis</option>
-                <option value="Cushing's syndrome">Cushing's syndrome</option>
-                <option value="Hypothyroidism">Hypothyroidism</option>
-              </select>
+              <QuestionRenderer 
+                :question="{
+                  id: 'shared_pathology',
+                  type: 'select',
+                  question: 'Select pathology that applies to your pet:',
+                  appliesTo: 'all',
+                  required: true,
+                  options: [
+                    'Food allergies and intolerances',
+                    'Sensitive digestions',
+                    'Skin problems',
+                    'Joint problems',
+                    'Dental problems',
+                    'Diabetes',
+                    'Epilepsy',
+                    'Otitis',
+                    'Cushing\'s syndrome',
+                    'Hypothyroidism'
+                  ],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Pathology selection is required'
+                    }
+                  ]
+                }"
+                :model-value="sharedPathology"
+                @answer="handleSharedPathologyChange"
+              />
             </div>
           </div>
           
@@ -545,23 +560,35 @@
               
               <!-- Conditional Pathology Select -->
               <div v-if="getAnswerValue('pet_has_pathology', petNum) === 'Yes'" class="pathology-select">
-                <label>Select pathology that applies to your pet:</label>
-                <SegmentedButtons
+                <QuestionRenderer 
+                  :question="{
+                    id: 'pet_pathology',
+                    type: 'select',
+                    question: 'Select pathology that applies to your pet:',
+                    appliesTo: 'individual',
+                    required: true,
+                    options: [
+                      'Food allergies and intolerances',
+                      'Sensitive digestions',
+                      'Skin problems',
+                      'Joint problems',
+                      'Dental problems',
+                      'Diabetes',
+                      'Epilepsy',
+                      'Otitis',
+                      'Cushing\'s syndrome',
+                      'Hypothyroidism'
+                    ],
+                    validation: [
+                      {
+                        type: 'required',
+                        message: 'Pathology selection is required'
+                      }
+                    ]
+                  }"
+                  :pet-id="`pet_${petNum}`"
                   :model-value="getAnswerValue('pet_pathology', petNum)"
-                  :options="[
-                    { value: 'Food allergies and intolerances', label: 'Food allergies' },
-                    { value: 'Sensitive digestions', label: 'Sensitive digestion' },
-                    { value: 'Skin problems', label: 'Skin problems' },
-                    { value: 'Joint problems', label: 'Joint problems' },
-                    { value: 'Dental problems', label: 'Dental problems' },
-                    { value: 'Diabetes', label: 'Diabetes' },
-                    { value: 'Epilepsy', label: 'Epilepsy' },
-                    { value: 'Otitis', label: 'Otitis' },
-                    { value: 'Cushing\'s syndrome', label: 'Cushing\'s' },
-                    { value: 'Hypothyroidism', label: 'Hypothyroidism' }
-                  ]"
-                  :name="`pet-pathology-${petNum}`"
-                  @update:model-value="(value) => handlePathologySelect({ target: { value } as any }, petNum)"
+                  @answer="handleAnswer"
                 />
               </div>
             </div>
@@ -1247,7 +1274,12 @@ const handleSharedActivityLevelChange = () => {
   }
 }
 
-const handleSharedPathologyChange = () => {
+const handleSharedPathologyChange = (value: string, questionId: string) => {
+  // Update the appropriate shared value based on question ID
+  if (questionId === 'shared_pathology') {
+    sharedPathology.value = value
+  }
+  
   const currentPetCount = petCount.value
   for (let i = 1; i <= currentPetCount; i++) {
     questionnaire.addAnswer('pet_has_pathology', sharedHasPathology.value, `pet_${i}`)
