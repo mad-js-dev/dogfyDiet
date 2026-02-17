@@ -394,19 +394,28 @@
         <div v-if="!showIndividualActivityLevels" class="shared-activity-level-mode">
           <div class="activity-level-inputs">
             <div class="activity-level-field">
-              <label>Select activity level for all pets:</label>
-              <select v-model="sharedActivityLevel" @change="handleSharedActivityLevelChange" class="activity-level-select">
-                <option value="" disabled>Select activity level</option>
-                <option value="Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm">
-                  Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm
-                </option>
-                <option value="Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest">
-                  Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest
-                </option>
-                <option value="Energy tornado - Daily walks of more than 2h. Don't let that energy tornado stop!">
-                  Energy tornado - Daily walks of more than 2h. Don't let that energy tornado stop!
-                </option>
-              </select>
+              <QuestionRenderer 
+                :question="{
+                  id: 'shared_activity_level',
+                  type: 'range-slider',
+                  question: 'Select activity level for all pets:',
+                  appliesTo: 'all',
+                  required: true,
+                  options: [
+                    'Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm',
+                    'Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest',
+                    'Energy tornado - Daily walks of more than 2h. Don\'t let that energy tornado stop!'
+                  ],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Activity level is required'
+                    }
+                  ]
+                }"
+                :model-value="sharedActivityLevel"
+                @answer="handleSharedActivityLevelChange"
+              />
             </div>
           </div>
           
@@ -435,7 +444,7 @@
               <QuestionRenderer 
                 :question="{
                   id: 'pet_activity_level',
-                  type: 'select',
+                  type: 'range-slider',
                   question: 'What is ' + petDisplayName(petNum) + '\'s activity level?',
                   appliesTo: 'individual',
                   required: true,
@@ -1273,7 +1282,8 @@ const handleSharedWeightChange = () => {
   }
 }
 
-const handleSharedActivityLevelChange = () => {
+const handleSharedActivityLevelChange = (value: string, questionId: string) => {
+  sharedActivityLevel.value = value
   if (sharedActivityLevel.value) {
     // Apply shared activity level to all pets
     const currentPetCount = petCount.value
@@ -1696,25 +1706,24 @@ definePageMeta({
 
 .shared-activity-level-mode {
   text-align: center;
-  padding: 2rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  background: #f8f9fa;
   margin-bottom: 2rem;
 }
 
 .activity-level-inputs {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 2rem;
   margin-bottom: 2rem;
-  justify-content: center;
+  align-items: center;
 }
 
 .activity-level-field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-width: 300px;
+  min-width: 400px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .activity-level-field label {

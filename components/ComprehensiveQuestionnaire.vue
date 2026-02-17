@@ -282,7 +282,6 @@ const submitQuestionnaire = () => {
   font-size: 0.875rem;
   text-align: center;
   color: #666;
-  max-width: 60%;
 }
 
 .step-current .step-title {
