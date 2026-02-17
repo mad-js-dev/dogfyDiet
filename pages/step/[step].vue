@@ -522,11 +522,15 @@
           <div class="pathology-inputs">
             <div class="pathology-field">
               <label>Does your pet have any pathology?</label>
-              <select v-model="sharedHasPathology" @change="handleSharedPathologyChange" class="pathology-bool-select">
-                <option value="" disabled>Select option</option>
-                <option value="No">No</option>
-                <option value="Yes">Yes</option>
-              </select>
+              <SegmentedButtons
+                v-model="sharedHasPathology"
+                :options="[
+                  { value: 'No', label: 'No' },
+                  { value: 'Yes', label: 'Yes' }
+                ]"
+                name="shared-has-pathology"
+                @change="handleSharedPathologyChange"
+              />
             </div>
             
             <div v-if="sharedHasPathology === 'Yes'" class="pathology-field">
@@ -567,25 +571,18 @@
               <h3>{{ petDisplayName(petNum) }}</h3>
               
               <!-- Pathology Yes/No Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_has_pathology',
-                  type: 'select',
-                  question: 'Does ' + petDisplayName(petNum) + ' have any pathology?',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: ['No', 'Yes'],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Pathology information is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_has_pathology', petNum)"
-                @answer="handleAnswer"
-              />
+              <div class="pathology-field">
+                <label>Does {{ petDisplayName(petNum) }} have any pathology?</label>
+                <SegmentedButtons
+                  :model-value="getAnswerValue('pet_has_pathology', petNum)"
+                  :options="[
+                    { value: 'No', label: 'No' },
+                    { value: 'Yes', label: 'Yes' }
+                  ]"
+                  :name="`pet-has-pathology-${petNum}`"
+                  @update:model-value="(value) => handleAnswer(value, 'pet_has_pathology', `pet_${petNum}`)"
+                />
+              </div>
               
               <!-- Conditional Pathology Select -->
               <div v-if="getAnswerValue('pet_has_pathology', petNum) === 'Yes'" class="pathology-select">
@@ -798,7 +795,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import { useAbTestingStore } from '~/stores/ab-testing'
 import { getQuestionnaireSteps, getStepQuestions, shouldShowQuestion, urlToInternalStep, internalToUrlStep, getTotalSteps, getInternalStepFromUrl, getUrlStepFromInternal } from '~/config/questionnaire-steps'
@@ -806,6 +803,8 @@ import { questionnaireQuestions } from '~/config/questionnaire-questions'
 import QuestionRenderer from '~/components/QuestionRenderer.vue'
 import StepNavigation from '~/components/StepNavigation.vue'
 import ConditionalAnswerRenderer from '~/components/ConditionalAnswerRenderer.vue'
+import SegmentedButtons from '~/components/segmented-buttons/SegmentedButtons.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
 const abTesting = useAbTestingStore()
@@ -976,7 +975,7 @@ const canProceed = computed(() => {
     const currentPetCount = petCount.value
     
     // Check pet names
-    const petNames = answers.value.filter(a => 
+    const petNames = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_name' && 
         a.petId && 
         a.value && 
@@ -1038,7 +1037,7 @@ const canProceed = computed(() => {
     } else {
       // Individual mode: check for individual answers
       console.log('Individual mode validation (should not happen with 1 pet)')
-      const petGenders = answers.value.filter(a => 
+      const petGenders = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
         a.questionId === 'pet_gender' && 
         a.petId && 
         a.value && 
