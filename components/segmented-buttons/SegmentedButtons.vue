@@ -72,16 +72,33 @@ const selectOption = (value: string) => {
 </script>
 
 <style scoped lang="scss">
+@use "sass:color";
 .c-segmented-buttons {
-  --radius: 25px;
-  --primary-color: #ffc800;
-  --primary-surface-color: #fe9;
-  --secondary-color: #c2c2c2;
+  $radius: 25px;
+  $primary-color: #ffc800;
+  $primary-surface-color: #fe9;
+  $secondary-color: #c2c2c2;
+  
+  --radius: #{$radius};
+  --primary-color: #{$primary-color};
+  --primary-surface-color: #{$primary-surface-color};
+  --secondary-color: #{$secondary-color};
+  
   display: inline-block;
 
   &__container {
+    $center-line-r: color.channel($secondary-color, "red", rgb);
+    $center-line-g: color.channel($secondary-color, "green", rgb);
+    $center-line-b: color.channel($secondary-color, "blue", rgb);
     display: inline-flex;
     border-radius: var(--radius);
+    
+    background: linear-gradient(to right,
+      rgba($center-line-r, $center-line-g, $center-line-b, 0) calc(50% - 0.5px),
+      rgba($center-line-r, $center-line-g, $center-line-b, 1) calc(50% - 0.5px),
+      rgba($center-line-r, $center-line-g, $center-line-b, 1) calc(50% + 0.5px),
+      rgba($center-line-r, $center-line-g, $center-line-b, 0) calc(50% + 0.5px)
+    );
     box-shadow: inset 0 0 2px var(--secondary-color), inset 0 0 2px var(--secondary-color), inset 0 0 2px var(--secondary-color), inset 0 0 2px var(--secondary-color);
   }
 
@@ -129,23 +146,6 @@ const selectOption = (value: string) => {
     display: block;
     line-height: 1.2;
     text-align: center;
-  }
-
-  // Size variants
-  &--small {
-    .c-segmented-buttons__button {
-      min-height: 32px;
-      padding: 0 12px;
-      font-size: 12px;
-    }
-  }
-
-  &--large {
-    .c-segmented-buttons__button {
-      min-height: 48px;
-      padding: 0 20px;
-      font-size: 16px;
-    }
   }
 
   // Responsive
