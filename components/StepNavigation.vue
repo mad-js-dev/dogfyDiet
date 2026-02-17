@@ -95,9 +95,9 @@ const navigateToStep = (stepId: number) => {
 .step-dots::before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
+  top: 24px;
+  left: 4px;
+  right: 30px;
   height: 2px;
   background: #e0e0e0;
   z-index: 0;
