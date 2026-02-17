@@ -3,117 +3,24 @@
     <StepNavigation :current-step="currentStepId" />
     
     <div class="step-content">
-      <!-- Pet Race Step -->
+      <!-- Pet Breed Step -->
       <div v-if="currentStepId === 0" class="pet-race-section">
         <PetBreedStep />
       </div>
 
       <!-- Pet Names Step -->
       <div v-else-if="currentStepId === 1" class="pet-names-section">
-        <ConditionalAnswerRenderer 
-          :question="{
-            id: 'pet_name',
-            type: 'text',
-            appliesTo: 'individual',
-            required: true,
-            validation: [
-              {
-                type: 'required',
-                message: 'Pet name is required'
-              },
-              {
-                type: 'minLength',
-                value: 2,
-                message: 'Pet name must be at least 2 characters'
-              }
-            ]
-          }"
-          :initial-mode="'individual'"
-        />
+        <PetNamesStep />
       </div>
 
       <!-- Pet Gender Step -->
       <div v-else-if="currentStepId === 2" class="pet-gender-section">
-        <ConditionalAnswerRenderer 
-          :question="{
-            id: 'pet_gender',
-            type: 'segmented',
-            question: 'What is {petName}\'s gender?',
-            appliesTo: 'all',
-            required: false,
-            options: ['Male', 'Female'],
-            validation: [
-              {
-                type: 'required',
-                message: 'Pet gender is required'
-              }
-            ]
-          }"
-          :initial-mode="showIndividualGenders ? 'individual' : 'shared'"
-          :hide-differentiation-button="true"
-          :hide-merge-button="true"
+        <PetGenderStep 
+          :show-individual-genders="showIndividualGenders"
+          :pet-count="petCount"
+          :should-show-expecting-question-renderer="shouldShowExpectingQuestionRenderer"
+          @toggle-gender-mode="toggleGenderMode"
         />
-        
-        <!-- Neutered Question -->
-        <ConditionalAnswerRenderer 
-          :question="{
-            id: 'pet_neutered',
-            type: 'segmented',
-            question: 'Has {petName} been neutered or spayed?',
-            appliesTo: 'all',
-            required: false,
-            options: ['Yes', 'No'],
-            validation: [
-              {
-                type: 'required',
-                message: 'Neutered status is required'
-              }
-            ]
-          }"
-          :initial-mode="showIndividualGenders ? 'individual' : 'shared'"
-          :hide-differentiation-button="true"
-          :hide-merge-button="true"
-        />
-        
-        <!-- Expecting Question (conditional) -->
-        <ConditionalAnswerRenderer 
-          v-if="shouldShowExpectingQuestionRenderer()"
-          :question="{
-            id: 'pet_expecting',
-            type: 'segmented',
-            question: 'Is {petName} expecting puppies or kittens?',
-            appliesTo: 'all',
-            required: false,
-            options: ['Yes', 'No'],
-            validation: [
-              {
-                type: 'required',
-                message: 'Expecting status is required'
-              }
-            ]
-          }"
-          :initial-mode="showIndividualGenders ? 'individual' : 'shared'"
-          :hide-differentiation-button="true"
-          :hide-merge-button="true"
-        />
-        
-        <!-- Master Differentiation Button -->
-        <div v-if="petCount > 1" class="master-differentiation-controls">
-          <div 
-            v-if="!showIndividualGenders"
-            @click="toggleGenderMode"
-            class="differentiate-btn"
-          >
-            Are your pets different in this aspect?
-          </div>
-          <button 
-            v-else
-            @click="toggleGenderMode"
-            class="merge-btn"
-          >
-            Apply same answers to all pets
-          </button>
-        </div>
       </div>
 
       <!-- Pet Birth Date Step -->
@@ -797,6 +704,8 @@ import StepNavigation from '~/components/StepNavigation.vue'
 import ConditionalAnswerRenderer from '~/components/ConditionalAnswerRenderer.vue'
 import SegmentedButtons from '~/components/segmented-buttons/SegmentedButtons.vue'
 import PetBreedStep from '~/components/steps/PetBreedStep.vue'
+import PetNamesStep from '~/components/steps/PetNamesStep.vue'
+import PetGenderStep from '~/components/steps/PetGenderStep.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
