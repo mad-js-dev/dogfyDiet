@@ -5,25 +5,7 @@
     <div class="step-content">
       <!-- Pet Race Step -->
       <div v-if="currentStepId === 0" class="pet-race-section">
-        <QuestionRenderer 
-          :question="{
-            id: 'pet_breed',
-            type: 'select',
-            question: 'What is your pet\'s breed?',
-            appliesTo: 'individual',
-            required: true,
-            options: allBreeds,
-            validation: [
-              {
-                type: 'required',
-                message: 'Pet breed is required'
-              }
-            ]
-          }"
-          :model-value="getAnswerValue('pet_breed', 1)"
-          pet-id="pet_1"
-          @answer="handleAnswer"
-        />
+        <PetBreedStep />
       </div>
 
       <!-- Pet Names Step -->
@@ -814,6 +796,7 @@ import QuestionRenderer from '~/components/QuestionRenderer.vue'
 import StepNavigation from '~/components/StepNavigation.vue'
 import ConditionalAnswerRenderer from '~/components/ConditionalAnswerRenderer.vue'
 import SegmentedButtons from '~/components/segmented-buttons/SegmentedButtons.vue'
+import PetBreedStep from '~/components/steps/PetBreedStep.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
