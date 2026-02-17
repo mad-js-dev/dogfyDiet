@@ -1341,16 +1341,25 @@ const handleSharedGastronomicProfileChange = (value: string, questionId: string)
 
 const shouldShowExpectingQuestionRenderer = () => {
   // Check if we should show the expecting question based on current mode and answers
+  console.log('shouldShowExpectingQuestionRenderer called:', {
+    showIndividualGenders: showIndividualGenders.value,
+    petCount: petCount.value
+  })
+  
   if (!showIndividualGenders.value) {
     // Shared mode: check shared answers
-    return shouldShowSharedExpectingQuestion()
+    const result = shouldShowSharedExpectingQuestion()
+    console.log('Shared mode result:', result)
+    return result
   } else {
     // Individual mode: show if any pet needs the expecting question
     for (let i = 1; i <= petCount.value; i++) {
       if (shouldShowExpectingQuestion(i)) {
+        console.log('Individual mode: pet', i, 'needs expecting question')
         return true
       }
     }
+    console.log('Individual mode: no pets need expecting question')
     return false
   }
 }
@@ -1359,6 +1368,12 @@ const shouldShowExpectingQuestion = (petNum: number) => {
   const genderAnswer = questionnaire.getAnswer('pet_gender', `pet_${petNum}`)
   const neuteredAnswer = questionnaire.getAnswer('pet_neutered', `pet_${petNum}`)
   
+  console.log('shouldShowExpectingQuestion for pet', petNum, ':', {
+    genderAnswer: genderAnswer?.value,
+    neuteredAnswer: neuteredAnswer?.value,
+    shouldShow: genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
+  })
+  
   // Show expecting question only for female pets that are not neutered
   return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
 }
@@ -1366,6 +1381,12 @@ const shouldShowExpectingQuestion = (petNum: number) => {
 const shouldShowSharedExpectingQuestion = () => {
   const genderAnswer = questionnaire.getAnswer('pet_gender')
   const neuteredAnswer = questionnaire.getAnswer('pet_neutered')
+  
+  console.log('shouldShowSharedExpectingQuestion:', {
+    genderAnswer: genderAnswer?.value,
+    neuteredAnswer: neuteredAnswer?.value,
+    shouldShow: genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
+  })
   
   // Show expecting question only for female pets that are not neutered
   return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
