@@ -7,6 +7,7 @@ import AgeAnswer from '~/components/AgeAnswer.vue'
 import RangeAnswer from '~/components/RangeAnswer.vue'
 import MultiSelectAnswer from '~/components/MultiSelectAnswer.vue'
 import SegmentedAnswer from '~/components/SegmentedAnswer.vue'
+import RangeSlider from '~/components/range-slider/RangeSlider.vue'
 
 export class TextQuestion extends BaseQuestion {
   constructor(config: QuestionConfig) {
@@ -153,5 +154,20 @@ export class SegmentedQuestion extends BaseQuestion {
 
   getAnswerComponent() {
     return SegmentedAnswer
+  }
+}
+
+export class RangeSliderQuestion extends BaseQuestion {
+  constructor(config: QuestionConfig) {
+    super(config)
+  }
+
+  validate(value: any): boolean {
+    if (!this.config.required) return true
+    return value !== null && value !== undefined && value !== ''
+  }
+
+  getAnswerComponent() {
+    return RangeSlider
   }
 }

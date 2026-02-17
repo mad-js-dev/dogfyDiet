@@ -1,5 +1,5 @@
 import { BaseQuestion } from './BaseQuestion'
-import { TextQuestion, SelectQuestion, BoolQuestion, AgeQuestion, RangeQuestion, EmailQuestion, TelQuestion, SegmentedQuestion } from './QuestionTypes'
+import { TextQuestion, SelectQuestion, BoolQuestion, AgeQuestion, RangeQuestion, EmailQuestion, TelQuestion, SegmentedQuestion, RangeSliderQuestion } from './QuestionTypes'
 import type { QuestionConfig } from '~/types/questionnaire'
 
 export class QuestionFactory {
@@ -32,6 +32,9 @@ export class QuestionFactory {
         break
       case 'segmented':
         question = new SegmentedQuestion(config)
+        break
+      case 'range-slider':
+        question = new RangeSliderQuestion(config)
         break
       default:
         throw new Error(`Unknown question type: ${config.type}`)
