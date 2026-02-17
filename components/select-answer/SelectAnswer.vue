@@ -5,6 +5,7 @@
       :id="config.id"
       v-model="selectedValue"
       :disabled="disabled"
+      autocomplete="off"
       class="c-select-answer__select c-select-answer__select--native"
       @blur="handleBlur"
     >

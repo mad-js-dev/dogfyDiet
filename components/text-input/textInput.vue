@@ -7,6 +7,7 @@
         :type="inputType"
         :placeholder="placeholder"
         :disabled="disabled"
+        autocomplete="off"
         class="c-text-input__input"
         :class="{ 'c-text-input__input--with-suffix': suffix || icon }"
         @input="handleInput"
