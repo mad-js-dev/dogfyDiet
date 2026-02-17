@@ -106,6 +106,9 @@ const getLabel = (option: string): string => {
   if (option.includes('thin')) return 'Thin'
   if (option.includes('good shape')) return 'Good'
   if (option.includes('chubby')) return 'Chubby'
+  if (option.includes('selective')) return 'Selective'
+  if (option.includes('gourmet')) return 'Regular'
+  if (option.includes('glutton')) return 'Glutton'
   return option.split(' ')[0] // Fallback to first word
 }
 

@@ -614,19 +614,28 @@
         <div v-if="!showIndividualGastronomicProfiles" class="shared-gastronomic-profile-mode">
           <div class="gastronomic-profile-inputs">
             <div class="gastronomic-profile-field">
-              <label>Select gastronomic profile for all pets:</label>
-              <select v-model="sharedGastronomicProfile" @change="handleSharedGastronomicProfileChange" class="gastronomic-profile-select">
-                <option value="" disabled>Select gastronomic profile</option>
-                <option value="The selective one: has a demanding palate, often struggles to finish their portion and gets tired of food">
-                  The selective one: has a demanding palate, often struggles to finish their portion and gets tired of food
-                </option>
-                <option value="The gourmet: loves to try new flavors, but isn't satisfied with just anything">
-                  The gourmet: loves to try new flavors, but isn't satisfied with just anything
-                </option>
-                <option value="The glutton: devours all types of food as if they'll never taste another bite again">
-                  The glutton: devours all types of food as if they'll never taste another bite again
-                </option>
-              </select>
+              <QuestionRenderer 
+                :question="{
+                  id: 'shared_gastronomic_profile',
+                  type: 'range-slider',
+                  question: 'Select gastronomic profile for all pets:',
+                  appliesTo: 'all',
+                  required: true,
+                  options: [
+                    'The selective one: has a demanding palate, often struggles to finish their portion and gets tired of food',
+                    'The gourmet: loves to try new flavors, but isn\'t satisfied with just anything',
+                    'The glutton: devours all types of food as if they\'ll never taste another bite again'
+                  ],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Gastronomic profile is required'
+                    }
+                  ]
+                }"
+                :model-value="sharedGastronomicProfile"
+                @answer="handleSharedGastronomicProfileChange"
+              />
             </div>
           </div>
           
@@ -655,7 +664,7 @@
               <QuestionRenderer 
                 :question="{
                   id: 'pet_gastronomic_profile',
-                  type: 'select',
+                  type: 'range-slider',
                   question: 'What is ' + petDisplayName(petNum) + '\'s gastronomic profile?',
                   appliesTo: 'individual',
                   required: true,
@@ -1289,7 +1298,8 @@ const handleSharedPathologyChange = (value: string, questionId: string) => {
   }
 }
 
-const handleSharedGastronomicProfileChange = () => {
+const handleSharedGastronomicProfileChange = (value: string, questionId: string) => {
+  sharedGastronomicProfile.value = value
   if (sharedGastronomicProfile.value) {
     // Apply shared gastronomic profile to all pets
     const currentPetCount = petCount.value
