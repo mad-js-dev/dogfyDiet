@@ -261,25 +261,33 @@
 
       <!-- Pet Body Shape Step -->
       <div v-else-if="currentStepId === 4" class="pet-body-shape-section">
-        <h2>Which silhouette best represents your pet{{ Math.max(petCount, 1) > 1 ? 's' : '' }}?</h2>
         
         <!-- Shared Body Shape Mode (Default) -->
         <div v-if="!showIndividualBodyShapes" class="shared-body-shape-mode">
           <div class="body-shape-inputs">
             <div class="body-shape-field">
-              <label>Select body shape for all pets:</label>
-              <select v-model="sharedBodyShape" @change="handleSharedBodyShapeChange" class="body-shape-select">
-                <option value="" disabled>Select body shape</option>
-                <option value="A bit thin - Narrow waist and ribs are clearly visible">
-                  A bit thin - Narrow waist and ribs are clearly visible
-                </option>
-                <option value="In good shape - Waist is visible and ribs are easy to feel">
-                  In good shape - Waist is visible and ribs are easy to feel
-                </option>
-                <option value="A bit chubby - Waist is not visible and ribs are hard to feel">
-                  A bit chubby - Waist is not visible and ribs are hard to feel
-                </option>
-              </select>
+              <QuestionRenderer 
+                :question="{
+                  id: 'shared_body_shape',
+                  type: 'range-slider',
+                  question: 'Select body shape for all pets:',
+                  appliesTo: 'all',
+                  required: true,
+                  options: [
+                    'A bit thin - Narrow waist and ribs are clearly visible',
+                    'In good shape - Waist is visible and ribs are easy to feel',
+                    'A bit chubby - Waist is not visible and ribs are hard to feel'
+                  ],
+                  validation: [
+                    {
+                      type: 'required',
+                      message: 'Body shape is required'
+                    }
+                  ]
+                }"
+                :model-value="sharedBodyShape"
+                @answer="handleSharedBodyShapeChange"
+              />
             </div>
             
             <div class="body-shape-field">
@@ -317,13 +325,12 @@
               :key="petNum" 
               class="pet-answer-section"
             >
-              <h3>{{ petDisplayName(petNum) }}</h3>
               
               <!-- Body Shape Question -->
               <QuestionRenderer 
                 :question="{
                   id: 'pet_body_shape',
-                  type: 'select',
+                  type: 'range-slider',
                   question: 'Which silhouette best represents ' + petDisplayName(petNum) + '?',
                   appliesTo: 'individual',
                   required: true,
@@ -1209,7 +1216,8 @@ const handleSharedBirthDateChange = () => {
   }
 }
 
-const handleSharedBodyShapeChange = () => {
+const handleSharedBodyShapeChange = (value: string, questionId: string) => {
+  sharedBodyShape.value = value
   if (sharedBodyShape.value) {
     // Apply shared body shape to all pets
     const currentPetCount = petCount.value
@@ -1525,9 +1533,6 @@ definePageMeta({
   flex: 1;
   min-width: 300px;
   max-width: 400px;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  border: 2px solid #e0e0e0;
   border-radius: 8px;
   background: #f8f9fa;
 }
@@ -1645,11 +1650,6 @@ definePageMeta({
 
 .shared-body-shape-mode {
   text-align: center;
-  padding: 2rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  background: #f8f9fa;
-  margin-bottom: 2rem;
 }
 
 .shared-activity-level-mode {
@@ -1697,16 +1697,18 @@ definePageMeta({
 
 .body-shape-inputs {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
   margin-bottom: 2rem;
-  justify-content: center;
+  align-items: center;
 }
 
 .body-shape-field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-width: 300px;
+  min-width: 400px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .body-shape-field label {
