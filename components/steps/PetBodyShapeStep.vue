@@ -37,7 +37,7 @@
               id: 'shared_weight',
               type: 'text',
               question: 'Enter weight (e.g., 25)',
-              appliesTo: 'individual'
+              appliesTo: 'all'
             }"
             suffix="Kg"
           />
@@ -153,6 +153,8 @@ const handleSharedBodyShapeChange = (value: string, questionId: string) => {
 
 const handleSharedWeightChange = (value: string) => {
   emit('handle-shared-weight-change', value)
+  // Also store the shared weight answer for validation
+  emit('handle-answer', value, 'shared_weight', null)
 }
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {
