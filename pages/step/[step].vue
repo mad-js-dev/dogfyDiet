@@ -40,526 +40,69 @@
 
       <!-- Pet Body Shape Step -->
       <div v-else-if="currentStepId === 4" class="pet-body-shape-section">
-        
-        <!-- Shared Body Shape Mode (Default) -->
-        <div v-if="!showIndividualBodyShapes" class="shared-body-shape-mode">
-          <div class="body-shape-inputs">
-            <div class="body-shape-field">
-              <QuestionRenderer 
-                :question="{
-                  id: 'shared_body_shape',
-                  type: 'range-slider',
-                  question: 'Select body shape for all pets:',
-                  appliesTo: 'all',
-                  required: true,
-                  options: [
-                    'A bit thin - Narrow waist and ribs are clearly visible',
-                    'In good shape - Waist is visible and ribs are easy to feel',
-                    'A bit chubby - Waist is not visible and ribs are hard to feel'
-                  ],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Body shape is required'
-                    }
-                  ]
-                }"
-                :model-value="sharedBodyShape"
-                @answer="handleSharedBodyShapeChange"
-              />
-            </div>
-            
-            <div class="body-shape-field">
-              <label>Enter weight for all pets:</label>
-              <TextInput
-                v-model="sharedWeight" 
-                @answer="handleSharedWeightChange" 
-                :config="{
-                  id: 'shared_weight',
-                  type: 'text',
-                  question: 'Enter weight (e.g., 25)',
-                  appliesTo: 'individual'
-                }"
-                suffix="Kg"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <div 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualBodyShapes = true"
-              class="differentiate-btn"
-            >
-              Are your pets different in this aspect?
-            </div>
-          </div>
-        </div>
-        
-        <!-- Individual Body Shape Mode -->
-        <div v-else class="individual-body-shape-mode">
-          <div class="pet-answers-grid">
-            <div 
-              v-for="petNum in Math.max(petCount, 1)" 
-              :key="petNum" 
-              class="pet-answer-section"
-            >
-              
-              <!-- Body Shape Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_body_shape',
-                  type: 'range-slider',
-                  question: 'Which silhouette best represents ' + petDisplayName(petNum) + '?',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: [
-                    'A bit thin - Narrow waist and ribs are clearly visible',
-                    'In good shape - Waist is visible and ribs are easy to feel',
-                    'A bit chubby - Waist is not visible and ribs are hard to feel'
-                  ],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Body shape is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_body_shape', petNum)"
-                @answer="handleAnswer"
-              />
-              
-              <!-- Pet Weight Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_weight',
-                  type: 'text',
-                  question: 'What is ' + petDisplayName(petNum) + '\'s weight?',
-                  appliesTo: 'individual',
-                  required: true,
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Weight is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_weight', petNum)"
-                @answer="handleAnswer"
-                suffix="Kg"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <button 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualBodyShapes = false"
-              class="merge-btn"
-            >
-              Apply same body shape to all pets
-            </button>
-          </div>
-        </div>
+        <PetBodyShapeStep 
+          :show-individual-body-shapes="showIndividualBodyShapes"
+          :pet-count="petCount"
+          :shared-body-shape="sharedBodyShape"
+          :shared-weight="sharedWeight"
+          :get-answer-value="getAnswerValue"
+          :pet-display-name="petDisplayName"
+          @toggle-individual-body-shapes="showIndividualBodyShapes = $event"
+          @handle-shared-body-shape-change="handleSharedBodyShapeChange"
+          @handle-shared-weight-change="handleSharedWeightChange"
+          @handle-answer="handleAnswer"
+        />
       </div>
 
       <!-- Pet Activity Level Step -->
       <div v-else-if="!excludeActivityLevel && currentStepId === 5" class="pet-activity-level-section">
-        <h2>What is your pet{{ Math.max(petCount, 1) > 1 ? 's\'' : '' }} activity level?</h2>
-        
-        <!-- Shared Activity Level Mode (Default) -->
-        <div v-if="!showIndividualActivityLevels" class="shared-activity-level-mode">
-          <div class="activity-level-inputs">
-            <div class="activity-level-field">
-              <QuestionRenderer 
-                :question="{
-                  id: 'shared_activity_level',
-                  type: 'range-slider',
-                  question: 'Select activity level for all pets:',
-                  appliesTo: 'all',
-                  required: true,
-                  options: [
-                    'Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm',
-                    'Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest',
-                    'Energy tornado - Daily walks of more than 2h. Don\'t let that energy tornado stop!'
-                  ],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Activity level is required'
-                    }
-                  ]
-                }"
-                :model-value="sharedActivityLevel"
-                @answer="handleSharedActivityLevelChange"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <div 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualActivityLevels = true"
-              class="differentiate-btn"
-            >
-              Are your pets different in this aspect?
-          </div>
-          </div>
-        </div>
-        
-        <!-- Individual Activity Level Mode -->
-        <div v-else class="individual-activity-level-mode">
-          <div class="pet-answers-grid">
-            <div 
-              v-for="petNum in Math.max(petCount, 1)" 
-              :key="petNum" 
-              class="pet-answer-section"
-            >
-              <h3>{{ petDisplayName(petNum) }}</h3>
-              
-              <!-- Activity Level Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_activity_level',
-                  type: 'range-slider',
-                  question: 'What is ' + petDisplayName(petNum) + '\'s activity level?',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: [
-                    'Couch potato - Daily walks of less than 1h. What they like most is to take a good nap and be very calm',
-                    'Zen dog - Daily walks of 1 to 2h. Knows how to enjoy good walks, but also knows when to rest',
-                    'Energy tornado - Daily walks of more than 2h. Don\'t let that energy tornado stop!'
-                  ],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Activity level is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_activity_level', petNum)"
-                @answer="handleAnswer"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <button 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualActivityLevels = false"
-              class="merge-btn"
-            >
-              Apply same activity level to all pets
-            </button>
-          </div>
-        </div>
+        <PetActivityLevelStep 
+          :show-individual-activity-levels="showIndividualActivityLevels"
+          :pet-count="petCount"
+          :shared-activity-level="sharedActivityLevel"
+          :get-answer-value="getAnswerValue"
+          :pet-display-name="petDisplayName"
+          @toggle-individual-activity-levels="showIndividualActivityLevels = $event"
+          @handle-shared-activity-level-change="handleSharedActivityLevelChange"
+          @handle-answer="handleAnswer"
+        />
       </div>
 
           <!-- Pet Pathology Step -->
       <div v-else-if="currentStepId === 6" class="pet-pathology-section">
-        
-        <!-- Shared Pathology Mode (Default) -->
-        <div v-if="!showIndividualPathologies" class="shared-pathology-mode">
-          <div class="pathology-inputs">
-            <div class="pathology-field">
-              <label>Does your pet have any pathology?</label>
-              <SegmentedButtons
-                v-model="sharedHasPathology"
-                :options="[
-                  { value: 'No', label: 'No' },
-                  { value: 'Yes', label: 'Yes' }
-                ]"
-                name="shared-has-pathology"
-                @change="handleSharedPathologyChange"
-              />
-            </div>
-            
-            <div v-if="sharedHasPathology === 'Yes'" class="pathology-field">
-              <QuestionRenderer 
-                :question="{
-                  id: 'shared_pathology',
-                  type: 'select',
-                  question: 'Select pathology that applies to your pet:',
-                  appliesTo: 'all',
-                  required: true,
-                  options: [
-                    'Food allergies and intolerances',
-                    'Sensitive digestions',
-                    'Skin problems',
-                    'Joint problems',
-                    'Dental problems',
-                    'Diabetes',
-                    'Epilepsy',
-                    'Otitis',
-                    'Cushing\'s syndrome',
-                    'Hypothyroidism'
-                  ],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Pathology selection is required'
-                    }
-                  ]
-                }"
-                :model-value="sharedPathology"
-                @answer="handleSharedPathologyChange"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <div 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualPathologies = true"
-              class="differentiate-btn"
-            >
-              Are your pets different in this aspect?
-            </div>
-          </div>
-        </div>
-        
-        <!-- Individual Pathology Mode -->
-        <div v-else class="individual-pathology-mode">
-          <div class="pet-answers-grid">
-            <div 
-              v-for="petNum in Math.max(petCount, 1)" 
-              :key="petNum" 
-              class="pet-answer-section"
-            >
-              <h3>{{ petDisplayName(petNum) }}</h3>
-              
-              <!-- Pathology Yes/No Question -->
-              <div class="pathology-field">
-                <label>Does {{ petDisplayName(petNum) }} have any pathology?</label>
-                <SegmentedButtons
-                  :model-value="getAnswerValue('pet_has_pathology', petNum)"
-                  :options="[
-                    { value: 'No', label: 'No' },
-                    { value: 'Yes', label: 'Yes' }
-                  ]"
-                  :name="`pet-has-pathology-${petNum}`"
-                  @update:model-value="(value) => handleAnswer(value, 'pet_has_pathology', `pet_${petNum}`)"
-                />
-              </div>
-              
-              <!-- Conditional Pathology Select -->
-              <div v-if="getAnswerValue('pet_has_pathology', petNum) === 'Yes'" class="pathology-select">
-                <QuestionRenderer 
-                  :question="{
-                    id: 'pet_pathology',
-                    type: 'select',
-                    question: 'Select pathology that applies to your pet:',
-                    appliesTo: 'individual',
-                    required: true,
-                    options: [
-                      'Food allergies and intolerances',
-                      'Sensitive digestions',
-                      'Skin problems',
-                      'Joint problems',
-                      'Dental problems',
-                      'Diabetes',
-                      'Epilepsy',
-                      'Otitis',
-                      'Cushing\'s syndrome',
-                      'Hypothyroidism'
-                    ],
-                    validation: [
-                      {
-                        type: 'required',
-                        message: 'Pathology selection is required'
-                      }
-                    ]
-                  }"
-                  :pet-id="`pet_${petNum}`"
-                  :model-value="getAnswerValue('pet_pathology', petNum)"
-                  @answer="handleAnswer"
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <div 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualPathologies = false"
-              class="differentiate-btn"
-            >
-              Apply same pathology to all pets
-            </div>
-          </div>
-        </div>
+        <PetPathologyStep 
+          :show-individual-pathologies="showIndividualPathologies"
+          :pet-count="petCount"
+          :shared-has-pathology="sharedHasPathology"
+          :shared-pathology="sharedPathology"
+          :get-answer-value="getAnswerValue"
+          :pet-display-name="petDisplayName"
+          @toggle-individual-pathologies="showIndividualPathologies = $event"
+          @handle-shared-pathology-change="handleSharedPathologyChange"
+          @handle-answer="handleAnswer"
+        />
       </div>
 
       <!-- Pet Gastronomic Profile Step -->
-      <div v-else-if="currentStepId === 7" class="pet-gastronomic-profile-section">        
-        <!-- Shared Gastronomic Profile Mode (Default) -->
-        <div v-if="!showIndividualGastronomicProfiles" class="shared-gastronomic-profile-mode">
-          <div class="gastronomic-profile-inputs">
-            <div class="gastronomic-profile-field">
-              <QuestionRenderer 
-                :question="{
-                  id: 'shared_gastronomic_profile',
-                  type: 'range-slider',
-                  question: 'Select gastronomic profile for all pets:',
-                  appliesTo: 'all',
-                  required: true,
-                  options: [
-                    'The selective one: has a demanding palate, often struggles to finish their portion and gets tired of food',
-                    'The gourmet: loves to try new flavors, but isn\'t satisfied with just anything',
-                    'The glutton: devours all types of food as if they\'ll never taste another bite again'
-                  ],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Gastronomic profile is required'
-                    }
-                  ]
-                }"
-                :model-value="sharedGastronomicProfile"
-                @answer="handleSharedGastronomicProfileChange"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <div 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualGastronomicProfiles = true"
-              class="differentiate-btn"
-            >
-              Are your pets different in this aspect?
-            </div>
-          </div>
-        </div>
-        
-        <!-- Individual Gastronomic Profile Mode -->
-        <div v-else class="individual-gastronomic-profile-mode">
-          <div class="pet-answers-grid">
-            <div 
-              v-for="petNum in Math.max(petCount, 1)" 
-              :key="petNum" 
-              class="pet-answer-section"
-            >
-              <h3>{{ petDisplayName(petNum) }}</h3>
-              
-              <!-- Gastronomic Profile Question -->
-              <QuestionRenderer 
-                :question="{
-                  id: 'pet_gastronomic_profile',
-                  type: 'range-slider',
-                  question: 'What is ' + petDisplayName(petNum) + '\'s gastronomic profile?',
-                  appliesTo: 'individual',
-                  required: true,
-                  options: [
-                    'The selective one: has a demanding palate, often struggles to finish their portion and gets tired of food',
-                    'The gourmet: loves to try new flavors, but isn\'t satisfied with just anything',
-                    'The glutton: devours all types of food as if they\'ll never taste another bite again'
-                  ],
-                  validation: [
-                    {
-                      type: 'required',
-                      message: 'Gastronomic profile is required'
-                    }
-                  ]
-                }"
-                :pet-id="`pet_${petNum}`"
-                :model-value="getAnswerValue('pet_gastronomic_profile', petNum)"
-                @answer="handleAnswer"
-              />
-            </div>
-          </div>
-          
-          <div class="master-differentiation-controls">
-            <button 
-              v-if="Math.max(petCount, 1) > 1"
-              @click="showIndividualGastronomicProfiles = false"
-              class="merge-btn"
-            >
-              Apply same gastronomic profile to all pets
-            </button>
-          </div>
-        </div>
+      <div v-else-if="currentStepId === 7" class="pet-gastronomic-profile-section">
+        <PetGastronomicProfileStep 
+          :show-individual-gastronomic-profiles="showIndividualGastronomicProfiles"
+          :pet-count="petCount"
+          :shared-gastronomic-profile="sharedGastronomicProfile"
+          :get-answer-value="getAnswerValue"
+          :pet-display-name="petDisplayName"
+          @toggle-individual-gastronomic-profiles="showIndividualGastronomicProfiles = $event"
+          @handle-shared-gastronomic-profile-change="handleSharedGastronomicProfileChange"
+          @handle-answer="handleAnswer"
+        />
       </div>
 
       <!-- User Contact Information Step -->
       <div v-else-if="currentStepId === 8" class="user-contact-section">
-        <div class="contact-form">
-          <div class="contact-field">
-            <QuestionRenderer 
-              :question="{
-                id: 'user_name',
-                type: 'text',
-                question: 'What is your name?',
-                appliesTo: 'all',
-                required: true,
-                validation: [
-                  {
-                    type: 'required',
-                    message: 'Your name is required'
-                  },
-                  {
-                    type: 'minLength',
-                    value: 2,
-                    message: 'Name must be at least 2 characters'
-                  }
-                ]
-              }"
-              :model-value="getAnswerValue('user_name')"
-              @answer="handleAnswer"
-            />
-          </div>
-
-          <div class="contact-field">
-            <QuestionRenderer 
-              :question="{
-                id: 'user_email',
-                type: 'email',
-                question: 'What is your email address?',
-                appliesTo: 'all',
-                required: true,
-                validation: [
-                  {
-                    type: 'required',
-                    message: 'Email address is required'
-                  },
-                  {
-                    type: 'email',
-                    message: 'Please enter a valid email address'
-                  }
-                ]
-              }"
-              :model-value="getAnswerValue('user_email')"
-              @answer="handleAnswer"
-            />
-          </div>
-
-          <div class="contact-field">
-            <QuestionRenderer 
-              :question="{
-                id: 'user_phone',
-                type: 'tel',
-                question: 'What is your phone number?',
-                appliesTo: 'all',
-                required: true,
-                validation: [
-                  {
-                    type: 'required',
-                    message: 'Phone number is required'
-                  },
-                  {
-                    type: 'phone',
-                    message: 'Please enter a valid phone number'
-                  }
-                ]
-              }"
-              :model-value="getAnswerValue('user_phone')"
-              @answer="handleAnswer"
-            />
-          </div>
-        </div>
+        <UserContactStep 
+          :get-answer-value="getAnswerValue"
+          @handle-answer="handleAnswer"
+        />
       </div>
 
       <!-- Navigation -->
@@ -597,6 +140,11 @@ import PetBreedStep from '~/components/steps/PetBreedStep.vue'
 import PetNamesStep from '~/components/steps/PetNamesStep.vue'
 import PetGenderStep from '~/components/steps/PetGenderStep.vue'
 import PetBirthDateStep from '~/components/steps/PetBirthDateStep.vue'
+import PetBodyShapeStep from '~/components/steps/PetBodyShapeStep.vue'
+import PetActivityLevelStep from '~/components/steps/PetActivityLevelStep.vue'
+import PetPathologyStep from '~/components/steps/PetPathologyStep.vue'
+import PetGastronomicProfileStep from '~/components/steps/PetGastronomicProfileStep.vue'
+import UserContactStep from '~/components/steps/UserContactStep.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
