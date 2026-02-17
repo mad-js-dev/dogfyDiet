@@ -27,7 +27,6 @@
       type="hidden"
       :name="name"
       :value="modelValue"
-      :required="required"
     />
   </div>
 </template>

@@ -32,6 +32,8 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   }
 
   const addAnswer = (questionId: string, value: any, petId?: string | null) => {
+    console.log('addAnswer called:', { questionId, value, petId, currentAnswers: answers.value })
+    
     const existingIndex = answers.value.findIndex(
       a => a.questionId === questionId && a.petId === petId
     )
@@ -48,6 +50,8 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     } else {
       answers.value.push(answer)
     }
+    
+    console.log('addAnswer result:', { answers: answers.value })
   }
 
   const addSmartAnswer = (questionId: string, value: any, petId?: string | null) => {
@@ -62,15 +66,19 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
 
   const differentiateAnswers = (questionId: string) => {
     const sharedAnswer = answers.value.find(a => a.questionId === questionId && !a.petId)
-    if (sharedAnswer) {
-      // Propagate to all pets
-      for (let i = 1; i <= petCount.value; i++) {
-        const existingPetAnswer = answers.value.find(a => a.questionId === questionId && a.petId === `pet_${i}`)
-        if (!existingPetAnswer) {
-          addAnswer(questionId, sharedAnswer.value, `pet_${i}`)
-        }
+    
+    // Always create individual answers for all pets, even if no shared answer exists
+    for (let i = 1; i <= petCount.value; i++) {
+      const existingPetAnswer = answers.value.find(a => a.questionId === questionId && a.petId === `pet_${i}`)
+      if (!existingPetAnswer) {
+        // Use shared answer if it exists, otherwise create empty answer
+        const value = sharedAnswer ? sharedAnswer.value : null
+        addAnswer(questionId, value, `pet_${i}`)
       }
-      // Remove shared answer
+    }
+    
+    // Remove shared answer if it exists
+    if (sharedAnswer) {
       const sharedIndex = answers.value.findIndex(a => a.questionId === questionId && !a.petId)
       if (sharedIndex >= 0) {
         answers.value.splice(sharedIndex, 1)

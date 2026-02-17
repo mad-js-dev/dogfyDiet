@@ -1,69 +1,66 @@
 <template>
   <div class="conditional-answer-renderer">
     <!-- Shared Answer Mode -->
-    <div v-if="answerMode === 'shared'" class="shared-answer-mode">
+    <div v-if="answerMode === 'shared'" class="conditional-answer-renderer__shared-answer-mode">
       <QuestionRenderer 
-        :question="question"
+        :question="sharedQuestionWithPetNames"
         :model-value="sharedAnswerValue"
         @answer="handleSharedAnswer"
       />
     </div>
 
     <!-- Individual Answer Mode -->
-    <div v-else class="individual-answer-mode">
-      <div class="pet-answers-grid">
-        <div 
-          v-for="petNum in petCount" 
-          :key="petNum" 
-          class="pet-answer-section"
-        >
-          <h3>{{ petDisplayName(petNum) }}</h3>
-          <QuestionRenderer 
-            :question="getQuestionForPet(petNum)"
-            :pet-id="`pet_${petNum}`"
-            :model-value="getAnswerValue(petNum)"
-            @answer="handleIndividualAnswer"
-          />
-          
-          <!-- Breed selection for pets 2+ (only for pet name step) -->
-          <div v-if="props.question.id === 'pet_name' && petNum > 1" class="breed-selection">
-            <label class="breed-label">Breed:</label>
-            <select 
-              :value="getBreedValue(petNum)"
-              @change="handleBreedChange(petNum, $event.target.value)"
-              class="breed-select"
-            >
-              <option value="" disabled>Select a breed...</option>
-              <option 
-                v-for="breed in breedOptions" 
-                :key="breed"
-                :value="breed"
-              >
-                {{ breed }}
-              </option>
-            </select>
+    <div v-else class="conditional-answer-renderer__individual-answer-mode">
+      <div class="conditional-answer-renderer__pet-answers-grid">
+        <template v-for="petIndex in petCount" :key="petIndex">
+          <div 
+            class="conditional-answer-renderer__pet-answer-section"
+            v-if="shouldShowQuestionForPet(petIndex)"
+          >
+            <QuestionRenderer 
+              :question="reactiveQuestionForPet(petIndex).value"
+              :pet-id="`pet_${petIndex}`"
+              :model-value="getAnswerValue(petIndex)"
+              @answer="handleIndividualAnswer"
+            />
+            
+            <!-- Breed selection for pets 2+ (only for pet name step) -->
+            <div v-if="props.question.id === 'pet_name' && petIndex > 1" class="conditional-answer-renderer__breed-selection">
+              <SelectAnswer
+                :config="{
+                  id: `pet_breed_${petIndex}`,
+                  type: 'select',
+                  question: 'Breed:',
+                  options: breedOptions,
+                  required: false,
+                  appliesTo: 'individual'
+                }"
+                :model-value="getBreedValue(petIndex)"
+                @answer="(value) => handleBreedChange(petIndex, Array.isArray(value) ? value[0] : value)"
+              />
+            </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
     
     <!-- Add Pet/Differentiate Button - Shows in both modes -->
-    <div class="answer-actions">
-      <button 
+    <div class="conditional-answer-renderer__answer-actions">
+      <div 
         v-if="showDifferentiationButton"
         @click="handleButtonClick"
-        class="differentiate-btn"
+        class="conditional-answer-renderer__differentiate-btn"
       >
-        {{ isPetNameQuestion ? (petCount === 1 ? '+ Add Second Pet' : 'Maximum 2 pets reached') : 'Are your pets different in this aspect?' }}
-      </button>
+        {{ isPetNameQuestion ? (petCount === 1 ? 'Have more than one pet?' : 'Maximum 2 pets reached') : 'Are your pets different in this aspect?' }}
+    </div>
       
-      <button 
+      <div 
         v-if="canMergeAnswers"
         @click="switchToShared"
-        class="merge-btn"
+        class="conditional-answer-renderer__merge-btn"
       >
         Apply same answer to all pets
-      </button>
+      </div>
     </div>
   </div>
 </template>
@@ -72,11 +69,14 @@
 import { computed, ref, watch } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import QuestionRenderer from '~/components/QuestionRenderer.vue'
+import SelectAnswer from '~/components/select-answer/SelectAnswer.vue'
 import type { QuestionConfig } from '~/types/questionnaire'
 
 interface Props {
   question: QuestionConfig
   initialMode?: 'shared' | 'individual'
+  hideDifferentiationButton?: boolean
+  hideMergeButton?: boolean
 }
 
 const props = defineProps<Props>()
@@ -168,6 +168,9 @@ const breedOptions = [
 const isPetNameQuestion = computed(() => props.question.id === 'pet_name')
 
 const showDifferentiationButton = computed(() => {
+  // If explicitly hidden, don't show
+  if (props.hideDifferentiationButton) return false
+  
   // For pet name question: show + Add Pet button only if less than 2 pets
   if (isPetNameQuestion.value) {
     return petCount.value < 2
@@ -182,10 +185,11 @@ const sharedAnswerValue = computed(() => {
 })
 
 const canMergeAnswers = computed(() => {
+  if (props.hideMergeButton) return false
   if (petCount.value <= 1) return false
   
   // Check if all pets have the same answer
-  const answers = []
+  const answers: any[] = []
   for (let i = 1; i <= petCount.value; i++) {
     const answer = questionnaire.getAnswer(props.question.id, `pet_${i}`)
     if (!answer) return false
@@ -198,17 +202,63 @@ const canMergeAnswers = computed(() => {
 
 // Methods
 const petDisplayName = (petNum: number) => {
-  const petNameAnswer = questionnaire.getAnswer(`pet_name_pet_${petNum}`, `pet_${petNum}`)
+  const petNameAnswer = questionnaire.getAnswer('pet_name', `pet_${petNum}`)
+  console.log(`petDisplayName(${petNum}):`, { petNameAnswer, value: petNameAnswer?.value })
   return petNameAnswer ? petNameAnswer.value : `Pet ${petNum}`
 }
 
+const shouldShowQuestionForPet = (petNum: number) => {
+  // For expecting question, only show for female pets that are not neutered
+  if (props.question.id === 'pet_expecting') {
+    const genderAnswer = questionnaire.getAnswer('pet_gender', `pet_${petNum}`)
+    const neuteredAnswer = questionnaire.getAnswer('pet_neutered', `pet_${petNum}`)
+    return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
+  }
+  
+  // For all other questions, always show
+  return true
+}
+
 const getQuestionForPet = (petNum: number): QuestionConfig => {
+  const petName = petDisplayName(petNum)
+  const originalQuestion = props.question.question || `What is ${petName}'s name?`
+  const finalQuestion = originalQuestion.includes('{petName}') ? originalQuestion.replaceAll('{petName}', petName) : originalQuestion
+  console.log(`getQuestionForPet(${petNum}):`, { petName, originalQuestion, finalQuestion })
   return {
     ...props.question,
     id: `${props.question.id}_pet_${petNum}`,
-    question: props.question.question.replace('your pet', `${petDisplayName(petNum)}`)
+    question: finalQuestion
   }
 }
+
+// Make the question reactive to pet name changes
+const reactiveQuestionForPet = (petNum: number) => {
+  return computed(() => getQuestionForPet(petNum))
+}
+
+// Handle shared mode question with pet names (use pet 1's name or general text)
+const sharedQuestionWithPetNames = computed(() => {
+  const originalQuestion = props.question.question || `What is your pet's name?`
+  
+  let finalQuestion
+  if (petCount.value === 1) {
+    // Single pet - use general text
+    finalQuestion = originalQuestion.includes('{petName}') ? 
+      originalQuestion.replaceAll('{petName}', 'your pet') : 
+      originalQuestion
+  } else {
+    // Multiple pets with shared answer - use plural text
+    finalQuestion = originalQuestion.includes('{petName}') ? 
+      originalQuestion.replaceAll('{petName}', 'your pets') : 
+      originalQuestion
+  }
+  
+  console.log('sharedQuestionWithPetNames:', { petCount: petCount.value, originalQuestion, finalQuestion })
+  return {
+    ...props.question,
+    question: finalQuestion
+  }
+})
 
 const getAnswerValue = (petNum: number) => {
   return questionnaire.getAnswer(props.question.id, `pet_${petNum}`)?.value || null
@@ -296,133 +346,146 @@ watch([
 }, { immediate: true })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .conditional-answer-renderer {
-  margin-bottom: 1.5rem;
-}
+  // Variables
+  $primary-color: #0066cc;
+  $primary-light: rgba(0, 102, 204, 0.1);
+  $background-light: #f8f9fa;
+  $border-color: #e0e0e0;
+  $border-dark: #dee2e6;
+  $text-muted: #6c757d;
+  $text-dark: #495057;
+  $success-gradient: linear-gradient(135deg, #28a745, #20c997);
+  $neutral-gradient: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  $border-radius-sm: 6px;
+  $border-radius-md: 8px;
+  $spacing-xs: 0.5rem;
+  $spacing-sm: 0.75rem;
+  $spacing-md: 1rem;
+  $spacing-lg: 1.5rem;
+  $transition-base: all 0.3s ease;
 
-.shared-answer-mode {
-  position: relative;
-}
+  // Block
+  margin-bottom: $spacing-lg;
 
-.differentiate-btn {
-  margin-top: 1rem;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
-  color: #6c757d;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.differentiate-btn:hover {
-  background: linear-gradient(135deg, #e9ecef, #dee2e6);
-  border-color: #adb5bd;
-  color: #495057;
-  transform: translateY(-1px);
-}
-
-.individual-answer-mode {
-  width: 100%;
-}
-
-.pet-answers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.pet-answer-section {
-  background: #f8f9fa;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.5rem;
-}
-
-.pet-answer-section h3 {
-  color: #0066cc;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.breed-selection {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.breed-label {
-  font-weight: 500;
-  color: #555;
-  font-size: 0.9rem;
-}
-
-.breed-select {
-  padding: 0.5rem 0.75rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.breed-select:focus {
-  outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
-}
-
-.breed-select:hover {
-  border-color: #0066cc;
-}
-
-.answer-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.merge-btn {
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #28a745, #20c997);
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.merge-btn:hover {
-  background: linear-gradient(135deg, #218838, #1ea085);
-  transform: translateY(-1px);
-}
-
-@media (max-width: 768px) {
-  .pet-answers-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  // Elements
+  &__shared-answer-mode {
+    position: relative;
   }
-  
-  .pet-answer-section {
-    padding: 1rem;
-  }
-  
-  .answer-actions {
-    flex-direction: column;
-  }
-  
-  .merge-btn {
+
+  &__individual-answer-mode {
     width: 100%;
+  }
+
+  &__pet-answers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: $spacing-md;
+    }
+  }
+
+  &__pet-answer-section {
+    border-radius: $border-radius-md;
+    border-right: 2px solid $border-color;
+
+    @media (max-width: 768px) {
+      padding: $spacing-md;
+      border-right: none;
+      border-bottom: 2px solid $border-color;
+    }
+
+    &:last-child {
+      border-right: none;
+
+      @media (max-width: 768px) {
+        border-bottom: none;
+      }
+    }
+
+    h3 {
+      color: $primary-color;
+      margin-bottom: $spacing-md;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+
+  &__breed-selection {
+    margin-top: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+    padding: 0 25px;
+  }
+
+  &__breed-label {
+    font-weight: 500;
+    color: #555;
+    font-size: 0.9rem;
+  }
+
+  &__answer-actions {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-md;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+  }
+
+  &__differentiate-btn {
+    border-radius: $border-radius-md;
+    color: #0a7373;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: $transition-base;
+    position: relative;
+
+    &:before {
+      display: block;
+      content: '';
+      width: 100%;
+      height: 1px;
+      background-color: #0a7373;
+      position: absolute;
+      bottom: -0.3rem;
+      transform: scaleX(0);
+      transform-origin: 100% 50%;
+      transition: transform 0.3s;
+    }
+    
+    &:hover:before {
+      transform: scaleX(1);
+    }
+  }
+
+  &__merge-btn {
+    padding: $spacing-xs $spacing-md;
+    background: $success-gradient;
+    border: none;
+    border-radius: $border-radius-sm;
+    color: white;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: $transition-base;
+
+    &:hover {
+      background: linear-gradient(135deg, #218838, #1ea085);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 }
 </style>

@@ -2,16 +2,16 @@
 export interface StepConfig {
   id: number
   title: string
-  description: string
-  questions: string[]
+  description?: string
+  questions?: string[]
   canSkip?: boolean
   dependsOn?: number[]
 }
 
 export interface QuestionConfig {
   id: string
-  type: 'text' | 'select' | 'bool' | 'age' | 'range' | 'email' | 'tel'
-  question: string
+  type: 'text' | 'select' | 'bool' | 'age' | 'range' | 'email' | 'tel' | 'segmented'
+  question?: string
   appliesTo: 'all' | 'individual'
   options?: string[] // for select questions
   rangeOptions?: RangeOption[] // for range questions

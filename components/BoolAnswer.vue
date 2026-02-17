@@ -73,7 +73,8 @@ watch(() => props.modelValue, (newValue) => {
 // Validate on mount if required
 onMounted(() => {
   if (props.config.required && selectedValue.value === null) {
-    error.value = 'This field is required'
+    const requiredMessage = props.config.validation?.find(v => v.type === 'required')?.message || 'This field is required'
+    error.value = requiredMessage
   }
 })
 </script>

@@ -90,7 +90,7 @@ watch(() => props.modelValue, (newValue) => {
 
 .question-label {
   display: block;
-  font-weight: 600;
+  font-weight: 400;
   color: #333;
   margin-bottom: 1rem;
   font-size: 1.1rem;

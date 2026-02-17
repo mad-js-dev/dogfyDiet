@@ -72,6 +72,7 @@ const navigateToStep = (stepId: number) => {
   background: white;
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 18vh;
 }
 
 .nav-container {
@@ -153,7 +154,7 @@ const navigateToStep = (stepId: number) => {
   font-size: 0.75rem;
   color: #666;
   text-align: center;
-  max-width: 80px;
+  max-width: 60%;
   line-height: 1.2;
 }
 
@@ -168,6 +169,7 @@ const navigateToStep = (stepId: number) => {
 }
 
 .step-future .step-title {
+  width: 80%;
   color: #999;
 }
 

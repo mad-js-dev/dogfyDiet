@@ -1,11 +1,12 @@
 import type { QuestionConfig } from '~/types/questionnaire'
 import { BaseQuestion } from './BaseQuestion'
-import TextAnswer from '~/components/TextAnswer.vue'
-import SelectAnswer from '~/components/SelectAnswer.vue'
+import TextInput from '~/components/text-input/textInput.vue'
+import SelectAnswer from '~/components/select-answer/SelectAnswer.vue'
 import BoolAnswer from '~/components/BoolAnswer.vue'
 import AgeAnswer from '~/components/AgeAnswer.vue'
 import RangeAnswer from '~/components/RangeAnswer.vue'
 import MultiSelectAnswer from '~/components/MultiSelectAnswer.vue'
+import SegmentedAnswer from '~/components/SegmentedAnswer.vue'
 
 export class TextQuestion extends BaseQuestion {
   constructor(config: QuestionConfig) {
@@ -18,7 +19,7 @@ export class TextQuestion extends BaseQuestion {
   }
 
   getAnswerComponent() {
-    return TextAnswer
+    return TextInput
   }
 }
 
@@ -117,7 +118,7 @@ export class EmailQuestion extends BaseQuestion {
   }
 
   getAnswerComponent() {
-    return TextAnswer // Use TextAnswer component for email input
+    return TextInput // Use TextInput component for email input
   }
 }
 
@@ -136,6 +137,21 @@ export class TelQuestion extends BaseQuestion {
   }
 
   getAnswerComponent() {
-    return TextAnswer // Use TextAnswer component for phone input
+    return TextInput // Use TextInput component for phone input
+  }
+}
+
+export class SegmentedQuestion extends BaseQuestion {
+  constructor(config: QuestionConfig) {
+    super(config)
+  }
+
+  validate(value: any): boolean {
+    if (!this.config.required) return true
+    return value !== null && value !== undefined && value !== ''
+  }
+
+  getAnswerComponent() {
+    return SegmentedAnswer
   }
 }

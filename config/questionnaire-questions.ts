@@ -4,7 +4,6 @@ export const questionnaireQuestions: QuestionConfig[] = [
   {
     id: 'pet_breed',
     type: 'select',
-    question: 'What is your pet\'s breed?',
     appliesTo: 'all',
     required: true,
     options: [
@@ -62,45 +61,27 @@ export const questionnaireQuestions: QuestionConfig[] = [
   },
   {
     id: 'pet_gender',
-    type: 'select',
+    type: 'segmented',
     question: 'What is your pet\'s gender?',
     appliesTo: 'individual',
-    required: true,
+    required: false,
     options: ['Male', 'Female'],
-    validation: [
-      {
-        type: 'required',
-        message: 'Pet gender is required'
-      }
-    ]
   },
   {
     id: 'pet_neutered',
-    type: 'select',
+    type: 'segmented',
     question: 'Is {petName} neutered/spayed?',
     appliesTo: 'individual',
-    required: true,
+    required: false,
     options: ['Yes', 'No'],
-    validation: [
-      {
-        type: 'required',
-        message: 'Neutered status is required'
-      }
-    ]
   },
   {
     id: 'pet_expecting',
-    type: 'select',
+    type: 'segmented',
     question: 'Is {petName} expecting?',
     appliesTo: 'individual',
-    required: true,
+    required: false,
     options: ['Yes', 'No'],
-    validation: [
-      {
-        type: 'required',
-        message: 'Expecting status is required'
-      }
-    ],
     dependencies: [
       {
         questionId: 'pet_gender',

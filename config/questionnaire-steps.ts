@@ -4,15 +4,13 @@ import { questionnaireQuestions } from './questionnaire-questions'
 export const questionnaireSteps: StepConfig[] = [
   {
     id: 0, // Internal 0-based ID
-    title: 'Pet Race',
-    description: 'What is your pet\'s breed?',
+    title: 'Pet Breed',
     questions: ['pet_breed'],
     canSkip: false
   },
   {
     id: 1, // Internal 0-based ID
     title: 'Pet Names',
-    description: 'Tell us your pets\' names',
     questions: ['pet_name'],
     canSkip: false,
     dependsOn: [0]
@@ -20,14 +18,13 @@ export const questionnaireSteps: StepConfig[] = [
   {
     id: 2, // Internal 0-based ID
     title: 'Pet Gender',
-    description: 'What is your pet\'s gender?',
     questions: ['pet_gender', 'pet_neutered', 'pet_expecting'],
     canSkip: false,
     dependsOn: [1]
   },
   {
     id: 3, // Internal 0-based ID
-    title: 'Pet Birth Date',
+    title: 'Birth Date',
     description: 'When was your pet born?',
     questions: ['pet_birth_year', 'pet_birth_month'],
     canSkip: false,
@@ -43,7 +40,7 @@ export const questionnaireSteps: StepConfig[] = [
   },
   {
     id: 5, // Internal 0-based ID
-    title: 'Pet Activity Level',
+    title: 'Activity Level',
     description: 'What is your pet\'s activity level?',
     questions: ['pet_activity_level'],
     canSkip: false,
@@ -59,7 +56,7 @@ export const questionnaireSteps: StepConfig[] = [
   },
   {
     id: 7, // Internal 0-based ID
-    title: 'Pet Gastronomic Profile',
+    title: 'Gastronomic Profile',
     description: 'What is your pet\'s gastronomic profile?',
     questions: ['pet_gastronomic_profile'],
     canSkip: false,
@@ -67,7 +64,7 @@ export const questionnaireSteps: StepConfig[] = [
   },
   {
     id: 8, // Internal 0-based ID
-    title: 'User Contact Information',
+    title: 'Contact Information',
     description: 'Please provide your contact information',
     questions: ['user_name', 'user_email', 'user_phone'],
     canSkip: false,

@@ -21,10 +21,6 @@
 
     <!-- Step Content -->
     <div class="step-content">
-      <div class="step-header">
-        <h1>{{ currentStep?.title }}</h1>
-        <p v-if="currentStep?.description">{{ currentStep.description }}</p>
-      </div>
 
       <!-- Pet Count Selection (First step) -->
       <div v-if="currentStepId === 0" class="pet-count-section">
@@ -44,15 +40,13 @@
 
       <!-- Pet Names Step -->
       <div v-else-if="currentStepId === 1" class="pet-names-section">
-        <h2>What are your pets' names?</h2>
         <div v-for="petNum in petCount" :key="petNum" class="pet-section">
-          <h3>Pet {{ petNum }}</h3>
           <QuestionRenderer 
             :question="{ 
               ...questionnaireQuestions.find(q => q.id === 'pet_name'), 
               id: `pet_name_pet_${petNum}`,
               type: 'text',
-              question: `What is Pet ${petNum}'s name?`,
+              question: (petNum < 2)?`What is your pet's name?`:`What are your pets' names?`,
               appliesTo: 'individual',
               required: true
             }"
@@ -65,7 +59,6 @@
 
       <!-- Pet Race Step -->
       <div v-else-if="currentStepId === 2" class="pet-race-section">
-        <h2>What is your pet's race?</h2>
         <QuestionRenderer 
             :question="questionnaireQuestions.find(q => q.id === 'pet_race') || {
               id: 'pet_race',
@@ -289,6 +282,7 @@ const submitQuestionnaire = () => {
   font-size: 0.875rem;
   text-align: center;
   color: #666;
+  max-width: 60%;
 }
 
 .step-current .step-title {

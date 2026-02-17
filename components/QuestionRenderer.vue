@@ -3,7 +3,6 @@
     <div class="question-wrapper">
       <label :for="question.id" class="question-label">
         {{ question.question }}
-        <span v-if="question.required" class="required-indicator">*</span>
       </label>
       
       <component 
@@ -11,7 +10,11 @@
         :config="question"
         :model-value="currentAnswer"
         :pet-id="petId"
-        @answer="(value: any) => $emit('answer', value, question.id, petId)"
+        :required="question.required"
+        @answer="(value: any) => {
+          console.log('QuestionRenderer answer emitted:', { questionId: question.id, value, petId })
+          $emit('answer', value, question.id, petId)
+        }"
       />
       
       <div v-if="error" class="error-message">
@@ -30,6 +33,7 @@ interface Props {
   question: QuestionConfig
   petId?: string
   modelValue?: any
+  required?: boolean
 }
 
 interface Emits {
@@ -63,34 +67,20 @@ const error = computed(() => {
 </script>
 
 <style scoped>
-.question-renderer {
-  margin-bottom: 1.5rem;
-}
-
 .question-wrapper {
   background: white;
-  padding: 1.5rem;
   border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  transition: border-color 0.3s ease;
+  text-align: center;
 }
 
-.question-wrapper:hover {
-  border-color: #0066cc;
-}
 
 .question-label {
   display: block;
-  font-weight: 600;
+  font-weight: 400;
   color: #333;
   margin-bottom: 1rem;
-  font-size: 1.1rem;
+  font-size: 2rem;
   line-height: 1.4;
-}
-
-.required-indicator {
-  color: #f44336;
-  margin-left: 0.25rem;
 }
 
 .error-message {
