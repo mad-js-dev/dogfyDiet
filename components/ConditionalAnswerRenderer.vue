@@ -176,6 +176,11 @@ const showDifferentiationButton = computed(() => {
     return petCount.value < 2
   }
   // For other questions: show differentiate button normally
+  console.log('showDifferentiationButton check:', {
+    petCount: petCount.value,
+    answerMode: answerMode.value,
+    shouldShow: petCount.value > 1 && answerMode.value === 'shared'
+  })
   return petCount.value > 1 && answerMode.value === 'shared'
 })
 
@@ -270,7 +275,18 @@ const handleBreedChange = (petNum: number, breedValue: string) => {
 }
 
 const handleSharedAnswer = (value: any) => {
-  questionnaire.addSmartAnswer(props.question.id, value, null)
+  // For single pet, store with petId to ensure proper saving
+  if (petCount.value === 1) {
+    questionnaire.addAnswer(props.question.id, value, 'pet_1')
+  } else {
+    // Multiple pets with same answer - store as shared to maintain UI consistency
+    // Clear any existing individual answers first to prevent mode conflicts
+    for (let i = 1; i <= petCount.value; i++) {
+      questionnaire.removeAnswer(props.question.id, `pet_${i}`)
+    }
+    // Add shared answer
+    questionnaire.addAnswer(props.question.id, value, null)
+  }
 }
 
 const handleIndividualAnswer = (value: any, questionId: string, petId?: string) => {
@@ -335,11 +351,20 @@ watch([
   () => questionnaire.hasSharedAnswer(props.question.id),
   () => questionnaire.hasIndividualAnswers(props.question.id)
 ], ([hasShared, hasIndividual]) => {
+  console.log('Mode watcher triggered:', {
+    questionId: props.question.id,
+    hasShared,
+    hasIndividual,
+    currentMode: answerMode.value
+  })
+  
   if (hasShared && !hasIndividual) {
     answerMode.value = 'shared'
   } else if (hasIndividual) {
     answerMode.value = 'individual'
   }
+  
+  console.log('Mode after watcher:', answerMode.value)
 }, { immediate: true })
 </script>
 

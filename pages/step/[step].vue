@@ -200,11 +200,6 @@ if (excludeActivityLevel.value !== null) {
   abTesting.trackEvent('activity_level_removal', 'questionnaire_started', {
     exclude_activity_level: excludeActivityLevel.value
   })
-  
-  // Add visual indicator for development (client-side only)
-  if (process.dev) {
-    console.log(`🧪 A/B Test Group: ${excludeActivityLevel.value ? 'TEST (8 steps)' : 'CONTROL (9 steps)'}`)
-  }
 }
 
 // Client-side initialization and data restoration
@@ -541,16 +536,21 @@ const shouldShowExpectingQuestionRenderer = () => {
   
   if (!showIndividualGenders.value) {
     // Shared mode: check shared answers
-    const result = shouldShowSharedExpectingQuestion()
+    console.log('Shared mode - checking expecting question:', {
+      showIndividualGenders: showIndividualGenders.value,
+      genderAnswer: questionnaire.getAnswer('pet_gender')?.value,
+      neuteredAnswer: questionnaire.getAnswer('pet_neutered')?.value,
+      result: shouldShowSharedExpectingQuestion()
+    })
+    return shouldShowSharedExpectingQuestion()
   } else {
     // Individual mode: show if any pet needs the expecting question
+    console.log('Individual mode - checking expecting question')
     for (let i = 1; i <= petCount.value; i++) {
       if (shouldShowExpectingQuestion(i)) {
-        console.log('Individual mode: pet', i, 'needs expecting question')
         return true
       }
     }
-    console.log('Individual mode: no pets need expecting question')
     return false
   }
 }
@@ -564,21 +564,9 @@ const shouldShowExpectingQuestion = (petNum: number) => {
 }
 
 const shouldShowSharedExpectingQuestion = () => {
-  // For single pet, check individual answers since they're stored with petId
-  const genderAnswer = petCount.value === 1 
-    ? questionnaire.getAnswer('pet_gender', 'pet_1')
-    : questionnaire.getAnswer('pet_gender')
-  
-  const neuteredAnswer = petCount.value === 1
-    ? questionnaire.getAnswer('pet_neutered', 'pet_1')
-    : questionnaire.getAnswer('pet_neutered')
-  
-  console.log('shouldShowSharedExpectingQuestion:', {
-    petCount: petCount.value,
-    genderAnswer: genderAnswer?.value,
-    neuteredAnswer: neuteredAnswer?.value,
-    shouldShow: genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
-  })
+  // For single pet, check shared answer since it's stored with petId: null
+  const genderAnswer = questionnaire.getAnswer('pet_gender')
+  const neuteredAnswer = questionnaire.getAnswer('pet_neutered')
   
   // Show expecting question only for female pets that are not neutered
   return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
