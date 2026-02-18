@@ -130,12 +130,8 @@
 import { computed, onMounted, ref } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import { useAbTestingStore } from '~/stores/ab-testing'
-import { getQuestionnaireSteps, getStepQuestions, shouldShowQuestion, urlToInternalStep, internalToUrlStep, getTotalSteps, getInternalStepFromUrl, getUrlStepFromInternal } from '~/config/questionnaire-steps'
-import { questionnaireQuestions } from '~/config/questionnaire-questions'
-import QuestionRenderer from '~/components/QuestionRenderer.vue'
+import { getQuestionnaireSteps, getTotalSteps, getInternalStepFromUrl, getUrlStepFromInternal } from '~/config/questionnaire-steps'
 import StepNavigation from '~/components/StepNavigation.vue'
-import ConditionalAnswerRenderer from '~/components/ConditionalAnswerRenderer.vue'
-import SegmentedButtons from '~/components/segmented-buttons/SegmentedButtons.vue'
 import PetBreedStep from '~/components/steps/PetBreedStep.vue'
 import PetNamesStep from '~/components/steps/PetNamesStep.vue'
 import PetGenderStep from '~/components/steps/PetGenderStep.vue'
@@ -257,7 +253,6 @@ const currentStepId = computed(() => {
 
 // Make sure the computed property updates when route changes
 watch(() => route.params.step, () => {
-  console.log('Route parameter changed:', route.params.step)
 }, { immediate: true })
 
 // State
@@ -378,17 +373,6 @@ const canProceed = computed(() => {
     // Body shape step - check for body shape and weight answers
     const currentPetCount = petCount.value
     
-    console.log('Body shape validation debug:', {
-      currentStepId: currentStepId.value,
-      currentPetCount,
-      showIndividualBodyShapes: showIndividualBodyShapes.value,
-      sharedBodyShape: sharedBodyShape.value,
-      sharedWeight: sharedWeight.value,
-      allAnswers: answers.value,
-      // Check for any existing individual answers that might interfere
-      existingIndividualBodyShapes: answers.value.filter(a => a.questionId === 'pet_body_shape' && a.petId),
-      existingIndividualWeights: answers.value.filter(a => a.questionId === 'pet_weight' && a.petId)
-    })
     
     // Check body shape answers
     const petBodyShapes = answers.value.filter(a => 
@@ -406,31 +390,18 @@ const canProceed = computed(() => {
         a.value.trim() !== ''
     )
     
-    console.log('Body shape answers found:', {
-      petBodyShapes: petBodyShapes.map(a => ({ questionId: a.questionId, petId: a.petId, value: a.value })),
-      petWeights: petWeights.map(a => ({ questionId: a.questionId, petId: a.petId, value: a.value }))
-    })
     
     const hasAllBodyShapes = petBodyShapes.length === currentPetCount
     const hasAllWeights = petWeights.length === currentPetCount
     
-    console.log('Body shape validation results:', {
-      hasAllBodyShapes,
-      hasAllWeights,
-      petBodyShapesLength: petBodyShapes.length,
-      petWeightsLength: petWeights.length,
-      expectedCount: currentPetCount
-    })
     
     // For shared mode: just need shared values to be set
     if (!showIndividualBodyShapes.value) {
       const result = sharedBodyShape.value !== '' && sharedWeight.value !== ''
-      console.log('Shared mode validation result:', { sharedBodyShape: sharedBodyShape.value, sharedWeight: sharedWeight.value, result })
       return result
     }
     
     // For individual mode: need all pets to have answers
-    console.log('Individual mode validation result:', { hasAllBodyShapes, hasAllWeights })
     return hasAllBodyShapes && hasAllWeights
   }
   
@@ -438,14 +409,6 @@ const canProceed = computed(() => {
     // Activity level step - check for activity level answers
     const currentPetCount = petCount.value
     
-    console.log('Activity level validation check:', {
-      currentStepId: currentStepId.value,
-      excludeActivityLevel: excludeActivityLevel.value,
-      currentPetCount,
-      showIndividualActivityLevels: showIndividualActivityLevels.value,
-      sharedActivityLevel: sharedActivityLevel.value,
-      allAnswers: answers.value
-    })
     
     // Check activity level answers
     const petActivityLevels = answers.value.filter(a => 
@@ -457,21 +420,14 @@ const canProceed = computed(() => {
     
     const hasAllActivityLevels = petActivityLevels.length === currentPetCount
     
-    console.log('Activity level validation results:', {
-      petActivityLevels: petActivityLevels.map(a => ({ questionId: a.questionId, petId: a.petId, value: a.value })),
-      hasAllActivityLevels,
-      petActivityLevelsLength: petActivityLevels.length
-    })
     
     // For shared mode: just need shared value to be set
     if (!showIndividualActivityLevels.value) {
       const result = sharedActivityLevel.value !== ''
-      console.log('Shared mode validation result:', { sharedActivityLevel: sharedActivityLevel.value, result })
       return result
     }
     
     // For individual mode: need all pets to have answers
-    console.log('Individual mode validation result:', { hasAllActivityLevels })
     return hasAllActivityLevels
   }
   
@@ -543,16 +499,10 @@ const setPetCount = (count: number) => {
 
 const shouldShowExpectingQuestionRenderer = () => {
   // Check if we should show the expecting question based on current mode and answers
-  console.log('shouldShowExpectingQuestionRenderer called:', {
-    showIndividualGenders: showIndividualGenders.value,
-    petCount: petCount.value
-  })
   
   if (!showIndividualGenders.value) {
     // Shared mode: check shared answers
     const result = shouldShowSharedExpectingQuestion()
-    console.log('Shared mode result:', result)
-    return result
   } else {
     // Individual mode: show if any pet needs the expecting question
     for (let i = 1; i <= petCount.value; i++) {
@@ -569,12 +519,6 @@ const shouldShowExpectingQuestionRenderer = () => {
 const shouldShowExpectingQuestion = (petNum: number) => {
   const genderAnswer = questionnaire.getAnswer('pet_gender', `pet_${petNum}`)
   const neuteredAnswer = questionnaire.getAnswer('pet_neutered', `pet_${petNum}`)
-  
-  console.log('shouldShowExpectingQuestion for pet', petNum, ':', {
-    genderAnswer: genderAnswer?.value,
-    neuteredAnswer: neuteredAnswer?.value,
-    shouldShow: genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
-  })
   
   // Show expecting question only for female pets that are not neutered
   return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
@@ -609,34 +553,27 @@ const handleAnswer = (value: any, questionId: string, petId?: string) => {
     if (petId) {
       // Individual mode - clear expecting for this specific pet
       questionnaire.removeAnswer('pet_expecting', petId)
-      console.log(`Cleared expecting answer for ${petId} because neutered is Yes`)
     } else {
       // Shared mode - clear shared expecting answer
       questionnaire.removeAnswer('pet_expecting')
-      console.log('Cleared shared expecting answer because neutered is Yes')
     }
   }
 }
 
 const toggleGenderMode = () => {
   const wasIndividualMode = showIndividualGenders.value
-  console.log('toggleGenderMode called:', { wasIndividualMode, currentMode: showIndividualGenders.value })
   showIndividualGenders.value = !showIndividualGenders.value
   
   if (!wasIndividualMode) {
     // Switching to individual mode - differentiate all gender-related answers
-    console.log('Switching to individual mode')
     questionnaire.differentiateAnswers('pet_gender')
     questionnaire.differentiateAnswers('pet_neutered')
     questionnaire.differentiateAnswers('pet_expecting')
   } else {
     // Switching to shared mode - merge all answers to shared
-    console.log('Switching to shared mode')
     const genderAnswer = questionnaire.getAnswer('pet_gender', 'pet_1')
     const neuteredAnswer = questionnaire.getAnswer('pet_neutered', 'pet_1')
     const expectingAnswer = questionnaire.getAnswer('pet_expecting', 'pet_1')
-    
-    console.log('Current answers:', { genderAnswer, neuteredAnswer, expectingAnswer })
     
     // Remove ALL individual answers for all pets
     for (let i = 1; i <= petCount.value; i++) {
@@ -648,17 +585,14 @@ const toggleGenderMode = () => {
     // Create shared answers from pet_1's values
     if (genderAnswer) {
       questionnaire.addAnswer('pet_gender', genderAnswer.value, null)
-      console.log('Merged gender answer:', genderAnswer.value)
     }
     
     if (neuteredAnswer) {
       questionnaire.addAnswer('pet_neutered', neuteredAnswer.value, null)
-      console.log('Merged neutered answer:', neuteredAnswer.value)
     }
     
     if (expectingAnswer) {
       questionnaire.addAnswer('pet_expecting', expectingAnswer.value, null)
-      console.log('Merged expecting answer:', expectingAnswer.value)
     }
   }
 }
@@ -671,34 +605,15 @@ const previousStep = () => {
 }
 
 const nextStep = () => {
-  console.log('nextStep called')
-  console.log('canProceed.value:', canProceed.value)
-  console.log('currentStepId.value:', currentStepId.value)
-  
   if (canProceed.value) {
-    console.log('Can proceed, navigating to next step')
     const steps = getQuestionnaireSteps(excludeActivityLevel.value)
     const currentStepIndex = steps.findIndex(step => step.id === currentStepId.value)
     const totalSteps = getTotalSteps(excludeActivityLevel.value)
-    
-    console.log('Navigation debug:', {
-      currentStepId: currentStepId.value,
-      currentStepIndex,
-      totalSteps,
-      steps: steps.map(s => ({ id: s.id, title: s.title })),
-      excludeActivityLevel: excludeActivityLevel.value
-    })
     
     if (currentStepIndex < totalSteps - 1) {
       // Get the next step by index, not by ID
       const nextStep = steps[currentStepIndex + 1]
       const nextUrlStep = getUrlStepFromInternal(nextStep.id, excludeActivityLevel.value)
-      console.log('Next step details:', {
-        nextStepId: nextStep.id,
-        nextStepTitle: nextStep.title,
-        nextUrlStep,
-        nextUrl: `/step/${nextUrlStep}`
-      })
       
       // Track step completion for A/B testing
       abTesting.trackEvent('activity_level_removal', 'step_completed', {
@@ -710,8 +625,7 @@ const nextStep = () => {
       router.push(`/step/${nextUrlStep}`)
     } else {
       // User contact is the last step, submit questionnaire
-      console.log('Submitting questionnaire')
-      
+        
       // Track questionnaire completion for A/B testing
       abTesting.trackEvent('activity_level_removal', 'questionnaire_completed', {
         total_steps: totalSteps,
@@ -721,7 +635,6 @@ const nextStep = () => {
       submitQuestionnaire()
     }
   } else {
-    console.log('Cannot proceed - validation failed')
   }
 }
 
@@ -750,8 +663,7 @@ watch(currentStepId, (newStepId) => {
   if (newStepId === 0) {
     // Reset to 1 pet for breed step
     questionnaire.setPetCount(1)
-    console.log('Reset pet count to 1 for breed step')
-  }
+    }
 })
 
 // Page metadata
