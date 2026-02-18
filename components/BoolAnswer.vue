@@ -56,7 +56,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 const questionnaire = useComprehensiveQuestionnaireStore()
 
-const selectedValue = ref(props.modelValue !== undefined ? props.modelValue : (props.config.required ? true : null))
+const selectedValue = ref(props.modelValue !== undefined ? props.modelValue : null)
 const error = ref('')
 
 const handleChange = () => {
@@ -74,14 +74,8 @@ watch(() => props.modelValue, (newValue) => {
   }
 })
 
-// Emit default value on mount for required questions
+// Validate on mount if required
 onMounted(() => {
-  if (props.config.required && props.modelValue === undefined && selectedValue.value !== null) {
-    emit('update:modelValue', selectedValue.value)
-    emit('answer', selectedValue.value, props.config.id, props.petId)
-  }
-  
-  // Validate on mount if required
   if (props.config.required && selectedValue.value === null) {
     const requiredMessage = props.config.validation?.find(v => v.type === 'required')?.message || 'This field is required'
     error.value = requiredMessage

@@ -70,10 +70,8 @@ watch(() => props.modelValue, (newValue) => {
 
 // Emit default value on mount for required questions
 onMounted(() => {
-  if (props.config.required && !props.modelValue && currentAnswer.value && !questionnaire.hasSharedAnswer(props.config.id) && !questionnaire.hasIndividualAnswers(props.config.id)) {
-    emit('update:modelValue', currentAnswer.value)
-    emit('answer', currentAnswer.value, props.config.id, props.petId)
-  }
+  // Don't emit default values automatically - only emit when user actually selects
+  // This prevents unwanted auto-selection of first option
 })
 
 // Validate on mount if required
