@@ -32,7 +32,8 @@
           <label>Enter weight for all pets:</label>
           <TextInput
             :value="sharedWeight" 
-            @update:value="handleSharedWeightChange" 
+            @update:modelValue="handleSharedWeightChange" 
+            @answer="handleSharedWeightChange" 
             :config="{
               id: 'shared_weight',
               type: 'text',

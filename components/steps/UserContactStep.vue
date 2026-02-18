@@ -87,11 +87,11 @@ interface Props {
 defineProps<Props>()
 
 const emit = defineEmits<{
-  'handle-answer': [value: any, questionId: string]
+  'handle-answer': [value: any, questionId: string, petId?: string]
 }>()
 
-const handleAnswer = (value: any, questionId: string) => {
-  emit('handle-answer', value, questionId)
+const handleAnswer = (value: any, questionId: string, petId?: string) => {
+  emit('handle-answer', value, questionId, petId)
 }
 </script>
 

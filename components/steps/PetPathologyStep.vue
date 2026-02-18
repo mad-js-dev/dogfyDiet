@@ -6,17 +6,17 @@
         <div class="pathology-field">
           <label>Does your pet have any pathology?</label>
           <SegmentedButtons
-            :model-value="sharedHasPathology"
+            :model-value="modelValue"
             :options="[
               { value: 'No', label: 'No' },
               { value: 'Yes', label: 'Yes' }
             ]"
             name="shared-has-pathology"
-            @update:model-value="handleSharedPathologyChange"
+            @update:model-value="(value) => handleSharedPathologyChange(value, 'shared_has_pathology')"
           />
         </div>
         
-        <div v-if="sharedHasPathology === 'Yes'" class="pathology-field">
+        <div v-if="modelValue === 'Yes'" class="pathology-field">
           <QuestionRenderer 
             :question="{
               id: 'shared_pathology',
@@ -44,7 +44,7 @@
               ]
             }"
             :model-value="sharedPathology"
-            @answer="handleSharedPathologyChange"
+            @answer="(value) => handleSharedPathologyChange(value, 'shared_pathology')"
           />
         </div>
       </div>
@@ -140,7 +140,7 @@ import SegmentedButtons from '~/components/segmented-buttons/SegmentedButtons.vu
 interface Props {
   showIndividualPathologies: boolean
   petCount: number
-  sharedHasPathology: string
+  modelValue: string
   sharedPathology: string
   getAnswerValue: (questionId: string, petNum: number) => any
   petDisplayName: (petNum: number) => string
@@ -150,12 +150,12 @@ defineProps<Props>()
 
 const emit = defineEmits<{
   'toggle-individual-pathologies': [value: boolean]
-  'handle-shared-pathology-change': [value: string]
+  'handle-shared-pathology-change': [value: string, questionId: string]
   'handle-answer': [value: any, questionId: string, petId?: string]
 }>()
 
-const handleSharedPathologyChange = (value: string) => {
-  emit('handle-shared-pathology-change', value)
+const handleSharedPathologyChange = (value: string, questionId: string) => {
+  emit('handle-shared-pathology-change', value, questionId)
 }
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {

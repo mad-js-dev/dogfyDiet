@@ -73,7 +73,7 @@
         <PetPathologyStep 
           :show-individual-pathologies="showIndividualPathologies"
           :pet-count="petCount"
-          :shared-has-pathology="sharedHasPathology"
+          :model-value="sharedHasPathology"
           :shared-pathology="sharedPathology"
           :get-answer-value="getAnswerValue"
           :pet-display-name="petDisplayName"
@@ -407,6 +407,18 @@ const canProceed = computed(() => {
     // Body shape step - check for body shape and weight answers
     const currentPetCount = petCount.value
     
+    console.log('Body shape validation debug:', {
+      currentStepId: currentStepId.value,
+      currentPetCount,
+      showIndividualBodyShapes: showIndividualBodyShapes.value,
+      sharedBodyShape: sharedBodyShape.value,
+      sharedWeight: sharedWeight.value,
+      allAnswers: answers.value,
+      // Check for any existing individual answers that might interfere
+      existingIndividualBodyShapes: answers.value.filter(a => a.questionId === 'pet_body_shape' && a.petId),
+      existingIndividualWeights: answers.value.filter(a => a.questionId === 'pet_weight' && a.petId)
+    })
+    
     // Check body shape answers
     const petBodyShapes = answers.value.filter(a => 
       a.questionId === 'pet_body_shape' && 
@@ -423,15 +435,31 @@ const canProceed = computed(() => {
         a.value.trim() !== ''
     )
     
+    console.log('Body shape answers found:', {
+      petBodyShapes: petBodyShapes.map(a => ({ questionId: a.questionId, petId: a.petId, value: a.value })),
+      petWeights: petWeights.map(a => ({ questionId: a.questionId, petId: a.petId, value: a.value }))
+    })
+    
     const hasAllBodyShapes = petBodyShapes.length === currentPetCount
     const hasAllWeights = petWeights.length === currentPetCount
     
+    console.log('Body shape validation results:', {
+      hasAllBodyShapes,
+      hasAllWeights,
+      petBodyShapesLength: petBodyShapes.length,
+      petWeightsLength: petWeights.length,
+      expectedCount: currentPetCount
+    })
+    
     // For shared mode: just need shared values to be set
     if (!showIndividualBodyShapes.value) {
-      return sharedBodyShape.value !== '' && sharedWeight.value !== ''
+      const result = sharedBodyShape.value !== '' && sharedWeight.value !== ''
+      console.log('Shared mode validation result:', { sharedBodyShape: sharedBodyShape.value, sharedWeight: sharedWeight.value, result })
+      return result
     }
     
     // For individual mode: need all pets to have answers
+    console.log('Individual mode validation result:', { hasAllBodyShapes, hasAllWeights })
     return hasAllBodyShapes && hasAllWeights
   }
   
@@ -617,7 +645,8 @@ const handleSharedBodyShapeChange = (value: string, questionId: string) => {
   }
 }
 
-const handleSharedWeightChange = () => {
+const handleSharedWeightChange = (value: string) => {
+  sharedWeight.value = value
   if (sharedWeight.value) {
     // Apply shared weight to all pets
     const currentPetCount = petCount.value
