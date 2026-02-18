@@ -119,15 +119,25 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (!excludeActivityLevel && internalStep === 5) {
       // For step 5 (activity level), need body shape and weight answers
       const currentPetCount = questionnaire.petCount || 1
-      const petBodyShapes = questionnaire.answers.filter(a => 
-        a.questionId === 'pet_body_shape' && 
-        a.petId && 
-        a.value && 
-        a.value.trim() !== ''
-      )
-      if (petBodyShapes.length !== currentPetCount) {
-        console.log('Missing body shape answers for activity level, redirecting to step 5')
-        return navigateTo('/step/5')
+      
+      // Check for shared body shape answer first
+      const sharedBodyShape = questionnaire.answers.find(a => a.questionId === 'pet_body_shape' && !a.petId)
+      
+      if (sharedBodyShape && sharedBodyShape.value) {
+        // Shared mode - body shape answer exists, allow access
+        console.log('Middleware: Found shared body shape answer, allowing access to activity level')
+      } else {
+        // Individual mode - check for individual body shape answers
+        const petBodyShapes = questionnaire.answers.filter(a => 
+          a.questionId === 'pet_body_shape' && 
+          a.petId && 
+          a.value && 
+          a.value.trim() !== ''
+        )
+        if (petBodyShapes.length !== currentPetCount) {
+          console.log('Missing body shape answers for activity level, redirecting to step 5')
+          return navigateTo('/step/5')
+        }
       }
     }
     
@@ -140,16 +150,25 @@ export default defineNuxtRouteMiddleware((to, from) => {
       
       if (excludeActivityLevel) {
         // Test group: need body shape answers
-        const petBodyShapes = questionnaire.answers.filter(a => 
-          a.questionId === 'pet_body_shape' && 
-          a.petId && 
-          a.value && 
-          a.value.trim() !== ''
-        )
-        console.log('Test group pathology validation:', { bodyShapeCount: petBodyShapes.length, petCount: currentPetCount })
-        if (petBodyShapes.length !== currentPetCount) {
-          console.log('Missing body shape answers for pathology, redirecting to step', pathologyStep)
-          return navigateTo(`/step/6`) // Always redirect to URL step 6 for pathology
+        // Check for shared body shape answer first
+        const sharedBodyShape = questionnaire.answers.find(a => a.questionId === 'pet_body_shape' && !a.petId)
+        
+        if (sharedBodyShape && sharedBodyShape.value) {
+          // Shared mode - body shape answer exists, allow access
+          console.log('Test group pathology: Found shared body shape answer, allowing access')
+        } else {
+          // Individual mode - check for individual body shape answers
+          const petBodyShapes = questionnaire.answers.filter(a => 
+            a.questionId === 'pet_body_shape' && 
+            a.petId && 
+            a.value && 
+            a.value.trim() !== ''
+          )
+          console.log('Test group pathology validation:', { bodyShapeCount: petBodyShapes.length, petCount: currentPetCount })
+          if (petBodyShapes.length !== currentPetCount) {
+            console.log('Missing body shape answers for pathology, redirecting to step', pathologyStep)
+            return navigateTo(`/step/6`) // Always redirect to URL step 6 for pathology
+          }
         }
       } else {
         // Control group: need activity level answers

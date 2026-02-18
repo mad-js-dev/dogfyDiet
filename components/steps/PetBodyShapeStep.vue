@@ -150,6 +150,8 @@ const emit = defineEmits<{
 
 const handleSharedBodyShapeChange = (value: string, questionId: string) => {
   emit('handle-shared-body-shape-change', value, questionId)
+  // Also store the shared body shape answer for validation
+  emit('handle-answer', value, 'pet_body_shape', null)
 }
 
 const handleSharedWeightChange = (value: string) => {

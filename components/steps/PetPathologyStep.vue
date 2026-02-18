@@ -156,6 +156,12 @@ const emit = defineEmits<{
 
 const handleSharedPathologyChange = (value: string, questionId: string) => {
   emit('handle-shared-pathology-change', value, questionId)
+  // Also store the shared pathology answer for validation
+  if (questionId === 'shared_has_pathology') {
+    emit('handle-answer', value, 'pet_has_pathology', undefined)
+  } else if (questionId === 'shared_pathology') {
+    emit('handle-answer', value, 'pet_pathology', undefined)
+  }
 }
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {
@@ -203,6 +209,14 @@ const handleAnswer = (value: any, questionId: string, petId?: string) => {
 .pathology-select:focus {
   outline: none;
   border-color: #0066cc;
+}
+
+/* Ensure segmented buttons active state works in pathology step */
+.pathology-bool-select .c-segmented-buttons__button--active,
+.pathology-select .c-segmented-buttons__button--active {
+  color: #000 !important;
+  border: 1px solid #ffc800 !important;
+  background-color: #fe9 !important;
 }
 
 .pet-answers-grid {

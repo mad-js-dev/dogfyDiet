@@ -146,11 +146,41 @@ import PetPathologyStep from '~/components/steps/PetPathologyStep.vue'
 import PetGastronomicProfileStep from '~/components/steps/PetGastronomicProfileStep.vue'
 import UserContactStep from '~/components/steps/UserContactStep.vue'
 import { useRoute, useRouter } from 'vue-router'
+import { usePetData } from '~/composables/usePetData'
+import { usePetUtils } from '~/composables/usePetUtils'
+import { useSharedHandlers } from '~/composables/useSharedHandlers'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
 const abTesting = useAbTestingStore()
 const route = useRoute()
 const router = useRouter()
+
+// Use composables
+const { allBreeds, yearOptions, monthOptions } = usePetData()
+const { petDisplayName, calculatePetAge, getAnswerValue } = usePetUtils(questionnaire)
+
+// Initialize shared handlers with a temporary petCount that will be reactive
+const petCount = computed(() => questionnaire.petCount)
+const sharedHandlers = useSharedHandlers(questionnaire, petCount)
+
+// Get shared state from composable
+const {
+  sharedBirthYear,
+  sharedBirthMonth,
+  sharedBodyShape,
+  sharedWeight,
+  sharedActivityLevel,
+  sharedPathology,
+  sharedGastronomicProfile,
+  sharedHasPathology,
+  handleSharedBirthYearChange,
+  handleSharedBirthMonthChange,
+  handleSharedBodyShapeChange,
+  handleSharedWeightChange,
+  handleSharedActivityLevelChange,
+  handleSharedPathologyChange,
+  handleSharedGastronomicProfileChange
+} = sharedHandlers
 
 // A/B Testing: Check if user is in test group (Activity Level removed)
 const excludeActivityLevel = computed(() => {
@@ -188,81 +218,23 @@ onMounted(() => {
   }
 })
 
-const allBreeds = [
-  // Dog Breeds
-  'Labrador Retriever',
-  'German Shepherd', 
-  'Golden Retriever',
-  'French Bulldog',
-  'Bulldog',
-  'Poodle',
-  'Beagle',
-  'Rottweiler',
-  'German Shorthaired Pointer',
-  'Yorkshire Terrier',
-  'Dachshund',
-  'Siberian Husky',
-  'Great Dane',
-  'Boxer',
-  'Chihuahua',
-  // Cat Breeds
-  'Persian',
-  'Maine Coon',
-  'British Shorthair',
-  'Siamese',
-  'American Shorthair',
-  'Ragdoll',
-  'Bengal',
-  'Russian Blue',
-  'Scottish Fold',
-  'Birman',
-  'Oriental Shorthair',
-  'Devon Rex',
-  'Himalayan',
-  'American Curl',
-  'Selkirk Rex'
-]
-
-// Birth date options
-const yearOptions = computed(() => {
-  const currentYear = new Date().getFullYear()
-  const years = []
-  for (let year = currentYear; year >= currentYear - 20; year--) {
-    years.push(year.toString())
-  }
-  return years
-})
-
-const monthOptions = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-]
-
 // Gender mode state
 const showIndividualGenders = ref(false)
 
 // Birth date mode state
 const showIndividualBirthDates = ref(false)
-const sharedBirthYear = ref('')
-const sharedBirthMonth = ref('')
 
 // Body shape mode state
 const showIndividualBodyShapes = ref(false)
-const sharedBodyShape = ref('')
-const sharedWeight = ref('')
 
 // Activity level mode state
 const showIndividualActivityLevels = ref(false)
-const sharedActivityLevel = ref('')
 
 // Pathology mode state
 const showIndividualPathologies = ref(false)
-const sharedHasPathology = ref('')
-const sharedPathology = ref('')
 
 // Gastronomic profile mode state
 const showIndividualGastronomicProfiles = ref(false)
-const sharedGastronomicProfile = ref('')
 
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
@@ -292,7 +264,6 @@ watch(() => route.params.step, () => {
 const steps = computed(() => getQuestionnaireSteps(excludeActivityLevel.value))
 const currentStep = computed(() => steps.value[currentStepId.value])
 const currentStepIndex = computed(() => steps.value.findIndex(step => step.id === currentStepId.value))
-const petCount = computed(() => questionnaire.petCount)
 const answers = computed(() => questionnaire.answers)
 
 // Computed
@@ -570,131 +541,6 @@ const setPetCount = (count: number) => {
   questionnaire.setPetCount(count)
 }
 
-const petDisplayName = (petNum: number) => {
-  const petNameAnswer = questionnaire.getAnswer('pet_name', `pet_${petNum}`)
-  return petNameAnswer ? petNameAnswer.value : `Pet ${petNum}`
-}
-
-const calculatePetAge = (petNum: number) => {
-  const yearAnswer = questionnaire.getAnswer('pet_birth_year', `pet_${petNum}`)
-  const monthAnswer = questionnaire.getAnswer('pet_birth_month', `pet_${petNum}`)
-  
-  if (!yearAnswer?.value || !monthAnswer?.value) return null
-  
-  const birthYear = parseInt(yearAnswer.value)
-  const birthMonth = new Date(monthAnswer.value + ' 1').getMonth() + 1
-  
-  const currentDate = new Date()
-  const currentYear = currentDate.getFullYear()
-  const currentMonth = currentDate.getMonth() + 1
-  
-  let years = currentYear - birthYear
-  let months = currentMonth - birthMonth
-  
-  if (months < 0) {
-    years--
-    months += 12
-  }
-  
-  return { years, months }
-}
-
-const handleSharedBirthYearChange = (value: string) => {
-  sharedBirthYear.value = value
-  if (sharedBirthYear.value && sharedBirthMonth.value) {
-    // Apply shared birth date to all pets
-    const currentPetCount = petCount.value
-    for (let i = 1; i <= currentPetCount; i++) {
-      questionnaire.addAnswer('pet_birth_year', sharedBirthYear.value, `pet_${i}`)
-      questionnaire.addAnswer('pet_birth_month', sharedBirthMonth.value, `pet_${i}`)
-    }
-  }
-}
-
-const handleSharedBirthMonthChange = (value: string) => {
-  sharedBirthMonth.value = value
-  if (sharedBirthYear.value && sharedBirthMonth.value) {
-    // Apply shared birth date to all pets
-    const currentPetCount = petCount.value
-    for (let i = 1; i <= currentPetCount; i++) {
-      questionnaire.addAnswer('pet_birth_year', sharedBirthYear.value, `pet_${i}`)
-      questionnaire.addAnswer('pet_birth_month', sharedBirthMonth.value, `pet_${i}`)
-    }
-  }
-}
-
-const handleSharedBirthDateChange = () => {
-  if (sharedBirthYear.value && sharedBirthMonth.value) {
-    // Apply shared birth date to all pets
-    const currentPetCount = petCount.value
-    for (let i = 1; i <= currentPetCount; i++) {
-      questionnaire.addAnswer('pet_birth_year', sharedBirthYear.value, `pet_${i}`)
-      questionnaire.addAnswer('pet_birth_month', sharedBirthMonth.value, `pet_${i}`)
-    }
-  }
-}
-
-const handleSharedBodyShapeChange = (value: string, questionId: string) => {
-  sharedBodyShape.value = value
-  if (sharedBodyShape.value) {
-    // Apply shared body shape to all pets
-    const currentPetCount = petCount.value
-    for (let i = 1; i <= currentPetCount; i++) {
-      questionnaire.addAnswer('pet_body_shape', sharedBodyShape.value, `pet_${i}`)
-    }
-  }
-}
-
-const handleSharedWeightChange = (value: string) => {
-  sharedWeight.value = value
-  if (sharedWeight.value) {
-    // Apply shared weight to all pets
-    const currentPetCount = petCount.value
-    for (let i = 1; i <= currentPetCount; i++) {
-      questionnaire.addAnswer('pet_weight', sharedWeight.value, `pet_${i}`)
-    }
-  }
-}
-
-const handleSharedActivityLevelChange = (value: string, questionId: string) => {
-  console.log('handleSharedActivityLevelChange called:', { value, questionId, sharedActivityLevel: sharedActivityLevel.value })
-  sharedActivityLevel.value = value
-  if (sharedActivityLevel.value) {
-    // Apply shared activity level to all pets
-    const currentPetCount = petCount.value
-    console.log('Adding activity level answers to pets:', { currentPetCount, value })
-    for (let i = 1; i <= currentPetCount; i++) {
-      questionnaire.addAnswer('pet_activity_level', sharedActivityLevel.value, `pet_${i}`)
-    }
-  }
-}
-
-const handleSharedPathologyChange = (value: string, questionId: string) => {
-  // Update the appropriate shared value based on question ID
-  if (questionId === 'shared_pathology') {
-    sharedPathology.value = value
-  }
-  
-  const currentPetCount = petCount.value
-  for (let i = 1; i <= currentPetCount; i++) {
-    questionnaire.addAnswer('pet_has_pathology', sharedHasPathology.value, `pet_${i}`)
-    if (sharedHasPathology.value === 'Yes' && sharedPathology.value) {
-      questionnaire.addAnswer('pet_pathology', sharedPathology.value, `pet_${i}`)
-    }
-  }
-}
-
-const handleSharedGastronomicProfileChange = (value: string, questionId: string) => {
-  sharedGastronomicProfile.value = value
-  if (sharedGastronomicProfile.value) {
-    // Apply shared gastronomic profile to all pets
-    const currentPetCount = petCount.value
-    for (let i = 1; i <= currentPetCount; i++) {
-      questionnaire.addAnswer('pet_gastronomic_profile', sharedGastronomicProfile.value, `pet_${i}`)
-    }
-  }
-}
-
 const shouldShowExpectingQuestionRenderer = () => {
   // Check if we should show the expecting question based on current mode and answers
   console.log('shouldShowExpectingQuestionRenderer called:', {
@@ -753,23 +599,6 @@ const shouldShowSharedExpectingQuestion = () => {
   
   // Show expecting question only for female pets that are not neutered
   return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
-}
-
-const getAnswerValue = (questionId: string, petNum?: number) => {
-  // For user-level questions (no pet), get answer without petId
-  if (!petNum) {
-    const answer = questionnaire.getAnswer(questionId)
-    return answer ? answer.value : null
-  }
-  
-  // For pet-specific questions, include petId in the search
-  const answer = questionnaire.getAnswer(questionId, `pet_${petNum}`)
-  return answer ? answer.value : null
-}
-
-const handlePathologySelect = (event: Event, petNum: number) => {
-  const target = event.target as HTMLSelectElement
-  questionnaire.addAnswer('pet_pathology', target.value, `pet_${petNum}`)
 }
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {
