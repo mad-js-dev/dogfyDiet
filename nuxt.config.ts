@@ -8,5 +8,15 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/test-utils',
     '@pinia/nuxt'
-  ]
+  ],
+  // GitHub Pages configuration
+  app: {
+    baseURL: '/dogfyDiet/',
+    buildAssetsDir: '/_nuxt/'
+  },
+  nitro: {
+    prerender: {
+      routes: ['/']
+    }
+  }
 })
