@@ -207,30 +207,78 @@ if (excludeActivityLevel.value !== null) {
   }
 }
 
-// Client-side logging for URL
+// Client-side initialization and data restoration
 onMounted(() => {
+  // Check for persisted data and restore if available
+  if (questionnaire.hasPersistedData?.() === true) {
+    const restored = questionnaire.loadFromLocalStorage()
+    
+    if (restored) {
+      // Restore UI state from questionnaire store (with null checks)
+      if (questionnaire.uiState) {
+        showIndividualGenders.value = questionnaire.uiState.showIndividualGenders
+        showIndividualBirthDates.value = questionnaire.uiState.showIndividualBirthDates
+        showIndividualBodyShapes.value = questionnaire.uiState.showIndividualBodyShapes
+        showIndividualActivityLevels.value = questionnaire.uiState.showIndividualActivityLevels
+        showIndividualPathologies.value = questionnaire.uiState.showIndividualPathologies
+        showIndividualGastronomicProfiles.value = questionnaire.uiState.showIndividualGastronomicProfiles
+      }
+      
+      // Only auto-navigate if this appears to be a fresh page load
+      // Check if user landed on step 1 (default entry point) but has progress elsewhere
+      const savedStep = questionnaire.currentStep
+      const urlStep = getUrlStepFromInternal(savedStep, excludeActivityLevel.value)
+      const currentUrlStep = parseInt(route.params.step as string) || 1
+      
+      // Only restore if user is on step 1 but has saved progress beyond step 1
+      // This prevents interference with manual navigation
+      if (currentUrlStep === 1 && savedStep > 0) {
+        router.replace(`/step/${urlStep}`)
+      }
+    }
+  }
+  
+  // Development logging
   if (process.dev && typeof window !== 'undefined') {
-    console.log(`📊 URL: ${window.location.pathname}?group=${excludeActivityLevel.value ? 'test' : 'control'}`)
+    // Removed console logs for cleaner production
   }
 })
 
-// Gender mode state
-const showIndividualGenders = ref(false)
+// Gender mode state (synced with questionnaire store)
+const showIndividualGenders = computed({
+  get: () => questionnaire.uiState?.showIndividualGenders || false,
+  set: (value) => questionnaire.setUiState('showIndividualGenders', value)
+})
 
-// Birth date mode state
-const showIndividualBirthDates = ref(false)
+// Birth date mode state (synced with questionnaire store)
+const showIndividualBirthDates = computed({
+  get: () => questionnaire.uiState?.showIndividualBirthDates || false,
+  set: (value) => questionnaire.setUiState('showIndividualBirthDates', value)
+})
 
-// Body shape mode state
-const showIndividualBodyShapes = ref(false)
+// Body shape mode state (synced with questionnaire store)
+const showIndividualBodyShapes = computed({
+  get: () => questionnaire.uiState?.showIndividualBodyShapes || false,
+  set: (value) => questionnaire.setUiState('showIndividualBodyShapes', value)
+})
 
-// Activity level mode state
-const showIndividualActivityLevels = ref(false)
+// Activity level mode state (synced with questionnaire store)
+const showIndividualActivityLevels = computed({
+  get: () => questionnaire.uiState?.showIndividualActivityLevels || false,
+  set: (value) => questionnaire.setUiState('showIndividualActivityLevels', value)
+})
 
-// Pathology mode state
-const showIndividualPathologies = ref(false)
+// Pathology mode state (synced with questionnaire store)
+const showIndividualPathologies = computed({
+  get: () => questionnaire.uiState?.showIndividualPathologies || false,
+  set: (value) => questionnaire.setUiState('showIndividualPathologies', value)
+})
 
-// Gastronomic profile mode state
-const showIndividualGastronomicProfiles = ref(false)
+// Gastronomic profile mode state (synced with questionnaire store)
+const showIndividualGastronomicProfiles = computed({
+  get: () => questionnaire.uiState?.showIndividualGastronomicProfiles || false,
+  set: (value) => questionnaire.setUiState('showIndividualGastronomicProfiles', value)
+})
 
 // Get step from URL parameter (convert 1-based URL to 0-based internal)
 const currentStepId = computed(() => {
@@ -239,14 +287,11 @@ const currentStepId = computed(() => {
   const maxStep = 8 // Both groups allow up to internal step 8 (User Contact)
   const result = Math.max(0, Math.min(internalStep, maxStep))
   
-  console.log('currentStepId calculation:', {
-    urlStep,
-    internalStep,
-    maxStep,
-    result,
-    excludeActivityLevel: excludeActivityLevel.value,
-    route: route.path
-  })
+  // Only update questionnaire store if it's different and not during initial restoration
+  // This prevents overwriting the saved step during page load
+  if (questionnaire.currentStep !== result) {
+    questionnaire.setStep(result)
+  }
   
   return result
 })
@@ -265,18 +310,12 @@ const answers = computed(() => questionnaire.answers)
 const canProceed = computed(() => {
   if (currentStepId.value === 0) {
     // Breed step - check for breed answer (only 1 pet)
-    const breedAnswer = answers.value.find(a => 
+    const breedAnswer = answers.value.find((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_breed' && 
       a.petId === 'pet_1' && 
       a.value && 
       a.value.trim() !== ''
     )
-    console.log('Breed step validation:', {
-      currentStepId: currentStepId.value,
-      answers: answers.value,
-      breedAnswer,
-      canProceed: !!breedAnswer
-    })
     return !!breedAnswer
   }
   
@@ -285,9 +324,9 @@ const canProceed = computed(() => {
     // and breeds for pet 2 (pet 1 breed is from step 1)
     const currentPetCount = petCount.value
     
-    // Check pet names
+    // Check pet names (both patterns: 'pet_name' and 'pet_name_pet_X')
     const petNames = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
-      a.questionId === 'pet_name' && 
+      (a.questionId === 'pet_name' || a.questionId.startsWith('pet_name_pet_')) && 
         a.petId && 
         a.value && 
         a.value.trim() !== ''
@@ -301,10 +340,10 @@ const canProceed = computed(() => {
     // For two pets: need names for both + breed for pet 2
     const hasBothNames = petNames.length === 2
     
-    // Check breed for pet 2
-    const pet2Breed = answers.value.find(a => 
-      a.questionId === 'pet_breed' && 
-      a.petId === 'pet_2' && 
+    // Check breed for pet 2 (both patterns)
+    const pet2Breed = answers.value.find((a: { questionId: string; petId: any; value: string }) => 
+      (a.questionId === 'pet_breed' || a.questionId === 'pet_breed_pet_2') && 
+      (a.petId === 'pet_2' || !a.petId) && 
       a.value && 
       a.value.trim() !== ''
     )
@@ -342,7 +381,7 @@ const canProceed = computed(() => {
     const currentPetCount = petCount.value
     
     // Check birth year answers
-    const petBirthYears = answers.value.filter(a => 
+    const petBirthYears = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_birth_year' && 
         a.petId && 
         a.value && 
@@ -350,7 +389,7 @@ const canProceed = computed(() => {
     )
     
     // Check birth month answers
-    const petBirthMonths = answers.value.filter(a => 
+    const petBirthMonths = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_birth_month' && 
         a.petId && 
         a.value && 
@@ -375,7 +414,7 @@ const canProceed = computed(() => {
     
     
     // Check body shape answers
-    const petBodyShapes = answers.value.filter(a => 
+    const petBodyShapes = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_body_shape' && 
         a.petId && 
         a.value && 
@@ -383,7 +422,7 @@ const canProceed = computed(() => {
     )
     
     // Check weight answers
-    const petWeights = answers.value.filter(a => 
+    const petWeights = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_weight' && 
         a.petId && 
         a.value && 
@@ -411,7 +450,7 @@ const canProceed = computed(() => {
     
     
     // Check activity level answers
-    const petActivityLevels = answers.value.filter(a => 
+    const petActivityLevels = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_activity_level' && 
         a.petId && 
         a.value && 
@@ -436,7 +475,7 @@ const canProceed = computed(() => {
     const currentPetCount = petCount.value
     
     // Check pathology boolean answers
-    const petHasPathology = answers.value.filter(a => 
+    const petHasPathology = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_has_pathology' && 
         a.petId && 
         a.value && 
@@ -459,7 +498,7 @@ const canProceed = computed(() => {
     const currentPetCount = petCount.value
     
     // Check gastronomic profile answers
-    const petGastronomicProfiles = answers.value.filter(a => 
+    const petGastronomicProfiles = answers.value.filter((a: { questionId: string; petId: any; value: string }) => 
       a.questionId === 'pet_gastronomic_profile' && 
         a.petId && 
         a.value && 
@@ -479,9 +518,9 @@ const canProceed = computed(() => {
   
   if (currentStepId.value === 8) {
     // User contact step - check for contact information
-    const userName = answers.value.find(a => a.questionId === 'user_name')
-    const userEmail = answers.value.find(a => a.questionId === 'user_email')
-    const userPhone = answers.value.find(a => a.questionId === 'user_phone')
+    const userName = answers.value.find((a: { questionId: string; value: string }) => a.questionId === 'user_name')
+    const userEmail = answers.value.find((a: { questionId: string; value: string }) => a.questionId === 'user_email')
+    const userPhone = answers.value.find((a: { questionId: string; value: string }) => a.questionId === 'user_phone')
     
     return userName?.value && userEmail?.value && userPhone?.value &&
            userName.value.trim() !== '' && 
@@ -599,7 +638,7 @@ const toggleGenderMode = () => {
 
 const previousStep = () => {
   if (currentStepId.value > 0) {
-    const prevUrlStep = internalToUrlStep(currentStepId.value - 1)
+    const prevUrlStep = getUrlStepFromInternal(currentStepId.value - 1, excludeActivityLevel.value)
     router.push(`/step/${prevUrlStep}`)
   }
 }
@@ -670,6 +709,7 @@ watch(currentStepId, (newStepId) => {
 definePageMeta({
   title: 'Pet Questionnaire',
   description: 'Tell us about your pets to get personalized recommendations',
+  ssr: false,
   middleware: 'step-validation'
 })
 </script>
@@ -747,6 +787,14 @@ definePageMeta({
   margin-bottom: 1rem;
   font-size: 1.1rem;
   font-weight: 600;
+}
+
+.data-management-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fafafa;
 }
 
 .birth-date-inputs {

@@ -1,13 +1,31 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { questionnaireSteps } from '~/config/questionnaire-steps'
+import { useLocalStorage } from '~/composables/useLocalStorage'
 
 export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-questionnaire', () => {
+  // Initialize localStorage composable
+  const localStorage = useLocalStorage()
+  
   // State
   const currentStep = ref(0)
   const answers = ref<Array<any>>([])
   const isCompleted = ref(false)
   const petCount = ref(1)
+  
+  // UI state for individual/shared modes
+  const uiState = ref({
+    showIndividualGenders: false,
+    showIndividualBirthDates: false,
+    showIndividualBodyShapes: false,
+    showIndividualActivityLevels: false,
+    showIndividualPathologies: false,
+    showIndividualGastronomicProfiles: false
+  })
+  
+  // Auto-save state
+  let saveTimeout: NodeJS.Timeout | null = null
+  const AUTO_SAVE_DELAY = 1000 // 1 second debounce
 
   // Getters
   const answeredQuestions = computed(() => {
@@ -23,6 +41,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   // Actions
   const setStep = (step: number) => {
     currentStep.value = step
+    triggerAutoSave()
   }
 
   const setPetCount = (count: number) => {
@@ -30,10 +49,70 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     petCount.value = validCount
     addAnswer('pet_count', validCount)
   }
+  
+  // UI state setters
+  const setUiState = (key: keyof typeof uiState.value, value: boolean) => {
+    uiState.value[key] = value
+    triggerAutoSave()
+  }
+  
+  // Auto-save functionality
+  const triggerAutoSave = () => {
+    if (saveTimeout) {
+      clearTimeout(saveTimeout)
+    }
+    
+    saveTimeout = setTimeout(() => {
+      saveToLocalStorage()
+    }, AUTO_SAVE_DELAY)
+  }
+  
+  const saveToLocalStorage = () => {
+    if (!localStorage.isLocalStorageAvailable.value) return false
+    
+    return localStorage.saveToLocalStorage({
+      currentStep: currentStep.value,
+      answers: answers.value,
+      petCount: petCount.value,
+      isCompleted: isCompleted.value,
+      uiState: uiState.value
+    })
+  }
+  
+  const loadFromLocalStorage = () => {
+    if (!localStorage.isLocalStorageAvailable.value) return false
+    
+    const data = localStorage.loadFromLocalStorage()
+    if (!data) return false
+    
+    // Restore state
+    currentStep.value = data.currentStep
+    answers.value = data.answers
+    petCount.value = data.petCount
+    isCompleted.value = data.isCompleted
+    uiState.value = data.uiState
+    
+    return true
+  }
+  
+  const clearAllData = () => {
+    clearAnswers()
+    uiState.value = {
+      showIndividualGenders: false,
+      showIndividualBirthDates: false,
+      showIndividualBodyShapes: false,
+      showIndividualActivityLevels: false,
+      showIndividualPathologies: false,
+      showIndividualGastronomicProfiles: false
+    }
+    localStorage.clearLocalStorage()
+  }
+  
+  const hasPersistedData = () => {
+    return localStorage.hasPersistedData()
+  }
 
   const addAnswer = (questionId: string, value: any, petId?: string | null) => {
-    console.log('addAnswer called:', { questionId, value, petId, currentAnswers: answers.value })
-    
     const existingIndex = answers.value.findIndex(
       a => a.questionId === questionId && a.petId === petId
     )
@@ -42,7 +121,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
       questionId,
       value,
       petId,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     }
 
     if (existingIndex >= 0) {
@@ -51,7 +130,8 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
       answers.value.push(answer)
     }
     
-    console.log('addAnswer result:', { answers: answers.value })
+    // Trigger auto-save
+    triggerAutoSave()
   }
 
   const addSmartAnswer = (questionId: string, value: any, petId?: string | null) => {
@@ -128,15 +208,17 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     answers.value = []
     currentStep.value = 0
     isCompleted.value = false
-    petCount.value = 0
+    petCount.value = 1
+    triggerAutoSave()
   }
 
   const submitQuestionnaire = () => {
     isCompleted.value = true
+    triggerAutoSave()
     return {
       answers: answers.value,
       petCount: petCount.value,
-      submittedAt: new Date()
+      submittedAt: new Date().toISOString()
     }
   }
 
@@ -146,6 +228,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     answers,
     isCompleted,
     petCount,
+    uiState,
     
     // Getters
     answeredQuestions,
@@ -154,6 +237,7 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     // Actions
     setStep,
     setPetCount,
+    setUiState,
     addAnswer,
     addSmartAnswer,
     differentiateAnswers,
@@ -165,6 +249,12 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     getPetAnswers,
     getGlobalAnswers,
     clearAnswers,
-    submitQuestionnaire
+    clearAllData,
+    submitQuestionnaire,
+    
+    // Persistence methods
+    loadFromLocalStorage,
+    saveToLocalStorage,
+    hasPersistedData
   }
 })

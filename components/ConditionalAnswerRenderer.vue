@@ -203,7 +203,6 @@ const canMergeAnswers = computed(() => {
 // Methods
 const petDisplayName = (petNum: number) => {
   const petNameAnswer = questionnaire.getAnswer('pet_name', `pet_${petNum}`)
-  console.log(`petDisplayName(${petNum}):`, { petNameAnswer, value: petNameAnswer?.value })
   return petNameAnswer ? petNameAnswer.value : `Pet ${petNum}`
 }
 
@@ -223,7 +222,6 @@ const getQuestionForPet = (petNum: number): QuestionConfig => {
   const petName = petDisplayName(petNum)
   const originalQuestion = props.question.question || `What is ${petName}'s name?`
   const finalQuestion = originalQuestion.includes('{petName}') ? originalQuestion.replaceAll('{petName}', petName) : originalQuestion
-  console.log(`getQuestionForPet(${petNum}):`, { petName, originalQuestion, finalQuestion })
   return {
     ...props.question,
     id: `${props.question.id}_pet_${petNum}`,
@@ -253,7 +251,6 @@ const sharedQuestionWithPetNames = computed(() => {
       originalQuestion
   }
   
-  console.log('sharedQuestionWithPetNames:', { petCount: petCount.value, originalQuestion, finalQuestion })
   return {
     ...props.question,
     question: finalQuestion

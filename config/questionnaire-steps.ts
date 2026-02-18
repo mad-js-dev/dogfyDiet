@@ -100,31 +100,16 @@ export const getStepMapping = (excludeActivityLevel = false) => {
 export const getInternalStepFromUrl = (urlStep: number, excludeActivityLevel = false) => {
   const steps = getQuestionnaireSteps(excludeActivityLevel)
   
-  console.log('getInternalStepFromUrl:', {
-    urlStep,
-    excludeActivityLevel,
-    steps: steps.map(s => ({ id: s.id, title: s.title })),
-    stepCount: steps.length
-  })
-  
   // URL steps are 1-based, so subtract 1 to get array index
   const stepIndex = urlStep - 1
   
   // Check if the index is valid
   if (stepIndex < 0 || stepIndex >= steps.length) {
-    console.warn(`URL step ${urlStep} is out of range for questionnaire steps`)
     return 0 // Fallback to first step
   }
   
   // Return the internal step ID at this index
   const internalStep = steps[stepIndex].id
-  console.log('Mapping result:', { 
-    urlStep, 
-    stepIndex, 
-    internalStep,
-    stepTitle: steps[stepIndex].title,
-    expectedMapping: 'URL 6 should be Internal 5 (Pathology) for test group'
-  })
   
   return internalStep
 }
@@ -145,10 +130,11 @@ export const getUrlStepFromInternal = (internalStep: number, excludeActivityLeve
 
 export const getStepQuestions = (stepId: number): any[] => {
   const step = questionnaireSteps.find(s => s.id === stepId)
-  if (!step) return []
+  if (!step || !step.questions) return []
   
+  const stepQuestions = step.questions
   return questionnaireQuestions.filter(question => 
-    step.questions.includes(question.id)
+    stepQuestions.includes(question.id)
   )
 }
 
@@ -188,7 +174,7 @@ export const isStepAccessible = (stepId: number, completedSteps: Set<number>): b
 
 export const canProceedToStep = (stepId: number, allAnswers: any[]): boolean => {
   const step = questionnaireSteps.find(s => s.id === stepId)
-  if (!step) return false
+  if (!step || !step.questions) return false
   
   return step.questions.every(qId => {
     const answer = allAnswers.find(a => a.questionId === qId)

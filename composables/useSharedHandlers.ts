@@ -59,12 +59,10 @@ export const useSharedHandlers = (questionnaire: any, petCount: ComputedRef<numb
   }
 
   const handleSharedActivityLevelChange = (value: string, questionId: string) => {
-    console.log('handleSharedActivityLevelChange called:', { value, questionId, sharedActivityLevel: sharedActivityLevel.value })
     sharedActivityLevel.value = value
     if (sharedActivityLevel.value) {
       // Apply shared activity level to all pets
       const currentPetCount = petCount.value
-      console.log('Adding activity level answers to pets:', { currentPetCount, value })
       for (let i = 1; i <= currentPetCount; i++) {
         questionnaire.addAnswer('pet_activity_level', sharedActivityLevel.value, `pet_${i}`)
       }

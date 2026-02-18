@@ -221,7 +221,6 @@ const nextStep = () => {
 
 const submitQuestionnaire = () => {
   const result = questionnaire.submitQuestionnaire()
-  console.log('Questionnaire submitted:', result)
   
   // Navigate to results page
   navigateTo('/results')

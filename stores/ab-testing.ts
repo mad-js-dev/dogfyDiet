@@ -71,8 +71,7 @@ export const useAbTestingStore = defineStore('ab-testing', () => {
 
   const sendToAnalytics = (event: ExperimentEvent) => {
     // TODO: Implement analytics integration
-    // For now, just log to console
-    console.log('A/B Test Event:', event)
+    // For now, just track internally
   }
 
   const getExperimentEvents = (experimentName: string, group?: ExperimentGroup) => {
@@ -95,7 +94,7 @@ export const useAbTestingStore = defineStore('ab-testing', () => {
         userAssignments.value = JSON.parse(stored)
       }
     } catch (error) {
-      console.warn('Failed to load A/B test assignments from storage:', error)
+      // Failed to load A/B test assignments from storage
     }
   }
 
@@ -103,7 +102,7 @@ export const useAbTestingStore = defineStore('ab-testing', () => {
     try {
       localStorage.setItem('ab_testing_assignments', JSON.stringify(userAssignments.value))
     } catch (error) {
-      console.warn('Failed to save A/B test assignments to storage:', error)
+      // Failed to save A/B test assignments to storage
     }
   }
 

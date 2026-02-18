@@ -77,7 +77,6 @@ export class QuestionFactory {
   static createValidatedQuestions(configs: Partial<QuestionConfig>[]): BaseQuestion[] {
     const validConfigs = configs.filter(config => {
       if (!config.id || !config.type || !config.question) {
-        console.warn('Invalid question config:', config)
         return false
       }
       return true

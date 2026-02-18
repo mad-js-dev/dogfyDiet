@@ -1,5 +1,5 @@
 <template>
-  <div class="breed-step">
+  <div class="question-renderer">
     <QuestionRenderer 
       :question="{
         id: 'pet_breed',

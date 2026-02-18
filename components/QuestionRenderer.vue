@@ -12,7 +12,6 @@
         :pet-id="petId"
         :required="question.required"
         @answer="(value: any) => {
-          console.log('QuestionRenderer answer emitted:', { questionId: question.id, value, petId })
           $emit('answer', value, question.id, petId)
         }"
       />
