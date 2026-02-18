@@ -25,6 +25,13 @@
 
 <script setup lang="ts">
 import ConditionalAnswerRenderer from '~/components/ConditionalAnswerRenderer.vue'
+import { computed } from 'vue'
+import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
+
+const questionnaire = useComprehensiveQuestionnaireStore()
+
+// Watch for changes to pet_name in questionnaire store and update component
+const petNameAnswer = computed(() => questionnaire.getAnswer('pet_name', 'pet_1')?.value)
 </script>
 
 <style scoped>
