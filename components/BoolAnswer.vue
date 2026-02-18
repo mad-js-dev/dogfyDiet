@@ -33,17 +33,20 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, onMounted } from 'vue'
+import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import type { QuestionConfig } from '~/types/questionnaire'
 
 interface Props {
   config: QuestionConfig
   modelValue?: boolean
   disabled?: boolean
+  petId?: string
 }
 
 interface Emits {
   (e: 'update:modelValue', value: boolean): void
-  (e: 'answer', questionId: string, value: boolean): void
+  (e: 'answer', value: boolean, questionId: string, petId?: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -51,15 +54,16 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<Emits>()
+const questionnaire = useComprehensiveQuestionnaireStore()
 
-const selectedValue = ref(props.modelValue !== undefined ? props.modelValue : null)
+const selectedValue = ref(props.modelValue !== undefined ? props.modelValue : (props.config.required ? true : null))
 const error = ref('')
 
 const handleChange = () => {
   if (selectedValue.value !== null) {
     error.value = ''
     emit('update:modelValue', selectedValue.value)
-    emit('answer', props.config.id, selectedValue.value)
+    emit('answer', selectedValue.value, props.config.id, props.petId)
   }
 }
 
@@ -70,8 +74,14 @@ watch(() => props.modelValue, (newValue) => {
   }
 })
 
-// Validate on mount if required
+// Emit default value on mount for required questions
 onMounted(() => {
+  if (props.config.required && props.modelValue === undefined && selectedValue.value !== null) {
+    emit('update:modelValue', selectedValue.value)
+    emit('answer', selectedValue.value, props.config.id, props.petId)
+  }
+  
+  // Validate on mount if required
   if (props.config.required && selectedValue.value === null) {
     const requiredMessage = props.config.validation?.find(v => v.type === 'required')?.message || 'This field is required'
     error.value = requiredMessage

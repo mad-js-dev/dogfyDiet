@@ -1,10 +1,21 @@
 <template>
   <div class="conditional-answer-renderer">
+    <!-- All Pets Mode (for appliesTo: 'all' questions) -->
+    <div v-if="props.question.appliesTo === 'all'" class="conditional-answer-renderer__all-pets-mode">
+      <QuestionRenderer 
+        :question="props.question"
+        :model-value="getAllPetsAnswerValue()"
+        @update:model-value="handleAllPetsModelUpdate"
+        @answer="handleAllPetsAnswer"
+      />
+    </div>
+
     <!-- Shared Answer Mode -->
-    <div v-if="answerMode === 'shared'" class="conditional-answer-renderer__shared-answer-mode">
+    <div v-else-if="answerMode === 'shared'" class="conditional-answer-renderer__shared-answer-mode">
       <QuestionRenderer 
         :question="sharedQuestionWithPetNames"
         :model-value="sharedAnswerValue"
+        @update:model-value="handleSharedModelUpdate"
         @answer="handleSharedAnswer"
       />
     </div>
@@ -21,6 +32,7 @@
               :question="reactiveQuestionForPet(petIndex).value"
               :pet-id="`pet_${petIndex}`"
               :model-value="getAnswerValue(petIndex)"
+              @update:model-value="(value) => handleIndividualModelUpdate(petIndex, value)"
               @answer="handleIndividualAnswer"
             />
             
@@ -36,6 +48,7 @@
                   appliesTo: 'individual'
                 }"
                 :model-value="getBreedValue(petIndex)"
+                :pet-id="`pet_${petIndex}`"
                 @answer="(value) => handleBreedChange(petIndex, Array.isArray(value) ? value[0] : value)"
               />
             </div>
@@ -229,7 +242,7 @@ const getQuestionForPet = (petNum: number): QuestionConfig => {
   const finalQuestion = originalQuestion.includes('{petName}') ? originalQuestion.replaceAll('{petName}', petName) : originalQuestion
   return {
     ...props.question,
-    id: `${props.question.id}_pet_${petNum}`,
+    id: props.question.id, // Use base question ID, not individual ID
     question: finalQuestion
   }
 }
@@ -302,6 +315,34 @@ const handleIndividualAnswer = (value: any, questionId: string, petId?: string) 
   }
 }
 
+const handleSharedModelUpdate = (value: any) => {
+  // Handle model update for shared mode
+  handleSharedAnswer(value)
+}
+
+const handleIndividualModelUpdate = (petIndex: number, value: any) => {
+  // Handle model update for individual mode
+  handleIndividualAnswer(value, props.question.id, `pet_${petIndex}`)
+}
+
+const handleAllPetsModelUpdate = (value: any) => {
+  // Handle model update for all pets questions
+  handleAllPetsAnswer(value, props.question.id)
+}
+
+const handleAllPetsAnswer = (value: any, questionId: string) => {
+  // For appliesTo: 'all' questions, save as shared (no petId)
+  if (props.question.appliesTo === 'all') {
+    questionnaire.addAnswer(questionId, value, null)
+  }
+}
+
+const getAllPetsAnswerValue = () => {
+  // Get the shared answer for appliesTo: 'all' questions
+  const sharedAnswer = questionnaire.getAnswer(props.question.id, null)
+  return sharedAnswer ? sharedAnswer.value : null
+}
+
 const handleButtonClick = () => {
   if (isPetNameQuestion.value) {
     // For pet name question: add a new pet only if less than 2
@@ -351,20 +392,11 @@ watch([
   () => questionnaire.hasSharedAnswer(props.question.id),
   () => questionnaire.hasIndividualAnswers(props.question.id)
 ], ([hasShared, hasIndividual]) => {
-  console.log('Mode watcher triggered:', {
-    questionId: props.question.id,
-    hasShared,
-    hasIndividual,
-    currentMode: answerMode.value
-  })
-  
   if (hasShared && !hasIndividual) {
     answerMode.value = 'shared'
   } else if (hasIndividual) {
     answerMode.value = 'individual'
   }
-  
-  console.log('Mode after watcher:', answerMode.value)
 }, { immediate: true })
 </script>
 
@@ -398,6 +430,12 @@ watch([
 
   &__individual-answer-mode {
     width: 100%;
+  }
+
+  &__all-pets-mode {
+    // Questions that apply to all pets (like breed)
+    max-width: 600px;
+    margin: 0 auto;
   }
 
   &__pet-answers-grid {

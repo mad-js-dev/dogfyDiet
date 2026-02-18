@@ -204,9 +204,13 @@ if (excludeActivityLevel.value !== null) {
 
 // Client-side initialization and data restoration
 onMounted(() => {
+  console.log('Step page onMounted - currentStep:', questionnaire.currentStep)
+  console.log('Step page onMounted - hasPersistedData:', questionnaire.hasPersistedData?.())
+  
   // Check for persisted data and restore if available
   if (questionnaire.hasPersistedData?.() === true) {
     const restored = questionnaire.loadFromLocalStorage()
+    console.log('Step page - restored data:', restored)
     
     if (restored) {
       // Restore UI state from questionnaire store (with null checks)
@@ -225,17 +229,19 @@ onMounted(() => {
       const urlStep = getUrlStepFromInternal(savedStep, excludeActivityLevel.value)
       const currentUrlStep = parseInt(route.params.step as string) || 1
       
+      console.log('Step page - navigation check:', {
+        savedStep,
+        urlStep,
+        currentUrlStep
+      })
+      
       // Only restore if user is on step 1 but has saved progress beyond step 1
       // This prevents interference with manual navigation
       if (currentUrlStep === 1 && savedStep > 0) {
+        console.log('Step page - auto-navigating to:', urlStep)
         router.replace(`/step/${urlStep}`)
       }
     }
-  }
-  
-  // Development logging
-  if (process.dev && typeof window !== 'undefined') {
-    // Removed console logs for cleaner production
   }
 })
 
@@ -536,16 +542,9 @@ const shouldShowExpectingQuestionRenderer = () => {
   
   if (!showIndividualGenders.value) {
     // Shared mode: check shared answers
-    console.log('Shared mode - checking expecting question:', {
-      showIndividualGenders: showIndividualGenders.value,
-      genderAnswer: questionnaire.getAnswer('pet_gender')?.value,
-      neuteredAnswer: questionnaire.getAnswer('pet_neutered')?.value,
-      result: shouldShowSharedExpectingQuestion()
-    })
     return shouldShowSharedExpectingQuestion()
   } else {
     // Individual mode: show if any pet needs the expecting question
-    console.log('Individual mode - checking expecting question')
     for (let i = 1; i <= petCount.value; i++) {
       if (shouldShowExpectingQuestion(i)) {
         return true
@@ -564,7 +563,15 @@ const shouldShowExpectingQuestion = (petNum: number) => {
 }
 
 const shouldShowSharedExpectingQuestion = () => {
-  // For single pet, check shared answer since it's stored with petId: null
+  // For single pet, check individual answers since they're stored with petId
+  if (petCount.value === 1) {
+    const genderAnswer = questionnaire.getAnswer('pet_gender', 'pet_1')
+    const neuteredAnswer = questionnaire.getAnswer('pet_neutered', 'pet_1')
+    
+    return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
+  }
+  
+  // For multiple pets, check shared answers
   const genderAnswer = questionnaire.getAnswer('pet_gender')
   const neuteredAnswer = questionnaire.getAnswer('pet_neutered')
   
@@ -573,6 +580,11 @@ const shouldShowSharedExpectingQuestion = () => {
 }
 
 const handleAnswer = (value: any, questionId: string, petId?: string) => {
+  console.log('handleAnswer called:', {
+    questionId,
+    value,
+    petId
+  })
   questionnaire.addAnswer(questionId, value, petId)
   
   // Auto-clear expecting answer when neutered is set to Yes

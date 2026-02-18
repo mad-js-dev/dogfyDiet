@@ -4,7 +4,7 @@ export const questionnaireQuestions: QuestionConfig[] = [
   {
     id: 'pet_breed',
     type: 'select',
-    appliesTo: 'all',
+    appliesTo: 'individual',
     required: true,
     options: [
       // Dog Breeds

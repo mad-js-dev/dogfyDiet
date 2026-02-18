@@ -33,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, onMounted } from 'vue'
 import type { QuestionConfig } from '~/types/questionnaire'
 
 interface Props {
@@ -52,7 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
-const selectedValue = ref(props.modelValue || '')
+const selectedValue = ref(props.modelValue || props.config.rangeOptions?.[0]?.value || '')
 const error = ref('')
 const isTouched = ref(false)
 
@@ -85,6 +86,14 @@ const handleBlur = () => {
 watch(() => props.modelValue, (newValue) => {
   if (newValue !== selectedValue.value) {
     selectedValue.value = newValue || ''
+  }
+})
+
+// Emit default value on mount for required questions
+onMounted(() => {
+  if (props.config.required && !props.modelValue && selectedValue.value) {
+    emit('update:modelValue', selectedValue.value)
+    emit('answer', props.config.id, selectedValue.value)
   }
 })
 </script>

@@ -11,6 +11,9 @@
         :model-value="currentAnswer"
         :pet-id="petId"
         :required="question.required"
+        @update:model-value="(value: any) => {
+          $emit('update:modelValue', value)
+        }"
         @answer="(value: any) => {
           $emit('answer', value, question.id, petId)
         }"

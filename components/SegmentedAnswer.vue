@@ -15,8 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import SegmentedButtons from '~/components/segmented-buttons/SegmentedButtons.vue'
+import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import type { QuestionConfig } from '~/types/questionnaire'
 
 interface Props {
@@ -36,8 +37,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<Emits>()
+const questionnaire = useComprehensiveQuestionnaireStore()
 
-const currentAnswer = ref(props.modelValue || '')
+const currentAnswer = ref(props.modelValue || props.config.options?.[0] || '')
 const error = ref('')
 
 // Convert string array options to SegmentedButtonOption format
@@ -63,6 +65,14 @@ const handleChange = (value: string) => {
 watch(() => props.modelValue, (newValue) => {
   if (newValue !== currentAnswer.value) {
     currentAnswer.value = newValue || ''
+  }
+})
+
+// Emit default value on mount for required questions
+onMounted(() => {
+  if (props.config.required && !props.modelValue && currentAnswer.value && !questionnaire.hasSharedAnswer(props.config.id) && !questionnaire.hasIndividualAnswers(props.config.id)) {
+    emit('update:modelValue', currentAnswer.value)
+    emit('answer', currentAnswer.value, props.config.id, props.petId)
   }
 })
 

@@ -75,11 +75,12 @@ interface Props {
   config: QuestionConfig
   modelValue?: string | string[]
   disabled?: boolean
+  petId?: string
 }
 
 interface Emits {
   (e: 'update:modelValue', value: string | string[]): void
-  (e: 'answer', value: string | string[], questionId: string): void
+  (e: 'answer', value: string | string[], questionId: string, petId?: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -149,7 +150,7 @@ const selectOption = (option: string) => {
   isOpen.value = false
   focusedOptionIndex.value = -1
   emit('update:modelValue', option)
-  emit('answer', option, props.config.id)
+  emit('answer', option, props.config.id, props.petId)
   
   if (isTouched.value) {
     validateInput(option)
@@ -171,7 +172,7 @@ const handleInputChange = (value: string) => {
     // Just update the input text for filtering and show dropdown
     selectedValue.value = ''
     emit('update:modelValue', '')
-    emit('answer', '', props.config.id)
+    emit('answer', '', props.config.id, props.petId)
     isOpen.value = true // Show dropdown when typing
   }
 }
@@ -249,7 +250,7 @@ onUnmounted(() => {
 watch(selectedValue, (newValue) => {
   const safeValue = newValue || ''
   emit('update:modelValue', safeValue)
-  emit('answer', safeValue, props.config.id)
+  emit('answer', safeValue, props.config.id, props.petId)
   
   // Update input text to match selected value
   if (newValue && props.config.options?.includes(newValue as string)) {
@@ -268,7 +269,7 @@ watch(() => props.modelValue, (newValue) => {
     selectedValue.value = safeValue
     inputText.value = safeValue
     emit('update:modelValue', safeValue)
-    emit('answer', safeValue, props.config.id)
+    emit('answer', safeValue, props.config.id, props.petId)
     
     // Update input text to match selected value
     if (newValue && props.config.options?.includes(newValue as string)) {

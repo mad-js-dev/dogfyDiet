@@ -52,6 +52,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
+console.log('TextInput component mounted:', {
+  questionId: props.config.id,
+  modelValue: props.modelValue,
+  petId: props.petId
+})
+
 const inputValue = ref(props.modelValue || '')
 const error = ref('')
 const isTouched = ref(false)
@@ -130,6 +136,12 @@ const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement
   const value = target.value
   
+  console.log('TextInput handleInput called:', {
+    questionId: props.config.id,
+    value,
+    petId: props.petId
+  })
+  
   inputValue.value = value
   emit('update:modelValue', value)
   
@@ -142,6 +154,12 @@ const handleInput = (event: Event) => {
 }
 
 const handleBlur = () => {
+  console.log('TextInput handleBlur called:', {
+    questionId: props.config.id,
+    value: inputValue.value,
+    petId: props.petId
+  })
+  
   isTouched.value = true
   validateInput(inputValue.value)
   // Also emit on blur for consistency

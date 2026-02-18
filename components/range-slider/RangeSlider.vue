@@ -220,7 +220,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
       break
     case 'End':
       event.preventDefault()
-      updateValue(props.config.options?.length - 1 || 0)
+      updateValue((props.config.options?.length || 1) - 1)
       break
   }
 }
@@ -237,6 +237,14 @@ const initializeFromModelValue = () => {
 
 // Watch for external changes
 watch(() => props.modelValue, initializeFromModelValue, { immediate: true })
+
+// Emit default value on mount for required questions
+onMounted(() => {
+  if (props.config.required && !props.modelValue && selectedValue.value) {
+    emit('update:modelValue', selectedValue.value)
+    emit('answer', selectedValue.value, props.config.id)
+  }
+})
 
 // Cleanup
 onUnmounted(() => {
