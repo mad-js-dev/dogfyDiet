@@ -56,7 +56,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 const questionnaire = useComprehensiveQuestionnaireStore()
 
-const selectedValue = ref(props.modelValue !== undefined ? props.modelValue : null)
+const selectedValue = ref(props.modelValue ?? null)
 const error = ref('')
 
 const handleChange = () => {

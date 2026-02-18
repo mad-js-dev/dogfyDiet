@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 const questionnaire = useComprehensiveQuestionnaireStore()
 
-const currentAnswer = ref(props.modelValue || props.config.options?.[0] || '')
+const currentAnswer = ref(props.modelValue ?? '')
 const error = ref('')
 
 // Convert string array options to SegmentedButtonOption format
