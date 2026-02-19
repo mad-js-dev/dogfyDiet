@@ -562,7 +562,7 @@ const shouldShowExpectingQuestion = (petNum: number) => {
   return genderAnswer?.value === 'Female' && neuteredAnswer?.value === 'No'
 }
 
-const shouldShowSharedExpectingQuestion = () => {
+const shouldShowSharedExpectingQuestion = (): boolean => {
   // For single pet, check individual answers since they're stored with petId
   if (petCount.value === 1) {
     const genderAnswer = questionnaire.getAnswer('pet_gender', 'pet_1')
