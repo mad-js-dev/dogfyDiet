@@ -198,9 +198,7 @@ bun run preview
 - **Vue 3**: Progressive JavaScript framework
 - **TypeScript**: Type-safe JavaScript
 - **Pinia**: State management
-- **Playwright**: End-to-end testing
 - **Storybook**: Component development
-- **Tailwind CSS**: Utility-first CSS framework
 
 ## Contributing
 
