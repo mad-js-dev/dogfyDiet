@@ -9,7 +9,6 @@ This is development demo, not a production application.
 - **A/B Testing**: Dynamic questionnaire flow based on test groups
 - **Smart Data Persistence**: Robust localStorage with data recovery
 - **Step Validation**: Prevents skipping required questions
-- **Responsive Design**: Works seamlessly on desktop and mobile
 - **Type Safety**: Full TypeScript implementation
 
 ## Setup
@@ -113,79 +112,15 @@ localStorage.getItem('ab_testing_assignments')
 - **Control Group**: Activity Level step appears after Body Shape
 - **Test Group**: Activity Level step is skipped, goes directly to Pathologyscenarios
 
-## Production
-
-### Building for Production
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-### GitHub Pages Deployment
-
-#### Option 1: Automatic Deployment (Recommended)
-
-1. **Enable GitHub Pages** in your repository settings:
-   - Go to Settings → Pages
-   - Source: Deploy from a branch
-   - Branch: `gh-pages` and `/ (root)`
-   - Save
-
-2. **Push to main branch** - Automatic deployment will trigger
-
-#### Option 2: Manual Deployment
-
-```bash
-# Install gh-pages (first time only)
-npm install --save-dev gh-pages
-
-# Deploy to GitHub Pages
-npm run deploy:gh-pages
-```
-
-#### Option 3: Local Build and Manual Upload
-
-```bash
-# Generate static site
-npm run generate
-
-# Upload .output/public folder to GitHub Pages
-```
-
-### Preview Production Build
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
 ## Project Structure
 
 ```
-├── components/          # Vue components
+├── components/         # Vue components
 │   ├── steps/          # Questionnaire step components
-│   └── ui/             # Reusable UI components
-├── composables/         # Vue composables
+│   └──                 # Reusable UI components
+├── composables/        # Vue composables
 ├── config/             # Configuration files
-├── middleware/          # Nuxt middleware
+├── middleware/         # Nuxt middleware
 ├── pages/              # Nuxt pages
 ├── stores/             # Pinia stores
 ├── types/              # TypeScript type definitions
@@ -199,16 +134,3 @@ bun run preview
 - **TypeScript**: Type-safe JavaScript
 - **Pinia**: State management
 - **Storybook**: Component development
-
-## Contributing
-
-1. Follow the existing code style
-2. Add tests for new features
-3. Update documentation
-4. Submit pull requests
-
-### Getting Help
-
-- Check browser console for errors
-- Review network requests in DevTools
-- Verify localStorage contents
