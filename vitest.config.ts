@@ -1,8 +1,14 @@
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 import { defineVitestProject } from '@nuxt/test-utils/config'
+import { resolve } from 'path'
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '~': resolve(__dirname, '.')
+    }
+  },
   test: {
     projects: [
       {

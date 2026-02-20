@@ -1,28 +1,33 @@
 import { vi } from 'vitest'
 
 // Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+  length: 0,
+  key: vi.fn()
+}
+
+// Mock sessionStorage
+const sessionStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+  length: 0,
+  key: vi.fn()
+}
+
+// Setup mocks
 Object.defineProperty(window, 'localStorage', {
-  value: {
-    getItem: vi.fn(),
-    setItem: vi.fn(),
-    removeItem: vi.fn(),
-    clear: vi.fn(),
-    length: 0,
-    key: vi.fn()
-  },
+  value: localStorageMock,
   writable: true
 })
 
-// Mock sessionStorage
 Object.defineProperty(window, 'sessionStorage', {
-  value: {
-    getItem: vi.fn(),
-    setItem: vi.fn(),
-    removeItem: vi.fn(),
-    clear: vi.fn(),
-    length: 0,
-    key: vi.fn()
-  },
+  value: sessionStorageMock,
   writable: true
 })
 
@@ -65,3 +70,6 @@ global.console = {
   warn: vi.fn(),
   info: vi.fn()
 }
+
+// Export mocks for use in tests
+export { localStorageMock, sessionStorageMock }

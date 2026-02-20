@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
+import { useComprehensiveQuestionnaireStore } from '../../stores/comprehensive-questionnaire'
 
 // Mock localStorage composable
 const localStorageMock = {

@@ -1,41 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { questionnaireService } from '~/services/questionnaire'
-
-// Mock localStorage and sessionStorage
-const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn()
-}
-
-const sessionStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn()
-}
-
-// Mock URLSearchParams
-class MockURLSearchParams {
-  private params: Record<string, string>
-  
-  constructor(url: string) {
-    this.params = {}
-    // Simple parsing for test purposes
-    const match = url.match(/[?&]([^=#]+)=([^&#]*)/g)
-    if (match) {
-      match.forEach(param => {
-        const [key, value] = param.slice(1).split('=')
-        this.params[key] = decodeURIComponent(value)
-      })
-    }
-  }
-  
-  get(key: string): string | null {
-    return this.params[key] || null
-  }
-}
+import { questionnaireService } from '../../services/questionnaire'
+import { localStorageMock, sessionStorageMock } from '../setup'
 
 describe('QuestionnaireService', () => {
   beforeEach(() => {
@@ -56,7 +21,25 @@ describe('QuestionnaireService', () => {
     })
     
     // Mock URLSearchParams
-    global.URLSearchParams = MockURLSearchParams as any
+    global.URLSearchParams = class MockURLSearchParams {
+      private params: Record<string, string>
+      
+      constructor(url: string) {
+        this.params = {}
+        // Simple parsing for test purposes
+        const match = url.match(/[?&]([^=#]+)=([^&#]*)/g)
+        if (match) {
+          match.forEach(param => {
+            const [key, value] = param.slice(1).split('=')
+            this.params[key] = decodeURIComponent(value)
+          })
+        }
+      }
+      
+      get(key: string): string | null {
+        return this.params[key] || null
+      }
+    } as any
     
     // Mock location
     Object.defineProperty(window, 'location', {
