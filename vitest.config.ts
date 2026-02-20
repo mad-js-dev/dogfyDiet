@@ -8,7 +8,11 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          include: ['tests/unit/*.{test,spec}.ts'],
+          include: [
+            'tests/unit/*.{test,spec}.ts',
+            'tests/services/*.{test,spec}.ts',
+            'tests/stores/*.{test,spec}.ts'
+          ],
           environment: 'jsdom',
           setupFiles: ['./tests/setup.ts'],
         },
