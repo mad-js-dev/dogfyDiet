@@ -36,28 +36,43 @@ export interface QuestionnaireService {
 // A/B Testing: Check URL parameter first, then localStorage, then random assignment
 const getTestGroup = (): 'control' | 'test' => {
   if (typeof window !== 'undefined') {
-    // Check URL parameter first (highest priority)
-    const urlParams = new URLSearchParams(window.location.search)
-    const urlGroup = urlParams.get('ab_test')
-    if (urlGroup === 'control' || urlGroup === 'test') {
-      // Save URL override to localStorage for persistence
-      localStorage.setItem('ab_test_group', urlGroup)
-      console.log('A/B Test Group from URL parameter:', urlGroup)
-      return urlGroup
+    try {
+      // Check URL parameter first (highest priority)
+      const urlParams = new URLSearchParams(window.location.search)
+      const urlGroup = urlParams.get('ab_test')
+      if (urlGroup === 'control' || urlGroup === 'test') {
+        // Save URL override to both localStorage and sessionStorage for persistence
+        localStorage.setItem('ab_test_group', urlGroup)
+        sessionStorage.setItem('ab_test_group', urlGroup)
+        console.log('A/B Test Group from URL parameter:', urlGroup)
+        return urlGroup
+      }
+      
+      // Check localStorage for existing assignment
+      const storedGroup = localStorage.getItem('ab_test_group')
+      const sessionGroup = sessionStorage.getItem('ab_test_group')
+      
+      // Prefer localStorage, fallback to sessionStorage
+      const persistentGroup = storedGroup || sessionGroup
+      if (persistentGroup === 'control' || persistentGroup === 'test') {
+        // Sync both storage mechanisms
+        localStorage.setItem('ab_test_group', persistentGroup)
+        sessionStorage.setItem('ab_test_group', persistentGroup)
+        console.log('A/B Test Group from persistent storage:', persistentGroup)
+        return persistentGroup
+      }
+      
+      // Assign new user to random group (50/50 split)
+      const randomGroup = Math.random() < 0.5 ? 'control' : 'test'
+      localStorage.setItem('ab_test_group', randomGroup)
+      sessionStorage.setItem('ab_test_group', randomGroup)
+      console.log('A/B Test Group randomly assigned:', randomGroup)
+      return randomGroup
+    } catch (error) {
+      console.error('Error accessing A/B test group storage:', error)
+      // Fallback to control group on error
+      return 'control'
     }
-    
-    // Check localStorage for existing assignment
-    const storedGroup = localStorage.getItem('ab_test_group')
-    if (storedGroup === 'control' || storedGroup === 'test') {
-      console.log('A/B Test Group from localStorage:', storedGroup)
-      return storedGroup
-    }
-    
-    // Assign new user to random group (50/50 split)
-    const randomGroup = Math.random() < 0.5 ? 'control' : 'test'
-    localStorage.setItem('ab_test_group', randomGroup)
-    console.log('A/B Test Group randomly assigned:', randomGroup)
-    return randomGroup
   }
   
   // Fallback for server-side rendering
@@ -102,19 +117,29 @@ export const questionnaireService: QuestionnaireService = {
 
   setTestGroup(group: 'control' | 'test'): void {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('ab_test_group', group)
-      console.log('A/B Test Group manually set to:', group)
-      // Force page reload to apply new group
-      window.location.reload()
+      try {
+        localStorage.setItem('ab_test_group', group)
+        sessionStorage.setItem('ab_test_group', group)
+        console.log('A/B Test Group manually set to:', group)
+        // Force page reload to apply new group
+        window.location.reload()
+      } catch (error) {
+        console.error('Error setting A/B test group:', error)
+      }
     }
   },
 
   clearTestGroup(): void {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('ab_test_group')
-      console.log('A/B Test Group cleared - will be randomly reassigned on next load')
-      // Force page reload to apply random assignment
-      window.location.reload()
+      try {
+        localStorage.removeItem('ab_test_group')
+        sessionStorage.removeItem('ab_test_group')
+        console.log('A/B Test Group cleared - will be randomly reassigned on next load')
+        // Force page reload to apply random assignment
+        window.location.reload()
+      } catch (error) {
+        console.error('Error clearing A/B test group:', error)
+      }
     }
   }
 }
