@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { questionnaireService } from '../../services/questionnaire'
+import { questionnaireService } from '/home/maribel/Documentos/dogfyDiet/services/questionnaire'
 import { localStorageMock, sessionStorageMock } from '../setup'
 
 describe('QuestionnaireService', () => {
