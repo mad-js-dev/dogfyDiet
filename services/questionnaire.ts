@@ -1,8 +1,12 @@
+import { defineStore } from 'pinia'
+import questionnaireControlData from '~/data/questionnaire-control.json'
+import questionnaireTestData from '~/data/questionnaire-test.json'
+
 export interface Question {
   id: string
   title: string
   description: string
-  type: 'single' | 'multiple' | 'text' | 'number' | 'date' | 'select'
+  type: 'text' | 'number' | 'select' | 'single' | 'multiple' | 'range'
   required: boolean
   options?: string[]
   validation?: {
@@ -10,7 +14,6 @@ export interface Question {
     max?: number
     pattern?: string
   }
-  petId?: string // For multi-pet scenarios
 }
 
 export interface QuestionnaireStep {
@@ -25,259 +28,37 @@ export interface QuestionnaireService {
   getStepById(id: number): QuestionnaireStep | undefined
   getNextStep(currentStepId: number): QuestionnaireStep | undefined
   getPreviousStep(currentStepId: number): QuestionnaireStep | undefined
+  getTestGroup(): 'control' | 'test'
+}
+
+// A/B Testing: Randomly assign user to control or test group
+const getTestGroup = (): 'control' | 'test' => {
+  // Check if user already has a test group assigned in localStorage
+  if (typeof window !== 'undefined') {
+    const storedGroup = localStorage.getItem('ab_test_group')
+    if (storedGroup === 'control' || storedGroup === 'test') {
+      return storedGroup
+    }
+    
+    // Assign new user to random group
+    const randomGroup = Math.random() < 0.5 ? 'control' : 'test'
+    localStorage.setItem('ab_test_group', randomGroup)
+    return randomGroup
+  }
+  
+  // Fallback for server-side rendering
+  return 'control'
 }
 
 export const questionnaireService: QuestionnaireService = {
   getSteps(): QuestionnaireStep[] {
-    return [
-      {
-        id: 0,
-        title: 'Pet Race',
-        description: 'Tell us about your pets\' breeds',
-        questions: [
-          {
-            id: 'pet_breed',
-            title: 'Pet Breed',
-            description: 'What is your pet\'s breed?',
-            type: 'select',
-            required: true,
-            options: [
-              'Labrador Retriever',
-              'German Shepherd',
-              'Golden Retriever',
-              'French Bulldog',
-              'Bulldog',
-              'Poodle',
-              'Beagle',
-              'Rottweiler',
-              'German Shorthaired Pointer',
-              'Yorkshire Terrier',
-              'Dachshund',
-              'Siberian Husky',
-              'Great Dane',
-              'Boxer',
-              'Chihuahua',
-              'Persian',
-              'Maine Coon',
-              'British Shorthair',
-              'Siamese',
-              'American Shorthair',
-              'Ragdoll',
-              'Bengal',
-              'Russian Blue',
-              'Scottish Fold',
-              'Birman',
-              'Oriental Shorthair',
-              'Devon Rex',
-              'Himalayan',
-              'American Curl',
-              'Selkirk Rex'
-            ]
-          }
-        ]
-      },
-      {
-        id: 1,
-        title: 'Pet Names',
-        description: 'Tell us your pets\' names',
-        questions: [
-          {
-            id: 'pet_name',
-            title: 'Pet Name',
-            description: 'What is your pet\'s name?',
-            type: 'text',
-            required: true,
-            validation: {
-              min: 1,
-              max: 50
-            }
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: 'Pet Gender',
-        description: 'Tell us about your pets\' gender and reproductive status',
-        questions: [
-          {
-            id: 'pet_gender',
-            title: 'Pet Gender',
-            description: 'What is your pet\'s gender?',
-            type: 'single',
-            required: true,
-            options: ['Male', 'Female']
-          },
-          {
-            id: 'pet_neutered',
-            title: 'Pet Neutered/Spayed',
-            description: 'Is your pet neutered/spayed?',
-            type: 'single',
-            required: true,
-            options: ['Yes', 'No']
-          },
-          {
-            id: 'pet_expecting',
-            title: 'Pet Expecting',
-            description: 'Is your pet expecting offspring?',
-            type: 'single',
-            required: false,
-            options: ['Yes', 'No']
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: 'Pet Birth Date',
-        description: 'Tell us when your pets were born',
-        questions: [
-          {
-            id: 'pet_birth_year',
-            title: 'Birth Year',
-            description: 'What year was your pet born?',
-            type: 'number',
-            required: true,
-            validation: {
-              min: 1990,
-              max: new Date().getFullYear()
-            }
-          },
-          {
-            id: 'pet_birth_month',
-            title: 'Birth Month',
-            description: 'What month was your pet born?',
-            type: 'select',
-            required: true,
-            options: [
-              'January', 'February', 'March', 'April', 'May', 'June',
-              'July', 'August', 'September', 'October', 'November', 'December'
-            ]
-          }
-        ]
-      },
-      {
-        id: 4,
-        title: 'Pet Body Shape',
-        description: 'Tell us about your pets\' body shape and weight',
-        questions: [
-          {
-            id: 'pet_body_shape',
-            title: 'Body Shape',
-            description: 'How would you describe your pet\'s body shape?',
-            type: 'single',
-            required: true,
-            options: ['Underweight', 'Ideal Weight', 'Overweight', 'Obese']
-          },
-          {
-            id: 'pet_weight',
-            title: 'Pet Weight',
-            description: 'How much does your pet weigh (in kg)?',
-            type: 'number',
-            required: true,
-            validation: {
-              min: 0.5,
-              max: 100
-            }
-          }
-        ]
-      },
-      {
-        id: 5,
-        title: 'Pet Activity Level',
-        description: 'Tell us about your pets\' activity levels',
-        questions: [
-          {
-            id: 'pet_activity_level',
-            title: 'Activity Level',
-            description: 'How active is your pet?',
-            type: 'single',
-            required: true,
-            options: ['Low', 'Moderate', 'High', 'Very High']
-          }
-        ]
-      },
-      {
-        id: 6,
-        title: 'Pet Pathology',
-        description: 'Tell us about any health conditions your pets may have',
-        questions: [
-          {
-            id: 'pet_has_pathology',
-            title: 'Has Health Conditions',
-            description: 'Does your pet have any health conditions?',
-            type: 'single',
-            required: true,
-            options: ['Yes', 'No']
-          },
-          {
-            id: 'pet_pathology',
-            title: 'Health Conditions',
-            description: 'What health conditions does your pet have?',
-            type: 'multiple',
-            required: false,
-            options: [
-              'Diabetes',
-              'Kidney Disease',
-              'Heart Disease',
-              'Arthritis',
-              'Allergies',
-              'Digestive Issues',
-              'Skin Problems',
-              'Dental Issues',
-              'Eye Problems',
-              'None'
-            ]
-          }
-        ]
-      },
-      {
-        id: 7,
-        title: 'Pet Gastronomic Profile',
-        description: 'Tell us about your pets\' eating habits',
-        questions: [
-          {
-            id: 'pet_gastronomic_profile',
-            title: 'Eating Habits',
-            description: 'What are your pet\'s eating habits?',
-            type: 'single',
-            required: true,
-            options: [
-              'Very Picky',
-              'Picky',
-              'Normal',
-              'Good Appetite',
-              'Very Good Appetite'
-            ]
-          }
-        ]
-      },
-      {
-        id: 8,
-        title: 'User Contact',
-        description: 'How can we contact you?',
-        questions: [
-          {
-            id: 'user_email',
-            title: 'Email Address',
-            description: 'What is your email address?',
-            type: 'text',
-            required: true,
-            validation: {
-              pattern: '^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$'
-            }
-          },
-          {
-            id: 'user_phone',
-            title: 'Phone Number',
-            description: 'What is your phone number?',
-            type: 'text',
-            required: false,
-            validation: {
-              pattern: '^[+]?[\\d\\s\\-\\(\\)]+$'
-            }
-          }
-        ]
-      }
-    ]
+    const testGroup = getTestGroup()
+    console.log('A/B Test Group:', testGroup)
+    
+    // Return appropriate dataset based on test group
+    return testGroup === 'control' 
+      ? questionnaireControlData as QuestionnaireStep[]
+      : questionnaireTestData as QuestionnaireStep[]
   },
 
   getStepById(id: number): QuestionnaireStep | undefined {
@@ -299,5 +80,9 @@ export const questionnaireService: QuestionnaireService = {
     return currentIndex > 0 
       ? steps[currentIndex - 1] 
       : undefined
+  },
+
+  getTestGroup(): 'control' | 'test' {
+    return getTestGroup()
   }
 }
