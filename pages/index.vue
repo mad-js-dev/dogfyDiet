@@ -7,25 +7,6 @@
       <div class="quick-start-section">
         <h2>Quick Start</h2>
         <p>Already know your pet's race? Select it below to skip ahead!</p>
-        
-        <div class="race-selector">
-          <label for="pet-race-select" class="race-label">What is your pet's race?</label>
-          <select 
-            id="pet-race-select"
-            v-model="selectedRace"
-            class="race-select"
-            @change="handleRaceSelection"
-          >
-            <option value="" disabled>Select your pet's breed...</option>
-            <option 
-              v-for="breed in allBreeds" 
-              :key="breed"
-              :value="breed"
-            >
-              {{ breed }}
-            </option>
-          </select>
-        </div>
       </div>
       
       <div class="features">
@@ -50,13 +31,7 @@
         <button @click="startQuestionnaire" class="start-btn primary">
           Start Questionnaire
         </button>
-        <button 
-          v-if="selectedRace" 
-          @click="startWithRace" 
-          class="start-btn secondary"
-        >
-          Continue with {{ selectedRace }}
-        </button>
+       
       </div>
     </div>
   </div>
@@ -106,7 +81,7 @@ const allBreeds = [
 ]
 
 const startQuestionnaire = () => {
-  router.push('/step/1')
+  router.push('/questionnaire/1')
 }
 
 const handleRaceSelection = () => {
