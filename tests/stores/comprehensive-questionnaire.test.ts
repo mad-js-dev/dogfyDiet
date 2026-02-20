@@ -4,7 +4,7 @@ import { useComprehensiveQuestionnaireStore } from '/home/maribel/Documentos/dog
 
 // Mock localStorage composable
 const localStorageMock = {
-  isLocalStorageAvailable: { value: true },
+  isLocalStorageAvailable: { value: true }, // Make available for persistence tests
   saveToLocalStorage: vi.fn(),
   loadFromLocalStorage: vi.fn(),
   hasPersistedData: vi.fn(),

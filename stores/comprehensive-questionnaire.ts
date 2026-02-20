@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { questionnaireSteps } from '~/config/questionnaire-steps'
-import { useLocalStorage } from '~/composables/useLocalStorage'
+import { questionnaireSteps } from '../config/questionnaire-steps'
+import { useLocalStorage } from '../composables/useLocalStorage'
 
 export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-questionnaire', () => {
   // Initialize localStorage composable
@@ -34,8 +34,10 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   })
 
   const progressPercentage = computed(() => {
-    const totalSteps = questionnaireSteps.length // Total number of steps
-    return Math.round((currentStep.value / (totalSteps - 1)) * 100)
+    const totalQuestions = questionnaireSteps.reduce((total, step) => {
+      return total + (step.questions?.length || 0)
+    }, 0)
+    return Math.round((currentStep.value / (totalQuestions - 1)) * 100)
   })
 
   // Enhanced getters for data restoration
@@ -187,11 +189,16 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
 
   const addSmartAnswer = (questionId: string, value: any, petId?: string | null) => {
     if (!petId && petCount.value > 1) {
-      // Single answer for multiple pets - store as shared
+      // Multiple pets with same answer - store as shared
       addAnswer(questionId, value, null)
+      setPetCount(petCount.value)
+      setUiState('showIndividualGenders', false)
+      differentiateAnswers(questionId)
     } else {
-      // Pet-specific answer
+      // Single pet or individual mode - store with petId
       addAnswer(questionId, value, petId)
+      setPetCount(petCount.value)
+      setUiState('showIndividualGenders', false)
     }
   }
 
