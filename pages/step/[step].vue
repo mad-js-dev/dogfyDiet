@@ -223,23 +223,29 @@ onMounted(() => {
         showIndividualGastronomicProfiles.value = questionnaire.uiState.showIndividualGastronomicProfiles
       }
       
-      // Only auto-navigate if this appears to be a fresh page load
-      // Check if user landed on step 1 (default entry point) but has progress elsewhere
-      const savedStep = questionnaire.currentStep
-      const urlStep = getUrlStepFromInternal(savedStep, excludeActivityLevel.value)
+      // Intelligent navigation based on completion status
+      const urlStep = getUrlStepFromInternal(questionnaire.currentStep, excludeActivityLevel.value)
       const currentUrlStep = parseInt(route.params.step as string) || 1
       
-      console.log('Step page - navigation check:', {
-        savedStep,
+      console.log('Step page - intelligent navigation:', {
+        currentStep: questionnaire.currentStep,
         urlStep,
-        currentUrlStep
+        currentUrlStep,
+        lastAnsweredStep: questionnaire.lastAnsweredStep.value,
+        nextUnansweredStep: questionnaire.nextUnansweredStep.value,
+        completionStatus: questionnaire.completionStatus.value
       })
       
-      // Only restore if user is on step 1 but has saved progress beyond step 1
-      // This prevents interference with manual navigation
-      if (currentUrlStep === 1 && savedStep > 0) {
+      // Only auto-navigate if user is on step 1 (default entry) and has progress elsewhere
+      if (currentUrlStep === 1 && questionnaire.currentStep > 0) {
         console.log('Step page - auto-navigating to:', urlStep)
         router.replace(`/step/${urlStep}`)
+      }
+      // If user lands on a step that's already completed, navigate to next unanswered
+      else if (currentUrlStep <= questionnaire.lastAnsweredStep.value && questionnaire.nextUnansweredStep.value < questionnaireSteps.length - 1) {
+        const nextStep = getUrlStepFromInternal(questionnaire.nextUnansweredStep.value, excludeActivityLevel.value)
+        console.log('Step page - navigating to next unanswered step:', nextStep)
+        router.replace(`/step/${nextStep}`)
       }
     }
   }

@@ -38,6 +38,57 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     return Math.round((currentStep.value / (totalSteps - 1)) * 100)
   })
 
+  // Enhanced getters for data restoration
+  const completionStatus = computed(() => {
+    const totalQuestions = questionnaireSteps.reduce((total, step) => {
+      return total + (step.questions?.length || 0)
+    }, 0)
+    
+    return {
+      totalQuestions,
+      answeredQuestions: answeredQuestions.value,
+      completionPercentage: totalQuestions > 0 ? Math.round((answeredQuestions.value / totalQuestions) * 100) : 0
+    }
+  })
+
+  const lastAnsweredStep = computed(() => {
+    // Find the furthest step with any answered questions
+    let furthestStep = 0
+    
+    for (let stepIndex = questionnaireSteps.length - 1; stepIndex >= 0; stepIndex--) {
+      const step = questionnaireSteps[stepIndex]
+      const stepHasAnswers = step.questions?.some((question: any) => 
+        answers.value.some(answer => answer.questionId === question.id)
+      )
+      
+      if (stepHasAnswers) {
+        furthestStep = stepIndex
+        break
+      }
+    }
+    
+    return furthestStep
+  })
+
+  const nextUnansweredStep = computed(() => {
+    // Find the first step with unanswered questions
+    for (let stepIndex = 0; stepIndex < questionnaireSteps.length; stepIndex++) {
+      const step = questionnaireSteps[stepIndex]
+      const stepQuestions = step.questions || []
+      
+      const hasUnansweredQuestions = stepQuestions.some((question: any) => {
+        // Check if question has any answer (shared or individual)
+        return !answers.value.some(answer => answer.questionId === question.id)
+      })
+      
+      if (hasUnansweredQuestions) {
+        return stepIndex
+      }
+    }
+    
+    return questionnaireSteps.length - 1 // Return last step if all are answered
+  })
+
   // Actions
   const setStep = (step: number) => {
     currentStep.value = step
@@ -233,6 +284,9 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     // Getters
     answeredQuestions,
     progressPercentage,
+    completionStatus,
+    lastAnsweredStep,
+    nextUnansweredStep,
     
     // Actions
     setStep,

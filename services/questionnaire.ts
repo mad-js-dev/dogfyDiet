@@ -1,8 +1,12 @@
+import { defineStore } from 'pinia'
+import questionnaireControlData from '~/data/questionnaire-control.json'
+import questionnaireTestData from '~/data/questionnaire-test.json'
+
 export interface Question {
   id: string
   title: string
   description: string
-  type: 'single' | 'multiple' | 'text' | 'number' | 'date' | 'select'
+  type: 'text' | 'number' | 'select' | 'single' | 'multiple' | 'range'
   required: boolean
   options?: string[]
   validation?: {
@@ -10,7 +14,6 @@ export interface Question {
     max?: number
     pattern?: string
   }
-  petId?: string // For multi-pet scenarios
 }
 
 export interface QuestionnaireStep {
@@ -25,259 +28,66 @@ export interface QuestionnaireService {
   getStepById(id: number): QuestionnaireStep | undefined
   getNextStep(currentStepId: number): QuestionnaireStep | undefined
   getPreviousStep(currentStepId: number): QuestionnaireStep | undefined
+  getTestGroup(): 'control' | 'test'
+  setTestGroup(group: 'control' | 'test'): void
+  clearTestGroup(): void
+}
+
+// A/B Testing: Check URL parameter first, then localStorage, then random assignment
+const getTestGroup = (): 'control' | 'test' => {
+  if (typeof window !== 'undefined') {
+    try {
+      // Check URL parameter first (highest priority)
+      const urlParams = new URLSearchParams(window.location.search)
+      const urlGroup = urlParams.get('ab_test')
+      if (urlGroup === 'control' || urlGroup === 'test') {
+        // Save URL override to both localStorage and sessionStorage for persistence
+        localStorage.setItem('ab_test_group', urlGroup)
+        sessionStorage.setItem('ab_test_group', urlGroup)
+        console.log('A/B Test Group from URL parameter:', urlGroup)
+        return urlGroup
+      }
+      
+      // Check localStorage for existing assignment
+      const storedGroup = localStorage.getItem('ab_test_group')
+      const sessionGroup = sessionStorage.getItem('ab_test_group')
+      
+      // Prefer localStorage, fallback to sessionStorage
+      const persistentGroup = storedGroup || sessionGroup
+      if (persistentGroup === 'control' || persistentGroup === 'test') {
+        // Sync both storage mechanisms
+        localStorage.setItem('ab_test_group', persistentGroup)
+        sessionStorage.setItem('ab_test_group', persistentGroup)
+        console.log('A/B Test Group from persistent storage:', persistentGroup)
+        return persistentGroup
+      }
+      
+      // Assign new user to random group (50/50 split)
+      const randomGroup = Math.random() < 0.5 ? 'control' : 'test'
+      localStorage.setItem('ab_test_group', randomGroup)
+      sessionStorage.setItem('ab_test_group', randomGroup)
+      console.log('A/B Test Group randomly assigned:', randomGroup)
+      return randomGroup
+    } catch (error) {
+      console.error('Error accessing A/B test group storage:', error)
+      // Fallback to control group on error
+      return 'control'
+    }
+  }
+  
+  // Fallback for server-side rendering
+  return 'control'
 }
 
 export const questionnaireService: QuestionnaireService = {
   getSteps(): QuestionnaireStep[] {
-    return [
-      {
-        id: 0,
-        title: 'Pet Race',
-        description: 'Tell us about your pets\' breeds',
-        questions: [
-          {
-            id: 'pet_breed',
-            title: 'Pet Breed',
-            description: 'What is your pet\'s breed?',
-            type: 'select',
-            required: true,
-            options: [
-              'Labrador Retriever',
-              'German Shepherd',
-              'Golden Retriever',
-              'French Bulldog',
-              'Bulldog',
-              'Poodle',
-              'Beagle',
-              'Rottweiler',
-              'German Shorthaired Pointer',
-              'Yorkshire Terrier',
-              'Dachshund',
-              'Siberian Husky',
-              'Great Dane',
-              'Boxer',
-              'Chihuahua',
-              'Persian',
-              'Maine Coon',
-              'British Shorthair',
-              'Siamese',
-              'American Shorthair',
-              'Ragdoll',
-              'Bengal',
-              'Russian Blue',
-              'Scottish Fold',
-              'Birman',
-              'Oriental Shorthair',
-              'Devon Rex',
-              'Himalayan',
-              'American Curl',
-              'Selkirk Rex'
-            ]
-          }
-        ]
-      },
-      {
-        id: 1,
-        title: 'Pet Names',
-        description: 'Tell us your pets\' names',
-        questions: [
-          {
-            id: 'pet_name',
-            title: 'Pet Name',
-            description: 'What is your pet\'s name?',
-            type: 'text',
-            required: true,
-            validation: {
-              min: 1,
-              max: 50
-            }
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: 'Pet Gender',
-        description: 'Tell us about your pets\' gender and reproductive status',
-        questions: [
-          {
-            id: 'pet_gender',
-            title: 'Pet Gender',
-            description: 'What is your pet\'s gender?',
-            type: 'single',
-            required: true,
-            options: ['Male', 'Female']
-          },
-          {
-            id: 'pet_neutered',
-            title: 'Pet Neutered/Spayed',
-            description: 'Is your pet neutered/spayed?',
-            type: 'single',
-            required: true,
-            options: ['Yes', 'No']
-          },
-          {
-            id: 'pet_expecting',
-            title: 'Pet Expecting',
-            description: 'Is your pet expecting offspring?',
-            type: 'single',
-            required: false,
-            options: ['Yes', 'No']
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: 'Pet Birth Date',
-        description: 'Tell us when your pets were born',
-        questions: [
-          {
-            id: 'pet_birth_year',
-            title: 'Birth Year',
-            description: 'What year was your pet born?',
-            type: 'number',
-            required: true,
-            validation: {
-              min: 1990,
-              max: new Date().getFullYear()
-            }
-          },
-          {
-            id: 'pet_birth_month',
-            title: 'Birth Month',
-            description: 'What month was your pet born?',
-            type: 'select',
-            required: true,
-            options: [
-              'January', 'February', 'March', 'April', 'May', 'June',
-              'July', 'August', 'September', 'October', 'November', 'December'
-            ]
-          }
-        ]
-      },
-      {
-        id: 4,
-        title: 'Pet Body Shape',
-        description: 'Tell us about your pets\' body shape and weight',
-        questions: [
-          {
-            id: 'pet_body_shape',
-            title: 'Body Shape',
-            description: 'How would you describe your pet\'s body shape?',
-            type: 'single',
-            required: true,
-            options: ['Underweight', 'Ideal Weight', 'Overweight', 'Obese']
-          },
-          {
-            id: 'pet_weight',
-            title: 'Pet Weight',
-            description: 'How much does your pet weigh (in kg)?',
-            type: 'number',
-            required: true,
-            validation: {
-              min: 0.5,
-              max: 100
-            }
-          }
-        ]
-      },
-      {
-        id: 5,
-        title: 'Pet Activity Level',
-        description: 'Tell us about your pets\' activity levels',
-        questions: [
-          {
-            id: 'pet_activity_level',
-            title: 'Activity Level',
-            description: 'How active is your pet?',
-            type: 'single',
-            required: true,
-            options: ['Low', 'Moderate', 'High', 'Very High']
-          }
-        ]
-      },
-      {
-        id: 6,
-        title: 'Pet Pathology',
-        description: 'Tell us about any health conditions your pets may have',
-        questions: [
-          {
-            id: 'pet_has_pathology',
-            title: 'Has Health Conditions',
-            description: 'Does your pet have any health conditions?',
-            type: 'single',
-            required: true,
-            options: ['Yes', 'No']
-          },
-          {
-            id: 'pet_pathology',
-            title: 'Health Conditions',
-            description: 'What health conditions does your pet have?',
-            type: 'multiple',
-            required: false,
-            options: [
-              'Diabetes',
-              'Kidney Disease',
-              'Heart Disease',
-              'Arthritis',
-              'Allergies',
-              'Digestive Issues',
-              'Skin Problems',
-              'Dental Issues',
-              'Eye Problems',
-              'None'
-            ]
-          }
-        ]
-      },
-      {
-        id: 7,
-        title: 'Pet Gastronomic Profile',
-        description: 'Tell us about your pets\' eating habits',
-        questions: [
-          {
-            id: 'pet_gastronomic_profile',
-            title: 'Eating Habits',
-            description: 'What are your pet\'s eating habits?',
-            type: 'single',
-            required: true,
-            options: [
-              'Very Picky',
-              'Picky',
-              'Normal',
-              'Good Appetite',
-              'Very Good Appetite'
-            ]
-          }
-        ]
-      },
-      {
-        id: 8,
-        title: 'User Contact',
-        description: 'How can we contact you?',
-        questions: [
-          {
-            id: 'user_email',
-            title: 'Email Address',
-            description: 'What is your email address?',
-            type: 'text',
-            required: true,
-            validation: {
-              pattern: '^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$'
-            }
-          },
-          {
-            id: 'user_phone',
-            title: 'Phone Number',
-            description: 'What is your phone number?',
-            type: 'text',
-            required: false,
-            validation: {
-              pattern: '^[+]?[\\d\\s\\-\\(\\)]+$'
-            }
-          }
-        ]
-      }
-    ]
+    const testGroup = getTestGroup()
+    console.log('A/B Test Group:', testGroup)
+    
+    // Return appropriate dataset based on test group
+    return testGroup === 'control' 
+      ? questionnaireControlData as QuestionnaireStep[]
+      : questionnaireTestData as QuestionnaireStep[]
   },
 
   getStepById(id: number): QuestionnaireStep | undefined {
@@ -299,5 +109,37 @@ export const questionnaireService: QuestionnaireService = {
     return currentIndex > 0 
       ? steps[currentIndex - 1] 
       : undefined
+  },
+
+  getTestGroup(): 'control' | 'test' {
+    return getTestGroup()
+  },
+
+  setTestGroup(group: 'control' | 'test'): void {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('ab_test_group', group)
+        sessionStorage.setItem('ab_test_group', group)
+        console.log('A/B Test Group manually set to:', group)
+        // Force page reload to apply new group
+        window.location.reload()
+      } catch (error) {
+        console.error('Error setting A/B test group:', error)
+      }
+    }
+  },
+
+  clearTestGroup(): void {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('ab_test_group')
+        sessionStorage.removeItem('ab_test_group')
+        console.log('A/B Test Group cleared - will be randomly reassigned on next load')
+        // Force page reload to apply random assignment
+        window.location.reload()
+      } catch (error) {
+        console.error('Error clearing A/B test group:', error)
+      }
+    }
   }
 }
