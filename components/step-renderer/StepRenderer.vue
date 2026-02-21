@@ -1,0 +1,229 @@
+<template>
+  <div class="step-renderer">
+    <div 
+      v-for="question in currentStepData?.questions" 
+      :key="question.id"
+      class="question-item"
+    >
+      <h3>{{ question.title }}</h3>
+      <p>{{ question.description }}</p>
+      
+      <!-- Dynamic question renderers based on question.type and pet count -->
+      <div class="question-input">
+        <!-- Shared mode (one set of answers for both pets) -->
+        <div v-if="petCount > 1 && isSharedMode" class="pet-section">
+          <component 
+            :is="getQuestionComponent(question.type)"
+            :question="question"
+            :model-value="getSharedQuestionValue(question.id)"
+            @update:model-value="handleSharedQuestionUpdate(question.id, $event)"
+          />
+        </div>
+        
+        <!-- Single pet mode -->
+        <div v-else-if="petCount === 1" class="pet-section">
+          <component 
+            :is="getQuestionComponent(question.type)"
+            :question="question"
+            :model-value="getQuestionValue(question.id, 'pet_1')"
+            @update:model-value="handleQuestionUpdate(question.id, $event, 'pet_1')"
+          />
+        </div>
+        
+        <!-- Multiple pets mode (separate answers) -->
+        <div v-else class="pets-grid">
+          <div v-for="petNum in petCount" :key="petNum" class="pet-section">
+            <h4>{{ getPetDisplayName(petNum) }}</h4>
+            <component 
+              :is="getQuestionComponent(question.type)"
+              :question="getQuestionForPet(question, petNum)"
+              :model-value="getQuestionValue(question.id, `pet_${petNum}`)"
+              @update:model-value="handleQuestionUpdate(question.id, $event, `pet_${petNum}`)"
+            />
+          </div>
+        </div>
+        
+        <!-- Multiple pets mode with toggle - after question -->
+      </div>
+    </div>
+    <div v-if="petCount > 1 && currentStep >= 2" class="multi-pet-controls">
+      <button 
+        @click="toggleSharedMode" 
+        :class="['shared-mode-btn', { active: isSharedMode }]"
+      >
+        {{ isSharedMode ? 'Edit pets separately' : 'Use same answers for both pets' }}
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useQuestionnaireStore } from '~/stores/questionnaire'
+import TextInput from './question-types/TextInput.vue'
+import SelectInput from './question-types/SelectInput.vue'
+import RadioInput from './question-types/RadioInput.vue'
+import CheckboxInput from './question-types/CheckboxInput.vue'
+
+interface Props {
+  stepData?: any
+}
+
+const props = defineProps<Props>()
+const questionnaire = useQuestionnaireStore()
+
+const currentStepData = computed(() => props.stepData || questionnaire.getCurrentStepData)
+const petCount = computed(() => questionnaire.petCount)
+const currentStep = computed(() => questionnaire.currentStep)
+
+// Auto-set shared mode based on step and pet count
+const isSharedMode = computed({
+  get: () => {
+    // Force separate mode for steps 0 and 1 when multiple pets
+    if (petCount.value > 1 && (currentStep.value === 0 || currentStep.value === 1)) {
+      return false
+    }
+    // For other steps, use the stored value (default to true)
+    return storedSharedMode.value
+  },
+  set: (value) => {
+    storedSharedMode.value = value
+  }
+})
+
+// Store the actual shared mode preference
+const storedSharedMode = ref(true)
+
+// Map question types to components
+const questionComponents = {
+  text: TextInput,
+  select: SelectInput,
+  radio: RadioInput,
+  checkbox: CheckboxInput
+}
+
+const getQuestionComponent = (type: string) => {
+  return questionComponents[type as keyof typeof questionComponents] || TextInput
+}
+
+const getQuestionValue = (questionId: string, petId?: string) => {
+  const answer = questionnaire.getAnswer(questionId, petId)
+  return answer?.value || ''
+}
+
+const handleQuestionUpdate = (questionId: string, value: any, petId: string) => {
+  questionnaire.updateAnswer(questionId, petId, value)
+}
+
+const toggleSharedMode = () => {
+  isSharedMode.value = !isSharedMode.value
+}
+
+const getSharedQuestionValue = (questionId: string) => {
+  // Get the first pet's answer as the shared value
+  const answer = questionnaire.getAnswer(questionId, 'pet_1')
+  return answer?.value || ''
+}
+
+const handleSharedQuestionUpdate = (questionId: string, value: any) => {
+  // Update all pets with the same value
+  for (let i = 1; i <= petCount.value; i++) {
+    questionnaire.updateAnswer(questionId, `pet_${i}`, value)
+  }
+}
+
+const getPetDisplayName = (petNum: number) => {
+  const petNameAnswer = questionnaire.getAnswer('pet_name', `pet_${petNum}`)
+  return petNameAnswer ? petNameAnswer.value : `Pet ${petNum}`
+}
+
+const getQuestionForPet = (question: any, petNum: number) => {
+  const petName = getPetDisplayName(petNum)
+  const originalQuestion = question.title || `Question for ${petName}`
+  const finalQuestion = originalQuestion.includes('{petName}') ? 
+    originalQuestion.replaceAll('{petName}', petName) : 
+    originalQuestion
+    
+  return {
+    ...question,
+    title: finalQuestion
+  }
+}
+</script>
+
+<style scoped>
+.step-renderer {
+  width: 100%;
+}
+
+.question-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.question-item h3 {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.question-item p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.question-input {
+  width: 100%;
+}
+
+.multi-pet-controls {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.shared-mode-btn {
+  background: transparent;
+  border: 2px solid #0066cc;
+  color: #0066cc;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.shared-mode-btn:hover {
+  background-color: rgba(0, 102, 204, 0.1);
+}
+
+.shared-mode-btn.active {
+  background-color: #0066cc;
+  color: white;
+}
+
+.shared-mode-btn.active:hover {
+  background-color: #0052a3;
+}
+
+.pet-section {
+  margin-bottom: 1.5rem;
+}
+
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.pet-section h4 {
+  color: #0066cc;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+</style>
