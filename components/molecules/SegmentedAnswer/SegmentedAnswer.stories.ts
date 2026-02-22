@@ -79,13 +79,6 @@ export const MultiplePets: Story = {
   },
 }
 
-export const Disabled: Story = {
-  args: {
-    ...GenderSelection.args,
-    disabled: true,
-  },
-}
-
 export const Required: Story = {
   args: {
     config: {

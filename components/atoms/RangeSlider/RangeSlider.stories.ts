@@ -95,13 +95,6 @@ export const GastronomicProfile: Story = {
   },
 }
 
-export const Disabled: Story = {
-  args: {
-    ...Default.args,
-    disabled: true,
-  },
-}
-
 export const NoValue: Story = {
   args: {
     ...Default.args,

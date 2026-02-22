@@ -181,8 +181,8 @@ const selectOption = (value: string) => {
     text-align: center;
   }
 
-  // Responsive
-  @media (max-width: 768px) {
+  // Responsive - only apply to very small screens, not Storybook
+  @media (max-width: 480px) {
     .c-segmented-buttons__container {
       flex-direction: column;
       gap: 4px;

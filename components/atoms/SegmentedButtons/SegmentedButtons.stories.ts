@@ -20,18 +20,3 @@ export const Default: Story = {
     options: ['Male', 'Female'],
   },
 }
-
-export const WithActive: Story = {
-  args: {
-    modelValue: 'Female',
-    options: ['Male', 'Female'],
-  },
-}
-
-export const Disabled: Story = {
-  args: {
-    modelValue: 'Male',
-    options: ['Male', 'Female'],
-    disabled: true,
-  },
-}
