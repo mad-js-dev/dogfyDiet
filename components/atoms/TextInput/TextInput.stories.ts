@@ -39,12 +39,3 @@ export const WithValidation: Story = {
     ],
   },
 }
-
-export const NumberInput: Story = {
-  args: {
-    modelValue: '',
-    placeholder: 'Enter your age',
-    type: 'number',
-    required: true,
-  },
-}
