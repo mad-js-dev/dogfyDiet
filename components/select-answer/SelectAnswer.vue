@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import type { QuestionConfig } from '~/types/questionnaire'
-import TextInput from '../text-input/textInput.vue'
+import TextInput from '../textInput/textInput.vue'
 
 interface Props {
   config: QuestionConfig

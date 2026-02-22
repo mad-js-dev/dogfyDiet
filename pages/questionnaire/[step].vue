@@ -14,21 +14,17 @@
       </div>
 
       <div class="questions-container">
-        <div 
-          v-for="question in currentStepData?.questions" 
-          :key="question.id"
-          class="question-item"
-        >
-          <h3>{{ question.title }}</h3>
-          <p>{{ question.description }}</p>
-          
-          <!-- Question renderers will go here based on question.type -->
-          <div class="question-input">
-            <p>Question Type: {{ question.type }}</p>
-            <p>Required: {{ question.required ? 'Yes' : 'No' }}</p>
-            <p v-if="question.options">Options: {{ question.options.join(', ') }}</p>
-          </div>
-        </div>
+        <StepRenderer :step-data="currentStepData" />
+      </div>
+
+      <!-- Add/Remove Pet Button - Only show in names step (step 1) -->
+      <div v-if="currentStep === 0" class="add-pet-section">
+        <button @click="togglePetCount" :class="['add-pet-btn', { 'remove-mode': petCount > 1 }]">
+          {{ petCount === 1 ? 'Have more than one pet?' : 'Remove second pet' }}
+        </button>
+        <p class="add-pet-description">
+          {{ petCount === 1 ? 'Add a second pet to get personalized recommendations for both' : 'Remove the second pet and continue with one pet' }}
+        </p>
       </div>
 
       <div class="navigation">
@@ -54,6 +50,7 @@
 <script setup lang="ts">
 import { computed, nextTick } from 'vue'
 import { useQuestionnaireStore } from '~/stores/questionnaire'
+import StepRenderer from '~/components/organisms/StepRenderer/StepRenderer.vue'
 
 // Store
 const questionnaire = useQuestionnaireStore()
@@ -71,6 +68,7 @@ const progressPercentage = computed(() =>
 )
 const isFirstStep = computed(() => questionnaire.isFirstStep)
 const isLastStep = computed(() => questionnaire.isLastStep)
+const petCount = computed(() => questionnaire.petCount)
 
 // Navigation methods
 const goBack = () => {
@@ -92,6 +90,15 @@ const goNext = () => {
     nextTick(() => {
       router.push(`/questionnaire/${questionnaire.currentStep + 1}`)
     })
+  }
+}
+
+// Toggle pet count method
+const togglePetCount = () => {
+  if (petCount.value === 1) {
+    questionnaire.setPetCount(2)
+  } else {
+    questionnaire.setPetCount(1)
   }
 }
 
@@ -166,33 +173,6 @@ console.log('Progress:', progressPercentage.value)
   margin-bottom: 3rem;
 }
 
-.question-item {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
-}
-
-.question-item h3 {
-  font-size: 1.3rem;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.question-item p {
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.question-input {
-  padding: 1rem;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 0.9rem;
-}
-
 .navigation {
   display: flex;
   justify-content: space-between;
@@ -229,5 +209,54 @@ console.log('Progress:', progressPercentage.value)
 
 .nav-btn.secondary:hover:not(:disabled) {
   background-color: #e0e0e0;
+}
+
+.add-pet-section {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  border: 2px dashed #0a7373;
+}
+
+.add-pet-btn {
+  background: transparent;
+  border: none;
+  color: #0a7373;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-decoration: underline;
+  text-decoration-color: #0a7373;
+  text-decoration-style: solid;
+  text-decoration-thickness: 2px;
+}
+
+.add-pet-btn:hover {
+  background-color: rgba(10, 115, 115, 0.1);
+  color: #085858;
+  transform: translateY(-2px);
+}
+
+.add-pet-btn.remove-mode {
+  color: #dc3545;
+  text-decoration-color: #dc3545;
+}
+
+.add-pet-btn.remove-mode:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #c82333;
+}
+
+.add-pet-description {
+  margin-top: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+  font-style: italic;
 }
 </style>
