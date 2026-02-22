@@ -31,6 +31,7 @@ export class QuestionFactory {
         question = new TelQuestion(config)
         break
       case 'segmented':
+      case 'single':
         question = new SegmentedQuestion(config)
         break
       case 'range-slider':

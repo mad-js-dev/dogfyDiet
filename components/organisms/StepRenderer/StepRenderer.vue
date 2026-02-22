@@ -64,6 +64,7 @@ import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-quest
 import { type Question, type ConditionalLogic } from '~/services/questionnaire'
 import TextInput from '~/components/atoms/TextInput/TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
+import SegmentedAnswer from '~/components/SegmentedAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
 import RangeAnswer from '~/components/atoms/RangeAnswer/RangeAnswer.vue'
 import RangeSlider from '~/components/range-slider/RangeSlider.vue'
@@ -177,7 +178,7 @@ const evaluateOperator = (answerValue: any, operator: string, conditionValue: an
 const questionComponents = {
   text: TextInput,
   select: SelectAnswer,
-  single: SegmentedButtons,
+  single: SegmentedAnswer,
   multiple: SegmentedButtons,
   range: RangeAnswer,
   'range-slider': RangeSlider

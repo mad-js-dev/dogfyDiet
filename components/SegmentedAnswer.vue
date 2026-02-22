@@ -75,14 +75,7 @@ onMounted(() => {
 })
 
 // Validate on mount if required
-watch(() => currentAnswer.value, (newValue) => {
-  if (props.config.required && !newValue) {
-    const requiredMessage = props.config.validation?.find(v => v.type === 'required')?.message || 'This field is required'
-    error.value = requiredMessage
-  } else {
-    error.value = ''
-  }
-}, { immediate: true })
+// Removed - validation will be handled at validator level
 </script>
 
 <style scoped>

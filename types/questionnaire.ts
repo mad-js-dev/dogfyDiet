@@ -10,7 +10,7 @@ export interface StepConfig {
 
 export interface QuestionConfig {
   id: string
-  type: 'text' | 'select' | 'bool' | 'age' | 'range' | 'email' | 'tel' | 'segmented' | 'range-slider'
+  type: 'text' | 'select' | 'bool' | 'age' | 'range' | 'email' | 'tel' | 'segmented' | 'single' | 'range-slider'
   question?: string
   appliesTo: 'all' | 'individual'
   options?: string[] // for select questions
