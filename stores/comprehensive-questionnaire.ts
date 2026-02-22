@@ -189,7 +189,8 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   }
 
   // Initialize from localStorage on store creation
-  loadFromLocalStorage()
+  // Temporarily disabled to debug loading issues
+  // loadFromLocalStorage()
 
   return {
     // State

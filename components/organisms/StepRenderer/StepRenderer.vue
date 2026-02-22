@@ -61,13 +61,34 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
-import { type Question, type ConditionalLogic } from '~/services/questionnaire'
 import TextInput from '~/components/atoms/TextInput/TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
 import SegmentedAnswer from '~/components/SegmentedAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
 import RangeAnswer from '~/components/atoms/RangeAnswer/RangeAnswer.vue'
 import RangeSlider from '~/components/range-slider/RangeSlider.vue'
+
+// Define types locally since we removed the service
+interface ConditionalLogic {
+  questionId: string
+  operator: 'equals' | 'notEquals' | 'contains' | 'greaterThan' | 'lessThan'
+  value: any
+  and?: ConditionalLogic
+  or?: ConditionalLogic
+}
+
+interface Question {
+  id: string
+  title: string
+  description: string
+  type: string
+  required: boolean
+  options?: string[]
+  rangeOptions?: Array<{ value: string; label: string; min?: number; max?: number }>
+  conditional?: {
+    showIf: ConditionalLogic
+  }
+}
 
 interface Props {
   stepData?: any
