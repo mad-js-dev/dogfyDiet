@@ -61,31 +61,3 @@ export const Default: Story = {
     disabled: false
   }
 }
-
-export const WithoutRangeOptions: Story = {
-  args: {
-    config: {
-      id: 'simple_question',
-      question: 'Simple question without range options',
-      type: 'range',
-      appliesTo: 'individual',
-      required: false
-    },
-    modelValue: 'option1',
-    disabled: false
-  }
-}
-
-export const NoValue: Story = {
-  args: {
-    config: {
-      id: 'pet_activity_level',
-      type: 'range',
-      question: 'How active is your pet?',
-      appliesTo: 'individual',
-      required: true,
-      options: ['Low', 'Medium', 'High'],
-    },
-    modelValue: undefined,
-  },
-}
