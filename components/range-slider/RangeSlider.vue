@@ -1,6 +1,6 @@
 <template>
   <div class="c-range-slider">
-    <div class="c-range-slider__track-container">
+    <div class="c-range-slider__track-container" ref="trackContainerRef">
       <!-- Track line -->
       <div class="c-range-slider__track"></div>
       
@@ -85,11 +85,16 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 // Reactive state
-const activeStepIndex = ref(0)
+const trackContainerRef = ref<HTMLElement | null>(null)
 const isDragging = ref(false)
 const error = ref('')
 
 // Computed properties
+const activeStepIndex = computed(() => {
+  if (!props.modelValue || reactiveOptions.value.length === 0) return 0
+  const index = reactiveOptions.value.indexOf(props.modelValue)
+  return index !== -1 ? index : 0
+})
 const selectedValue = computed(() => {
   return reactiveOptions.value[activeStepIndex.value] || ''
 })
@@ -140,8 +145,7 @@ const updateValue = (index: number) => {
   const optionsLength = reactiveOptions.value.length || 0
   if (index < 0 || index >= optionsLength) return
   
-  activeStepIndex.value = index
-  const value = selectedValue.value
+  const value = reactiveOptions.value[index]
   
   emit('update:modelValue', value)
   emit('answer', value, props.config.id)
@@ -208,10 +212,9 @@ const handleTouchEnd = () => {
 }
 
 const updatePositionFromEvent = (event: MouseEvent | Touch) => {
-  const trackContainer = document.querySelector('.c-range-slider__track-container')
-  if (!trackContainer) return
+  if (!trackContainerRef.value) return
   
-  const rect = trackContainer.getBoundingClientRect()
+  const rect = trackContainerRef.value.getBoundingClientRect()
   const relativeX = event.clientX - rect.left
   const percentage = Math.max(0, Math.min(1, relativeX / rect.width))
   
@@ -246,24 +249,10 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 }
 
-// Initialize from modelValue
-const initializeFromModelValue = () => {
-  if (props.modelValue && reactiveOptions.value.length > 0) {
-    const index = reactiveOptions.value.indexOf(props.modelValue)
-    if (index !== -1) {
-      activeStepIndex.value = index
-    }
-  }
-}
-
-// Watch for external changes
-watch(() => props.modelValue, initializeFromModelValue, { immediate: true })
-
 // Emit default value on mount for required questions
 onMounted(() => {
   // For required questions, always select the first option if no value is set
   if (props.config.required && !props.modelValue && reactiveOptions.value.length > 0) {
-    activeStepIndex.value = 0
     const firstValue = reactiveOptions.value[0]
     emit('update:modelValue', firstValue)
     emit('answer', firstValue, props.config.id)
@@ -289,15 +278,7 @@ onMounted(() => {
   console.log('RangeSlider mounted with config:', props.config)
   console.log('RangeSlider config.rangeOptions:', props.config.rangeOptions)
   console.log('RangeSlider reactiveOptions:', reactiveOptions.value)
-  
-  if (props.modelValue && props.config.rangeOptions) {
-    const index = props.config.rangeOptions.findIndex(option => 
-      typeof option === 'object' ? option.value === props.modelValue : option === props.modelValue
-    )
-    if (index >= 0) {
-      activeStepIndex.value = index
-    }
-  }
+  // activeStepIndex is now computed, no need to manually set it
 })
 
 // Cleanup
