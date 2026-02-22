@@ -223,8 +223,15 @@
         "id": "pet_pathology",
         "title": "Health Conditions",
         "description": "What health conditions does your pet have?",
-        "type": "multiple",
+        "type": "select",
         "required": false,
+        "conditional": {
+          "showIf": {
+            "questionId": "pet_has_pathology",
+            "operator": "equals",
+            "value": "Yes"
+          }
+        },
         "options": [
           "Diabetes",
           "Kidney Disease",
