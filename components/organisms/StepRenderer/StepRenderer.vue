@@ -1,7 +1,7 @@
 <template>
   <div class="step-renderer">
     <div 
-      v-for="question in currentStepData?.questions" 
+      v-for="question in filteredQuestions" 
       :key="question.id"
       class="question-item"
     >
@@ -35,6 +35,7 @@
           <div v-for="petNum in petCount" :key="petNum" class="pet-section">
             <h4>{{ getPetDisplayName(petNum) }}</h4>
             <component 
+              v-if="shouldShowQuestionForPet(question, `pet_${petNum}`)"
               :is="getQuestionComponent(question.type)"
               :question="getQuestionForPet(question, petNum)"
               :model-value="getQuestionValue(question.id, `pet_${petNum}`)"
@@ -64,6 +65,28 @@ import TextInput from '~/components/atoms/TextInput/TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
 
+interface ConditionalLogic {
+  questionId: string
+  operator: 'equals' | 'not_equals' | 'contains' | 'not_contains'
+  value: any
+  and?: ConditionalLogic
+  or?: ConditionalLogic
+}
+
+interface QuestionConditional {
+  showIf: ConditionalLogic
+}
+
+interface Question {
+  id: string
+  title: string
+  description: string
+  type: string
+  required: boolean
+  options?: string[]
+  conditional?: QuestionConditional
+}
+
 interface Props {
   stepData?: any
 }
@@ -92,6 +115,77 @@ const isSharedMode = computed({
 
 // Store the actual shared mode preference
 const storedSharedMode = ref(true)
+
+// Filter questions based on conditional logic
+const filteredQuestions = computed(() => {
+  if (!currentStepData.value?.questions) return []
+  
+  return currentStepData.value.questions.filter((question: Question) => {
+    // If no conditional logic, always show
+    if (!question.conditional) return true
+    
+    // Check conditional logic for each pet
+    if (petCount.value === 1) {
+      return shouldShowQuestionForPet(question, 'pet_1')
+    } else {
+      // For multiple pets, show if ANY pet meets the condition
+      for (let i = 1; i <= petCount.value; i++) {
+        if (shouldShowQuestionForPet(question, `pet_${i}`)) {
+          return true
+        }
+      }
+      return false
+    }
+  })
+})
+
+// Check if a question should be shown for a specific pet based on conditional logic
+const shouldShowQuestionForPet = (question: Question, petId: string) => {
+  if (!question.conditional?.showIf) return true
+  
+  const condition = question.conditional.showIf
+  return evaluateCondition(condition, petId)
+}
+
+// Evaluate conditional logic
+const evaluateCondition = (condition: ConditionalLogic, petId: string): boolean => {
+  const { questionId, operator, value, and, or } = condition
+  
+  // Get the answer for the condition question
+  const answer = questionnaire.getAnswer(questionId, petId)
+  const answerValue = answer?.value
+  
+  // Evaluate the primary condition
+  let result = evaluateOperator(answerValue, operator, value)
+  
+  // Evaluate AND condition if present
+  if (and && result) {
+    result = result && evaluateCondition(and, petId)
+  }
+  
+  // Evaluate OR condition if present
+  if (or && !result) {
+    result = result || evaluateCondition(or, petId)
+  }
+  
+  return result
+}
+
+// Evaluate individual operators
+const evaluateOperator = (answerValue: any, operator: string, conditionValue: any): boolean => {
+  switch (operator) {
+    case 'equals':
+      return answerValue === conditionValue
+    case 'not_equals':
+      return answerValue !== conditionValue
+    case 'contains':
+      return Array.isArray(answerValue) ? answerValue.includes(conditionValue) : false
+    case 'not_contains':
+      return Array.isArray(answerValue) ? !answerValue.includes(conditionValue) : true
+    default:
+      return false
+  }
+}
 
 // Map question types to components
 const questionComponents = {
@@ -134,7 +228,7 @@ const getPetDisplayName = (petNum: number) => {
   return petNameAnswer ? petNameAnswer.value : `Pet ${petNum}`
 }
 
-const getQuestionForPet = (question: any, petNum: number) => {
+const getQuestionForPet = (question: Question, petNum: number) => {
   const petName = getPetDisplayName(petNum)
   const originalQuestion = question.title || `Question for ${petName}`
   const finalQuestion = originalQuestion.includes('{petName}') ? 
