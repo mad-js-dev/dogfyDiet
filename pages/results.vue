@@ -15,10 +15,6 @@
             <span class="stat-value">{{ questionnaireData.answers.length }}</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Answered Questions:</span>
-            <span class="stat-value">{{ questionnaireData.answeredQuestions }}</span>
-          </div>
-          <div class="stat-item">
             <span class="stat-label">Progress:</span>
             <span class="stat-value">{{ Math.round(questionnaireData.progressPercentage) }}%</span>
           </div>
@@ -61,19 +57,6 @@
         </div>
       </div>
 
-      <div class="json-section">
-        <div class="json-header">
-          <h2>JSON Results</h2>
-          <button @click="copyToClipboard" class="copy-btn">
-            {{ copied ? 'Copied!' : 'Copy JSON' }}
-          </button>
-        </div>
-        
-        <div class="json-container">
-          <pre class="json-content">{{ formattedJson }}</pre>
-        </div>
-      </div>
-
       <div class="actions">
         <button @click="downloadJson" class="download-btn">
           📥 Download JSON
@@ -91,7 +74,6 @@ import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-quest
 
 const questionnaire = useComprehensiveQuestionnaireStore()
 const router = useRouter()
-const copied = ref(false)
 
 // Get questionnaire data from store
 const questionnaireData = computed(() => {
@@ -100,17 +82,9 @@ const questionnaireData = computed(() => {
     currentStep: questionnaire.currentStep,
     isCompleted: questionnaire.isCompleted,
     answers: questionnaire.answers,
-    answeredQuestions: questionnaire.answeredQuestions,
     progressPercentage: questionnaire.progressPercentage,
-    completionStatus: questionnaire.completionStatus,
-    uiState: questionnaire.uiState,
     submittedAt: new Date()
   }
-})
-
-// Format JSON for display
-const formattedJson = computed(() => {
-  return JSON.stringify(questionnaireData.value, null, 2)
 })
 
 // Format date for display
@@ -136,22 +110,9 @@ const formatAnswerValue = (value: any) => {
   return String(value)
 }
 
-// Copy JSON to clipboard
-const copyToClipboard = async () => {
-  try {
-    await navigator.clipboard.writeText(formattedJson.value)
-    copied.value = true
-    setTimeout(() => {
-      copied.value = false
-    }, 2000)
-  } catch (err) {
-    // Failed to copy JSON
-  }
-}
-
 // Download JSON as file
 const downloadJson = () => {
-  const dataStr = formattedJson.value
+  const dataStr = JSON.stringify(questionnaireData.value, null, 2)
   const dataBlob = new Blob([dataStr], { type: 'application/json' })
   const url = URL.createObjectURL(dataBlob)
   
@@ -166,7 +127,7 @@ const downloadJson = () => {
 
 // Start new questionnaire
 const startNew = () => {
-  questionnaire.clearAnswers()
+  questionnaire.resetQuestionnaire()
   router.push('/')
 }
 
@@ -325,64 +286,6 @@ h1 {
   font-size: 0.8rem;
 }
 
-.json-section {
-  margin-bottom: 2rem;
-}
-
-.json-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.json-header h2 {
-  color: #333;
-  margin: 0;
-}
-
-.copy-btn {
-  padding: 0.5rem 1rem;
-  background: #0066cc;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600;
-}
-
-.copy-btn:hover {
-  background: #0052a3;
-}
-
-.copy-btn:active {
-  transform: translateY(1px);
-}
-
-.json-container {
-  background: #1e1e1e;
-  border-radius: 8px;
-  padding: 1.5rem;
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-.json-content {
-  color: #d4d4d4;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-/* Syntax highlighting for JSON */
-.json-content {
-  color: #d4d4d4;
-}
-
 .actions {
   display: flex;
   gap: 1rem;
@@ -423,25 +326,6 @@ h1 {
   box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
 }
 
-/* Scrollbar styling */
-.json-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.json-container::-webkit-scrollbar-track {
-  background: #2d2d2d;
-  border-radius: 4px;
-}
-
-.json-container::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 4px;
-}
-
-.json-container::-webkit-scrollbar-thumb:hover {
-  background: #777;
-}
-
 /* Responsive design */
 @media (max-width: 768px) {
   .results-container {
@@ -450,24 +334,6 @@ h1 {
   
   h1 {
     font-size: 2rem;
-  }
-  
-  .json-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  
-  .copy-btn {
-    align-self: flex-end;
-  }
-  
-  .json-container {
-    padding: 1rem;
-  }
-  
-  .json-content {
-    font-size: 0.8rem;
   }
   
   .actions {

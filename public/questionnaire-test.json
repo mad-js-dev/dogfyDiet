@@ -262,40 +262,6 @@
     ]
   },
   {
-    "id": 6,
-    "title": "Pet Gastronomic Profile",
-    "description": "Tell us about your pets' eating habits",
-    "questions": [
-      {
-        "id": "pet_gastronomic_profile",
-        "title": "Eating Habits",
-        "description": "What are your pet's eating habits?",
-        "type": "range-slider",
-        "required": true,
-        "rangeOptions": [
-          {
-            "value": "selective",
-            "label": "Selective",
-            "min": 0,
-            "max": 33
-          },
-          {
-            "value": "normal",
-            "label": "Normal",
-            "min": 34,
-            "max": 66
-          },
-          {
-            "value": "glutton",
-            "label": "Glutton",
-            "min": 67,
-            "max": 100
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": 7,
     "title": "User Contact",
     "description": "How can we contact you?",
@@ -307,7 +273,7 @@
         "type": "text",
         "required": true,
         "validation": {
-          "pattern": "^[w.-]+@[w.-]+.[a-zA-Z]{2,}$"
+          "pattern": "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$"
         }
       },
       {
@@ -317,7 +283,7 @@
         "type": "text",
         "required": false,
         "validation": {
-          "pattern": "^[+]?[ds-()]+$"
+          "pattern": "^[+]?[\\d\\s\\-()]+$"
         }
       }
     ]

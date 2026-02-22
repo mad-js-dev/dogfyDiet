@@ -58,13 +58,27 @@ const error = ref('')
 const isTouched = ref(false)
 
 const validateInput = (value: string): boolean => {
+  error.value = ''
+  
   if (!props.config.required) return true
   
-  if (!value || value.trim() === '') return false
+  if (!value || value.trim() === '') {
+    error.value = 'This field is required'
+    return false
+  }
   
-  if (!props.config.rangeOptions) return false
+  if (!props.config.rangeOptions) {
+    error.value = 'Invalid configuration'
+    return false
+  }
   
-  return props.config.rangeOptions.some(option => option.value === value)
+  const isValidOption = props.config.rangeOptions.some(option => option.value === value)
+  if (!isValidOption) {
+    error.value = 'Please select a valid option'
+    return false
+  }
+  
+  return true
 }
 
 const handleChange = () => {

@@ -56,6 +56,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
+import { useAbTestingStore } from '~/stores/ab-testing'
+import { useStepValidation } from '~/composables/useStepValidation'
 import StepRenderer from '~/components/organisms/StepRenderer/StepRenderer.vue'
 
 // Store
@@ -69,19 +71,49 @@ const router = useRouter()
 const questionnaireData = ref<any[]>([])
 
 onMounted(async () => {
-  // Load appropriate questionnaire data
-  const isDev = process.env.NODE_ENV === 'development'
-  console.log('Environment:', isDev ? 'development' : 'production')
-  const dataFile = isDev ? '/questionnaire-test.json' : '/questionnaire-control.json'
-  console.log('Loading data from:', dataFile)
+  // Load questionnaire data based on A/B test group
+  const abTesting = useAbTestingStore()
+  
+  // Force URL parameter processing before getting group
+  console.log('🔍 URL params before processing:', window.location.search)
+  
+  // Also check URL parameter directly as backup
+  const urlParams = new URLSearchParams(window.location.search)
+  const urlGroup = urlParams.get('group')
+  console.log('🔍 Direct URL group param:', urlGroup)
+  
+  // Small delay to ensure URL parameters are processed
+  await nextTick()
+  
+  const group = abTesting.getExperimentGroup('activity_level_removal')
+  
+  console.log('🔍 A/B Test Group from store:', group)
+  console.log('🔍 User assignments:', abTesting.userAssignments)
+  
+  // Use URL parameter directly if store doesn't have the right group
+  const finalGroup = (urlGroup === 'control' || urlGroup === 'test') ? urlGroup : group
+  console.log('🔍 Final group used:', finalGroup)
+  
+  // Determine which data file to load
+  const dataFile = finalGroup === 'test' ? '/questionnaire-test.json' : '/questionnaire-control.json'
+  console.log('🔍 Loading data from:', dataFile)
   
   try {
-    const response = await fetch(dataFile)
-    console.log('Fetch response:', response)
+    // Add cache-busting timestamp
+    const timestamp = Date.now()
+    const cacheBustingFile = `${dataFile}?t=${timestamp}`
+    console.log('🔍 Fetching with cache-busting:', cacheBustingFile)
+    
+    const response = await fetch(cacheBustingFile)
+    console.log('🔍 Fetch response:', response)
     questionnaireData.value = await response.json()
-    console.log('Loaded questionnaire data:', questionnaireData.value)
+    console.log('🔍 Loaded questionnaire data:', questionnaireData.value)
+    console.log('🔍 Total steps loaded:', questionnaireData.value.length)
+    
+    // Log step titles to verify
+    console.log('🔍 Step titles:', questionnaireData.value.map((step: any) => step.title))
   } catch (error) {
-    console.error('Failed to load questionnaire data:', error)
+    console.error('❌ Failed to load questionnaire data:', error)
   }
 })
 
@@ -107,8 +139,9 @@ const isLastStep = computed(() => {
   return totalSteps.value > 0 && currentStep.value >= totalSteps.value - 1
 })
 const canProceed = computed(() => {
-  // TEMPORARY BYPASS: Always allow proceeding to test results page
-  return true
+  // Import validation composable
+  const { canProceed: stepCanProceed } = useStepValidation()
+  return stepCanProceed.value
 })
 const petCount = computed(() => questionnaire.petCount)
 
@@ -116,9 +149,11 @@ const petCount = computed(() => questionnaire.petCount)
 const goBack = () => {
   const newStep = Math.max(0, currentStep.value - 1)
   questionnaire.setStep(newStep)
-  // Update URL to reflect new step - convert to 1-based for URL
+  // Update URL to reflect new step - convert to 1-based for URL and preserve query params
   nextTick(() => {
-    router.push(`/questionnaire/${newStep + 1}`)
+    const queryParams = route.query
+    const queryString = Object.keys(queryParams).length > 0 ? `?${new URLSearchParams(queryParams as Record<string, string>).toString()}` : ''
+    router.push(`/questionnaire/${newStep + 1}${queryString}`)
   })
 }
 
@@ -131,9 +166,11 @@ const goNext = () => {
   } else {
     const newStep = currentStep.value + 1
     questionnaire.setStep(newStep)
-    // Update URL to reflect new step - convert to 1-based for URL
+    // Update URL to reflect new step - convert to 1-based for URL and preserve query params
     nextTick(() => {
-      router.push(`/questionnaire/${newStep + 1}`)
+      const queryParams = route.query
+      const queryString = Object.keys(queryParams).length > 0 ? `?${new URLSearchParams(queryParams as Record<string, string>).toString()}` : ''
+      router.push(`/questionnaire/${newStep + 1}${queryString}`)
     })
   }
 }

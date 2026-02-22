@@ -226,13 +226,27 @@
         "id": "pet_activity_level",
         "title": "Activity Level",
         "description": "How active is your pet?",
-        "type": "single",
+        "type": "range-slider",
         "required": true,
-        "options": [
-          "Low",
-          "Moderate",
-          "High",
-          "Very High"
+        "rangeOptions": [
+          {
+            "value": "low",
+            "label": "Low Activity",
+            "min": 0,
+            "max": 33
+          },
+          {
+            "value": "moderate",
+            "label": "Moderate Activity",
+            "min": 34,
+            "max": 66
+          },
+          {
+            "value": "high",
+            "label": "High Activity",
+            "min": 67,
+            "max": 100
+          }
         ]
       }
     ]
@@ -312,7 +326,7 @@
         "type": "text",
         "required": true,
         "validation": {
-          "pattern": "^[w.-]+@[w.-]+.[a-zA-Z]{2,}$"
+          "pattern": "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$"
         }
       },
       {
@@ -322,7 +336,7 @@
         "type": "text",
         "required": false,
         "validation": {
-          "pattern": "^[+]?[ds-()]+$"
+          "pattern": "^[+]?[\\d\\s\\-()]+$"
         }
       }
     ]

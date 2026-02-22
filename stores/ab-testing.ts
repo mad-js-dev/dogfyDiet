@@ -19,6 +19,9 @@ export const useAbTestingStore = defineStore('ab-testing', () => {
       return userAssignments.value[experimentName]
     }
 
+    // Process URL parameters first to allow manual override
+    loadFromUrlParams()
+
     const experiment = experiments.value[experimentName]
     if (!experiment || !experiment.enabled) {
       return null
@@ -109,8 +112,26 @@ export const useAbTestingStore = defineStore('ab-testing', () => {
   // Auto-save assignments when they change
   watch(userAssignments, saveToStorage, { deep: true })
 
+  // Check URL parameters for manual override
+  const loadFromUrlParams = () => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const groupParam = urlParams.get('group')
+      
+      if (groupParam === 'control' || groupParam === 'test') {
+        // Always override with URL parameter and save to localStorage
+        userAssignments.value['activity_level_removal'] = groupParam
+        saveToStorage()
+        console.log(`🧪 A/B Test Group: ${groupParam.toUpperCase()} (forced via URL parameter)`)
+      }
+    }
+  }
+
   // Load assignments on initialization
   loadFromStorage()
+  
+  // Check URL parameters for manual override immediately
+  loadFromUrlParams()
 
   return {
     // State

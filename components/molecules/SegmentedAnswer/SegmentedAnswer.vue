@@ -5,6 +5,7 @@
       :options="segmentedOptions"
       :name="config.id"
       :disabled="disabled"
+      :class="{ 'has-error': error && isTouched }"
       @update:model-value="handleChange"
     />
     
@@ -16,7 +17,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue'
-import SegmentedButtons from '../../components/atoms/SegmentedButtons/SegmentedButtons.vue'
+import SegmentedButtons from '../../atoms/SegmentedButtons/SegmentedButtons.vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import type { QuestionConfig } from '~/types/questionnaire'
 
@@ -41,6 +42,7 @@ const questionnaire = useComprehensiveQuestionnaireStore()
 
 const currentAnswer = ref(props.modelValue ?? '')
 const error = ref('')
+const isTouched = ref(false)
 
 // Convert options to string array for SegmentedButtons
 const segmentedOptions = computed(() => {
@@ -51,15 +53,34 @@ const segmentedOptions = computed(() => {
       return option
     }
     // If option is an object with value property, extract the value
-    return option.value || option
+    return (option as { value: string }).value
   })
 })
 
-const handleChange = (value: string) => {
-  currentAnswer.value = value
+const validateInput = (value: string): boolean => {
   error.value = ''
-  emit('update:modelValue', value)
-  emit('answer', value, props.config.id, props.petId)
+  
+  if (!props.config.required) return true
+  
+  if (!value || value.trim() === '') {
+    error.value = 'This field is required'
+    return false
+  }
+  
+  return true
+}
+
+const handleChange = (value: string | string[]) => {
+  // Convert to string for single selection mode
+  const stringValue = Array.isArray(value) ? value[0] || '' : value
+  currentAnswer.value = stringValue
+  isTouched.value = true
+  
+  // Validate the input
+  validateInput(stringValue)
+  
+  emit('update:modelValue', stringValue)
+  emit('answer', stringValue, props.config.id, props.petId)
 }
 
 // Watch for external changes
@@ -88,5 +109,21 @@ onMounted(() => {
   color: #f44336;
   font-size: 0.875rem;
   margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+:deep(.has-error) {
+  .c-segmented-buttons {
+    border: 2px solid #f44336;
+    border-radius: 25px;
+    
+    &__button {
+      border-color: #f44336;
+      
+      &:hover {
+        border-color: #d32f2f;
+      }
+    }
+  }
 }
 </style>

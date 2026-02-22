@@ -13,9 +13,9 @@ export interface QuestionConfig {
   type: 'text' | 'select' | 'bool' | 'age' | 'range' | 'email' | 'tel' | 'segmented' | 'single' | 'range-slider'
   question?: string
   appliesTo: 'all' | 'individual'
-  options?: string[] // for select questions
+  options?: (string | { value: string; label?: string })[] // for select questions
   rangeOptions?: RangeOption[] // for range questions
-  validation?: ValidationRule[]
+  validation?: ValidationRule[] | JsonValidation // Support both formats
   dependencies?: QuestionDependency[]
   required?: boolean
 }
@@ -28,9 +28,17 @@ export interface RangeOption {
 }
 
 export interface ValidationRule {
-  type: 'required' | 'minLength' | 'maxLength' | 'pattern' | 'email' | 'phone'
+  type: 'required' | 'minLength' | 'maxLength' | 'pattern' | 'email' | 'phone' | 'min' | 'max'
   value?: any
   message: string
+}
+
+// JSON validation format (simpler, used in questionnaire JSON files)
+export interface JsonValidation {
+  min?: number
+  max?: number
+  pattern?: string
+  required?: boolean
 }
 
 export interface QuestionDependency {
