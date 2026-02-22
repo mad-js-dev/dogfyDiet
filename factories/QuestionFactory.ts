@@ -34,7 +34,7 @@ export class QuestionFactory {
         question = new SegmentedQuestion(config)
         break
       case 'range-slider':
-        question = new RangeSliderQuestion(config)
+        question = new RangeQuestion(config)
         break
       default:
         throw new Error(`Unknown question type: ${config.type}`)

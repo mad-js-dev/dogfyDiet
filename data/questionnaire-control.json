@@ -181,13 +181,21 @@
         "id": "pet_body_shape",
         "title": "Body Shape",
         "description": "How would you describe your pet's body shape?",
-        "type": "single",
+        "type": "range",
         "required": true,
-        "options": [
-          "Underweight",
-          "Ideal Weight",
-          "Overweight",
-          "Obese"
+        "rangeOptions": [
+          {
+            "value": "underweight",
+            "label": "Underweight"
+          },
+          {
+            "value": "ideal",
+            "label": "Ideal Weight"
+          },
+          {
+            "value": "overweight",
+            "label": "Overweight"
+          }
         ]
       },
       {
