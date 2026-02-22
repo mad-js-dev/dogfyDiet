@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/vue3-vite'
 import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 
 const config: StorybookConfig = {
   stories: [
@@ -22,6 +23,14 @@ const config: StorybookConfig = {
     autodocs: "tag"
   },
   viteFinal: async (config, { configType }) => {
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+        '~': resolve(__dirname, '..'),
+        '@': resolve(__dirname, '..')
+      }
+    }
     config.plugins = [
       ...(config.plugins || []),
       vue()
