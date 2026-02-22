@@ -16,29 +16,22 @@ type Story = StoryObj<typeof SegmentedButtons>
 
 export const Default: Story = {
   args: {
-    modelValue: 'Option 1',
-    options: ['Option 1', 'Option 2', 'Option 3'],
+    modelValue: 'Male',
+    options: ['Male', 'Female'],
   },
 }
 
 export const WithActive: Story = {
   args: {
-    modelValue: 'Option 2',
-    options: ['Option 1', 'Option 2', 'Option 3'],
-  },
-}
-
-export const TwoOptions: Story = {
-  args: {
-    modelValue: 'Male',
+    modelValue: 'Female',
     options: ['Male', 'Female'],
   },
 }
 
 export const Disabled: Story = {
   args: {
-    modelValue: 'Option 1',
-    options: ['Option 1', 'Option 2', 'Option 3'],
+    modelValue: 'Male',
+    options: ['Male', 'Female'],
     disabled: true,
   },
 }
