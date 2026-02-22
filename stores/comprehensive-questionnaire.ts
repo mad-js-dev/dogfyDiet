@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
-import { questionnaireSteps } from '../config/questionnaire-steps'
+import { ref, computed } from 'vue'
 import { useLocalStorage } from '../composables/useLocalStorage'
 
 export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-questionnaire', () => {
@@ -28,103 +27,25 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   const AUTO_SAVE_DELAY = 1000 // 1 second debounce
 
   // Getters
-  const answeredQuestions = computed(() => {
-    // Only calculate if store is initialized and has answers
+  const getCurrentStep = computed(() => currentStep.value)
+  const getAnswers = computed(() => answers.value)
+  const getIsCompleted = computed(() => isCompleted.value)
+  const getPetCount = computed(() => petCount.value)
+  
+  const uniqueAnswerCount = computed(() => {
     if (!answers.value || answers.value.length === 0) return 0
-    
     const uniqueQuestions = new Set(answers.value.map(a => a.questionId))
     return uniqueQuestions.size
   })
 
   const progressPercentage = computed(() => {
-    // Only calculate if store is initialized and has answers
     if (!answers.value || answers.value.length === 0) return 0
     
-    const totalQuestions = questionnaireSteps.reduce((total, step) => {
-      return total + (step.questions?.length || 0)
-    }, 0)
-    
     const uniqueQuestions = new Set(answers.value.map(a => a.questionId))
-    return Math.round((uniqueQuestions.size / (totalQuestions - 1)) * 100)
-  })
-
-  // Enhanced getters for data restoration
-  const completionStatus = computed(() => {
-    let totalRequiredQuestions = 0
-    let completedRequiredQuestions = 0
+    // For now, estimate total questions based on typical questionnaire structure
+    const estimatedTotalQuestions = 20 // This can be made dynamic later
     
-    questionnaireSteps.forEach(step => {
-      step.questions?.forEach(questionId => {
-        // Get question from questionnaireQuestions to check if it's required
-        const allQuestions = questionnaireSteps.flatMap(s => s.questions || [])
-        const questionIndex = allQuestions.findIndex(q => q === questionId)
-        
-        // For now, assume all questions are required except optional ones
-        const isOptional = questionId === 'pet_expecting' || questionId === 'pet_pathology'
-        
-        if (!isOptional) {
-          totalRequiredQuestions++
-          
-          if (petCount.value === 1) {
-            // Single pet: check if question has any answer
-            const hasAnswer = answers.value.some(a => a.questionId === questionId && a.value)
-            if (hasAnswer) completedRequiredQuestions++
-          } else {
-            // Multiple pets: check if question has answers for all pets OR shared answer
-            const petIds = Array.from({ length: petCount.value }, (_, i) => `pet_${i + 1}`)
-            const allPetsAnswered = petIds.every(petId => 
-              answers.value.some(a => a.questionId === questionId && a.petId === petId && a.value) ||
-              answers.value.some(a => a.questionId === questionId && !a.petId && a.value) // shared answer
-            )
-            if (allPetsAnswered) completedRequiredQuestions++
-          }
-        }
-      })
-    })
-    
-    return {
-      totalQuestions: totalRequiredQuestions,
-      answeredQuestions: completedRequiredQuestions,
-      completionPercentage: totalRequiredQuestions > 0 ? Math.round((completedRequiredQuestions / totalRequiredQuestions) * 100) : 0
-    }
-  })
-
-  const lastAnsweredStep = computed(() => {
-    // Find the furthest step with any answered questions
-    let furthestStep = 0
-    
-    for (let stepIndex = questionnaireSteps.length - 1; stepIndex >= 0; stepIndex--) {
-      const step = questionnaireSteps[stepIndex]
-      const stepHasAnswers = step.questions?.some((question: any) => 
-        answers.value.some(answer => answer.questionId === question.id)
-      )
-      
-      if (stepHasAnswers) {
-        furthestStep = stepIndex
-        break
-      }
-    }
-    
-    return furthestStep
-  })
-
-  const nextUnansweredStep = computed(() => {
-    // Find the first step with unanswered questions
-    for (let stepIndex = 0; stepIndex < questionnaireSteps.length; stepIndex++) {
-      const step = questionnaireSteps[stepIndex]
-      const stepQuestions = step.questions || []
-      
-      const hasUnansweredQuestions = stepQuestions.some((question: any) => {
-        // Check if question has any answer (shared or individual)
-        return !answers.value.some(answer => answer.questionId === question.id)
-      })
-      
-      if (hasUnansweredQuestions) {
-        return stepIndex
-      }
-    }
-    
-    return questionnaireSteps.length - 1 // Return last step if all are answered
+    return Math.round((uniqueQuestions.size / estimatedTotalQuestions) * 100)
   })
 
   // Actions
@@ -132,135 +53,45 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     currentStep.value = step
     triggerAutoSave()
   }
-
-  const setPetCount = (count: number) => {
-    const validCount = Math.max(1, Math.min(2, count)) // Ensure between 1-2 pets
-    petCount.value = validCount
-    addAnswer('pet_count', validCount)
-  }
   
-  // UI state setters
-  const setUiState = (key: keyof typeof uiState.value, value: boolean) => {
-    uiState.value[key] = value
+  const setAnswers = (newAnswers: Array<any>) => {
+    answers.value = newAnswers
     triggerAutoSave()
   }
   
-  // Auto-save functionality
-  const triggerAutoSave = () => {
-    if (saveTimeout) {
-      clearTimeout(saveTimeout)
-    }
-    
-    saveTimeout = setTimeout(() => {
-      saveToLocalStorage()
-    }, AUTO_SAVE_DELAY)
-  }
-  
-  const saveToLocalStorage = () => {
-    if (!localStorage.isLocalStorageAvailable.value) return false
-    
-    return localStorage.saveToLocalStorage({
-      currentStep: currentStep.value,
-      answers: answers.value,
-      petCount: petCount.value,
-      isCompleted: isCompleted.value,
-      uiState: uiState.value
-    })
-  }
-  
-  const loadFromLocalStorage = () => {
-    if (!localStorage.isLocalStorageAvailable.value) return false
-    
-    const data = localStorage.loadFromLocalStorage()
-    if (!data) return false
-    
-    // Restore state
-    currentStep.value = data.currentStep
-    answers.value = data.answers
-    petCount.value = data.petCount
-    isCompleted.value = data.isCompleted
-    uiState.value = data.uiState
-    
-    return true
-  }
-  
-  // Initialize state from localStorage after function declaration
-  loadFromLocalStorage()
-  
-  const clearAllData = () => {
-    clearAnswers()
-    uiState.value = {
-      showIndividualGenders: false,
-      showIndividualBirthDates: false,
-      showIndividualBodyShapes: false,
-      showIndividualActivityLevels: false,
-      showIndividualPathologies: false,
-      showIndividualGastronomicProfiles: false
-    }
-    localStorage.clearLocalStorage()
-  }
-  
-  const hasPersistedData = () => {
-    return localStorage.hasPersistedData()
-  }
-
   const addAnswer = (questionId: string, value: any, petId?: string | null) => {
-    const existingIndex = answers.value.findIndex(
-      a => a.questionId === questionId && a.petId === petId
+    // Remove existing answer for this question and pet
+    answers.value = answers.value.filter(a => 
+      !(a.questionId === questionId && (a.petId === petId || (!a.petId && !petId)))
     )
-
-    const answer = {
-      questionId,
-      value,
-      petId,
-      timestamp: new Date().toISOString()
-    }
-
-    if (existingIndex >= 0) {
-      answers.value[existingIndex] = answer
-    } else {
-      answers.value.push(answer)
-    }
     
-    // Trigger auto-save
+    // Add new answer
+    answers.value.push({
+      questionId,
+      petId: petId || null,
+      value,
+      timestamp: new Date().toISOString()
+    })
+    
     triggerAutoSave()
   }
 
   const addSmartAnswer = (questionId: string, value: any, petId?: string | null) => {
-    if (!petId && petCount.value > 1) {
-      // Multiple pets with same answer - store as shared
+    // Smart logic for adding answers based on context
+    if (petCount.value === 1) {
+      // Single pet - don't use petId
       addAnswer(questionId, value, null)
-      setPetCount(petCount.value)
-      setUiState('showIndividualGenders', false)
-      differentiateAnswers(questionId)
     } else {
-      // Single pet or individual mode - store with petId
-      addAnswer(questionId, value, petId)
-      setPetCount(petCount.value)
-      setUiState('showIndividualGenders', false)
+      // Multiple pets - use provided petId or determine automatically
+      const targetPetId = petId || 'pet_1'
+      addAnswer(questionId, value, targetPetId)
     }
   }
 
-  const differentiateAnswers = (questionId: string) => {
-    const sharedAnswer = answers.value.find(a => a.questionId === questionId && !a.petId)
-    
-    // Always create individual answers for all pets, even if no shared answer exists
-    for (let i = 1; i <= petCount.value; i++) {
-      const existingPetAnswer = answers.value.find(a => a.questionId === questionId && a.petId === `pet_${i}`)
-      if (!existingPetAnswer) {
-        // Use shared answer if it exists, otherwise create empty answer
-        const value = sharedAnswer ? sharedAnswer.value : null
-        addAnswer(questionId, value, `pet_${i}`)
-      }
-    }
-    
-    // Remove shared answer if it exists
-    if (sharedAnswer) {
-      const sharedIndex = answers.value.findIndex(a => a.questionId === questionId && !a.petId)
-      if (sharedIndex >= 0) {
-        answers.value.splice(sharedIndex, 1)
-      }
-    }
+  const getAnswer = (questionId: string, petId?: string | null) => {
+    return answers.value.find(a => 
+      a.questionId === questionId && (petId ? a.petId === petId : !a.petId)
+    )
   }
 
   const getAnswerForPet = (questionId: string, petId: string) => {
@@ -280,30 +111,40 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     return answers.value.some(a => a.questionId === questionId && a.petId)
   }
 
-  const removeAnswer = (questionId: string, petId?: string | null) => {
-    const index = answers.value.findIndex(a => a.questionId === questionId && a.petId === petId)
-    if (index >= 0) {
-      answers.value.splice(index, 1)
+  const differentiateAnswers = (questionId: string) => {
+    const sharedAnswer = answers.value.find(a => a.questionId === questionId && !a.petId)
+    if (!sharedAnswer) return
+    
+    // Create individual answers for each pet from the shared answer
+    for (let i = 1; i <= petCount.value; i++) {
+      const petId = `pet_${i}`
+      addAnswer(questionId, sharedAnswer.value, petId)
     }
+    
+    // Remove the shared answer
+    answers.value = answers.value.filter(a => !(a.questionId === questionId && !a.petId))
   }
 
-  const getAnswer = (questionId: string, petId?: string | null) => {
-    return answers.value.find(a => 
-      a.questionId === questionId && (petId ? a.petId === petId : !a.petId)
+  const removeAnswer = (questionId: string, petId?: string) => {
+    answers.value = answers.value.filter(a => 
+      !(a.questionId === questionId && (!petId || a.petId === petId))
     )
+    triggerAutoSave()
   }
 
-  const getPetAnswers = (petNum: number) => {
-    return answers.value.filter(a => a.petId === `pet_${petNum}`)
+  const setCompleted = (completed: boolean) => {
+    isCompleted.value = completed
+    triggerAutoSave()
+  }
+  
+  const setPetCount = (count: number) => {
+    petCount.value = count
+    triggerAutoSave()
   }
 
-  const getGlobalAnswers = () => {
-    return answers.value.filter(a => !a.petId)
-  }
-
-  const clearAnswers = () => {
-    answers.value = []
+  const reset = () => {
     currentStep.value = 0
+    answers.value = []
     isCompleted.value = false
     petCount.value = 1
     triggerAutoSave()
@@ -312,12 +153,43 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
   const submitQuestionnaire = () => {
     isCompleted.value = true
     triggerAutoSave()
-    return {
+  }
+
+  // Auto-save functionality
+  const triggerAutoSave = () => {
+    if (saveTimeout) {
+      clearTimeout(saveTimeout)
+    }
+    
+    saveTimeout = setTimeout(() => {
+      saveToLocalStorage()
+    }, AUTO_SAVE_DELAY)
+  }
+
+  const saveToLocalStorage = () => {
+    const state = {
+      currentStep: currentStep.value,
       answers: answers.value,
+      isCompleted: isCompleted.value,
       petCount: petCount.value,
-      submittedAt: new Date().toISOString()
+      uiState: uiState.value
+    }
+    localStorage.saveToLocalStorage(state)
+  }
+
+  const loadFromLocalStorage = () => {
+    const savedState = localStorage.loadFromLocalStorage()
+    if (savedState) {
+      currentStep.value = savedState.currentStep || 0
+      answers.value = savedState.answers || []
+      isCompleted.value = savedState.isCompleted || false
+      petCount.value = savedState.petCount || 1
+      uiState.value = { ...uiState.value, ...(savedState.uiState || {}) }
     }
   }
+
+  // Initialize from localStorage on store creation
+  loadFromLocalStorage()
 
   return {
     // State
@@ -328,33 +200,29 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     uiState,
     
     // Getters
-    answeredQuestions,
+    getCurrentStep,
+    getAnswers,
+    getIsCompleted,
+    getPetCount,
+    uniqueAnswerCount,
     progressPercentage,
-    completionStatus,
-    lastAnsweredStep,
-    nextUnansweredStep,
     
     // Actions
     setStep,
-    setPetCount,
-    setUiState,
+    setAnswers,
     addAnswer,
     addSmartAnswer,
-    differentiateAnswers,
     getAnswer,
     getAnswerForPet,
     hasSharedAnswer,
     hasIndividualAnswers,
+    differentiateAnswers,
     removeAnswer,
-    getPetAnswers,
-    getGlobalAnswers,
-    clearAnswers,
-    clearAllData,
+    setCompleted,
+    setPetCount,
+    reset,
     submitQuestionnaire,
-    
-    // Persistence methods
-    loadFromLocalStorage,
     saveToLocalStorage,
-    hasPersistedData
+    loadFromLocalStorage
   }
 })

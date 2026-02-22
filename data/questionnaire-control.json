@@ -293,11 +293,9 @@
         "type": "single",
         "required": true,
         "options": [
-          "Very Picky",
           "Picky",
           "Normal",
-          "Good Appetite",
-          "Very Good Appetite"
+          "Good Appetite"
         ]
       }
     ]

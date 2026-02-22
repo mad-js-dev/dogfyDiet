@@ -47,7 +47,7 @@
         <!-- Multiple pets mode with toggle - after question -->
       </div>
     </div>
-    <div v-if="petCount > 1 && currentStep >= 2" class="multi-pet-controls">
+    <div v-if="petCount > 1 && currentStep >= 2 && !isContactStep" class="multi-pet-controls">
       <button 
         @click="toggleSharedMode" 
         :class="['shared-mode-btn', { active: isSharedMode }]"
@@ -79,6 +79,12 @@ const questionnaire = useComprehensiveQuestionnaireStore()
 const currentStepData = computed(() => props.stepData)
 const petCount = computed(() => questionnaire.petCount)
 const currentStep = computed(() => questionnaire.currentStep)
+
+// Check if current step is contact information (owner-specific, not pet-specific)
+const isContactStep = computed(() => {
+  return currentStepData.value?.title?.toLowerCase().includes('contact') || 
+         currentStepData.value?.title?.toLowerCase().includes('user')
+})
 
 // Auto-set shared mode based on step and pet count
 const isSharedMode = computed({
