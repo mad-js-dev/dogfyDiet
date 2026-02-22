@@ -42,15 +42,16 @@ const questionnaire = useComprehensiveQuestionnaireStore()
 const currentAnswer = ref(props.modelValue ?? '')
 const error = ref('')
 
-// Convert string array options to SegmentedButtonOption format
+// Convert options to string array for SegmentedButtons
 const segmentedOptions = computed(() => {
   if (!props.config.options) return []
   
   return props.config.options.map(option => {
     if (typeof option === 'string') {
-      return { value: option, label: option }
+      return option
     }
-    return option
+    // If option is an object with value property, extract the value
+    return option.value || option
   })
 })
 
