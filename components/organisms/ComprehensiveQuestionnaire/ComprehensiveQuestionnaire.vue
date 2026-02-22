@@ -100,7 +100,7 @@ import { computed, ref, watch } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import { questionnaireSteps, getStepQuestions, shouldShowQuestion } from '~/config/questionnaire-steps'
 import { questionnaireQuestions } from '~/config/questionnaire-questions'
-import QuestionRenderer from '~/components/QuestionRenderer.vue'
+import QuestionRenderer from '~/components/organisms/QuestionRenderer/QuestionRenderer.vue'
 
 const questionnaire = useComprehensiveQuestionnaireStore()
 

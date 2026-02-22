@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue'
-import SegmentedButtons from '~/components/segmented-buttons/SegmentedButtons.vue'
+import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import type { QuestionConfig } from '~/types/questionnaire'
 

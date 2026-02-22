@@ -1,13 +1,10 @@
 import type { QuestionConfig } from '~/types/questionnaire'
 import { BaseQuestion } from './BaseQuestion'
-import TextInput from '~/components/text-input/textInput.vue'
-import SelectAnswer from '~/components/select-answer/SelectAnswer.vue'
-import BoolAnswer from '~/components/BoolAnswer.vue'
-import AgeAnswer from '~/components/AgeAnswer.vue'
+import TextInput from '~/components/atoms/TextInput/TextInput.vue'
+import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
 import RangeAnswer from '~/components/atoms/RangeAnswer/RangeAnswer.vue'
-import RangeSlider from '~/components/range-slider/RangeSlider.vue'
-import MultiSelectAnswer from '~/components/MultiSelectAnswer.vue'
-import SegmentedAnswer from '~/components/SegmentedAnswer.vue'
+import RangeSlider from '~/components/atoms/RangeSlider/RangeSlider.vue'
+import SegmentedAnswer from '~/components/molecules/SegmentedAnswer/SegmentedAnswer.vue'
 
 export class TextQuestion extends BaseQuestion {
   constructor(config: QuestionConfig) {
@@ -36,56 +33,6 @@ export class SelectQuestion extends BaseQuestion {
 
   getAnswerComponent() {
     return SelectAnswer
-  }
-}
-
-export class MultiSelectQuestion extends BaseQuestion {
-  constructor(config: QuestionConfig) {
-    super(config)
-  }
-
-  validate(value: any): boolean {
-    if (!this.config.required) return true
-    return Array.isArray(value) && value.length > 0
-  }
-
-  getAnswerComponent() {
-    return MultiSelectAnswer
-  }
-}
-
-export class BoolQuestion extends BaseQuestion {
-  constructor(config: QuestionConfig) {
-    super(config)
-  }
-
-  validate(value: any): boolean {
-    if (!this.config.required) return true
-    return value === true || value === false
-  }
-
-  getAnswerComponent() {
-    return BoolAnswer
-  }
-}
-
-export class AgeQuestion extends BaseQuestion {
-  constructor(config: QuestionConfig) {
-    super(config)
-  }
-
-  validate(value: any): boolean {
-    if (!this.config.required) return true
-    
-    if (!value || typeof value !== 'object') return false
-    if (typeof value.years !== 'number' || typeof value.months !== 'number') return false
-    if (value.years < 0 || value.months < 0 || value.months > 11) return false
-    
-    return true
-  }
-
-  getAnswerComponent() {
-    return AgeAnswer
   }
 }
 
@@ -132,9 +79,9 @@ export class TelQuestion extends BaseQuestion {
     if (!this.config.required) return true
     if (!value || value.trim() === '') return false
     
-    // Basic phone validation - allow digits, spaces, dashes, parentheses, plus
-    const phoneRegex = /^[\d\s\-\(\)\+]+$/
-    return phoneRegex.test(value) && value.replace(/\D/g, '').length >= 7
+    // Basic phone validation
+    const phoneRegex = /^[\d\s\-\+\(\)]+$/
+    return phoneRegex.test(value) && value.replace(/\D/g, '').length >= 10
   }
 
   getAnswerComponent() {

@@ -63,10 +63,10 @@ import { computed, ref } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import TextInput from '~/components/atoms/TextInput/TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
-import SegmentedAnswer from '~/components/SegmentedAnswer.vue'
+import SegmentedAnswer from '~/components/molecules/SegmentedAnswer/SegmentedAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
 import RangeAnswer from '~/components/atoms/RangeAnswer/RangeAnswer.vue'
-import RangeSlider from '~/components/range-slider/RangeSlider.vue'
+import RangeSlider from '~/components/atoms/RangeSlider/RangeSlider.vue'
 
 // Define types locally since we removed the service
 interface ConditionalLogic {
