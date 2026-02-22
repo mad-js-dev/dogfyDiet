@@ -110,19 +110,24 @@ const filteredQuestions = computed(() => {
     if (petCount.value === 1) {
       return shouldShowQuestionForPet(question, 'pet_1')
     } else {
-      // For multiple pets, show if ANY pet meets the condition
-      for (let i = 1; i <= petCount.value; i++) {
-        if (shouldShowQuestionForPet(question, `pet_${i}`)) {
-          return true
+      // For multiple pets, check shared mode first
+      if (isSharedMode.value) {
+        return shouldShowQuestionForPet(question, null) // Check shared answer
+      } else {
+        // For individual mode, show if ANY pet meets the condition
+        for (let i = 1; i <= petCount.value; i++) {
+          if (shouldShowQuestionForPet(question, `pet_${i}`)) {
+            return true
+          }
         }
+        return false
       }
-      return false
     }
   })
 })
 
 // Check if a question should be shown for a specific pet based on conditional logic
-const shouldShowQuestionForPet = (question: Question, petId: string) => {
+const shouldShowQuestionForPet = (question: Question, petId: string | null) => {
   if (!question.conditional?.showIf) return true
   
   const condition = question.conditional.showIf
@@ -130,7 +135,7 @@ const shouldShowQuestionForPet = (question: Question, petId: string) => {
 }
 
 // Evaluate conditional logic
-const evaluateCondition = (condition: ConditionalLogic, petId: string): boolean => {
+const evaluateCondition = (condition: ConditionalLogic, petId: string | null): boolean => {
   const { questionId, operator, value, and, or } = condition
   
   // Get the answer for the condition question
