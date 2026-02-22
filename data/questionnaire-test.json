@@ -270,14 +270,27 @@
         "id": "pet_gastronomic_profile",
         "title": "Eating Habits",
         "description": "What are your pet's eating habits?",
-        "type": "single",
+        "type": "range-slider",
         "required": true,
-        "options": [
-          "Very Picky",
-          "Picky",
-          "Normal",
-          "Good Appetite",
-          "Very Good Appetite"
+        "rangeOptions": [
+          {
+            "value": "selective",
+            "label": "Selective",
+            "min": 0,
+            "max": 33
+          },
+          {
+            "value": "normal",
+            "label": "Normal",
+            "min": 34,
+            "max": 66
+          },
+          {
+            "value": "glutton",
+            "label": "Glutton",
+            "min": 67,
+            "max": 100
+          }
         ]
       }
     ]
