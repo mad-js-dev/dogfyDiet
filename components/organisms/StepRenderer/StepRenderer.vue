@@ -61,31 +61,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
+import { type Question, type ConditionalLogic } from '~/services/questionnaire'
 import TextInput from '~/components/atoms/TextInput/TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
-
-interface ConditionalLogic {
-  questionId: string
-  operator: 'equals' | 'not_equals' | 'contains' | 'not_contains'
-  value: any
-  and?: ConditionalLogic
-  or?: ConditionalLogic
-}
-
-interface QuestionConditional {
-  showIf: ConditionalLogic
-}
-
-interface Question {
-  id: string
-  title: string
-  description: string
-  type: string
-  required: boolean
-  options?: string[]
-  conditional?: QuestionConditional
-}
 
 interface Props {
   stepData?: any
@@ -120,20 +99,34 @@ const storedSharedMode = ref(true)
 const filteredQuestions = computed(() => {
   if (!currentStepData.value?.questions) return []
   
+  console.log('Current step data questions:', currentStepData.value.questions)
+  
   return currentStepData.value.questions.filter((question: Question) => {
+    console.log(`Processing question: ${question.id}`, question)
+    
     // If no conditional logic, always show
-    if (!question.conditional) return true
+    if (!question.conditional) {
+      console.log(`Question ${question.id}: No conditional logic, showing`)
+      return true
+    }
+    
+    console.log(`Question ${question.id}: Has conditional logic:`, question.conditional)
     
     // Check conditional logic for each pet
     if (petCount.value === 1) {
-      return shouldShowQuestionForPet(question, 'pet_1')
+      const shouldShow = shouldShowQuestionForPet(question, 'pet_1')
+      console.log(`Question ${question.id}: Single pet, should show: ${shouldShow}`)
+      return shouldShow
     } else {
       // For multiple pets, show if ANY pet meets the condition
       for (let i = 1; i <= petCount.value; i++) {
-        if (shouldShowQuestionForPet(question, `pet_${i}`)) {
+        const shouldShow = shouldShowQuestionForPet(question, `pet_${i}`)
+        console.log(`Question ${question.id}: Pet ${i}, should show: ${shouldShow}`)
+        if (shouldShow) {
           return true
         }
       }
+      console.log(`Question ${question.id}: No pets meet condition, hiding`)
       return false
     }
   })
@@ -151,23 +144,39 @@ const shouldShowQuestionForPet = (question: Question, petId: string) => {
 const evaluateCondition = (condition: ConditionalLogic, petId: string): boolean => {
   const { questionId, operator, value, and, or } = condition
   
+  console.log(`Evaluating condition for ${questionId} on ${petId}:`, { questionId, operator, value })
+  
   // Get the answer for the condition question
   const answer = questionnaire.getAnswer(questionId, petId)
   const answerValue = answer?.value
   
+  console.log(`Answer value: ${answerValue}`)
+  
+  // If no answer exists, don't show the conditional question
+  if (answerValue === undefined || answerValue === null || answerValue === '') {
+    console.log('No answer value, returning false')
+    return false
+  }
+  
   // Evaluate the primary condition
   let result = evaluateOperator(answerValue, operator, value)
+  console.log(`Primary condition result: ${result}`)
   
   // Evaluate AND condition if present
   if (and && result) {
-    result = result && evaluateCondition(and, petId)
+    const andResult = evaluateCondition(and, petId)
+    result = result && andResult
+    console.log(`AND condition result: ${andResult}, final result: ${result}`)
   }
   
   // Evaluate OR condition if present
   if (or && !result) {
-    result = result || evaluateCondition(or, petId)
+    const orResult = evaluateCondition(or, petId)
+    result = result || orResult
+    console.log(`OR condition result: ${orResult}, final result: ${result}`)
   }
   
+  console.log(`Final evaluation result for ${questionId}: ${result}`)
   return result
 }
 

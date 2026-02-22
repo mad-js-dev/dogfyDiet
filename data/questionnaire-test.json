@@ -96,6 +96,18 @@
         "description": "Is your pet expecting offspring?",
         "type": "single",
         "required": false,
+        "conditional": {
+          "showIf": {
+            "questionId": "pet_gender",
+            "operator": "equals",
+            "value": "Female",
+            "and": {
+              "questionId": "pet_neutered",
+              "operator": "equals", 
+              "value": "No"
+            }
+          }
+        },
         "options": [
           "Yes",
           "No"

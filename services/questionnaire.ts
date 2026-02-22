@@ -2,6 +2,18 @@ import { defineStore } from 'pinia'
 import questionnaireControlData from '~/data/questionnaire-control.json'
 import questionnaireTestData from '~/data/questionnaire-test.json'
 
+export interface ConditionalLogic {
+  questionId: string
+  operator: 'equals' | 'not_equals' | 'contains' | 'not_contains'
+  value: any
+  and?: ConditionalLogic
+  or?: ConditionalLogic
+}
+
+export interface QuestionConditional {
+  showIf: ConditionalLogic
+}
+
 export interface Question {
   id: string
   title: string
@@ -9,6 +21,7 @@ export interface Question {
   type: 'text' | 'number' | 'select' | 'single' | 'multiple' | 'range'
   required: boolean
   options?: string[]
+  conditional?: QuestionConditional
   validation?: {
     min?: number
     max?: number
