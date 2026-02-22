@@ -65,6 +65,8 @@ import { type Question, type ConditionalLogic } from '~/services/questionnaire'
 import TextInput from '~/components/atoms/TextInput/TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
+// @ts-ignore
+import RangeAnswer from '~/components/atoms/RangeAnswer/RangeAnswer.vue'
 
 interface Props {
   stepData?: any
@@ -176,7 +178,8 @@ const questionComponents = {
   text: TextInput,
   select: SelectAnswer,
   single: SegmentedButtons,
-  multiple: SegmentedButtons
+  multiple: SegmentedButtons,
+  range: RangeAnswer
 }
 
 const getQuestionComponent = (type: string) => {
