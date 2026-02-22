@@ -7,7 +7,7 @@
       <!-- Step indicators -->
       <div class="c-range-slider__steps">
         <div
-          v-for="(option, index) in (config.options || [])"
+          v-for="(option, index) in reactiveOptions"
           :key="option"
           class="c-range-slider__step"
           :class="{
@@ -36,7 +36,7 @@
     <!-- Labels -->
     <div v-if="showLabels" class="c-range-slider__labels">
       <div
-        v-for="(option, index) in (config.options || [])"
+        v-for="(option, index) in reactiveOptions"
         :key="option"
         class="c-range-slider__label"
         :class="{
@@ -91,18 +91,35 @@ const error = ref('')
 
 // Computed properties
 const selectedValue = computed(() => {
-  return props.config.options?.[activeStepIndex.value] || ''
+  return reactiveOptions.value[activeStepIndex.value] || ''
 })
 
 const thumbPosition = computed(() => {
-  const optionsLength = props.config.options?.length || 1
+  const optionsLength = reactiveOptions.value.length || 1
   const percentage = (activeStepIndex.value / (optionsLength - 1)) * 100
   return `${percentage}%`
 })
 
+// Reactive options
+const reactiveOptions = computed(() => {
+  const options = props.config.rangeOptions || props.config.options || []
+  // If options are objects with value property, extract the values
+  return options.map(option => typeof option === 'object' ? option.value : option)
+})
+
 // Methods
 const getLabel = (option: string): string => {
-  // Extract short label from long description
+  // First check if we have rangeOptions with labels
+  if (props.config.rangeOptions) {
+    const rangeOption = props.config.rangeOptions.find(opt => 
+      typeof opt === 'object' ? opt.value === option : opt === option
+    )
+    if (rangeOption && typeof rangeOption === 'object' && rangeOption.label) {
+      return rangeOption.label
+    }
+  }
+  
+  // Extract short label from long description (fallback)
   if (option.includes('underweight')) return 'Underweight'
   if (option.includes('ideal')) return 'Ideal Weight'
   if (option.includes('overweight')) return 'Overweight'
@@ -120,7 +137,7 @@ const getLabel = (option: string): string => {
 }
 
 const updateValue = (index: number) => {
-  const optionsLength = props.config.options?.length || 0
+  const optionsLength = reactiveOptions.value.length || 0
   if (index < 0 || index >= optionsLength) return
   
   activeStepIndex.value = index
@@ -198,7 +215,7 @@ const updatePositionFromEvent = (event: MouseEvent | Touch) => {
   const relativeX = event.clientX - rect.left
   const percentage = Math.max(0, Math.min(1, relativeX / rect.width))
   
-  const stepCount = props.config.options?.length || 1
+  const stepCount = reactiveOptions.value.length || 1
   const newIndex = Math.round(percentage * (stepCount - 1))
   
   updateValue(newIndex)
@@ -224,15 +241,15 @@ const handleKeyDown = (event: KeyboardEvent) => {
       break
     case 'End':
       event.preventDefault()
-      updateValue((props.config.options?.length || 1) - 1)
+      updateValue((reactiveOptions.value.length || 1) - 1)
       break
   }
 }
 
 // Initialize from modelValue
 const initializeFromModelValue = () => {
-  if (props.modelValue && props.config.options) {
-    const index = props.config.options.indexOf(props.modelValue)
+  if (props.modelValue && reactiveOptions.value.length > 0) {
+    const index = reactiveOptions.value.indexOf(props.modelValue)
     if (index !== -1) {
       activeStepIndex.value = index
     }
@@ -244,25 +261,39 @@ watch(() => props.modelValue, initializeFromModelValue, { immediate: true })
 
 // Emit default value on mount for required questions
 onMounted(() => {
-  if (props.config.required && !props.modelValue && selectedValue.value) {
-    emit('update:modelValue', selectedValue.value)
-    emit('answer', selectedValue.value, props.config.id)
+  // For required questions, always select the first option if no value is set
+  if (props.config.required && !props.modelValue && reactiveOptions.value.length > 0) {
+    activeStepIndex.value = 0
+    const firstValue = reactiveOptions.value[0]
+    emit('update:modelValue', firstValue)
+    emit('answer', firstValue, props.config.id)
   }
 })
 
 // Watch for config changes
 watch(() => props.config, (newConfig) => {
   console.log('RangeSlider config changed:', newConfig)
-  console.log('RangeSlider options:', newConfig?.options)
+  console.log('RangeSlider options:', newConfig?.rangeOptions)
+  console.log('Watch triggered, newConfig.rangeOptions:', newConfig?.rangeOptions)
+}, { immediate: true })
+
+// Update reactive options when config changes
+watch(() => props.config.rangeOptions, (newOptions) => {
+  console.log('Watch triggered, newOptions:', newOptions)
+  // No need to manually update reactiveOptions since it's a computed property
+  console.log('RangeSlider reactiveOptions will update automatically')
 })
 
 // Initialize active step based on modelValue
 onMounted(() => {
   console.log('RangeSlider mounted with config:', props.config)
-  console.log('RangeSlider options:', props.config.options)
+  console.log('RangeSlider config.rangeOptions:', props.config.rangeOptions)
+  console.log('RangeSlider reactiveOptions:', reactiveOptions.value)
   
-  if (props.modelValue && props.config.options) {
-    const index = props.config.options.findIndex(option => option.value === props.modelValue)
+  if (props.modelValue && props.config.rangeOptions) {
+    const index = props.config.rangeOptions.findIndex(option => 
+      typeof option === 'object' ? option.value === props.modelValue : option === props.modelValue
+    )
     if (index >= 0) {
       activeStepIndex.value = index
     }
