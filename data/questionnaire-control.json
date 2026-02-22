@@ -181,7 +181,7 @@
         "id": "pet_body_shape",
         "title": "Body Shape",
         "description": "How would you describe your pet's body shape?",
-        "type": "range",
+        "type": "range-slider",
         "required": true,
         "rangeOptions": [
           {

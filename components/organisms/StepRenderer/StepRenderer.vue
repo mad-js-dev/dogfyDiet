@@ -14,7 +14,7 @@
         <div v-if="petCount > 1 && isSharedMode" class="pet-section">
           <component 
             :is="getQuestionComponent(question.type)"
-            :question="question"
+            :config="question"
             :model-value="getSharedQuestionValue(question.id)"
             @update:model-value="handleSharedQuestionUpdate(question.id, $event)"
           />
@@ -24,7 +24,7 @@
         <div v-else-if="petCount === 1" class="pet-section">
           <component 
             :is="getQuestionComponent(question.type)"
-            :question="question"
+            :config="question"
             :model-value="getQuestionValue(question.id, 'pet_1')"
             @update:model-value="handleQuestionUpdate(question.id, $event, 'pet_1')"
           />
@@ -37,7 +37,7 @@
             <component 
               v-if="shouldShowQuestionForPet(question, `pet_${petNum}`)"
               :is="getQuestionComponent(question.type)"
-              :question="getQuestionForPet(question, petNum)"
+              :config="question"
               :model-value="getQuestionValue(question.id, `pet_${petNum}`)"
               @update:model-value="handleQuestionUpdate(question.id, $event, `pet_${petNum}`)"
             />
@@ -65,8 +65,8 @@ import { type Question, type ConditionalLogic } from '~/services/questionnaire'
 import TextInput from '~/components/atoms/TextInput/TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
-// @ts-ignore
 import RangeAnswer from '~/components/atoms/RangeAnswer/RangeAnswer.vue'
+import RangeSlider from '~/components/range-slider/RangeSlider.vue'
 
 interface Props {
   stepData?: any
@@ -179,7 +179,8 @@ const questionComponents = {
   select: SelectAnswer,
   single: SegmentedButtons,
   multiple: SegmentedButtons,
-  range: RangeAnswer
+  range: RangeAnswer,
+  'range-slider': RangeSlider
 }
 
 const getQuestionComponent = (type: string) => {
@@ -222,10 +223,8 @@ const getQuestionForPet = (question: Question, petNum: number) => {
     originalQuestion.replaceAll('{petName}', petName) : 
     originalQuestion
     
-  return {
-    ...question,
-    title: finalQuestion
-  }
+  // Ensure all properties are preserved, including rangeOptions
+  return { ...question, title: finalQuestion }
 }
 </script>
 

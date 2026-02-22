@@ -103,6 +103,10 @@ const thumbPosition = computed(() => {
 // Methods
 const getLabel = (option: string): string => {
   // Extract short label from long description
+  if (option.includes('underweight')) return 'Underweight'
+  if (option.includes('ideal')) return 'Ideal Weight'
+  if (option.includes('overweight')) return 'Overweight'
+  if (option.includes('obese')) return 'Obese'
   if (option.includes('thin')) return 'Thin'
   if (option.includes('good shape')) return 'Good'
   if (option.includes('chubby')) return 'Chubby'
@@ -243,6 +247,25 @@ onMounted(() => {
   if (props.config.required && !props.modelValue && selectedValue.value) {
     emit('update:modelValue', selectedValue.value)
     emit('answer', selectedValue.value, props.config.id)
+  }
+})
+
+// Watch for config changes
+watch(() => props.config, (newConfig) => {
+  console.log('RangeSlider config changed:', newConfig)
+  console.log('RangeSlider options:', newConfig?.options)
+})
+
+// Initialize active step based on modelValue
+onMounted(() => {
+  console.log('RangeSlider mounted with config:', props.config)
+  console.log('RangeSlider options:', props.config.options)
+  
+  if (props.modelValue && props.config.options) {
+    const index = props.config.options.findIndex(option => option.value === props.modelValue)
+    if (index >= 0) {
+      activeStepIndex.value = index
+    }
   }
 })
 

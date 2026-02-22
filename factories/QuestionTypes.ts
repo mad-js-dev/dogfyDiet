@@ -5,9 +5,9 @@ import SelectAnswer from '~/components/select-answer/SelectAnswer.vue'
 import BoolAnswer from '~/components/BoolAnswer.vue'
 import AgeAnswer from '~/components/AgeAnswer.vue'
 import RangeAnswer from '~/components/atoms/RangeAnswer/RangeAnswer.vue'
+import RangeSlider from '~/components/range-slider/RangeSlider.vue'
 import MultiSelectAnswer from '~/components/MultiSelectAnswer.vue'
 import SegmentedAnswer from '~/components/SegmentedAnswer.vue'
-import RangeSlider from '~/components/range-slider/RangeSlider.vue'
 
 export class TextQuestion extends BaseQuestion {
   constructor(config: QuestionConfig) {
