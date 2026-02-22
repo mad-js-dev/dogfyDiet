@@ -186,15 +186,21 @@
         "rangeOptions": [
           {
             "value": "underweight",
-            "label": "Underweight"
+            "label": "Underweight",
+            "min": 0,
+            "max": 25
           },
           {
             "value": "ideal",
-            "label": "Ideal Weight"
+            "label": "Ideal Weight",
+            "min": 26,
+            "max": 50
           },
           {
             "value": "overweight",
-            "label": "Overweight"
+            "label": "Overweight",
+            "min": 51,
+            "max": 75
           }
         ]
       },
