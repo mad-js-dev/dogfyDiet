@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { computed, nextTick } from 'vue'
 import { useQuestionnaireStore } from '~/stores/questionnaire'
-import StepRenderer from '~/components/step-renderer/StepRenderer.vue'
+import StepRenderer from '~/components/organisms/StepRenderer/StepRenderer.vue'
 
 // Store
 const questionnaire = useQuestionnaireStore()

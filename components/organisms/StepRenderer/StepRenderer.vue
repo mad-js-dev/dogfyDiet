@@ -60,10 +60,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useQuestionnaireStore } from '~/stores/questionnaire'
-import TextInput from './question-types/TextInput.vue'
-import SelectInput from './question-types/SelectInput.vue'
-import RadioInput from './question-types/RadioInput.vue'
-import CheckboxInput from './question-types/CheckboxInput.vue'
+import TextInput from '~/components/atoms/TextInput/TextInput.vue'
+import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
+import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
 
 interface Props {
   stepData?: any
@@ -97,9 +96,9 @@ const storedSharedMode = ref(true)
 // Map question types to components
 const questionComponents = {
   text: TextInput,
-  select: SelectInput,
-  radio: RadioInput,
-  checkbox: CheckboxInput
+  select: SelectAnswer,
+  single: SegmentedButtons,
+  multiple: SegmentedButtons
 }
 
 const getQuestionComponent = (type: string) => {
