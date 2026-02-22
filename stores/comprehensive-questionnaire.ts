@@ -29,27 +29,63 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
 
   // Getters
   const answeredQuestions = computed(() => {
+    // Only calculate if store is initialized and has answers
+    if (!answers.value || answers.value.length === 0) return 0
+    
     const uniqueQuestions = new Set(answers.value.map(a => a.questionId))
     return uniqueQuestions.size
   })
 
   const progressPercentage = computed(() => {
-    const totalQuestions = questionnaireSteps.reduce((total, step) => {
-      return total + (step.questions?.length || 0)
-    }, 0)
-    return Math.round((currentStep.value / (totalQuestions - 1)) * 100)
-  })
-
-  // Enhanced getters for data restoration
-  const completionStatus = computed(() => {
+    // Only calculate if store is initialized and has answers
+    if (!answers.value || answers.value.length === 0) return 0
+    
     const totalQuestions = questionnaireSteps.reduce((total, step) => {
       return total + (step.questions?.length || 0)
     }, 0)
     
+    const uniqueQuestions = new Set(answers.value.map(a => a.questionId))
+    return Math.round((uniqueQuestions.size / (totalQuestions - 1)) * 100)
+  })
+
+  // Enhanced getters for data restoration
+  const completionStatus = computed(() => {
+    let totalRequiredQuestions = 0
+    let completedRequiredQuestions = 0
+    
+    questionnaireSteps.forEach(step => {
+      step.questions?.forEach(questionId => {
+        // Get question from questionnaireQuestions to check if it's required
+        const allQuestions = questionnaireSteps.flatMap(s => s.questions || [])
+        const questionIndex = allQuestions.findIndex(q => q === questionId)
+        
+        // For now, assume all questions are required except optional ones
+        const isOptional = questionId === 'pet_expecting' || questionId === 'pet_pathology'
+        
+        if (!isOptional) {
+          totalRequiredQuestions++
+          
+          if (petCount.value === 1) {
+            // Single pet: check if question has any answer
+            const hasAnswer = answers.value.some(a => a.questionId === questionId && a.value)
+            if (hasAnswer) completedRequiredQuestions++
+          } else {
+            // Multiple pets: check if question has answers for all pets OR shared answer
+            const petIds = Array.from({ length: petCount.value }, (_, i) => `pet_${i + 1}`)
+            const allPetsAnswered = petIds.every(petId => 
+              answers.value.some(a => a.questionId === questionId && a.petId === petId && a.value) ||
+              answers.value.some(a => a.questionId === questionId && !a.petId && a.value) // shared answer
+            )
+            if (allPetsAnswered) completedRequiredQuestions++
+          }
+        }
+      })
+    })
+    
     return {
-      totalQuestions,
-      answeredQuestions: answeredQuestions.value,
-      completionPercentage: totalQuestions > 0 ? Math.round((answeredQuestions.value / totalQuestions) * 100) : 0
+      totalQuestions: totalRequiredQuestions,
+      answeredQuestions: completedRequiredQuestions,
+      completionPercentage: totalRequiredQuestions > 0 ? Math.round((completedRequiredQuestions / totalRequiredQuestions) * 100) : 0
     }
   })
 
@@ -147,6 +183,9 @@ export const useComprehensiveQuestionnaireStore = defineStore('comprehensive-que
     
     return true
   }
+  
+  // Initialize state from localStorage after function declaration
+  loadFromLocalStorage()
   
   const clearAllData = () => {
     clearAnswers()

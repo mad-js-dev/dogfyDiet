@@ -2,17 +2,17 @@
   <div class="c-segmented-buttons" :class="{ 'c-segmented-buttons--disabled': disabled }">
     <div class="c-segmented-buttons__container">
       <button
-        v-for="(option, index) in options"
+        v-for="(option, index) in actualOptions"
         :key="option"
         type="button"
         class="c-segmented-buttons__button"
         :class="{
-          'c-segmented-buttons__button--active': modelValue === option,
+          'c-segmented-buttons__button--active': isOptionSelected(option),
           'c-segmented-buttons__button--first': index === 0,
-          'c-segmented-buttons__button--last': index === options.length - 1
+          'c-segmented-buttons__button--last': index === actualOptions.length - 1
         }"
         :disabled="disabled"
-        :aria-pressed="modelValue === option"
+        :aria-pressed="isOptionSelected(option)"
         :aria-label="option"
         @click="selectOption(option)"
       >
@@ -25,16 +25,24 @@
     <!-- Hidden input for form compatibility -->
     <input
       type="hidden"
-      :name="name"
-      :value="modelValue"
+      :name="actualName"
+      :value="Array.isArray(modelValue) ? modelValue.join(',') : modelValue"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 interface Props {
-  modelValue: string
-  options: string[]
+  question?: {
+    id: string
+    title?: string
+    description?: string
+    type: string
+    required?: boolean
+    options?: string[]
+  }
+  modelValue?: string | string[]
+  options?: string[]
   name?: string
   disabled?: boolean
   required?: boolean
@@ -42,8 +50,9 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'update:modelValue', value: string): void
-  (e: 'change', value: string): void
+  (e: 'update:modelValue', value: string | string[]): void
+  (e: 'change', value: string | string[]): void
+  (e: 'answer', value: string | string[], questionId: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -54,11 +63,42 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
+// Computed properties to handle both question and direct props
+const actualOptions = computed(() => props.question?.options || props.options || [])
+const actualName = computed(() => props.question?.id || props.name || 'segmented-buttons')
+const actualRequired = computed(() => props.question?.required || props.required || false)
+const isMultiple = computed(() => props.question?.type === 'multiple')
+
+const isOptionSelected = (option: string) => {
+  if (isMultiple.value) {
+    return Array.isArray(props.modelValue) && props.modelValue.includes(option)
+  }
+  return props.modelValue === option
+}
+
 const selectOption = (value: string) => {
   if (props.disabled) return
   
-  emit('update:modelValue', value)
-  emit('change', value)
+  let newValue: string | string[]
+  
+  if (isMultiple.value) {
+    // Handle multiple selection
+    const currentValues = Array.isArray(props.modelValue) ? props.modelValue : []
+    if (currentValues.includes(value)) {
+      // Remove value if already selected
+      newValue = currentValues.filter(v => v !== value)
+    } else {
+      // Add value if not selected
+      newValue = [...currentValues, value]
+    }
+  } else {
+    // Handle single selection
+    newValue = value
+  }
+  
+  emit('update:modelValue', newValue)
+  emit('change', newValue)
+  emit('answer', newValue, actualName.value)
 }
 </script>
 

@@ -37,7 +37,7 @@
         </button>
         <button 
           @click="goNext" 
-          :disabled="isLastStep"
+          :disabled="!canProceed"
           class="nav-btn primary"
         >
           {{ isLastStep ? 'Complete' : 'Next' }}
@@ -49,11 +49,12 @@
 
 <script setup lang="ts">
 import { computed, nextTick } from 'vue'
-import { useQuestionnaireStore } from '~/stores/questionnaire'
+import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
+import { questionnaireService } from '~/services/questionnaire'
 import StepRenderer from '~/components/organisms/StepRenderer/StepRenderer.vue'
 
 // Store
-const questionnaire = useQuestionnaireStore()
+const questionnaire = useComprehensiveQuestionnaireStore()
 
 // Route params
 const route = useRoute()
@@ -61,34 +62,46 @@ const router = useRouter()
 
 // Computed properties
 const currentStep = computed(() => questionnaire.currentStep)
-const currentStepData = computed(() => questionnaire.getCurrentStepData)
-const totalSteps = computed(() => questionnaire.getAllSteps.length)
+const currentStepData = computed(() => {
+  return questionnaireService.getStepById(currentStep.value)
+})
+const totalSteps = computed(() => questionnaireService.getSteps().length)
 const progressPercentage = computed(() => 
   ((currentStep.value + 1) / totalSteps.value) * 100
 )
-const isFirstStep = computed(() => questionnaire.isFirstStep)
-const isLastStep = computed(() => questionnaire.isLastStep)
+const isFirstStep = computed(() => currentStep.value === 0)
+const isLastStep = computed(() => {
+  const steps = questionnaireService.getSteps()
+  return currentStep.value >= steps.length - 1
+})
+const canProceed = computed(() => {
+  // TEMPORARY BYPASS: Always allow proceeding to test results page
+  return true
+})
 const petCount = computed(() => questionnaire.petCount)
 
 // Navigation methods
 const goBack = () => {
-  questionnaire.previousStep()
+  const newStep = Math.max(0, currentStep.value - 1)
+  questionnaire.setStep(newStep)
   // Update URL to reflect new step - convert to 1-based for URL
   nextTick(() => {
-    router.push(`/questionnaire/${questionnaire.currentStep + 1}`)
+    router.push(`/questionnaire/${newStep + 1}`)
   })
 }
 
 const goNext = () => {
   if (isLastStep.value) {
-    // Handle questionnaire completion
-    questionnaire.setCompleted(true)
-    router.push('/thank-you')
+    // Handle questionnaire completion - go to results page instead of thank-you
+    questionnaire.submitQuestionnaire()
+    questionnaire.isCompleted = true
+    router.push('/results')
   } else {
-    questionnaire.nextStep()
+    const newStep = currentStep.value + 1
+    questionnaire.setStep(newStep)
     // Update URL to reflect new step - convert to 1-based for URL
     nextTick(() => {
-      router.push(`/questionnaire/${questionnaire.currentStep + 1}`)
+      router.push(`/questionnaire/${newStep + 1}`)
     })
   }
 }
@@ -105,7 +118,7 @@ const togglePetCount = () => {
 // Initialize step from URL
 onMounted(() => {
   const stepFromUrl = parseInt(route.params.step as string) || 1
-  questionnaire.goToStep(stepFromUrl - 1) // Convert to 0-based index
+  questionnaire.setStep(stepFromUrl - 1) // Convert to 0-based index
 })
 
 // Debug: Print questionnaire data
@@ -113,8 +126,8 @@ console.log('=== Questionnaire Data ===')
 console.log('Current Step:', currentStep.value)
 console.log('Current Step Data:', currentStepData.value)
 console.log('Total Steps:', totalSteps.value)
-console.log('All Steps:', questionnaire.getAllSteps)
-console.log('Answers:', questionnaire.getAnswers)
+console.log('All Steps:', questionnaireService.getSteps())
+console.log('Answers:', questionnaire.answers)
 console.log('Is First Step:', isFirstStep.value)
 console.log('Is Last Step:', isLastStep.value)
 console.log('Progress:', progressPercentage.value)

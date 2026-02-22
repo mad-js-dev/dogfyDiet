@@ -58,8 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useQuestionnaireStore } from '~/stores/questionnaire'
+import { computed, ref } from 'vue'
+import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
 import TextInput from '~/components/atoms/TextInput/TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'
@@ -69,9 +69,9 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const questionnaire = useQuestionnaireStore()
+const questionnaire = useComprehensiveQuestionnaireStore()
 
-const currentStepData = computed(() => props.stepData || questionnaire.getCurrentStepData)
+const currentStepData = computed(() => props.stepData)
 const petCount = computed(() => questionnaire.petCount)
 const currentStep = computed(() => questionnaire.currentStep)
 
@@ -111,7 +111,7 @@ const getQuestionValue = (questionId: string, petId?: string) => {
 }
 
 const handleQuestionUpdate = (questionId: string, value: any, petId: string) => {
-  questionnaire.updateAnswer(questionId, petId, value)
+  questionnaire.addAnswer(questionId, value, petId)
 }
 
 const toggleSharedMode = () => {
@@ -119,16 +119,14 @@ const toggleSharedMode = () => {
 }
 
 const getSharedQuestionValue = (questionId: string) => {
-  // Get the first pet's answer as the shared value
-  const answer = questionnaire.getAnswer(questionId, 'pet_1')
+  // Get shared answer (no petId)
+  const answer = questionnaire.getAnswer(questionId, null)
   return answer?.value || ''
 }
 
 const handleSharedQuestionUpdate = (questionId: string, value: any) => {
-  // Update all pets with the same value
-  for (let i = 1; i <= petCount.value; i++) {
-    questionnaire.updateAnswer(questionId, `pet_${i}`, value)
-  }
+  // Update as shared answer (no petId)
+  questionnaire.addAnswer(questionId, value, null)
 }
 
 const getPetDisplayName = (petNum: number) => {

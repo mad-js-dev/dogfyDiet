@@ -20,6 +20,20 @@ export const useQuestionnaireStore = defineStore('questionnaire', () => {
     const steps = questionnaireService.getSteps()
     return currentStep.value >= steps.length - 1
   })
+
+  const canCompleteQuestionnaire = computed(() => {
+    // Check if all required questions are answered
+    const allSteps = questionnaireService.getSteps()
+    const totalQuestions = allSteps.reduce((total, step) => {
+      return total + (step.questions?.length || 0)
+    }, 0)
+    
+    // Count unique question IDs that have answers
+    const answeredQuestions = answers.value ? new Set(answers.value.map(a => a.questionId)).size : 0
+    
+    // Simple completion check - if we've answered as many questions as exist, we can complete
+    return answeredQuestions >= totalQuestions
+  })
   const isFirstStep = computed(() => currentStep.value === 0)
   
   // Actions
@@ -110,6 +124,7 @@ export const useQuestionnaireStore = defineStore('questionnaire', () => {
     getAllSteps,
     isLastStep,
     isFirstStep,
+    canCompleteQuestionnaire,
     
     // Actions
     setStep,
