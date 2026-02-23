@@ -304,12 +304,27 @@
         "id": "pet_gastronomic_profile",
         "title": "Eating Habits",
         "description": "What are your pet's eating habits?",
-        "type": "single",
+        "type": "range-slider",
         "required": true,
-        "options": [
-          "Picky",
-          "Normal",
-          "Good Appetite"
+        "rangeOptions": [
+          {
+            "value": "picky",
+            "label": "Picky",
+            "min": 0,
+            "max": 33
+          },
+          {
+            "value": "normal",
+            "label": "Normal",
+            "min": 34,
+            "max": 66
+          },
+          {
+            "value": "good_appetite",
+            "label": "Good Appetite",
+            "min": 67,
+            "max": 100
+          }
         ]
       }
     ]

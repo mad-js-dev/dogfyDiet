@@ -120,6 +120,8 @@ onMounted(async () => {
 // Computed properties
 const currentStep = computed(() => questionnaire.currentStep)
 const currentStepData = computed(() => {
+  console.log('=== STEP DEBUG ===')
+  console.log('URL step:', route.params.step)
   console.log('currentStep.value:', currentStep.value)
   console.log('questionnaireData.value length:', questionnaireData.value?.length)
   console.log('questionnaireData.value:', questionnaireData.value)
@@ -127,7 +129,8 @@ const currentStepData = computed(() => {
   if (!questionnaireData.value || questionnaireData.value.length === 0) return null
   
   const stepData = questionnaireData.value[currentStep.value] || null
-  console.log('stepData:', stepData)
+  console.log('stepData for index', currentStep.value, ':', stepData)
+  console.log('==================')
   return stepData
 })
 const totalSteps = computed(() => questionnaireData.value?.length || 0)

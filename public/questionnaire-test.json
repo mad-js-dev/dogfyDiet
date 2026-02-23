@@ -263,6 +263,40 @@
   },
   {
     "id": 7,
+    "title": "Pet Gastronomic Profile",
+    "description": "Tell us about your pets' eating habits",
+    "questions": [
+      {
+        "id": "pet_gastronomic_profile",
+        "title": "Eating Habits",
+        "description": "What are your pet's eating habits?",
+        "type": "range-slider",
+        "required": true,
+        "rangeOptions": [
+          {
+            "value": "picky",
+            "label": "Picky",
+            "min": 0,
+            "max": 33
+          },
+          {
+            "value": "normal",
+            "label": "Normal",
+            "min": 34,
+            "max": 66
+          },
+          {
+            "value": "good_appetite",
+            "label": "Good Appetite",
+            "min": 67,
+            "max": 100
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 8,
     "title": "User Contact",
     "description": "How can we contact you?",
     "questions": [

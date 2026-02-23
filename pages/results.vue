@@ -2,32 +2,6 @@
   <div class="results-page">
     <div class="results-container">
       <h1>🎉 Questionnaire Complete!</h1>
-      
-      <div class="summary-section">
-        <h2>Summary</h2>
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="stat-label">Pet Count:</span>
-            <span class="stat-value">{{ questionnaireData.petCount }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Total Answers:</span>
-            <span class="stat-value">{{ questionnaireData.answers.length }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Progress:</span>
-            <span class="stat-value">{{ Math.round(questionnaireData.progressPercentage) }}%</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Status:</span>
-            <span class="stat-value">{{ questionnaireData.isCompleted ? 'Completed' : 'In Progress' }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Submitted At:</span>
-            <span class="stat-value">{{ formatDate(questionnaireData.submittedAt) }}</span>
-          </div>
-        </div>
-      </div>
 
       <div class="answers-section">
         <h2>Answers</h2>

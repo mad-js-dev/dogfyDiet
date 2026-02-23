@@ -47,13 +47,24 @@
         <!-- Multiple pets mode with toggle - after question -->
       </div>
     </div>
-    <div v-if="petCount > 1 && currentStep >= 2 && !isContactStep" class="multi-pet-controls">
+    <div v-if="petCount > 1 && currentStep >= 2 && !isContactStep" class="multi-pet-controls" style="background: yellow; border: 2px solid red; padding: 10px; margin: 10px 0;">
       <button 
         @click="toggleSharedMode" 
         :class="['shared-mode-btn', { active: isSharedMode }]"
+        style="background: blue; color: white; padding: 10px; border: none; cursor: pointer;"
       >
         {{ isSharedMode ? 'Edit pets separately' : 'Use same answers for both pets' }}
       </button>
+    </div>
+    <!-- Debug info for toggle button visibility -->
+    <div v-if="petCount > 1" style="background: #f0f0f0; padding: 10px; margin: 10px 0; font-size: 12px;">
+      <strong>Toggle Debug:</strong><br>
+      petCount: {{ petCount }}<br>
+      currentStep: {{ currentStep }}<br>
+      isContactStep: {{ isContactStep }}<br>
+      shouldShowToggle: {{ petCount > 1 && currentStep >= 2 && !isContactStep }}<br>
+      isSharedMode: {{ isSharedMode }}<br>
+      stepTitle: "{{ currentStepData?.title }}"
     </div>
   </div>
 </template>
@@ -103,8 +114,10 @@ const currentStep = computed(() => questionnaire.currentStep)
 
 // Check if current step is contact information (owner-specific, not pet-specific)
 const isContactStep = computed(() => {
-  return currentStepData.value?.title?.toLowerCase().includes('contact') || 
-         currentStepData.value?.title?.toLowerCase().includes('user')
+  const title = currentStepData.value?.title?.toLowerCase() || ''
+  const isContact = title.includes('contact') || title.includes('user')
+  console.log('🔍 isContactStep check - title:', title, 'isContact:', isContact)
+  return isContact
 })
 
 // Auto-set shared mode based on step and pet count
@@ -114,8 +127,12 @@ const isSharedMode = computed({
     if (petCount.value > 1 && (currentStep.value === 0 || currentStep.value === 1)) {
       return false
     }
-    // For other steps, use the stored value (default to true)
-    return storedSharedMode.value
+    // For other steps with multiple pets, use the stored value (default to true)
+    if (petCount.value > 1) {
+      return storedSharedMode.value
+    }
+    // Single pet - not applicable
+    return false
   },
   set: (value) => {
     storedSharedMode.value = value
@@ -127,9 +144,16 @@ const storedSharedMode = ref(true)
 
 // Filter questions based on conditional logic
 const filteredQuestions = computed(() => {
-  if (!currentStepData.value?.questions) return []
+  console.log('🔍 StepRenderer - currentStepData.value:', currentStepData.value)
   
-  return currentStepData.value.questions.filter((question: Question) => {
+  if (!currentStepData.value?.questions) {
+    console.log('🔍 StepRenderer - no questions found')
+    return []
+  }
+  
+  console.log('🔍 StepRenderer - raw questions:', currentStepData.value.questions)
+  
+  const filtered = currentStepData.value.questions.filter((question: Question) => {
     // If no conditional logic, always show
     if (!question.conditional) return true
     
@@ -151,6 +175,9 @@ const filteredQuestions = computed(() => {
       }
     }
   })
+  
+  console.log('🔍 StepRenderer - filtered questions:', filtered)
+  return filtered
 })
 
 // Check if a question should be shown for a specific pet based on conditional logic
@@ -217,7 +244,9 @@ const questionComponents = {
 }
 
 const getQuestionComponent = (type: string) => {
-  return questionComponents[type as keyof typeof questionComponents] || TextInput
+  const component = questionComponents[type as keyof typeof questionComponents] || TextInput
+  console.log('🎯 Component mapping:', type, '→', component.__name || component.name || 'Unknown')
+  return component
 }
 
 const getQuestionValue = (questionId: string, petId?: string) => {
@@ -230,7 +259,9 @@ const handleQuestionUpdate = (questionId: string, value: any, petId: string) => 
 }
 
 const toggleSharedMode = () => {
+  console.log('🔄 Toggle clicked! Before:', isSharedMode.value)
   isSharedMode.value = !isSharedMode.value
+  console.log('🔄 Toggle clicked! After:', isSharedMode.value)
 }
 
 const getSharedQuestionValue = (questionId: string) => {

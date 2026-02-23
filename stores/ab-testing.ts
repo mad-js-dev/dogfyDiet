@@ -14,13 +14,13 @@ export const useAbTestingStore = defineStore('ab-testing', () => {
 
   // Getters
   const getExperimentGroup = (experimentName: string): ExperimentGroup | null => {
-    // Check if user is already assigned
+    // Process URL parameters first to allow manual override
+    loadFromUrlParams()
+
+    // Check if user is already assigned (after URL processing)
     if (userAssignments.value[experimentName]) {
       return userAssignments.value[experimentName]
     }
-
-    // Process URL parameters first to allow manual override
-    loadFromUrlParams()
 
     const experiment = experiments.value[experimentName]
     if (!experiment || !experiment.enabled) {
