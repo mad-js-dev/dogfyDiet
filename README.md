@@ -10,7 +10,6 @@ This application implements a sophisticated multi-step questionnaire inspired by
 - **A/B Testing**: Dynamic questionnaire flow with Control (9 steps) vs Test (8 steps) groups
 - **Smart Data Persistence**: Robust localStorage with data recovery and session consistency
 - **Step Validation**: Comprehensive validation system preventing navigation without required answers
-- **Responsive Design**: Mobile-first design with seamless desktop experience
 - **Type Safety**: Full TypeScript implementation with strict typing
 - **Clean Architecture**: Separation of concerns with composables, stores, and components
 
@@ -281,66 +280,6 @@ const triggerAutoSave = () => {
 - Session continuity across browser refreshes
 - A/B test group persistence
 
-## 🧪 Testing Strategy
-
-### Unit Testing Coverage
-
-#### **Core Business Logic**
-- Step validation logic ([`composables/useStepValidation.ts`](composables/useStepValidation.ts))
-- A/B testing assignment ([`stores/ab-testing.ts`](stores/ab-testing.ts))
-- Answer management ([`stores/comprehensive-questionnaire.ts`](stores/comprehensive-questionnaire.ts))
-
-#### **Component Testing**
-- Question rendering ([`components/organisms/StepRenderer/`](components/organisms/StepRenderer/))
-- Input components ([`components/atoms/`](components/atoms/))
-- Navigation components
-
-### Integration Testing
-
-#### **A/B Test Scenarios**
-```bash
-# Test control group
-npm run test:ab-control
-
-# Test test group  
-npm run test:ab-test
-
-# Test group switching
-npm run test:ab-switching
-```
-
-#### **Form Completion Scenarios**
-```bash
-# Single pet completion
-npm run test:single-pet
-
-# Multi-pet shared mode
-npm run test:multi-pet-shared
-
-# Multi-pet individual mode
-npm run test:multi-pet-individual
-```
-
-### End-to-End Testing
-
-#### **Playwright Configuration**
-```typescript
-// tests/e2e/questionnaire.spec.ts
-test.describe('Questionnaire Flow', () => {
-  test('Complete questionnaire as single pet', async ({ page }) => {
-    // Navigate through all steps
-    // Verify validation
-    // Check completion
-  })
-  
-  test('A/B test group assignment', async ({ page }) => {
-    // Verify group assignment
-    // Test URL parameter override
-    // Check persistence
-  })
-})
-```
-
 ## 📚 Documentation
 
 ### Component Documentation
@@ -359,26 +298,6 @@ http://localhost:6006
 - Composable return values
 - Store state structure
 
-### API Documentation
-
-#### **Validation API** ([`composables/useStepValidation.ts`](composables/useStepValidation.ts))
-```typescript
-interface StepValidationReturn {
-  canProceed: ComputedRef<boolean>
-  currentStep: ComputedRef<number>
-  answers: ComputedRef<Answer[]>
-  petCount: ComputedRef<number>
-}
-```
-
-#### **A/B Testing API** ([`stores/ab-testing.ts`](stores/ab-testing.ts))
-```typescript
-interface AbTestingStore {
-  getExperimentGroup: (experimentName: string) => ExperimentGroup | null
-  assignToGroup: (experimentName: string) => ExperimentGroup
-  trackEvent: (experimentName: string, event: string, data?: any) => void
-}
-```
 
 ## 🛠️ Development Tools
 
@@ -453,73 +372,10 @@ NUXT_PUBLIC_API_URL=https://your-domain.com
 NUXT_PUBLIC_DEBUG=false
 ```
 
-## 📊 Performance Considerations
-
-### Optimization Strategies
-
-#### **Bundle Optimization**
-- Code splitting by route
-- Component lazy loading
-- Tree shaking for unused dependencies
-
-#### **Runtime Performance**
-- Computed properties for expensive calculations
-- Debounced input handling
-- Efficient state updates
-
-#### **SEO & Accessibility**
-- Meta tags for each step
-- Semantic HTML structure
-- ARIA labels for form controls
-- Keyboard navigation support
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-#### **A/B Test Not Working**
-```javascript
-// Clear localStorage and refresh
-localStorage.clear()
-location.reload()
-```
-
-#### **Validation Failing**
-```javascript
-// Check validation debug logs
-localStorage.setItem('debug_validation', 'true')
-```
-
-#### **State Not Persisting**
-```javascript
-// Check localStorage quota
-console.log('Storage used:', JSON.stringify(localStorage).length)
-```
-
-### Getting Help
-
-1. **Check browser console** for validation errors and debug logs
-2. **Review network requests** in DevTools for API calls
-3. **Verify localStorage contents** for state persistence
-4. **Check A/B test assignment** in console logs
-5. **Review component props** in Vue DevTools
-
-## 🤝 Contributing
-
-### Development Workflow
-
-1. **Fork the repository**
-2. **Create feature branch**: `git checkout -b feature/amazing-feature`
-3. **Follow code style**: Use existing patterns and TypeScript strict mode
-4. **Add tests**: Cover new functionality with unit and integration tests
-5. **Update documentation**: README, component docs, API docs
-6. **Submit PR**: With clear description of changes
-
 ### Code Style Guidelines
 
 - **TypeScript**: Strict mode, explicit types
 - **Vue 3**: Composition API, `<script setup>`
-- **CSS**: Tailwind CSS utility classes
 - **Naming**: PascalCase for components, camelCase for functions
 - **File organization**: Group by feature, not by file type
 
@@ -536,12 +392,11 @@ This project successfully demonstrates:
 ✅ **Vue 3 Composition API** with TypeScript  
 ✅ **Nuxt 3** framework integration  
 ✅ **Multi-step form** with complex validation  
-✅ **A/B testing** mechanism with persistence  
+✅ **A/B testing** mechanism with persistence  ✅ **Responsive design** and accessibility  
+
 ✅ **State management** using Pinia  
 ✅ **Clean architecture** with separation of concerns  
 ✅ **Type safety** throughout the application  
-✅ **Responsive design** and accessibility  
-✅ **Testing strategy** with unit and E2E tests  
 ✅ **Documentation** and deployment guides  
 
 The implementation showcases advanced frontend engineering skills and follows modern best practices for scalable Vue.js applications.
