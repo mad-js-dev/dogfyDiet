@@ -47,11 +47,10 @@
         <!-- Multiple pets mode with toggle - after question -->
       </div>
     </div>
-    <div v-if="petCount > 1 && currentStep >= 2 && !isContactStep" class="multi-pet-controls" style="background: yellow; border: 2px solid red; padding: 10px; margin: 10px 0;">
+    <div v-if="petCount > 1 && currentStep >= 2 && !isContactStep" class="multi-pet-controls mb-6">
       <button 
         @click="toggleSharedMode" 
-        :class="['shared-mode-btn', { active: isSharedMode }]"
-        style="background: blue; color: white; padding: 10px; border: none; cursor: pointer;"
+        :class="['shared-mode-btn button small outline', { active: isSharedMode }]"
       >
         {{ isSharedMode ? 'Edit pets separately' : 'Use same answers for both pets' }}
       </button>
@@ -292,79 +291,269 @@ const getQuestionForPet = (question: Question, petNum: number) => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '~/assets/styles/_variables' as *;
+@use '~/assets/styles/_mixins' as *;
+
 .step-renderer {
-  width: 100%;
+  @include card-base(true, false);
+  padding: $questionnaire-step-padding;
+  margin-bottom: $spacing-6;
+  
+  @include respond-to(md) {
+    padding: $questionnaire-step-padding * 1.5;
+  }
 }
 
-.question-item {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
+.step-header {
+  margin-bottom: $spacing-8;
+  text-align: center;
+  
+  @include respond-to(md) {
+    margin-bottom: $spacing-10;
+  }
 }
 
-.question-item h3 {
-  font-size: 1.3rem;
-  color: #333;
-  margin-bottom: 0.5rem;
+.step-title {
+  @include typography(h2, semibold, primary);
+  color: $neutral-darkest;
+  margin-bottom: $spacing-4;
 }
 
-.question-item p {
-  color: #666;
-  margin-bottom: 1.5rem;
+.step-description {
+  @include typography(body-large, regular, secondary);
+  color: $neutral-medium;
+  max-width: 600px;
+  margin: 0 auto $spacing-6;
 }
 
-.question-input {
-  width: 100%;
+.question-wrapper {
+  margin-bottom: $form-field-gap;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.question-text {
+  @include typography(body, medium, secondary);
+  color: $neutral-dark;
+  margin-bottom: $spacing-3;
+}
+
+.question-help {
+  @include typography(caption, regular, secondary);
+  color: $neutral-medium;
+  margin-top: $spacing-2;
 }
 
 .multi-pet-controls {
-  margin-bottom: 1.5rem;
-  text-align: center;
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-4;
+  
+  @include respond-to(md) {
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
 .shared-mode-btn {
-  background: transparent;
-  border: 2px solid #0066cc;
-  color: #0066cc;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.shared-mode-btn:hover {
-  background-color: rgba(0, 102, 204, 0.1);
-}
-
-.shared-mode-btn.active {
-  background-color: #0066cc;
-  color: white;
-}
-
-.shared-mode-btn.active:hover {
-  background-color: #0052a3;
-}
-
-.pet-section {
-  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 300px;
+  
+  @include respond-to(md) {
+    width: auto;
+  }
+  
+  &.active {
+    @include button-base(sm, primary);
+  }
 }
 
 .pets-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 1rem;
+  gap: $questionnaire-card-gap;
+  
+  @include respond-to(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.pet-section h4 {
-  color: #0066cc;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
+.pet-section {
+  @include card-base(false, true);
+  padding: $spacing-6;
+  background-color: $neutral-lightest;
+  border: 2px solid $neutral-light;
+  border-radius: $radius-lg;
+  transition: all $transition-normal $ease-out;
+  
+  &:hover {
+    border-color: $primary-green-light;
+    background-color: rgba($primary-green, 0.02);
+  }
+  
+  &.active {
+    border-color: $primary-green;
+    background-color: rgba($primary-green, 0.05);
+    box-shadow: $shadow-primary;
+  }
+  
+  h4 {
+    @include typography(h4, semibold, primary);
+    color: $primary-green;
+    margin-bottom: $spacing-3;
+  }
+  
+  .pet-info {
+    @include typography(caption, regular, secondary);
+    color: $neutral-medium;
+    margin-bottom: $spacing-4;
+  }
+}
+
+.shared-mode-section {
+  @include card-base(false, false);
+  padding: $spacing-6;
+  background-color: rgba($primary-green, 0.02);
+  border: 2px solid $primary-green;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-6;
+}
+
+// Component overrides for design system integration
+:deep(.text-input) {
+  @include input-base(md, default);
+}
+
+:deep(.select-answer) {
+  @include input-base(md, default);
+}
+
+:deep(.segmented-answer) {
+  display: flex;
+  gap: $spacing-2;
+  flex-wrap: wrap;
+  
+  button {
+    @include button-base(sm, outline);
+    flex: 1;
+    min-width: 120px;
+    
+    &.active {
+      @include button-base(sm, primary);
+    }
+  }
+}
+
+:deep(.range-slider) {
+  margin: $spacing-4 0;
+  
+  .slider-track {
+    height: 6px;
+    background: $neutral-light;
+    border-radius: $radius-full;
+    position: relative;
+    
+    .slider-fill {
+      height: 100%;
+      background: $primary-green;
+      border-radius: $radius-full;
+      transition: width $transition-normal $ease-out;
+    }
+    
+    .slider-thumb {
+      width: 20px;
+      height: 20px;
+      background: $primary-green;
+      border: 3px solid $neutral-white;
+      border-radius: $radius-full;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      box-shadow: $shadow-md;
+      transition: all $transition-normal $ease-out;
+      
+      &:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: $shadow-lg;
+      }
+    }
+  }
+  
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: $spacing-2;
+    
+    span {
+      @include typography(caption, regular, secondary);
+      color: $neutral-medium;
+    }
+  }
+}
+
+// Responsive adjustments
+@include respond-down-to(mobile) {
+  .pets-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .segmented-answer {
+    flex-direction: column;
+    
+    button {
+      min-width: auto;
+    }
+  }
+}
+
+// Animation utilities
+.question-wrapper {
+  @include slide-up(16px, 0.3s);
+  
+  &:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  
+  &:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  
+  &:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+}
+
+// Focus management
+:deep(.text-input:focus),
+:deep(.select-answer:focus),
+:deep(.segmented-answer button:focus) {
+  @include focus-visible;
+}
+
+// Error states
+:deep(.text-input.error),
+:deep(.select-answer.error) {
+  @include input-base(md, error);
+}
+
+:deep(.form-error) {
+  @include typography(caption, regular, secondary);
+  color: $error;
+  margin-top: $spacing-2;
+}
+
+// Success states
+:deep(.text-input.success),
+:deep(.select-answer.success) {
+  @include input-base(md, success);
+}
+
+:deep(.form-success) {
+  @include typography(caption, regular, secondary);
+  color: $success;
+  margin-top: $spacing-2;
 }
 </style>

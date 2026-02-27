@@ -1,0 +1,532 @@
+// =============================================================================
+// DOGFY DIET DESIGN SYSTEM - TYPOGRAPHY UTILITIES
+// =============================================================================
+
+@use './variables' as *;
+@use './mixins' as *;
+
+// -----------------------------------------------------------------------------
+// TYPOGRAPHY BASE STYLES
+// -----------------------------------------------------------------------------
+
+html {
+  // Set base font size for rem calculations
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  @include typography(body, regular, secondary);
+  color: $neutral-dark;
+  background-color: $neutral-white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// -----------------------------------------------------------------------------
+// HEADING STYLES
+// -----------------------------------------------------------------------------
+
+h1, h2, h3, h4, h5, h6 {
+  @include typography(h3, semibold, primary);
+  color: $neutral-darkest;
+  margin: 0 0 $spacing-4 0;
+  line-height: $line-height-snug;
+}
+
+h1 {
+  @include typography(h1, semibold, primary);
+  margin-bottom: $spacing-6;
+  
+  @include respond-to(md) {
+    @include typography(h1, semibold, primary);
+  }
+}
+
+h2 {
+  @include typography(h2, semibold, primary);
+  margin-bottom: $spacing-5;
+  
+  @include respond-to(md) {
+    @include typography(h2, semibold, primary);
+  }
+}
+
+h3 {
+  @include typography(h3, semibold, primary);
+  margin-bottom: $spacing-4;
+  
+  @include respond-to(md) {
+    @include typography(h3, semibold, primary);
+  }
+}
+
+h4 {
+  @include typography(h4, semibold, primary);
+  margin-bottom: $spacing-3;
+}
+
+h5 {
+  @include typography(h5, medium, primary);
+  margin-bottom: $spacing-3;
+}
+
+h6 {
+  @include typography(h6, medium, secondary);
+  margin-bottom: $spacing-2;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+}
+
+// -----------------------------------------------------------------------------
+// TEXT ELEMENTS
+// -----------------------------------------------------------------------------
+
+p {
+  @include typography(body, regular, secondary);
+  margin: 0 0 $spacing-4 0;
+  color: $neutral-dark;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Lead paragraph for introductory text
+.lead {
+  @include typography(body-large, regular, secondary);
+  color: $neutral-medium;
+  margin-bottom: $spacing-6;
+}
+
+// Small text
+small {
+  @include typography(caption, regular, secondary);
+  color: $neutral-medium;
+}
+
+// Links
+a {
+  color: $primary-green;
+  text-decoration: none;
+  transition: color $transition-fast $ease-out;
+  
+  &:hover {
+    color: $primary-green-dark;
+    text-decoration: underline;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid $primary-green;
+    outline-offset: 2px;
+    border-radius: $radius-sm;
+  }
+}
+
+// Strong and bold
+strong, b {
+  font-weight: $font-weight-semibold;
+  color: $neutral-darkest;
+}
+
+// Emphasis
+em, i {
+  font-style: italic;
+  color: $accent-orange;
+}
+
+// -----------------------------------------------------------------------------
+// LISTS
+// -----------------------------------------------------------------------------
+
+ul, ol {
+  margin: 0 0 $spacing-4 0;
+  padding-left: $spacing-6;
+  
+  li {
+    @include typography(body, regular, secondary);
+    margin-bottom: $spacing-2;
+    color: $neutral-dark;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Unstyled list
+.list-unstyled {
+  list-style: none;
+  padding-left: 0;
+  
+  li {
+    margin-bottom: $spacing-2;
+  }
+}
+
+// Inline list
+.list-inline {
+  list-style: none;
+  padding-left: 0;
+  
+  li {
+    display: inline-block;
+    margin-right: $spacing-4;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// BLOCKQUOTES
+// -----------------------------------------------------------------------------
+
+blockquote {
+  margin: $spacing-6 0;
+  padding: $spacing-4 $spacing-6;
+  border-left: 4px solid $primary-green;
+  background-color: $neutral-lightest;
+  border-radius: $radius-md;
+  
+  p {
+    @include typography(body-large, medium, secondary);
+    color: $neutral-dark;
+    margin: 0;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  cite {
+    @include typography(caption, regular, secondary);
+    color: $neutral-medium;
+    font-style: normal;
+    display: block;
+    margin-top: $spacing-2;
+    
+    &::before {
+      content: '— ';
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// CODE
+// -----------------------------------------------------------------------------
+
+code {
+  @include typography(caption, regular, mono);
+  background-color: $neutral-light;
+  color: $neutral-darkest;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-sm;
+  font-size: 0.875em;
+}
+
+pre {
+  background-color: $neutral-darkest;
+  color: $neutral-white;
+  padding: $spacing-4;
+  border-radius: $radius-md;
+  overflow-x: auto;
+  margin: $spacing-4 0;
+  
+  code {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// UTILITY CLASSES
+// -----------------------------------------------------------------------------
+
+// Font family utilities
+.font-primary {
+  font-family: $font-primary;
+}
+
+.font-secondary {
+  font-family: $font-secondary;
+}
+
+.font-mono {
+  font-family: $font-mono;
+}
+
+// Font size utilities
+.text-xs { @include typography(caption-small); }
+.text-sm { @include typography(caption); }
+.text-base { @include typography(body); }
+.text-lg { @include typography(body-large); }
+.text-xl { @include typography(h5); }
+.text-2xl { @include typography(h4); }
+.text-3xl { @include typography(h3); }
+.text-4xl { @include typography(h2); }
+.text-5xl { @include typography(h1); }
+.text-6xl { @include typography(display-sm); }
+
+// Font weight utilities
+.font-thin { font-weight: $font-weight-thin; }
+.font-light { font-weight: $font-weight-light; }
+.font-normal { font-weight: $font-weight-regular; }
+.font-medium { font-weight: $font-weight-medium; }
+.font-semibold { font-weight: $font-weight-semibold; }
+.font-bold { font-weight: $font-weight-bold; }
+.font-extrabold { font-weight: $font-weight-extrabold; }
+.font-black { font-weight: $font-weight-black; }
+
+// Line height utilities
+.leading-tight { line-height: $line-height-tight; }
+.leading-snug { line-height: $line-height-snug; }
+.leading-normal { line-height: $line-height-normal; }
+.leading-relaxed { line-height: $line-height-relaxed; }
+.leading-loose { line-height: $line-height-loose; }
+
+// Letter spacing utilities
+.tracking-tight { letter-spacing: $letter-spacing-tight; }
+.tracking-normal { letter-spacing: $letter-spacing-normal; }
+.tracking-wide { letter-spacing: $letter-spacing-wide; }
+.tracking-wider { letter-spacing: $letter-spacing-wider; }
+.tracking-widest { letter-spacing: $letter-spacing-widest; }
+
+// Text alignment utilities
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-justify { text-align: justify; }
+
+// Text decoration utilities
+.underline { text-decoration: underline; }
+.line-through { text-decoration: line-through; }
+.no-underline { text-decoration: none; }
+
+// Text transform utilities
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+.normal-case { text-transform: none; }
+
+// Text color utilities
+.text-primary { color: $primary-green; }
+.text-primary-dark { color: $primary-green-dark; }
+.text-primary-light { color: $primary-green-light; }
+.text-accent { color: $accent-orange; }
+.text-accent-dark { color: $accent-orange-dark; }
+.text-accent-light { color: $accent-yellow; }
+
+.text-darkest { color: $neutral-darkest; }
+.text-dark { color: $neutral-dark; }
+.text-medium { color: $neutral-medium; }
+.text-light { color: $neutral-light; }
+.text-white { color: $neutral-white; }
+
+.text-success { color: $success; }
+.text-error { color: $error; }
+.text-warning { color: $warning; }
+.text-info { color: $info; }
+
+// Text overflow utilities
+.truncate {
+  @include text-truncate;
+}
+
+.line-clamp-2 {
+  @include text-truncate-lines(2);
+}
+
+.line-clamp-3 {
+  @include text-truncate-lines(3);
+}
+
+.line-clamp-4 {
+  @include text-truncate-lines(4);
+}
+
+// -----------------------------------------------------------------------------
+// QUESTIONNAIRE SPECIFIC TYPOGRAPHY
+// -----------------------------------------------------------------------------
+
+// Questionnaire headings
+.questionnaire-title {
+  @include typography(h2, semibold, primary);
+  color: $neutral-darkest;
+  margin-bottom: $spacing-6;
+  text-align: center;
+  
+  @include respond-to(md) {
+    @include typography(h1, semibold, primary);
+  }
+}
+
+.questionnaire-subtitle {
+  @include typography(body-large, regular, secondary);
+  color: $neutral-medium;
+  margin-bottom: $spacing-8;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Step headings
+.step-title {
+  @include typography(h3, semibold, primary);
+  color: $neutral-darkest;
+  margin-bottom: $spacing-4;
+}
+
+.step-description {
+  @include typography(body, regular, secondary);
+  color: $neutral-medium;
+  margin-bottom: $spacing-6;
+}
+
+// Question text
+.question-text {
+  @include typography(body, medium, secondary);
+  color: $neutral-dark;
+  margin-bottom: $spacing-3;
+}
+
+.question-help {
+  @include typography(caption, regular, secondary);
+  color: $neutral-medium;
+  margin-top: $spacing-2;
+}
+
+// Form labels
+.form-label {
+  @include typography(body-small, medium, secondary);
+  color: $neutral-dark;
+  margin-bottom: $spacing-2;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+}
+
+.form-error {
+  @include typography(caption, regular, secondary);
+  color: $error;
+  margin-top: $spacing-2;
+}
+
+.form-success {
+  @include typography(caption, regular, secondary);
+  color: $success;
+  margin-top: $spacing-2;
+}
+
+// Progress indicator
+.progress-text {
+  @include typography(caption, medium, secondary);
+  color: $neutral-medium;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+}
+
+// Pet sections
+.pet-name {
+  @include typography(h4, semibold, primary);
+  color: $primary-green;
+  margin-bottom: $spacing-3;
+}
+
+.pet-section-title {
+  @include typography(h5, medium, secondary);
+  color: $neutral-dark;
+  margin-bottom: $spacing-4;
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+// Button text
+.button-text {
+  @include typography(body, medium, secondary);
+}
+
+.button-text-large {
+  @include typography(body-large, medium, secondary);
+}
+
+.button-text-small {
+  @include typography(body-small, medium, secondary);
+}
+
+// -----------------------------------------------------------------------------
+// RESPONSIVE TYPOGRAPHY
+// -----------------------------------------------------------------------------
+
+// Mobile-first responsive typography
+@include respond-to(md) {
+  .text-responsive-sm {
+    @include typography(body-large);
+  }
+  
+  .text-responsive-md {
+    @include typography(h4);
+  }
+  
+  .text-responsive-lg {
+    @include typography(h3);
+  }
+  
+  .text-responsive-xl {
+    @include typography(h2);
+  }
+}
+
+@include respond-to(lg) {
+  .text-responsive-sm {
+    @include typography(h4);
+  }
+  
+  .text-responsive-md {
+    @include typography(h3);
+  }
+  
+  .text-responsive-lg {
+    @include typography(h2);
+  }
+  
+  .text-responsive-xl {
+    @include typography(h1);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// PRINT STYLES
+// -----------------------------------------------------------------------------
+
+@media print {
+  body {
+    @include typography(body, regular, secondary);
+    color: $neutral-darkest;
+    background: $neutral-white;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: $neutral-darkest;
+    page-break-after: avoid;
+  }
+  
+  p, li {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  a {
+    color: $primary-green;
+    text-decoration: underline;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}

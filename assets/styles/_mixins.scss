@@ -1,0 +1,552 @@
+// =============================================================================
+// DOGFY DIET DESIGN SYSTEM - MIXINS
+// =============================================================================
+
+@use './variables' as *;
+
+// -----------------------------------------------------------------------------
+// RESPONSIVE BREAKPOINTS
+// -----------------------------------------------------------------------------
+
+/// Mobile-first responsive breakpoint mixin
+/// @param {String} $breakpoint - Breakpoint name (sm, md, lg, xl, 2xl)
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) { @content; }
+  }
+  @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) { @content; }
+  }
+  @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) { @content; }
+  }
+  @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) { @content; }
+  }
+  @else if $breakpoint == 2xl {
+    @media (min-width: $breakpoint-2xl) { @content; }
+  }
+  @else {
+    @warn "Breakpoint '#{$breakpoint}' does not exist. Available: sm, md, lg, xl, 2xl";
+  }
+}
+
+/// Desktop-first responsive breakpoint mixin
+/// @param {String} $breakpoint - Breakpoint name (mobile, tablet, desktop)
+@mixin respond-down-to($breakpoint) {
+  @if $breakpoint == mobile {
+    @media (max-width: $mobile-max) { @content; }
+  }
+  @else if $breakpoint == tablet {
+    @media (max-width: $tablet-max) { @content; }
+  }
+  @else if $breakpoint == desktop {
+    @media (max-width: $desktop-max) { @content; }
+  }
+  @else {
+    @warn "Breakpoint '#{$breakpoint}' does not exist. Available: mobile, tablet, desktop";
+  }
+}
+
+/// Range between two breakpoints
+/// @param {String} $min - Minimum breakpoint
+/// @param {String} $max - Maximum breakpoint
+@mixin respond-between($min, $max) {
+  @if $min == sm and $max == md {
+    @media (min-width: $breakpoint-sm) and (max-width: $tablet-max) { @content; }
+  }
+  @else if $min == md and $max == lg {
+    @media (min-width: $breakpoint-md) and (max-width: $desktop-max) { @content; }
+  }
+  @else {
+    @warn "Breakpoint range '#{$min}-#{$max}' not defined";
+  }
+}
+
+// -----------------------------------------------------------------------------
+// TYPOGRAPHY MIXINS
+// -----------------------------------------------------------------------------
+
+/// Responsive typography mixin
+/// @param {String} $size - Font size class (display, h1, h2, h3, h4, h5, h6, body, caption)
+/// @param {String} $weight - Font weight (light, regular, medium, semibold, bold, black)
+/// @param {String} $family - Font family (primary, secondary, mono)
+@mixin typography($size: body, $weight: regular, $family: secondary) {
+  // Font family
+  @if $family == primary {
+    font-family: $font-primary;
+  }
+  @else if $family == mono {
+    font-family: $font-mono;
+  }
+  @else {
+    font-family: $font-secondary;
+  }
+
+  // Font size
+  @if $size == display-xl {
+    font-size: $font-size-display-xl;
+    line-height: $line-height-tight;
+  }
+  @else if $size == display-lg {
+    font-size: $font-size-display-lg;
+    line-height: $line-height-tight;
+  }
+  @else if $size == display-md {
+    font-size: $font-size-display-md;
+    line-height: $line-height-tight;
+  }
+  @else if $size == display-sm {
+    font-size: $font-size-display-sm;
+    line-height: $line-height-tight;
+  }
+  @else if $size == h1 {
+    font-size: $font-size-h1;
+    line-height: $line-height-tight;
+  }
+  @else if $size == h2 {
+    font-size: $font-size-h2;
+    line-height: $line-height-snug;
+  }
+  @else if $size == h3 {
+    font-size: $font-size-h3;
+    line-height: $line-height-snug;
+  }
+  @else if $size == h4 {
+    font-size: $font-size-h4;
+    line-height: $line-height-normal;
+  }
+  @else if $size == h5 {
+    font-size: $font-size-h5;
+    line-height: $line-height-normal;
+  }
+  @else if $size == h6 {
+    font-size: $font-size-h6;
+    line-height: $line-height-normal;
+  }
+  @else if $size == body-large {
+    font-size: $font-size-body-large;
+    line-height: $line-height-normal;
+  }
+  @else if $size == body {
+    font-size: $font-size-body;
+    line-height: $line-height-normal;
+  }
+  @else if $size == body-small {
+    font-size: $font-size-body-small;
+    line-height: $line-height-normal;
+  }
+  @else if $size == caption {
+    font-size: $font-size-caption;
+    line-height: $line-height-normal;
+  }
+  @else if $size == caption-small {
+    font-size: $font-size-caption-small;
+    line-height: $line-height-normal;
+  }
+  @else {
+    font-size: $font-size-body;
+    line-height: $line-height-normal;
+  }
+
+  // Font weight
+  @if $weight == thin {
+    font-weight: $font-weight-thin;
+  }
+  @else if $weight == light {
+    font-weight: $font-weight-light;
+  }
+  @else if $weight == medium {
+    font-weight: $font-weight-medium;
+  }
+  @else if $weight == semibold {
+    font-weight: $font-weight-semibold;
+  }
+  @else if $weight == bold {
+    font-weight: $font-weight-bold;
+  }
+  @else if $weight == extrabold {
+    font-weight: $font-weight-extrabold;
+  }
+  @else if $weight == black {
+    font-weight: $font-weight-black;
+  }
+  @else {
+    font-weight: $font-weight-regular;
+  }
+
+  // Responsive font sizes
+  @include respond-to(md) {
+    @if $size == h1 {
+      font-size: $font-size-h1 * 1.1;
+    }
+    @else if $size == h2 {
+      font-size: $font-size-h2 * 1.1;
+    }
+    @else if $size == h3 {
+      font-size: $font-size-h3 * 1.1;
+    }
+  }
+
+  @include respond-to(lg) {
+    @if $size == h1 {
+      font-size: $font-size-h1 * 1.2;
+    }
+    @else if $size == h2 {
+      font-size: $font-size-h2 * 1.2;
+    }
+    @else if $size == h3 {
+      font-size: $font-size-h3 * 1.2;
+    }
+  }
+}
+
+/// Truncate text with ellipsis
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/// Truncate text to multiple lines
+/// @param {Number} $lines - Number of lines to show
+@mixin text-truncate-lines($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// -----------------------------------------------------------------------------
+// LAYOUT MIXINS
+// -----------------------------------------------------------------------------
+
+/// Flexbox centering
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/// Flexbox column centering
+@mixin flex-center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/// Flexbox space between
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/// Absolute centering
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/// Fixed aspect ratio
+/// @param {Number} $ratio - Aspect ratio (e.g., 16/9)
+@mixin aspect-ratio($ratio: 1/1) {
+  position: relative;
+  
+  &::before {
+    content: '';
+    display: block;
+    padding-bottom: (1 / $ratio) * 100%;
+    width: 100%;
+  }
+  
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// VISIBILITY MIXINS
+// -----------------------------------------------------------------------------
+
+/// Visually hide but keep accessible
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/// Focus visible styles
+@mixin focus-visible {
+  &:focus-visible {
+    outline: 2px solid $primary-green;
+    outline-offset: 2px;
+  }
+}
+
+/// Hover and focus states
+@mixin interactive-states {
+  &:hover {
+    @content;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid $primary-green;
+    outline-offset: 2px;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// BUTTON MIXINS
+// -----------------------------------------------------------------------------
+
+/// Button base styles
+/// @param {String} $size - Button size (sm, md, lg)
+/// @param {String} $variant - Button variant (primary, secondary, outline, ghost)
+@mixin button-base($size: md, $variant: primary) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  border: none;
+  border-radius: $radius-full;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all $transition-normal $ease-out;
+  font-weight: $font-weight-medium;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  // Size variants
+  @if $size == sm {
+    height: $button-height-sm;
+    padding: 0 $spacing-4;
+    @include typography(body-small, medium);
+  }
+  @else if $size == md {
+    height: $button-height-md;
+    padding: 0 $spacing-6;
+    @include typography(body, medium);
+  }
+  @else if $size == lg {
+    height: $button-height-lg;
+    padding: 0 $spacing-8;
+    @include typography(body-large, medium);
+  }
+
+  // Color variants
+  @if $variant == primary {
+    background-color: $primary-green;
+    color: $neutral-white;
+    
+    &:hover:not(:disabled) {
+      background-color: $primary-green-dark;
+      transform: translateY(-1px);
+      box-shadow: $shadow-primary;
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: $shadow-md;
+    }
+  }
+  @else if $variant == secondary {
+    background-color: $accent-orange;
+    color: $neutral-white;
+    
+    &:hover:not(:disabled) {
+      background-color: $accent-orange-dark;
+      transform: translateY(-1px);
+      box-shadow: $shadow-accent;
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: $shadow-md;
+    }
+  }
+  @else if $variant == outline {
+    background-color: transparent;
+    color: $primary-green;
+    border: 2px solid $primary-green;
+    
+    &:hover:not(:disabled) {
+      background-color: $primary-green;
+      color: $neutral-white;
+      transform: translateY(-1px);
+      box-shadow: $shadow-primary;
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: $shadow-md;
+    }
+  }
+  @else if $variant == ghost {
+    background-color: transparent;
+    color: $primary-green;
+    
+    &:hover:not(:disabled) {
+      background-color: rgba($primary-green, 0.1);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  @include focus-visible;
+}
+
+// -----------------------------------------------------------------------------
+// FORM MIXINS
+// -----------------------------------------------------------------------------
+
+/// Input field base styles
+/// @param {String} $size - Input size (sm, md, lg)
+/// @param {String} $state - Input state (default, error, success, warning)
+@mixin input-base($size: md, $state: default) {
+  width: 100%;
+  border: 2px solid $neutral-light;
+  border-radius: $radius-md;
+  background-color: $neutral-white;
+  transition: all $transition-normal $ease-out;
+  @include typography(body, regular);
+
+  // Size variants
+  @if $size == sm {
+    height: $input-height-sm;
+    padding: 0 $spacing-3;
+  }
+  @else if $size == md {
+    height: $input-height-md;
+    padding: 0 $spacing-4;
+  }
+  @else if $size == lg {
+    height: $input-height-lg;
+    padding: 0 $spacing-5;
+  }
+
+  // State variants
+  @if $state == error {
+    border-color: $error;
+    box-shadow: 0 0 0 3px rgba($error, 0.1);
+  }
+  @else if $state == success {
+    border-color: $success;
+    box-shadow: 0 0 0 3px rgba($success, 0.1);
+  }
+  @else if $state == warning {
+    border-color: $warning;
+    box-shadow: 0 0 0 3px rgba($warning, 0.1);
+  }
+  @else {
+    &:focus {
+      outline: none;
+      border-color: $primary-green;
+      box-shadow: 0 0 0 3px rgba($primary-green, 0.1);
+    }
+  }
+
+  &::placeholder {
+    color: $neutral-medium;
+  }
+
+  &:disabled {
+    background-color: $neutral-lightest;
+    color: $neutral-medium;
+    cursor: not-allowed;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// CARD MIXINS
+// -----------------------------------------------------------------------------
+
+/// Card base styles
+/// @param {Boolean} $elevated - Whether card should have elevation
+/// @param {Boolean} $bordered - Whether card should have border
+@mixin card-base($elevated: true, $bordered: false) {
+  background-color: $neutral-white;
+  border-radius: $card-border-radius;
+  padding: $card-padding;
+  transition: all $transition-normal $ease-out;
+
+  @if $elevated {
+    box-shadow: $shadow-md;
+    
+    &:hover {
+      box-shadow: $shadow-lg;
+      transform: translateY(-2px);
+    }
+  }
+
+  @if $bordered {
+    border: 1px solid $neutral-light;
+  }
+
+  @if not $elevated and not $bordered {
+    box-shadow: $shadow-sm;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// ANIMATION MIXINS
+// -----------------------------------------------------------------------------
+
+/// Fade in animation
+@mixin fade-in($duration: $transition-normal) {
+  opacity: 0;
+  animation: fadeIn $duration $ease-out forwards;
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/// Slide up animation
+@mixin slide-up($distance: 20px, $duration: $transition-normal) {
+  opacity: 0;
+  transform: translateY($distance);
+  animation: slideUp $duration $ease-out forwards;
+
+  @keyframes slideUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/// Scale in animation
+@mixin scale-in($scale: 0.9, $duration: $transition-normal) {
+  opacity: 0;
+  transform: scale($scale);
+  animation: scaleIn $duration $ease-out forwards;
+
+  @keyframes scaleIn {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}

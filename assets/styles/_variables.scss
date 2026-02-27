@@ -1,0 +1,399 @@
+// =============================================================================
+// DOGFY DIET DESIGN SYSTEM
+// =============================================================================
+// Design tokens extracted from https://dogfydiet.com/
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// COLOR PALETTE
+// -----------------------------------------------------------------------------
+
+// Primary Brand Colors
+$primary-green: #00B67A !default;
+$primary-green-dark: #1BB57C !default;
+$primary-green-light: #0aaa46 !default;
+$primary-green-darkest: #005128 !default;
+
+// Accent Colors
+$accent-orange: #EF6948 !default;
+$accent-orange-light: #ffca4e !default;
+$accent-orange-dark: #ed6948 !default;
+$accent-yellow: #ffc800 !default;
+
+// Neutral Palette
+$neutral-darkest: #1a1a1a !default;
+$neutral-dark: #3d3d3d !default;
+$neutral-medium: #767676 !default;
+$neutral-light: #e8e8e8 !default;
+$neutral-lighter: #d6d6d6 !default;
+$neutral-lightest: #f7f7f7 !default;
+$neutral-white: #ffffff !default;
+$neutral-off-white: #f9f8f7 !default;
+
+// Semantic Colors
+$success: #0aaa46 !default;
+$success-dark: #005128 !default;
+$error: #d80003 !default;
+$error-light: #fef1f1 !default;
+$warning: #ffc800 !default;
+$info: #1976D2 !default;
+
+// -----------------------------------------------------------------------------
+// MATERIAL DESIGN 3 COLOR ROLES
+// -----------------------------------------------------------------------------
+// Based on https://m3.material.io/styles/color/roles
+// M3 uses semantic color roles that map to tonal palettes
+
+// Light Theme Color Roles
+$md3-light-primary: $primary-green !default;
+$md3-light-on-primary: $neutral-white !default;
+$md3-light-primary-container: lighten($primary-green, 40%) !default;
+$md3-light-on-primary-container: darken($primary-green, 20%) !default;
+
+$md3-light-secondary: $accent-orange !default;
+$md3-light-on-secondary: $neutral-white !default;
+$md3-light-secondary-container: lighten($accent-orange, 40%) !default;
+$md3-light-on-secondary-container: darken($accent-orange, 20%) !default;
+
+$md3-light-tertiary: $info !default;
+$md3-light-on-tertiary: $neutral-white !default;
+$md3-light-tertiary-container: lighten($info, 40%) !default;
+$md3-light-on-tertiary-container: darken($info, 20%) !default;
+
+$md3-light-surface: $neutral-white !default;
+$md3-light-on-surface: $neutral-darkest !default;
+$md3-light-surface-variant: $neutral-lightest !default;
+$md3-light-on-surface-variant: $neutral-medium !default;
+
+$md3-light-outline: $neutral-lighter !default;
+$md3-light-outline-variant: $neutral-light !default;
+
+$md3-light-scrim: rgba($neutral-darkest, 0.32) !default;
+$md3-light-shadow: rgba($neutral-darkest, 0.12) !default;
+
+// Dark Theme Color Roles
+$md3-dark-primary: lighten($primary-green, 20%) !default;
+$md3-dark-on-primary: darken($primary-green, 40%) !default;
+$md3-dark-primary-container: darken($primary-green, 30%) !default;
+$md3-dark-on-primary-container: lighten($primary-green, 30%) !default;
+
+$md3-dark-secondary: lighten($accent-orange, 20%) !default;
+$md3-dark-on-secondary: darken($accent-orange, 40%) !default;
+$md3-dark-secondary-container: darken($accent-orange, 30%) !default;
+$md3-dark-on-secondary-container: lighten($accent-orange, 30%) !default;
+
+$md3-dark-tertiary: lighten($info, 20%) !default;
+$md3-dark-on-tertiary: darken($info, 40%) !default;
+$md3-dark-tertiary-container: darken($info, 30%) !default;
+$md3-dark-on-tertiary-container: lighten($info, 30%) !default;
+
+$md3-dark-surface: $neutral-darkest !default;
+$md3-dark-on-surface: $neutral-lightest !default;
+$md3-dark-surface-variant: $neutral-dark !default;
+$md3-dark-on-surface-variant: $neutral-lighter !default;
+
+$md3-dark-outline: $neutral-medium !default;
+$md3-dark-outline-variant: $neutral-dark !default;
+
+$md3-dark-scrim: rgba($neutral-darkest, 0.32) !default;
+$md3-dark-shadow: rgba($neutral-darkest, 0.12) !default;
+
+// Semantic M3 Color Roles
+$md3-surface-bright: $neutral-white !default;
+$md3-surface-dim: darken($neutral-darkest, 10%) !default;
+$md3-surface-container: $neutral-lightest !default;
+$md3-surface-container-high: $neutral-lighter !default;
+$md3-surface-container-highest: $neutral-light !default;
+
+$md3-inverse-primary: $neutral-darkest !default;
+$md3-inverse-on-primary: $neutral-white !default;
+$md3-inverse-surface: $neutral-darkest !default;
+$md3-inverse-on-surface: $neutral-white !default;
+
+// Error Colors (M3 Standard)
+$md3-error: $error !default;
+$md3-error-container: $error-light !default;
+$md3-on-error: $neutral-white !default;
+$md3-on-error-container: darken($error, 20%) !default;
+
+// -----------------------------------------------------------------------------
+// M3 COLOR ROLE MAPPINGS (Legacy Support)
+// -----------------------------------------------------------------------------
+// Map existing variables to M3 roles for backward compatibility
+
+// Primary Mappings
+$md3-primary: $md3-light-primary !default;
+$md3-on-primary: $md3-light-on-primary !default;
+$md3-primary-container: $md3-light-primary-container !default;
+$md3-on-primary-container: $md3-light-on-primary-container !default;
+
+// Secondary Mappings
+$md3-secondary: $md3-light-secondary !default;
+$md3-on-secondary: $md3-light-on-secondary !default;
+$md3-secondary-container: $md3-light-secondary-container !default;
+$md3-on-secondary-container: $md3-light-on-secondary-container !default;
+
+// Surface Mappings
+$md3-surface: $md3-light-surface !default;
+$md3-on-surface: $md3-light-on-surface !default;
+$md3-surface-variant: $md3-light-surface-variant !default;
+$md3-on-surface-variant: $md3-light-on-surface-variant !default;
+$md3-outline: $md3-light-outline !default;
+
+// -----------------------------------------------------------------------------
+// THEME SWITCHING HELPERS
+// -----------------------------------------------------------------------------
+
+// Function to get current theme colors
+@function get-md3-color($role, $theme: 'light') {
+  @if $theme == 'dark' {
+    @return map-get((
+      'primary': $md3-dark-primary,
+      'on-primary': $md3-dark-on-primary,
+      'primary-container': $md3-dark-primary-container,
+      'on-primary-container': $md3-dark-on-primary-container,
+      'secondary': $md3-dark-secondary,
+      'on-secondary': $md3-dark-on-secondary,
+      'secondary-container': $md3-dark-secondary-container,
+      'on-secondary-container': $md3-dark-on-secondary-container,
+      'tertiary': $md3-dark-tertiary,
+      'on-tertiary': $md3-dark-on-tertiary,
+      'tertiary-container': $md3-dark-tertiary-container,
+      'on-tertiary-container': $md3-dark-on-tertiary-container,
+      'surface': $md3-dark-surface,
+      'on-surface': $md3-dark-on-surface,
+      'surface-variant': $md3-dark-surface-variant,
+      'on-surface-variant': $md3-dark-on-surface-variant,
+      'outline': $md3-dark-outline,
+      'outline-variant': $md3-dark-outline-variant,
+      'error': $md3-error,
+      'error-container': $md3-error-container,
+      'on-error': $md3-on-error,
+      'on-error-container': $md3-on-error-container
+    ), $role);
+  } @else {
+    @return map-get((
+      'primary': $md3-light-primary,
+      'on-primary': $md3-light-on-primary,
+      'primary-container': $md3-light-primary-container,
+      'on-primary-container': $md3-light-on-primary-container,
+      'secondary': $md3-light-secondary,
+      'on-secondary': $md3-light-on-secondary,
+      'secondary-container': $md3-light-secondary-container,
+      'on-secondary-container': $md3-light-on-secondary-container,
+      'tertiary': $md3-light-tertiary,
+      'on-tertiary': $md3-light-on-tertiary,
+      'tertiary-container': $md3-light-tertiary-container,
+      'on-tertiary-container': $md3-light-on-tertiary-container,
+      'surface': $md3-light-surface,
+      'on-surface': $md3-light-on-surface,
+      'surface-variant': $md3-light-surface-variant,
+      'on-surface-variant': $md3-light-on-surface-variant,
+      'outline': $md3-light-outline,
+      'outline-variant': $md3-light-outline-variant,
+      'error': $md3-error,
+      'error-container': $md3-error-container,
+      'on-error': $md3-on-error,
+      'on-error-container': $md3-on-error-container
+    ), $role);
+  }
+}
+
+// Mixin for applying M3 colors with theme support
+@mixin md3-theme($theme: 'light') {
+  color: get-md3-color('on-surface', $theme);
+  background-color: get-md3-color('surface', $theme);
+}
+
+// -----------------------------------------------------------------------------
+// SOCIAL MEDIA COLORS
+// -----------------------------------------------------------------------------
+$whatsapp: #25d366 !default;
+$facebook: #1877F2 !default;
+$instagram: linear-gradient(45deg, #F09433 0%, #E6683C 25%, #DC2743 50%, #CC2366 75%, #BC1888 100%) !default;
+
+// -----------------------------------------------------------------------------
+// TYPOGRAPHY
+// -----------------------------------------------------------------------------
+
+// Font Families
+$font-primary: 'PP Agrandir', sans-serif !default;
+$font-secondary: 'Manrope', sans-serif !default;
+$font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace !default;
+
+// Font Sizes - Display Scale
+$font-size-display-xl: 74px !default;
+$font-size-display-lg: 60px !default;
+$font-size-display-md: 50px !default;
+$font-size-display-sm: 40px !default;
+
+// Font Sizes - Heading Scale
+$font-size-h1: 47.31px !default;
+$font-size-h2: 31.53px !default;
+$font-size-h3: 24px !default;
+$font-size-h4: 21px !default;
+$font-size-h5: 18px !default;
+$font-size-h6: 16px !default;
+
+// Font Sizes - Body Scale
+$font-size-body-large: 18px !default;
+$font-size-body: 16px !default;
+$font-size-body-small: 14px !default;
+
+// Font Sizes - Small Scale
+$font-size-caption: 12px !default;
+$font-size-caption-small: 11.43px !default;
+$font-size-tiny: 10px !default;
+
+// Font Weights
+$font-weight-thin: 100 !default;
+$font-weight-light: 300 !default;
+$font-weight-regular: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold: 700 !default;
+$font-weight-extrabold: 800 !default;
+$font-weight-black: 900 !default;
+
+// Line Heights
+$line-height-tight: 1.1 !default;
+$line-height-snug: 1.2 !default;
+$line-height-normal: 1.45 !default;
+$line-height-relaxed: 1.6 !default;
+$line-height-loose: 1.8 !default;
+
+// Letter Spacing
+$letter-spacing-tight: -0.05em !default;
+$letter-spacing-normal: 0 !default;
+$letter-spacing-wide: 0.025em !default;
+$letter-spacing-wider: 0.05em !default;
+$letter-spacing-widest: 0.1em !default;
+
+// -----------------------------------------------------------------------------
+// SPACING
+// -----------------------------------------------------------------------------
+
+// Base spacing unit (8px grid system)
+$spacing-unit: 8px !default;
+
+// Spacing Scale
+$spacing-0: 0 !default;
+$spacing-1: 4px !default;    // 0.5 * unit
+$spacing-2: 8px !default;    // 1 * unit
+$spacing-3: 12px !default;   // 1.5 * unit
+$spacing-4: 16px !default;   // 2 * unit
+$spacing-5: 20px !default;   // 2.5 * unit
+$spacing-6: 24px !default;   // 3 * unit
+$spacing-8: 32px !default;   // 4 * unit
+$spacing-10: 40px !default;  // 5 * unit
+$spacing-12: 48px !default;  // 6 * unit
+$spacing-16: 64px !default;  // 8 * unit
+$spacing-20: 80px !default;  // 10 * unit
+$spacing-24: 96px !default;  // 12 * unit
+$spacing-32: 128px !default; // 16 * unit
+
+// Semantic Spacing
+$spacing-xs: $spacing-1 !default;
+$spacing-sm: $spacing-2 !default;
+$spacing-md: $spacing-4 !default;
+$spacing-lg: $spacing-6 !default;
+$spacing-xl: $spacing-8 !default;
+$spacing-2xl: $spacing-12 !default;
+$spacing-3xl: $spacing-16 !default;
+$spacing-4xl: $spacing-20 !default;
+
+// -----------------------------------------------------------------------------
+// BORDER RADIUS
+// -----------------------------------------------------------------------------
+
+$radius-none: 0 !default;
+$radius-sm: 4px !default;
+$radius-md: 8px !default;
+$radius-lg: 12px !default;
+$radius-xl: 16px !default;
+$radius-2xl: 24px !default;
+$radius-3xl: 32px !default;
+$radius-full: 9999px !default;
+
+// -----------------------------------------------------------------------------
+// SHADOWS
+// -----------------------------------------------------------------------------
+
+$shadow-sm: 0 1px 2px 0 rgba($neutral-darkest, 0.05) !default;
+$shadow-md: 0 4px 6px -1px rgba($neutral-darkest, 0.1), 0 2px 4px -1px rgba($neutral-darkest, 0.06) !default;
+$shadow-lg: 0 10px 15px -3px rgba($neutral-darkest, 0.1), 0 4px 6px -2px rgba($neutral-darkest, 0.05) !default;
+$shadow-xl: 0 20px 25px -5px rgba($neutral-darkest, 0.1), 0 10px 10px -5px rgba($neutral-darkest, 0.04) !default;
+$shadow-2xl: 0 25px 50px -12px rgba($neutral-darkest, 0.25) !default;
+
+// Colored shadows
+$shadow-primary: 0 4px 14px 0 rgba($primary-green, 0.15) !default;
+$shadow-accent: 0 4px 14px 0 rgba($accent-orange, 0.15) !default;
+$shadow-error: 0 4px 14px 0 rgba($error, 0.15) !default;
+
+// -----------------------------------------------------------------------------
+// TRANSITIONS & ANIMATIONS
+// -----------------------------------------------------------------------------
+
+$transition-fast: 0.15s ease !default;
+$transition-normal: 0.2s ease !default;
+$transition-slow: 0.3s ease !default;
+$transition-slower: 0.5s ease !default;
+
+// Easing functions
+$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1) !default;
+$ease-out: cubic-bezier(0, 0, 0.2, 1) !default;
+$ease-in: cubic-bezier(0.4, 0, 1, 1) !default;
+
+// -----------------------------------------------------------------------------
+// BREAKPOINTS
+// -----------------------------------------------------------------------------
+
+$breakpoint-sm: 640px !default;
+$breakpoint-md: 768px !default;
+$breakpoint-lg: 1024px !default;
+$breakpoint-xl: 1280px !default;
+$breakpoint-2xl: 1536px !default;
+
+// Mobile-first breakpoint mixins
+$mobile-max: $breakpoint-sm - 1px !default;
+$tablet-max: $breakpoint-md - 1px !default;
+$desktop-max: $breakpoint-lg - 1px !default;
+
+// -----------------------------------------------------------------------------
+// Z-INDEX SCALE
+// -----------------------------------------------------------------------------
+
+$z-index-dropdown: 1000 !default;
+$z-index-sticky: 1020 !default;
+$z-index-fixed: 1030 !default;
+$z-index-modal-backdrop: 1040 !default;
+$z-index-modal: 1050 !default;
+$z-index-popover: 1060 !default;
+$z-index-tooltip: 1070 !default;
+
+// -----------------------------------------------------------------------------
+// COMPONENT SPECIFIC
+// -----------------------------------------------------------------------------
+
+// Button heights
+$button-height-sm: 40px !default;
+$button-height-md: 48px !default;
+$button-height-lg: 56px !default;
+
+// Input heights
+$input-height-sm: 40px !default;
+$input-height-md: 48px !default;
+$input-height-lg: 56px !default;
+
+// Card spacing
+$card-padding: $spacing-6 !default;
+$card-border-radius: $radius-lg !default;
+
+// Form field spacing
+$form-field-gap: $spacing-4 !default;
+$form-label-gap: $spacing-2 !default;
+
+// Questionnaire specific
+$questionnaire-step-padding: $spacing-8 !default;
+$questionnaire-card-gap: $spacing-6 !default;
+$questionnaire-progress-height: 4px !default;

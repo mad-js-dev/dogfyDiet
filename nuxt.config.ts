@@ -7,8 +7,21 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/fonts',
     '@nuxt/test-utils',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxtjs/tailwindcss'
   ],
+  // SASS configuration
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler',
+          additionalData: '@use "~/assets/styles/_variables.scss" as *;',
+          silenceDeprecations: ['legacy-js-api']
+        }
+      }
+    }
+  },
   // GitHub Pages configuration
   app: {
     baseURL: '/dogfyDiet/',
