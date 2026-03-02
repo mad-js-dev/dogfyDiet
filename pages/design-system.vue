@@ -595,6 +595,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, nextTick } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -613,6 +614,10 @@ useHead({
 
 // Reactive state for active section
 const activeSection = ref('primary')
+
+// Animation state variables
+let lettersToHide: NodeListOf<Element> | null = null
+let tl: gsap.core.Timeline | null = null
 
 // Pantone sections data
 const pantoneSections = [
@@ -660,7 +665,7 @@ const initScrollNavigation = () => {
 
 // Update active navigation indicator
 const updateActiveNav = () => {
-  const navItems = document.querySelectorAll('.pantone-nav-item')
+  const navItems = document.querySelectorAll('.pantone-nav-item') as NodeListOf<HTMLElement>
   navItems.forEach(item => {
     if (item.dataset.section === activeSection.value) {
       gsap.to(item, {
@@ -669,6 +674,12 @@ const updateActiveNav = () => {
         duration: 0.3,
         ease: 'power2.out'
       })
+      tl?.to(lettersToHide || [], {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: 'power2.out'
+      }, '+=1')
     } else {
       gsap.to(item, {
         scale: 1,
@@ -681,7 +692,7 @@ const updateActiveNav = () => {
 }
 
 // Scroll to section
-const scrollToSection = (sectionId) => {
+const scrollToSection = (sectionId: string) => {
   const section = document.getElementById(`${sectionId}-section`)
   if (section) {
     gsap.to(window, {
@@ -703,11 +714,12 @@ const initScrollAnimations = () => {
 
 // Letter hiding animation for questionnaire title
 const initLetterHidingAnimation = () => {
-  const titleElement = document.querySelector('.questionnaire-title')
-  if (!titleElement) return
+  try {
+    const titleElement = document.querySelector('.questionnaire-title')
+    if (!titleElement) return
   
   // Get the original text
-  const originalText = titleElement.textContent
+  const originalText = titleElement.textContent || ''
   const words = originalText.split(' ')
   
   // Create spans for each letter while preserving word structure
@@ -728,123 +740,122 @@ const initLetterHidingAnimation = () => {
   titleElement.innerHTML = htmlContent
   
   // Get all letters except first letters of each word
-  const lettersToHide = titleElement.querySelectorAll('.letter:not(.first-letter)')
+  lettersToHide = titleElement.querySelectorAll('.letter:not(.first-letter)')
   
   // Get all spaces
   const spaces = titleElement.querySelectorAll('.space')
   
-  // Store original widths and ensure proper alignment
-  lettersToHide.forEach(letter => {
+  // Store original widths and ensure proper alignment (only for animatable letters)
+  if (lettersToHide) {
+    lettersToHide.forEach(letter => {
+    // Only apply styles to letters that will be animated (not first letters)
     // Force a reflow to get accurate width
-    letter.style.display = 'inline-block'
-    letter.style.whiteSpace = 'nowrap'
-    letter.style.verticalAlign = 'baseline'
-    letter.style.lineHeight = 'inherit'
+    const letterElement = letter as HTMLElement
+    letterElement.style.display = 'inline-block'
+    letterElement.style.whiteSpace = 'nowrap'
+    letterElement.style.verticalAlign = 'baseline'
     
     // Get the computed width
     const computedStyle = window.getComputedStyle(letter)
-    const width = parseFloat(computedStyle.width)
+    const width: number = parseFloat(computedStyle.width) || 0
     
     // Store original width
-    letter.dataset.originalWidth = `${width}px`
-    letter.style.width = `${width}px`
-    letter.style.overflow = 'hidden'
+    letterElement.dataset.originalWidth = `${width}px`
+    letterElement.style.width = `${width}px`
+    letterElement.style.overflow = 'hidden'
     
     // Ensure no extra margins that could cause alignment issues
-    letter.style.margin = '0'
-    letter.style.padding = '0'
-    letter.style.border = 'none'
-    letter.style.outline = 'none'
+    letterElement.style.margin = '0'
+    letterElement.style.padding = '0'
+    letterElement.style.border = 'none'
+    letterElement.style.outline = 'none'
   })
+  }
   
-  // Also ensure first letters have proper alignment
+  // Ensure first letters are never touched by JavaScript
   const firstLetters = titleElement.querySelectorAll('.letter.first-letter')
   firstLetters.forEach(letter => {
-    letter.style.display = 'inline-block'
-    letter.style.verticalAlign = 'baseline'
-    letter.style.lineHeight = 'inherit'
-    letter.style.margin = '0'
-    letter.style.padding = '0'
-    letter.style.border = 'none'
-    letter.style.outline = 'none'
+    // Remove any inline styles that might have been applied
+    const letterElement = letter as HTMLElement
+    letterElement.style.display = ''
+    letterElement.style.whiteSpace = ''
+    letterElement.style.verticalAlign = 'top' //First letter missalignment fix
+    letterElement.style.width = ''
+    letterElement.style.margin = ''
+    letterElement.style.padding = ''
+    letterElement.style.border = ''
+    letterElement.style.outline = ''
   })
+  
+  // First letters don't need JavaScript manipulation - CSS handles alignment
+  // The CSS already has proper styling for all letters including first letters
   
   // Store original widths for spaces
   spaces.forEach(space => {
-    space.style.display = 'inline-block'
-    space.style.whiteSpace = 'pre'
+    const spaceElement = space as HTMLElement
+    spaceElement.style.display = 'inline-block'
+    spaceElement.style.whiteSpace = 'pre'
     const computedStyle = window.getComputedStyle(space)
-    const width = parseFloat(computedStyle.width)
-    space.dataset.originalWidth = `${width}px`
-    space.style.width = `${width}px`
-    space.style.overflow = 'hidden'
-    space.style.margin = '0'
-    space.style.padding = '0'
+    const spaceWidth = parseFloat(computedStyle.width)
+    spaceElement.dataset.originalWidth = `${spaceWidth}px`
+    spaceElement.style.width = `${spaceWidth}px`
+    spaceElement.style.overflow = 'hidden'
+    spaceElement.style.margin = '0'
+    spaceElement.style.padding = '0'
   })
   
-  // Create timeline for the animation
-  const tl = gsap.timeline({ repeat: -1, repeatDelay: 2 })
+  // Create simple GSAP timeline like CodePen example
+  tl = gsap.timeline({ paused: true })
   
-  // Group letters by word for word-by-word animation
-  const wordsToAnimate = {}
-  lettersToHide.forEach(letter => {
-    const wordIndex = letter.dataset.word
-    if (!wordsToAnimate[wordIndex]) {
-      wordsToAnimate[wordIndex] = []
-    }
-    wordsToAnimate[wordIndex].push(letter)
-  })
-  
-  // First tween: Animate each word from last letter to first (excluding first letter)
-  Object.keys(wordsToAnimate).reverse().forEach((wordIndex, wordAnimIndex) => {
-    const letters = wordsToAnimate[wordIndex]
-    
-    // Animate letters from last to first (but keep first letter)
-    letters.reverse().forEach((letter, letterIndex) => {
+  // Animate letters word by word
+  if (lettersToHide) {
+    lettersToHide.forEach((letter, index) => {
       tl.to(letter, {
-        width: 0,
         opacity: 0,
-        paddingLeft: 0,
-        paddingRight: 0,
-        marginLeft: 0,
-        marginRight: 0,
+        scale: 0,
         duration: 0.3,
         ease: 'power2.inOut'
-      }, `word${wordAnimIndex}+=${letterIndex * 0.1}`)
+      }, index * 0.1)
     })
-  })
+  }
   
-  // Second tween: Remove all spaces at the same time after letters are done
+  // Animate spaces
   tl.to(spaces, {
-    width: 0,
     opacity: 0,
     paddingLeft: 0,
     paddingRight: 0,
-    marginLeft: 0,
-    marginRight: 0,
     duration: 0.4,
     ease: 'bounce.out'
-  }, '+=0.2')
+  })
   
-  // At the same time as spaces, fade out subtitle
+  // Animate subtitle
   tl.to('.questionnaire-subtitle', {
     opacity: 0,
     duration: 0.4,
     ease: 'power2.inOut'
-  }, '-=0.6') 
-  // After all animations, animate header padding and h1 size
+  })
+  
+  // Animate header
   tl.to('.sticky-header', {
     paddingTop: '3vh',
     paddingBottom: '3vh',
     duration: 0.8,
     ease: 'power2.inOut'
-  }, '+=0.5')
+  })
   
+  // Animate title
   tl.to('.questionnaire-title', {
     fontSize: '2rem',
     duration: 0.8,
     ease: 'power2.inOut'
-  }, '-=0.8')
+  })
+  
+  // Play animation
+  tl.play()
+  
+  } catch (error) {
+    console.error('Animation error:', error)
+  }
 }
 </script>
 
@@ -870,16 +881,31 @@ const initLetterHidingAnimation = () => {
   .word-wrapper {
     display: inline-block;
     vertical-align: baseline;
+    line-height: inherit;
   }
   
   .letter {
     display: inline-block;
     transform-origin: center center;
-    transition: transform 0.3s ease;
     white-space: nowrap;
     vertical-align: baseline;
     text-align: left;
     line-height: inherit;
+    max-height: 1em;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    // Performance optimizations
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  .letter.first-letter {
+    // Special handling for first letters to prevent alignment shift
+    display: inline;
+    max-height: none;
   }
   
   .space {
@@ -887,6 +913,10 @@ const initLetterHidingAnimation = () => {
     white-space: pre;
     vertical-align: baseline;
     line-height: inherit;
+    // Performance optimizations
+    will-change: transform, opacity, width;
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 }
 
