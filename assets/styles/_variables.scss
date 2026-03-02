@@ -4,6 +4,8 @@
 // Design tokens extracted from https://dogfydiet.com/
 // =============================================================================
 
+@use "sass:color";
+
 // -----------------------------------------------------------------------------
 // COLOR PALETTE
 // -----------------------------------------------------------------------------
@@ -47,18 +49,18 @@ $info: #1976D2 !default;
 // Light Theme Color Roles
 $md3-light-primary: $primary-green !default;
 $md3-light-on-primary: $neutral-white !default;
-$md3-light-primary-container: lighten($primary-green, 40%) !default;
-$md3-light-on-primary-container: darken($primary-green, 20%) !default;
+$md3-light-primary-container: color.adjust($primary-green, $lightness: 40%) !default;
+$md3-light-on-primary-container: color.adjust($primary-green, $lightness: -20%) !default;
 
 $md3-light-secondary: $accent-orange !default;
 $md3-light-on-secondary: $neutral-white !default;
-$md3-light-secondary-container: lighten($accent-orange, 40%) !default;
-$md3-light-on-secondary-container: darken($accent-orange, 20%) !default;
+$md3-light-secondary-container: color.adjust($accent-orange, $lightness: 40%) !default;
+$md3-light-on-secondary-container: color.adjust($accent-orange, $lightness: -20%) !default;
 
 $md3-light-tertiary: $info !default;
 $md3-light-on-tertiary: $neutral-white !default;
-$md3-light-tertiary-container: lighten($info, 40%) !default;
-$md3-light-on-tertiary-container: darken($info, 20%) !default;
+$md3-light-tertiary-container: color.adjust($info, $lightness: 40%) !default;
+$md3-light-on-tertiary-container: color.adjust($info, $lightness: -20%) !default;
 
 $md3-light-surface: $neutral-white !default;
 $md3-light-on-surface: $neutral-darkest !default;
@@ -72,20 +74,20 @@ $md3-light-scrim: rgba($neutral-darkest, 0.32) !default;
 $md3-light-shadow: rgba($neutral-darkest, 0.12) !default;
 
 // Dark Theme Color Roles
-$md3-dark-primary: lighten($primary-green, 20%) !default;
-$md3-dark-on-primary: darken($primary-green, 40%) !default;
-$md3-dark-primary-container: darken($primary-green, 30%) !default;
-$md3-dark-on-primary-container: lighten($primary-green, 30%) !default;
+$md3-dark-primary: color.adjust($primary-green, $lightness: 20%) !default;
+$md3-dark-on-primary: color.adjust($primary-green, $lightness: -40%) !default;
+$md3-dark-primary-container: color.adjust($primary-green, $lightness: -30%) !default;
+$md3-dark-on-primary-container: color.adjust($primary-green, $lightness: 30%) !default;
 
-$md3-dark-secondary: lighten($accent-orange, 20%) !default;
-$md3-dark-on-secondary: darken($accent-orange, 40%) !default;
-$md3-dark-secondary-container: darken($accent-orange, 30%) !default;
-$md3-dark-on-secondary-container: lighten($accent-orange, 30%) !default;
+$md3-dark-secondary: color.adjust($accent-orange, $lightness: 20%) !default;
+$md3-dark-on-secondary: color.adjust($accent-orange, $lightness: -40%) !default;
+$md3-dark-secondary-container: color.adjust($accent-orange, $lightness: -30%) !default;
+$md3-dark-on-secondary-container: color.adjust($accent-orange, $lightness: 30%) !default;
 
-$md3-dark-tertiary: lighten($info, 20%) !default;
-$md3-dark-on-tertiary: darken($info, 40%) !default;
-$md3-dark-tertiary-container: darken($info, 30%) !default;
-$md3-dark-on-tertiary-container: lighten($info, 30%) !default;
+$md3-dark-tertiary: color.adjust($info, $lightness: 20%) !default;
+$md3-dark-on-tertiary: color.adjust($info, $lightness: -40%) !default;
+$md3-dark-tertiary-container: color.adjust($info, $lightness: -30%) !default;
+$md3-dark-on-tertiary-container: color.adjust($info, $lightness: 30%) !default;
 
 $md3-dark-surface: $neutral-darkest !default;
 $md3-dark-on-surface: $neutral-lightest !default;
@@ -100,7 +102,7 @@ $md3-dark-shadow: rgba($neutral-darkest, 0.12) !default;
 
 // Semantic M3 Color Roles
 $md3-surface-bright: $neutral-white !default;
-$md3-surface-dim: darken($neutral-darkest, 10%) !default;
+$md3-surface-dim: color.adjust($neutral-darkest, $lightness: -10%) !default;
 $md3-surface-container: $neutral-lightest !default;
 $md3-surface-container-high: $neutral-lighter !default;
 $md3-surface-container-highest: $neutral-light !default;
@@ -114,7 +116,7 @@ $md3-inverse-on-surface: $neutral-white !default;
 $md3-error: $error !default;
 $md3-error-container: $error-light !default;
 $md3-on-error: $neutral-white !default;
-$md3-on-error-container: darken($error, 20%) !default;
+$md3-on-error-container: color.adjust($error, $lightness: -20%) !default;
 
 // -----------------------------------------------------------------------------
 // M3 COLOR ROLE MAPPINGS (Legacy Support)
