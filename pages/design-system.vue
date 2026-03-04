@@ -1731,317 +1731,214 @@
         </div>
       </section>
 
-      <!-- Typography -->
-      <section class="mb-16 px-6 py-8">
-        <h2 class="step-title">Typography</h2>
+      <!-- Elevation Tokens -->
+      <section class="mb-16">
+        <h2 class="step-title">Elevation Tokens</h2>
         
-        <div class="space-y-6">
-          <div>
-            <h1 class="text-6xl font-black font-primary text-primary">Display Heading</h1>
-            <p class="text-sm text-medium mt-2">Display XL - 74px - PP Agrandir - Black</p>
-          </div>
-          
-          <div>
-            <h1 class="text-5xl font-bold font-primary text-darkest">Main Heading</h1>
-            <p class="text-sm text-medium mt-2">H1 - 47.31px - PP Agrandir - Bold</p>
-          </div>
-          
-          <div>
-            <h2 class="text-3xl font-semibold font-primary text-darkest">Section Heading</h2>
-            <p class="text-sm text-medium mt-2">H2 - 31.53px - PP Agrandir - Semibold</p>
-          </div>
-          
-          <div>
-            <h3 class="text-2xl font-medium font-primary text-darkest">Subsection Heading</h3>
-            <p class="text-sm text-medium mt-2">H3 - 24px - PP Agrandir - Medium</p>
-          </div>
-          
-          <div>
-            <p class="text-lg font-normal font-secondary text-dark">Body text large for important content that needs more emphasis.</p>
-            <p class="text-sm text-medium mt-2">Body Large - 18px - Manrope - Regular</p>
-          </div>
-          
-          <div>
-            <p class="text-base font-normal font-secondary text-dark">Regular body text for general content and descriptions. This is the most common text size used throughout the application.</p>
-            <p class="text-sm text-medium mt-2">Body - 16px - Manrope - Regular</p>
-          </div>
-          
-          <div>
-            <p class="text-sm font-normal font-secondary text-dark">Small text for captions, labels, and secondary information.</p>
-            <p class="text-sm text-medium mt-2">Body Small - 14px - Manrope - Regular</p>
-          </div>
-          
-          <div>
-            <p class="text-xs font-normal font-secondary text-dark">Caption text for metadata, timestamps, and minimal UI elements.</p>
-            <p class="text-sm text-medium mt-2">Caption - 12px - Manrope - Regular</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Buttons -->
-      <section class="mb-16 px-6 py-8">
-        <h2 class="step-title">Buttons</h2>
-        
-        <div class="space-y-6">
-          <!-- Primary Buttons -->
-          <div class="flex flex-wrap gap-4">
-            <button class="button">Primary Button</button>
-            <button class="button secondary">Secondary Button</button>
-            <button class="button outline">Outline Button</button>
-            <button class="button ghost">Ghost Button</button>
-          </div>
-          
-          <!-- Button Sizes -->
-          <div class="flex flex-wrap items-center gap-4">
-            <button class="button small">Small Button</button>
-            <button class="button">Medium Button</button>
-            <button class="button large">Large Button</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Form Elements -->
-      <section class="mb-16 px-6 py-8">
-        <h2 class="step-title">Form Elements</h2>
-        
-        <div class="max-w-md space-y-6">
-          <div>
-            <label class="form-label">Text Input</label>
-            <input 
-              type="text" 
-              class="w-full p-3 border-2 border-light rounded-lg focus:border-primary focus:outline-none transition-colors"
-              placeholder="Enter your text..."
-            />
-          </div>
-          
-          <div>
-            <label class="form-label">Select Input</label>
-            <select class="w-full p-3 border-2 border-light rounded-lg focus:border-primary focus:outline-none transition-colors">
-              <option>Choose an option</option>
-              <option>Option 1</option>
-              <option>Option 2</option>
-            </select>
-          </div>
-          
-          <div>
-            <label class="form-label">Error State</label>
-            <input 
-              type="text" 
-              class="w-full p-3 border-2 border-error rounded-lg focus:border-error focus:outline-none transition-colors"
-              placeholder="This field has an error"
-            />
-            <p class="form-error">This field is required</p>
-          </div>
-          
-          <div>
-            <label class="form-label">Success State</label>
-            <input 
-              type="text" 
-              class="w-full p-3 border-2 border-success rounded-lg focus:border-success focus:outline-none transition-colors"
-              placeholder="This field is valid"
-            />
-            <p class="form-success">This field looks good!</p>
-          </div>
-          
-          <div>
-            <label class="form-label">Warning State</label>
-            <input 
-              type="text" 
-              class="w-full p-3 border-2 border-warning rounded-lg focus:border-warning focus:outline-none transition-colors"
-              placeholder="This field needs attention"
-            />
-            <p class="form-warning">Please review this field</p>
-          </div>
-          
-          <div>
-            <label class="form-label">Info State</label>
-            <input 
-              type="text" 
-              class="w-full p-3 border-2 border-info rounded-lg focus:border-info focus:outline-none transition-colors"
-              placeholder="Information field"
-            />
-            <p class="form-info">Additional information</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Cards -->
-      <section class="mb-16 px-6 py-8">
-        <h2 class="step-title">Cards</h2>
-        
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="card">
-            <h3 class="text-xl font-semibold text-primary mb-3">Standard Card</h3>
-            <p class="text-medium mb-4">This is a standard card with elevation and default styling.</p>
-            <button class="button small">Learn More</button>
-          </div>
-          
-          <div class="card bordered">
-            <h3 class="text-xl font-semibold text-accent mb-3">Bordered Card</h3>
-            <p class="text-medium mb-4">This card has a border instead of elevation for a different visual style.</p>
-            <button class="button small outline">Learn More</button>
-          </div>
-          
-          <div class="card flat">
-            <h3 class="text-xl font-semibold text-dark mb-3">Flat Card</h3>
-            <p class="text-medium mb-4">This card has minimal styling with just a subtle shadow.</p>
-            <button class="button small ghost">Learn More</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Utility Classes -->
-      <section class="mb-16 px-6 py-8">
-        <h2 class="step-title">Utility Classes</h2>
-        
-        <div class="space-y-8">
-          <!-- Spacing -->
-          <div>
-            <h3 class="text-xl font-semibold text-dark mb-4">Spacing</h3>
-            <div class="flex flex-wrap gap-4">
-              <div class="p-4 bg-light rounded">p-4</div>
-              <div class="p-6 bg-light rounded">p-6</div>
-              <div class="p-8 bg-light rounded">p-8</div>
-              <div class="px-6 py-4 bg-light rounded">px-6 py-4</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="p-6 bg-lightest rounded-lg border border-light">
+            <div class="space-y-1">
+              <h4 class="text-sm font-semibold text-dark mb-1">Level 1</h4>
+              <p class="text-xs text-medium mb-1">Lowest Elevation</p>
+              <p class="text-xs text-medium opacity-75">Minimum depth</p>
             </div>
-          </div>
-          
-          <!-- Border Radius -->
-          <div>
-            <h3 class="text-xl font-semibold text-dark mb-4">Border Radius</h3>
-            <div class="flex flex-wrap gap-4 items-center">
-              <div class="w-16 h-16 bg-primary rounded-none"></div>
-              <div class="w-16 h-16 bg-primary rounded-sm"></div>
-              <div class="w-16 h-16 bg-primary rounded"></div>
-              <div class="w-16 h-16 bg-primary rounded-lg"></div>
-              <div class="w-16 h-16 bg-primary rounded-xl"></div>
-              <div class="w-16 h-16 bg-primary rounded-full"></div>
-            </div>
-          </div>
-          
-          <!-- Shadows -->
-          <div>
-            <h3 class="text-xl font-semibold text-dark mb-4">Shadows</h3>
-            <div class="flex flex-wrap gap-4">
-              <div class="w-24 h-24 bg-white rounded-lg shadow-sm"></div>
-              <div class="w-24 h-24 bg-white rounded-lg shadow"></div>
-              <div class="w-24 h-24 bg-white rounded-lg shadow-lg"></div>
-              <div class="w-24 h-24 bg-white rounded-lg shadow-xl"></div>
-              <div class="w-24 h-24 bg-white rounded-lg shadow-primary"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Responsive Design -->
-      <section class="mb-16 px-6 py-8">
-        <h2 class="step-title">Responsive Design</h2>
-        
-        <div class="space-y-6">
-          <div class="p-6 bg-lightest rounded-lg">
-            <h3 class="text-responsive-sm font-semibold text-primary mb-2">Responsive Typography</h3>
-            <p class="text-responsive-md text-medium">This text scales responsively across different screen sizes.</p>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="p-6 bg-primary text-white rounded-lg">
-              <h4 class="font-semibold mb-2">Mobile First</h4>
-              <p class="text-sm opacity-90">1 column on mobile</p>
-            </div>
-            <div class="p-6 bg-accent text-white rounded-lg">
-              <h4 class="font-semibold mb-2">Tablet</h4>
-              <p class="text-sm opacity-90">2 columns on tablet</p>
-            </div>
-            <div class="p-6 bg-primary-dark text-white rounded-lg">
-              <h4 class="font-semibold mb-2">Desktop</h4>
-              <p class="text-sm opacity-90">3 columns on desktop</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Animation Examples -->
-      <section class="mb-16 px-6 py-8">
-        <h2 class="step-title">Animations</h2>
-        
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="text-center">
-            <div class="w-full h-32 bg-primary rounded-lg mb-4 hover-lift cursor-pointer flex items-center justify-center">
-              <span class="text-white font-medium">Hover Lift</span>
-            </div>
-            <p class="text-sm text-medium">Hover over this card</p>
-          </div>
-          
-          <div class="text-center">
-            <div class="w-full h-32 bg-accent rounded-lg mb-4 hover-scale cursor-pointer flex items-center justify-center">
-              <span class="text-white font-medium">Hover Scale</span>
-            </div>
-            <p class="text-sm text-medium">Hover over this card</p>
-          </div>
-          
-          <div class="text-center">
-            <div class="w-full h-32 bg-primary-dark rounded-lg mb-4 fade-in flex items-center justify-center">
-              <span class="text-white font-medium">Fade In</span>
-            </div>
-            <p class="text-sm text-medium">Animated on load</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Questionnaire Components -->
-      <section class="mb-16 px-6 py-8">
-        <h2 class="step-title">Questionnaire Components</h2>
-        
-        <div class="questionnaire-card">
-          <!-- Progress Bar -->
-          <div class="progress-bar mb-8">
-            <div class="progress-fill" style="width: 65%;"></div>
-          </div>
-          
-          <!-- Header Section -->
-          <header class="sticky top-0 z-50 bg-white border-b border-gray-200" style="min-height: 40vh; padding: 5vh 0px;">
-            <div class="container mx-auto px-4">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h1 class="text-4xl font-bold text-gray-900 mb-2">Design System</h1>
-                  <p class="text-lg text-gray-600">Complete color palette and design tokens for Dogfy Diet</p>
-                </div>
-                <div class="flex items-center space-x-4">
-                  <div class="text-right">
-                    <p class="text-sm text-gray-500">Last Updated</p>
-                    <p class="text-sm font-medium text-gray-900">November 2024</p>
-                  </div>
-                </div>
+            <div class="space-y-1">
+              <div class="text-xs font-mono bg-lightest p-1 rounded">
+                <div class="font-semibold">$elevation-1</div>
               </div>
-            </div>
-          </header>
-          
-          <!-- Step Title -->
-          <h3 class="step-title">Pet Information</h3>
-          <p class="step-description">Tell us about your pets to create personalized nutrition plans.</p>
-          
-          <!-- Pet Sections -->
-          <div class="space-y-4 mb-6">
-            <div class="pet-section active">
-              <h4 class="pet-name">Max</h4>
-              <p class="text-medium text-sm">Golden Retriever • 3 years old</p>
-            </div>
-            
-            <div class="pet-section">
-              <h4 class="pet-name">Luna</h4>
-              <p class="text-medium text-sm">Siamese Cat • 2 years old</p>
+              <div class="text-xs text-medium">Backgrounds, cards</div>
             </div>
           </div>
-          
-          <!-- Shared Mode Toggle -->
-          <button class="shared-mode-toggle">
-            Use same answers for both pets
-          </button>
-          
-          <!-- Navigation -->
-          <div class="step-navigation">
-            <button class="button ghost">Previous</button>
-            <button class="button">Next Step</button>
+          <div class="p-6 bg-lightest rounded-lg border border-light">
+            <div class="space-y-1">
+              <h4 class="text-sm font-semibold text-dark mb-1">Level 2</h4>
+              <p class="text-xs text-medium mb-1">Moderate Elevation</p>
+              <p class="text-xs text-medium opacity-75">Standard depth</p>
+            </div>
+            <div class="space-y-1">
+              <div class="text-xs font-mono bg-lightest p-1 rounded">
+                <div class="font-semibold">$elevation-2</div>
+              </div>
+              <div class="text-xs text-medium">Menus, tooltips</div>
+            </div>
+          </div>
+          <div class="p-6 bg-lightest rounded-lg border border-light">
+            <div class="space-y-1">
+              <h4 class="text-sm font-semibold text-dark mb-1">Level 3</h4>
+              <p class="text-xs text-medium mb-1">Higher Elevation</p>
+              <p class="text-xs text-medium opacity-75">Increased depth</p>
+            </div>
+            <div class="space-y-1">
+              <div class="text-xs font-mono bg-lightest p-1 rounded">
+                <div class="font-semibold">$elevation-3</div>
+              </div>
+              <div class="text-xs text-medium">Dialogs, popovers</div>
+            </div>
+          </div>
+          <div class="p-6 bg-lightest rounded-lg border border-light">
+            <div class="space-y-1">
+              <h4 class="text-sm font-semibold text-dark mb-1">Level 4</h4>
+              <p class="text-xs text-medium mb-1">High Elevation</p>
+              <p class="text-xs text-medium opacity-75">Maximum depth</p>
+            </div>
+            <div class="space-y-1">
+              <div class="text-xs font-mono bg-lightest p-1 rounded">
+                <div class="font-semibold">$elevation-4</div>
+              </div>
+              <div class="text-xs text-medium">Modals, notifications</div>
+            </div>
+          </div>
+          <div class="p-6 bg-lightest rounded-lg border border-light">
+            <div class="space-y-1">
+              <h4 class="text-sm font-semibold text-dark mb-1">Level 5</h4>
+              <p class="text-xs text-medium mb-1">Highest Elevation</p>
+              <p class="text-xs text-medium opacity-75">Maximum depth</p>
+            </div>
+            <div class="space-y-1">
+              <div class="text-xs font-mono bg-lightest p-1 rounded">
+                <div class="font-semibold">$elevation-5</div>
+              </div>
+              <div class="text-xs text-medium">Menus, tooltips</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Semantic Elevation Tokens -->
+      <section class="mb-8">
+        <h3 class="text-xl font-semibold text-dark mb-6">Semantic Elevation Tokens</h3>
+        <p class="text-medium mb-4">Use semantic tokens for component-specific elevation to maintain consistency across your application.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="p-4 bg-lightest rounded-lg border border-light">
+            <div class="font-semibold text-primary mb-1">$elevation-card</div>
+            <div class="text-sm text-medium mb-2">Maps to $elevation-1</div>
+            <div class="text-xs text-medium">Use for content cards</div>
+          </div>
+          <div class="p-4 bg-lightest rounded-lg border border-light">
+            <div class="font-semibold text-primary mb-1">$elevation-button</div>
+            <div class="text-sm text-medium mb-2">Maps to $elevation-2</div>
+            <div class="text-xs text-medium">Use for raised buttons</div>
+          </div>
+          <div class="p-4 bg-lightest rounded-lg border border-light">
+            <div class="font-semibold text-primary mb-1">$elevation-fab</div>
+            <div class="text-sm text-medium mb-2">Maps to $elevation-3</div>
+            <div class="text-xs text-medium">Use for floating action buttons</div>
+          </div>
+          <div class="p-4 bg-lightest rounded-lg border border-light">
+            <div class="font-semibold text-primary mb-1">$elevation-modal</div>
+            <div class="text-sm text-medium mb-2">Maps to $elevation-4</div>
+            <div class="text-xs text-medium">Use for modal dialogs</div>
+          </div>
+          <div class="p-4 bg-lightest rounded-lg border border-light">
+            <div class="font-semibold text-primary mb-1">$elevation-menu</div>
+            <div class="text-sm text-medium mb-2">Maps to $elevation-5</div>
+            <div class="text-xs text-medium">Use for dropdown menus</div>
+          </div>
+          <div class="p-4 bg-lightest rounded-lg border border-light">
+            <div class="font-semibold text-primary mb-1">$elevation-app-bar</div>
+            <div class="text-sm text-medium mb-2">Maps to $elevation-2</div>
+            <div class="text-xs text-medium">Use for top navigation</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Z-index Layering -->
+      <section class="mb-8">
+        <h3 class="text-xl font-semibold text-dark mb-6">Z-index Layering</h3>
+        <p class="text-medium mb-4">Proper z-index values ensure elements stack correctly and maintain accessibility.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-3">
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Base</span>
+              <span class="text-sm font-mono text-medium">$z-index-base (0)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Raised</span>
+              <span class="text-sm font-mono text-medium">$z-index-raised (10)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Dropdown</span>
+              <span class="text-sm font-mono text-medium">$z-index-dropdown (100)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Sticky</span>
+              <span class="text-sm font-mono text-medium">$z-index-sticky (200)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Fixed</span>
+              <span class="text-sm font-mono text-medium">$z-index-fixed (300)</span>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Modal Backdrop</span>
+              <span class="text-sm font-mono text-medium">$z-index-modal-backdrop (400)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Modal</span>
+              <span class="text-sm font-mono text-medium">$z-index-modal (500)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Popover</span>
+              <span class="text-sm font-mono text-medium">$z-index-popover (600)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Tooltip</span>
+              <span class="text-sm font-mono text-medium">$z-index-tooltip (700)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+              <span class="font-medium text-dark">Notification</span>
+              <span class="text-sm font-mono text-medium">$z-index-notification (800)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage Guidelines -->
+      <section class="mb-8">
+        <h3 class="text-xl font-semibold text-dark mb-6">Usage Guidelines</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-primary mb-3">Best Practices</h4>
+            <ul class="space-y-2 text-medium">
+              <li class="flex items-start gap-2">
+                <span class="text-primary">•</span>
+                <span>Use semantic tokens for consistency across components</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-primary">•</span>
+                <span>Keep elevation levels minimal (0-5 scale)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-primary">•</span>
+                <span>Combine elevation with proper z-index values</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-primary">•</span>
+                <span>Consider accessibility when using elevation</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold text-primary mb-3">Accessibility</h4>
+            <ul class="space-y-2 text-medium">
+              <li class="flex items-start gap-2">
+                <span class="text-primary">•</span>
+                <span>Don't rely solely on elevation for hierarchy</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-primary">•</span>
+                <span>Use color and typography to supplement depth</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-primary">•</span>
+                <span>Ensure sufficient contrast for elevated elements</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-primary">•</span>
+                <span>Test elevation in both light and dark themes</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -2255,7 +2152,7 @@ onMounted(() => {
 
 .pantone-section {
   position: relative;
-  background: #f8f8f8;
+  background: white;
   border-radius: 0; // Remove border radius for full screen
   overflow: hidden;
   border: 1px solid #e0e0e0;
