@@ -3,7 +3,7 @@
     <div>
 
       <!-- Header -->
-      <header class="sticky-header">
+      <header class="header">
         <div class="container mx-auto px-4">
           <div class="text-left">
             <h1 class="questionnaire-title">Dogfy Diet Design System</h1>
@@ -14,18 +14,19 @@
         </div>
       </header>
 
-      <!-- Color Roles -->
+      <!-- Color Palette -->
       <section class="mb-16">
-        <h2 class="step-title">Color Roles</h2>
+        <h2 class="step-title">Color Palette</h2>
         
         <div class="pantone-sections-container">
-          <!-- Primary Colors -->
-          <div id="primary-section" class="pantone-section">
-            <div class="pantone-tab primary">Primary</div>
+          
+          <!-- Brand Colors -->
+          <div id="brand-section" class="pantone-section">
+            <div class="pantone-tab brand">Brand</div>
             <div class="pantone-content">
               <div class="pantone-header">
-                <h3 class="pantone-title">Primary Colors</h3>
-                <p class="pantone-subtitle">Core brand identity colors</p>
+                <h3 class="pantone-title">Brand Colors</h3>
+                <p class="pantone-subtitle">Core brand identity and supporting colors</p>
               </div>
               <div class="pantone-swatches-container">
                 <div class="flex flex-nowrap gap-4 overflow-x-auto pb-4">
@@ -39,61 +40,11 @@
                   </div>
                   
                   <div class="pantone-swatch-page">
-                    <div class="pantone-color-display" style="background-color: #1BB57C;"></div>
-                    <div class="pantone-color-info">
-                      <p class="pantone-color-name" style="color: #1a1a1a;">Primary Dark</p>
-                      <p class="pantone-color-code" style="color: #1a1a1a;">#1BB57C</p>
-                      <p class="pantone-color-formula" style="color: #1a1a1a;">$primary-green-dark</p>
-                    </div>
-                  </div>
-                  
-                  <div class="pantone-swatch-page">
-                    <div class="pantone-color-display" style="background-color: #0aaa46;"></div>
-                    <div class="pantone-color-info">
-                      <p class="pantone-color-name" style="color: #1a1a1a;">Primary Light</p>
-                      <p class="pantone-color-code" style="color: #1a1a1a;">#0aaa46</p>
-                      <p class="pantone-color-formula" style="color: #1a1a1a;">$primary-green-light</p>
-                    </div>
-                  </div>
-                  
-                  <div class="pantone-swatch-page">
-                    <div class="pantone-color-display" style="background-color: #005128;"></div>
-                    <div class="pantone-color-info">
-                      <p class="pantone-color-name" style="color: #1a1a1a;">Primary Darkest</p>
-                      <p class="pantone-color-code" style="color: #1a1a1a;">#005128</p>
-                      <p class="pantone-color-formula" style="color: #1a1a1a;">$primary-green-darkest</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Accent Colors -->
-          <div id="accent-section" class="pantone-section">
-            <div class="pantone-tab accent">Accent</div>
-            <div class="pantone-content">
-              <div class="pantone-header">
-                <h3 class="pantone-title">Accent Colors</h3>
-                <p class="pantone-subtitle">Supporting brand colors</p>
-              </div>
-              <div class="pantone-swatches-container">
-                <div class="flex flex-nowrap gap-4 overflow-x-auto pb-4">
-                  <div class="pantone-swatch-page">
                     <div class="pantone-color-display" style="background-color: #EF6948;"></div>
                     <div class="pantone-color-info">
                       <p class="pantone-color-name" style="color: #1a1a1a;">Accent Orange</p>
                       <p class="pantone-color-code" style="color: #1a1a1a;">#EF6948</p>
                       <p class="pantone-color-formula" style="color: #1a1a1a;">$accent-orange</p>
-                    </div>
-                  </div>
-                  
-                  <div class="pantone-swatch-page">
-                    <div class="pantone-color-display" style="background-color: #ed6948;"></div>
-                    <div class="pantone-color-info">
-                      <p class="pantone-color-name" style="color: #1a1a1a;">Accent Dark</p>
-                      <p class="pantone-color-code" style="color: #1a1a1a;">#ed6948</p>
-                      <p class="pantone-color-formula" style="color: #1a1a1a;">$accent-orange-dark</p>
                     </div>
                   </div>
                   
@@ -105,20 +56,11 @@
                       <p class="pantone-color-formula" style="color: #1a1a1a;">$accent-yellow</p>
                     </div>
                   </div>
-                  
-                  <div class="pantone-swatch-page">
-                    <div class="pantone-color-display" style="background-color: #ffc800;"></div>
-                    <div class="pantone-color-info">
-                      <p class="pantone-color-name" style="color: #1a1a1a;">Warning</p>
-                      <p class="pantone-color-code" style="color: #1a1a1a;">#ffc800</p>
-                      <p class="pantone-color-formula" style="color: #1a1a1a;">$warning</p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-
+          
           <!-- Neutral Colors -->
           <div id="neutral-section" class="pantone-section">
             <div class="pantone-tab neutral">Neutral</div>
@@ -225,15 +167,6 @@
                   </div>
                   
                   <div class="pantone-swatch-page">
-                    <div class="pantone-color-display" style="background-color: #005128;"></div>
-                    <div class="pantone-color-info">
-                      <p class="pantone-color-name" style="color: #1a1a1a;">Success Dark</p>
-                      <p class="pantone-color-code" style="color: #1a1a1a;">#005128</p>
-                      <p class="pantone-color-formula" style="color: #1a1a1a;">$success-dark</p>
-                    </div>
-                  </div>
-                  
-                  <div class="pantone-swatch-page">
                     <div class="pantone-color-display" style="background-color: #d80003;"></div>
                     <div class="pantone-color-info">
                       <p class="pantone-color-name" style="color: #1a1a1a;">Error</p>
@@ -243,11 +176,11 @@
                   </div>
                   
                   <div class="pantone-swatch-page">
-                    <div class="pantone-color-display" style="background-color: #fef1f1;"></div>
+                    <div class="pantone-color-display" style="background-color: #ffc800;"></div>
                     <div class="pantone-color-info">
-                      <p class="pantone-color-name" style="color: #1a1a1a;">Error Light</p>
-                      <p class="pantone-color-code" style="color: #1a1a1a;">#fef1f1</p>
-                      <p class="pantone-color-formula" style="color: #1a1a1a;">$error-light</p>
+                      <p class="pantone-color-name" style="color: #1a1a1a;">Warning</p>
+                      <p class="pantone-color-code" style="color: #1a1a1a;">#ffc800</p>
+                      <p class="pantone-color-formula" style="color: #1a1a1a;">$warning</p>
                     </div>
                   </div>
                   
@@ -258,6 +191,489 @@
                       <p class="pantone-color-code" style="color: #1a1a1a;">#1976D2</p>
                       <p class="pantone-color-formula" style="color: #1a1a1a;">$info</p>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Material Design 3 Color Roles -->
+      <section class="mb-16">
+        <h2 class="step-title">Material Design 3 Color Roles</h2>
+        <p class="step-description">Semantic color mappings following M3 guidelines for consistent UI design.</p>
+        
+        <!-- General Concepts -->
+        <div class="mb-8 p-6 bg-lightest rounded-lg border border-light">
+          <h3 class="text-xl font-semibold text-dark mb-4">General Concepts</h3>
+          <p class="text-medium mb-4">Here are helpful-to-know words you'll see in the names of color roles:</p>
+          <div class="space-y-3 text-medium">
+            <div class="flex items-start gap-3">
+              <span class="font-semibold text-primary min-w-24">Surface</span>
+              <span>A role used for backgrounds and large, low-emphasis areas of the screen.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="font-semibold text-primary min-w-24">Primary, Secondary, Tertiary</span>
+              <span>Accent color roles used to emphasize or de-emphasize foreground elements.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="font-semibold text-primary min-w-24">Container</span>
+              <span>Roles used as a fill color for foreground elements like buttons. They should not be used for text or icons.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="font-semibold text-primary min-w-24">On</span>
+              <span>Roles starting with this term indicate a color for text or icons on top of its paired parent color. For example, on primary is used for text and icons against the primary fill color.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="font-semibold text-primary min-w-24">Variant</span>
+              <span>Roles ending with this term offer a lower emphasis alternative to its non-variant pair. For example, outline variant is a less emphasized version of the outline color.</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="md3-color-roles-grid">
+          <!-- Brand & Surface Colors Grid -->
+          <div class="md3-column-headers">
+            <div class="md3-column-header"></div>
+            <div class="md3-column-header">Surface</div>
+            <div class="md3-column-header">Primary</div>
+            <div class="md3-column-header">Secondary</div>
+            <div class="md3-column-header">Tertiary</div>
+          </div>
+
+          <!-- Color Rows -->
+          <div class="md3-color-rows">
+            <!-- Base Colors Row -->
+            <div class="md3-row-label">Base</div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffffff; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">Surface</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">Surface</div>
+                    <div class="md3-color-hex">#ffffff</div>
+                    <div class="md3-color-var">$md3-surface</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #00B67A;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">Primary</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">Primary</div>
+                    <div class="md3-color-hex">#00B67A</div>
+                    <div class="md3-color-var">$md3-primary</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #EF6948;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">Secondary</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">Secondary</div>
+                    <div class="md3-color-hex">#EF6948</div>
+                    <div class="md3-color-var">$md3-secondary</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffca4e;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">Tertiary</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">Tertiary</div>
+                    <div class="md3-color-hex">#ffca4e</div>
+                    <div class="md3-color-var">$md3-tertiary</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- On Colors Row -->
+          <div class="md3-color-rows">
+            <div class="md3-row-label">On</div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #1a1a1a;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Surface</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Surface</div>
+                    <div class="md3-color-hex">#1a1a1a</div>
+                    <div class="md3-color-var">$md3-on-surface</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffffff; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">On Primary</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">On Primary</div>
+                    <div class="md3-color-hex">#ffffff</div>
+                    <div class="md3-color-var">$md3-on-primary</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffffff; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">On Secondary</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">On Secondary</div>
+                    <div class="md3-color-hex">#ffffff</div>
+                    <div class="md3-color-var">$md3-on-secondary</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #1a1a1a;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Tertiary</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Tertiary</div>
+                    <div class="md3-color-hex">#1a1a1a</div>
+                    <div class="md3-color-var">$md3-on-tertiary</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Container Colors Row -->
+          <div class="md3-color-rows">
+            <div class="md3-row-label">Container</div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #f7f7f7; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">Surface Variant</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">Surface Variant</div>
+                    <div class="md3-color-hex">#f7f7f7</div>
+                    <div class="md3-color-var">$md3-surface-variant</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #B3E5CC;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">Primary Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">Primary Container</div>
+                    <div class="md3-color-hex">#B3E5CC</div>
+                    <div class="md3-color-var">$md3-primary-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #FFD4C4;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">Secondary Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">Secondary Container</div>
+                    <div class="md3-color-hex">#FFD4C4</div>
+                    <div class="md3-color-var">$md3-secondary-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #fff5d6; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">Tertiary Container</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">Tertiary Container</div>
+                    <div class="md3-color-hex">#fff5d6</div>
+                    <div class="md3-color-var">$md3-tertiary-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- On Container Colors Row -->
+          <div class="md3-color-rows">
+            <div class="md3-row-label">On Container</div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #767676;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Surface Variant</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Surface Variant</div>
+                    <div class="md3-color-hex">#767676</div>
+                    <div class="md3-color-var">$md3-on-surface-variant</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #004D29;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Primary Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Primary Container</div>
+                    <div class="md3-color-hex">#004D29</div>
+                    <div class="md3-color-var">$md3-on-primary-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #5D2B1E;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Secondary Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Secondary Container</div>
+                    <div class="md3-color-hex">#5D2B1E</div>
+                    <div class="md3-color-var">$md3-on-secondary-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #cc8a00;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Tertiary Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Tertiary Container</div>
+                    <div class="md3-color-hex">#cc8a00</div>
+                    <div class="md3-color-var">$md3-on-tertiary-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Semantic Colors Grid -->
+        <div class="md3-color-roles-grid">
+          <!-- Column Headers -->
+          <div class="md3-column-headers">
+            <div class="md3-column-header"></div>
+            <div class="md3-column-header">Error</div>
+            <div class="md3-column-header">Success</div>
+            <div class="md3-column-header">Warning</div>
+            <div class="md3-column-header">Info</div>
+          </div>
+
+          <!-- Color Rows -->
+          <div class="md3-color-rows">
+            <!-- Base Colors Row -->
+            <div class="md3-row-label">Base</div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #d80003;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">Error</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">Error</div>
+                    <div class="md3-color-hex">#d80003</div>
+                    <div class="md3-color-var">$md3-error</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #0aaa46;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">Success</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">Success</div>
+                    <div class="md3-color-hex">#0aaa46</div>
+                    <div class="md3-color-var">$md3-success</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffc800;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">Warning</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">Warning</div>
+                    <div class="md3-color-hex">#ffc800</div>
+                    <div class="md3-color-var">$md3-warning</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #1976D2;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">Info</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">Info</div>
+                    <div class="md3-color-hex">#1976D2</div>
+                    <div class="md3-color-var">$md3-info</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- On Colors Row -->
+          <div class="md3-color-rows">
+            <div class="md3-row-label">On</div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffffff; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">On Error</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">On Error</div>
+                    <div class="md3-color-hex">#ffffff</div>
+                    <div class="md3-color-var">$md3-on-error</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffffff; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">On Success</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">On Success</div>
+                    <div class="md3-color-hex">#ffffff</div>
+                    <div class="md3-color-var">$md3-on-success</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #1a1a1a;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Warning</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Warning</div>
+                    <div class="md3-color-hex">#1a1a1a</div>
+                    <div class="md3-color-var">$md3-on-warning</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffffff; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">On Info</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">On Info</div>
+                    <div class="md3-color-hex">#ffffff</div>
+                    <div class="md3-color-var">$md3-on-info</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Container Colors Row -->
+          <div class="md3-color-rows">
+            <div class="md3-row-label">Container</div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #fef1f1; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">Error Container</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">Error Container</div>
+                    <div class="md3-color-hex">#fef1f1</div>
+                    <div class="md3-color-var">$md3-error-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #005128;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">Success Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">Success Container</div>
+                    <div class="md3-color-hex">#005128</div>
+                    <div class="md3-color-var">$md3-success-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #fff5d6; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">Warning Container</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">Warning Container</div>
+                    <div class="md3-color-hex">#fff5d6</div>
+                    <div class="md3-color-var">$md3-warning-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #e3f2fd; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">Info Container</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">Info Container</div>
+                    <div class="md3-color-hex">#e3f2fd</div>
+                    <div class="md3-color-var">$md3-info-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- On Container Colors Row -->
+          <div class="md3-color-rows">
+            <div class="md3-row-label">On Container</div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #93000A;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Error Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Error Container</div>
+                    <div class="md3-color-hex">#93000A</div>
+                    <div class="md3-color-var">$md3-on-error-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #ffffff; border: 1px solid #e0e0e0;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label" style="color: #1a1a1a;">On Success Container</div>
+                  <div class="md3-color-details" style="color: #1a1a1a;">
+                    <div class="md3-color-name">On Success Container</div>
+                    <div class="md3-color-hex">#ffffff</div>
+                    <div class="md3-color-var">$md3-on-success-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #cc8a00;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Warning Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Warning Container</div>
+                    <div class="md3-color-hex">#cc8a00</div>
+                    <div class="md3-color-var">$md3-on-warning-container</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="md3-color-cell">
+              <div class="md3-color-unified" style="background-color: #0d47a1;">
+                <div class="md3-color-content">
+                  <div class="md3-color-label">On Info Container</div>
+                  <div class="md3-color-details">
+                    <div class="md3-color-name">On Info Container</div>
+                    <div class="md3-color-hex">#0d47a1</div>
+                    <div class="md3-color-var">$md3-on-info-container</div>
                   </div>
                 </div>
               </div>
@@ -406,6 +822,26 @@
               placeholder="This field is valid"
             />
             <p class="form-success">This field looks good!</p>
+          </div>
+          
+          <div>
+            <label class="form-label">Warning State</label>
+            <input 
+              type="text" 
+              class="w-full p-3 border-2 border-warning rounded-lg focus:border-warning focus:outline-none transition-colors"
+              placeholder="This field needs attention"
+            />
+            <p class="form-warning">Please review this field</p>
+          </div>
+          
+          <div>
+            <label class="form-label">Info State</label>
+            <input 
+              type="text" 
+              class="w-full p-3 border-2 border-info rounded-lg focus:border-info focus:outline-none transition-colors"
+              placeholder="Information field"
+            />
+            <p class="form-info">Additional information</p>
           </div>
         </div>
       </section>
@@ -595,14 +1031,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
+import { ref, onMounted } from 'vue'
 
 // Page title and meta
 useHead({
@@ -615,248 +1044,11 @@ useHead({
 // Reactive state for active section
 const activeSection = ref('primary')
 
-// Animation state variables
-let lettersToHide: NodeListOf<Element> | null = null
-let tl: gsap.core.Timeline | null = null
-
-// Pantone sections data
-const pantoneSections = [
-  { id: 'primary', name: 'Primary', color: '#00B67A', gradient: 'linear-gradient(135deg, #00B67A, #1BB57C)' },
-  { id: 'accent', name: 'Accent', color: '#EF6948', gradient: 'linear-gradient(135deg, #EF6948, #ffca4e)' },
-  { id: 'neutral', name: 'Neutral', color: '#3d3d3d', gradient: 'linear-gradient(135deg, #3d3d3d, #767676)' },
-  { id: 'semantic', name: 'Semantic', color: '#0aaa46', gradient: 'linear-gradient(135deg, #0aaa46, #1976D2)' }
-]
-
-// Initialize animations and scroll navigation
+// Initialize page
 onMounted(() => {
-  nextTick(() => {
-    // Initialize scroll navigation
-    initScrollNavigation()
-    
-    // Initialize scroll-triggered animations
-    initScrollAnimations()
-    
-    // Initialize letter hiding animation
-    initLetterHidingAnimation()
-  })
+  // Static page - no animations
 })
 
-// Scroll navigation functionality
-const initScrollNavigation = () => {
-  // Create horizontal scroll navigation
-  const sections = document.querySelectorAll('.pantone-section')
-  
-  sections.forEach((section, index) => {
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 50%',
-      end: 'bottom 50%',
-      onEnter: () => {
-        activeSection.value = section.id.replace('-section', '')
-        updateActiveNav()
-      },
-      onEnterBack: () => {
-        activeSection.value = section.id.replace('-section', '')
-        updateActiveNav()
-      }
-    })
-  })
-}
-
-// Update active navigation indicator
-const updateActiveNav = () => {
-  const navItems = document.querySelectorAll('.pantone-nav-item') as NodeListOf<HTMLElement>
-  navItems.forEach(item => {
-    if (item.dataset.section === activeSection.value) {
-      gsap.to(item, {
-        scale: 1.1,
-        backgroundColor: item.dataset.color,
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-      tl?.to(lettersToHide || [], {
-        opacity: 1,
-        scale: 1,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, '+=1')
-    } else {
-      gsap.to(item, {
-        scale: 1,
-        backgroundColor: '#f8f8f8',
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-    }
-  })
-}
-
-// Scroll to section
-const scrollToSection = (sectionId: string) => {
-  const section = document.getElementById(`${sectionId}-section`)
-  if (section) {
-    gsap.to(window, {
-      duration: 1,
-      scrollTo: {
-        y: section,
-        offsetY: 100
-      },
-      ease: 'power2.inOut'
-    })
-  }
-}
-
-// Initialize scroll-triggered animations
-const initScrollAnimations = () => {
-  // No scroll animations - clean implementation
-  // Sections are now static with only hover effects
-}
-
-// Letter hiding animation for questionnaire title
-const initLetterHidingAnimation = () => {
-  try {
-    const titleElement = document.querySelector('.questionnaire-title')
-    if (!titleElement) return
-  
-  // Get the original text
-  const originalText = titleElement.textContent || ''
-  const words = originalText.split(' ')
-  
-  // Create spans for each letter while preserving word structure
-  let htmlContent = ''
-  words.forEach((word, wordIndex) => {
-    htmlContent += '<span class="word-wrapper">'
-    for (let i = 0; i < word.length; i++) {
-      const isFirstLetter = i === 0
-      const isLastLetter = i === word.length - 1
-      htmlContent += `<span class="letter ${isFirstLetter ? 'first-letter' : ''} ${isLastLetter ? 'last-letter' : ''}" data-word="${wordIndex}" data-position="${i}">${word[i]}</span>`
-    }
-    htmlContent += '</span>'
-    if (wordIndex < words.length - 1) {
-      htmlContent += '<span class="space"> </span>'
-    }
-  })
-  
-  titleElement.innerHTML = htmlContent
-  
-  // Get all letters except first letters of each word
-  lettersToHide = titleElement.querySelectorAll('.letter:not(.first-letter)')
-  
-  // Get all spaces
-  const spaces = titleElement.querySelectorAll('.space')
-  
-  // Store original widths and ensure proper alignment (only for animatable letters)
-  if (lettersToHide) {
-    lettersToHide.forEach(letter => {
-    // Only apply styles to letters that will be animated (not first letters)
-    // Force a reflow to get accurate width
-    const letterElement = letter as HTMLElement
-    letterElement.style.display = 'inline-block'
-    letterElement.style.whiteSpace = 'nowrap'
-    letterElement.style.verticalAlign = 'baseline'
-    
-    // Get the computed width
-    const computedStyle = window.getComputedStyle(letter)
-    const width: number = parseFloat(computedStyle.width) || 0
-    
-    // Store original width
-    letterElement.dataset.originalWidth = `${width}px`
-    letterElement.style.width = `${width}px`
-    letterElement.style.overflow = 'hidden'
-    
-    // Ensure no extra margins that could cause alignment issues
-    letterElement.style.margin = '0'
-    letterElement.style.padding = '0'
-    letterElement.style.border = 'none'
-    letterElement.style.outline = 'none'
-  })
-  }
-  
-  // Ensure first letters are never touched by JavaScript
-  const firstLetters = titleElement.querySelectorAll('.letter.first-letter')
-  firstLetters.forEach(letter => {
-    // Remove any inline styles that might have been applied
-    const letterElement = letter as HTMLElement
-    letterElement.style.display = ''
-    letterElement.style.whiteSpace = ''
-    letterElement.style.verticalAlign = 'top' //First letter missalignment fix
-    letterElement.style.width = ''
-    letterElement.style.margin = ''
-    letterElement.style.padding = ''
-    letterElement.style.border = ''
-    letterElement.style.outline = ''
-  })
-  
-  // First letters don't need JavaScript manipulation - CSS handles alignment
-  // The CSS already has proper styling for all letters including first letters
-  
-  // Store original widths for spaces
-  spaces.forEach(space => {
-    const spaceElement = space as HTMLElement
-    spaceElement.style.display = 'inline-block'
-    spaceElement.style.whiteSpace = 'pre'
-    const computedStyle = window.getComputedStyle(space)
-    const spaceWidth = parseFloat(computedStyle.width)
-    spaceElement.dataset.originalWidth = `${spaceWidth}px`
-    spaceElement.style.width = `${spaceWidth}px`
-    spaceElement.style.overflow = 'hidden'
-    spaceElement.style.margin = '0'
-    spaceElement.style.padding = '0'
-  })
-  
-  // Create simple GSAP timeline like CodePen example
-  tl = gsap.timeline({ paused: true })
-  
-  // Animate letters word by word
-  if (lettersToHide) {
-    lettersToHide.forEach((letter, index) => {
-      tl.to(letter, {
-        opacity: 0,
-        scale: 0,
-        duration: 0.3,
-        ease: 'power2.inOut'
-      }, index * 0.1)
-    })
-  }
-  
-  // Animate spaces
-  tl.to(spaces, {
-    opacity: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
-    duration: 0.4,
-    ease: 'bounce.out'
-  })
-  
-  // Animate subtitle
-  tl.to('.questionnaire-subtitle', {
-    opacity: 0,
-    duration: 0.4,
-    ease: 'power2.inOut'
-  })
-  
-  // Animate header
-  tl.to('.sticky-header', {
-    paddingTop: '3vh',
-    paddingBottom: '3vh',
-    duration: 0.8,
-    ease: 'power2.inOut'
-  })
-  
-  // Animate title
-  tl.to('.questionnaire-title', {
-    fontSize: '2rem',
-    duration: 0.8,
-    ease: 'power2.inOut'
-  })
-  
-  // Play animation
-  tl.play()
-  
-  } catch (error) {
-    console.error('Animation error:', error)
-  }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -873,81 +1065,30 @@ const initLetterHidingAnimation = () => {
   min-height: 100vh;
 }
 
-// Questionnaire title animation styles
+// Questionnaire title styles
 .questionnaire-title {
   text-align: left;
   line-height: 1.2;
-  
-  .word-wrapper {
-    display: inline-block;
-    vertical-align: baseline;
-    line-height: inherit;
-  }
-  
-  .letter {
-    display: inline-block;
-    transform-origin: center center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    text-align: left;
-    line-height: inherit;
-    max-height: 1em;
-    margin: 0;
-    padding: 0;
-    border: none;
-    outline: none;
-    // Performance optimizations
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-  }
-  
-  .letter.first-letter {
-    // Special handling for first letters to prevent alignment shift
-    display: inline;
-    max-height: none;
-  }
-  
-  .space {
-    display: inline-block;
-    white-space: pre;
-    vertical-align: baseline;
-    line-height: inherit;
-    // Performance optimizations
-    will-change: transform, opacity, width;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-  }
 }
 
-// Sticky header styles
-.sticky-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
+// Header styles
+.header {
   background-color: white;
   border-bottom: 1px solid #e5e7eb;
   min-height: 85vh;
   padding: 30vh 0px;
 }
 
-// Pantone-style individual color pages - authentic proportions (4x taller)
+// Pantone-style individual color pages
 .pantone-swatch-page {
   background: white;
   border: 1px solid #d0d0d0;
   border-radius: 2px;
-  overflow: hidden;
-  transition: all 0.2s ease;
   margin-bottom: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   width: 160px;
-  height: 640px; /* 4x taller than 160px */
+  height: 640px;
   position: relative;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
 }
 
 .pantone-color-display {
@@ -1056,37 +1197,8 @@ const initLetterHidingAnimation = () => {
   border-radius: 8px;
   padding: 8px 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: #d0d0d0;
-    
-    &::before {
-      opacity: 1;
-    }
-  }
-  
-  &.active {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    border-color: transparent;
-  }
 }
 
 .pantone-nav-text {
@@ -1111,7 +1223,6 @@ const initLetterHidingAnimation = () => {
   height: 100%;
   background: linear-gradient(90deg, #00B67A, #EF6948, #3d3d3d, #0aaa46);
   border-radius: 2px;
-  transition: width 0.5s ease;
 }
 
 // Pantone-style tabs
@@ -1120,6 +1231,7 @@ const initLetterHidingAnimation = () => {
   flex-wrap: wrap;
   gap: 0; // Remove gap for full width
   margin-bottom: 0; // Remove margin for full height
+  column-gap: 2%;
 }
 
 .pantone-section {
@@ -1128,7 +1240,7 @@ const initLetterHidingAnimation = () => {
   border-radius: 0; // Remove border radius for full screen
   overflow: hidden;
   border: 1px solid #e0e0e0;
-  flex: 1;
+  flex: 46%;
   display: flex;
   flex-direction: column;
 }
@@ -1213,14 +1325,8 @@ const initLetterHidingAnimation = () => {
 .color-swatch {
   @include card-base(false, true);
   overflow: hidden;
-  transition: all $transition-normal $ease-out;
   margin-bottom: $spacing-4;
   max-width: 300px;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: $shadow-lg;
-  }
 }
 
 .color-swatch-box {
@@ -1295,6 +1401,200 @@ const initLetterHidingAnimation = () => {
         font-size: 10px;
       }
     }
+  }
+}
+
+// Material Design 3 Color Roles Grid
+.md3-color-roles-grid {
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.md3-column-headers {
+  display: grid;
+  grid-template-columns: 100px repeat(5, 1fr);
+  background: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
+  
+  // Brand & Surface grid has 6 columns, Semantic grid has 6 columns
+  &:first-of-type {
+    grid-template-columns: 100px repeat(5, 1fr);
+  }
+}
+
+.md3-column-header {
+  padding: 16px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #e0e0e0;
+  
+  &:first-child {
+    background: #f0f0f0;
+    font-weight: 700;
+  }
+  
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.md3-color-rows {
+  display: grid;
+  grid-template-columns: 100px repeat(5, 1fr);
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.md3-row-label {
+  padding: 16px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #666;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #e0e0e0;
+}
+
+.md3-color-cell {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.md3-color-unified {
+  width: 100%;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.md3-color-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px;
+}
+
+.md3-color-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.md3-color-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.md3-color-name {
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1px;
+  color: #ffffff;
+  line-height: 1.1;
+  opacity: 0.9;
+}
+
+.md3-color-hex {
+  font-size: 7px;
+  font-family: 'Courier New', monospace;
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+.md3-color-var {
+  font-size: 6px;
+  font-family: 'Courier New', monospace;
+  color: #ffffff;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+// Responsive adjustments for M3 grid
+@include respond-down-to(mobile) {
+  .md3-color-roles-grid {
+    margin-top: 24px;
+  }
+  
+  .md3-column-headers,
+  .md3-color-rows {
+    grid-template-columns: 80px repeat(5, 1fr);
+  }
+  
+  .md3-column-header {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  
+  .md3-row-label {
+    padding: 12px 8px;
+    font-size: 10px;
+  }
+  
+  .md3-color-unified {
+    height: 120px;
+  }
+  
+  .md3-color-content {
+    padding: 6px;
+  }
+  
+  .md3-color-label {
+    font-size: 8px;
+    margin-bottom: 3px;
+  }
+  
+  .md3-color-name {
+    font-size: 7px;
+  }
+  
+  .md3-color-hex {
+    font-size: 6px;
+  }
+  
+  .md3-color-var {
+    font-size: 5px;
   }
 }
 </style>

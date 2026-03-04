@@ -57,10 +57,10 @@ $md3-light-on-secondary: $neutral-white !default;
 $md3-light-secondary-container: color.adjust($accent-orange, $lightness: 40%) !default;
 $md3-light-on-secondary-container: color.adjust($accent-orange, $lightness: -20%) !default;
 
-$md3-light-tertiary: $info !default;
-$md3-light-on-tertiary: $neutral-white !default;
-$md3-light-tertiary-container: color.adjust($info, $lightness: 40%) !default;
-$md3-light-on-tertiary-container: color.adjust($info, $lightness: -20%) !default;
+$md3-light-tertiary: $accent-yellow !default;
+$md3-light-on-tertiary: $neutral-darkest !default;
+$md3-light-tertiary-container: color.adjust($accent-yellow, $lightness: 40%) !default;
+$md3-light-on-tertiary-container: color.adjust($accent-yellow, $lightness: -20%) !default;
 
 $md3-light-surface: $neutral-white !default;
 $md3-light-on-surface: $neutral-darkest !default;
@@ -84,10 +84,10 @@ $md3-dark-on-secondary: color.adjust($accent-orange, $lightness: -40%) !default;
 $md3-dark-secondary-container: color.adjust($accent-orange, $lightness: -30%) !default;
 $md3-dark-on-secondary-container: color.adjust($accent-orange, $lightness: 30%) !default;
 
-$md3-dark-tertiary: color.adjust($info, $lightness: 20%) !default;
-$md3-dark-on-tertiary: color.adjust($info, $lightness: -40%) !default;
-$md3-dark-tertiary-container: color.adjust($info, $lightness: -30%) !default;
-$md3-dark-on-tertiary-container: color.adjust($info, $lightness: 30%) !default;
+$md3-dark-tertiary: color.adjust($accent-yellow, $lightness: 20%) !default;
+$md3-dark-on-tertiary: color.adjust($accent-yellow, $lightness: -40%) !default;
+$md3-dark-tertiary-container: color.adjust($accent-yellow, $lightness: -30%) !default;
+$md3-dark-on-tertiary-container: color.adjust($accent-yellow, $lightness: 30%) !default;
 
 $md3-dark-surface: $neutral-darkest !default;
 $md3-dark-on-surface: $neutral-lightest !default;
@@ -134,6 +134,12 @@ $md3-secondary: $md3-light-secondary !default;
 $md3-on-secondary: $md3-light-on-secondary !default;
 $md3-secondary-container: $md3-light-secondary-container !default;
 $md3-on-secondary-container: $md3-light-on-secondary-container !default;
+
+// Tertiary Mappings
+$md3-tertiary: $md3-light-tertiary !default;
+$md3-on-tertiary: $md3-light-on-tertiary !default;
+$md3-tertiary-container: $md3-light-tertiary-container !default;
+$md3-on-tertiary-container: $md3-light-on-tertiary-container !default;
 
 // Surface Mappings
 $md3-surface: $md3-light-surface !default;
