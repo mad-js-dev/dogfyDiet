@@ -417,6 +417,114 @@ $breakpoint-2xl: 1536px !default;
 // Mobile-first breakpoint mixins
 $mobile-max: $breakpoint-sm - 1px !default;
 $tablet-max: $breakpoint-md - 1px !default;
+
+// -----------------------------------------------------------------------------
+// TYPOGRAPHY
+// -----------------------------------------------------------------------------
+
+// Font Families
+$font-family-primary: 'PP Agrandir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !default;
+$font-family-secondary: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !default;
+$font-family-mono: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace !default;
+
+// Font Weights
+$font-weight-light: 300 !default;
+$font-weight-regular: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold: 700 !default;
+$font-weight-black: 900 !default;
+
+// Font Sizes
+$font-size-display-large: 57px !default;
+$font-size-display-medium: 45px !default;
+$font-size-display-small: 36px !default;
+$font-size-headline-large: 32px !default;
+$font-size-headline-medium: 28px !default;
+$font-size-headline-small: 24px !default;
+$font-size-title-large: 22px !default;
+$font-size-title-medium: 16px !default;
+$font-size-title-small: 14px !default;
+$font-size-body-large: 16px !default;
+$font-size-body-medium: 14px !default;
+$font-size-body-small: 12px !default;
+$font-size-label-large: 14px !default;
+$font-size-label-medium: 12px !default;
+$font-size-label-small: 11px !default;
+
+// Line Heights
+$line-height-display-large: 64px !default;
+$line-height-display-medium: 52px !default;
+$line-height-display-small: 44px !default;
+$line-height-headline-large: 40px !default;
+$line-height-headline-medium: 36px !default;
+$line-height-headline-small: 32px !default;
+$line-height-title-large: 28px !default;
+$line-height-title-medium: 24px !default;
+$line-height-title-small: 20px !default;
+$line-height-body-large: 24px !default;
+$line-height-body-medium: 20px !default;
+$line-height-body-small: 16px !default;
+$line-height-label-large: 20px !default;
+$line-height-label-medium: 16px !default;
+$line-height-label-small: 16px !default;
+
+// Letter Spacing
+$letter-spacing-tight: -0.02em !default;
+$letter-spacing-normal: 0em !default;
+$letter-spacing-wide: 0.025em !default;
+$letter-spacing-wider: 0.1em !default;
+
+// Typography Tokens
+$typography-display-large: $font-size-display-large !default;
+$typography-display-medium: $font-size-display-medium !default;
+$typography-display-small: $font-size-display-small !default;
+$typography-headline-large: $font-size-headline-large !default;
+$typography-headline-medium: $font-size-headline-medium !default;
+$typography-headline-small: $font-size-headline-small !default;
+$typography-title-large: $font-size-title-large !default;
+$typography-title-medium: $font-size-title-medium !default;
+$typography-title-small: $font-size-title-small !default;
+$typography-body-large: $font-size-body-large !default;
+$typography-body-medium: $font-size-body-medium !default;
+$typography-body-small: $font-size-body-small !default;
+$typography-label-large: $font-size-label-large !default;
+$typography-label-medium: $font-size-label-medium !default;
+$typography-label-small: $font-size-label-small !default;
+
+// Emphasized Typography Tokens
+$typography-display-large-em: $font-size-display-large !default;
+$typography-display-medium-em: $font-size-display-medium !default;
+$typography-display-small-em: $font-size-display-small !default;
+$typography-headline-large-em: $font-size-headline-large !default;
+$typography-headline-medium-em: $font-size-headline-medium !default;
+$typography-headline-small-em: $font-size-headline-small !default;
+$typography-title-large-em: $font-size-title-large !default;
+$typography-title-medium-em: $font-size-title-medium !default;
+$typography-title-small-em: $font-size-title-small !default;
+$typography-body-large-em: $font-size-body-large !default;
+$typography-body-medium-em: $font-size-body-medium !default;
+$typography-body-small-em: $font-size-body-small !default;
+$typography-label-large-em: $font-size-label-large !default;
+$typography-label-medium-em: $font-size-label-medium !default;
+$typography-label-small-em: $font-size-label-small !default;
+
+// Letter Spacing for Emphasized Styles
+$letter-spacing-display-large-em: -0.01em !default;
+$letter-spacing-display-medium-em: -0.01em !default;
+$letter-spacing-display-small-em: -0.01em !default;
+$letter-spacing-headline-large-em: 0.1em !default;
+$letter-spacing-headline-medium-em: 0.1em !default;
+$letter-spacing-headline-small-em: 0.025em !default;
+$letter-spacing-title-large-em: 0.025em !default;
+$letter-spacing-title-medium-em: 0.025em !default;
+$letter-spacing-title-small-em: 0.025em !default;
+$letter-spacing-body-large-em: 0.025em !default;
+$letter-spacing-body-medium-em: 0.025em !default;
+$letter-spacing-body-small-em: 0.025em !default;
+$letter-spacing-label-large-em: 0.025em !default;
+$letter-spacing-label-medium-em: 0.025em !default;
+$letter-spacing-label-small-em: 0.025em !default;
 $desktop-max: $breakpoint-lg - 1px !default;
 
 // -----------------------------------------------------------------------------
