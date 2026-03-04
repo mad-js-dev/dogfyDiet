@@ -15,7 +15,7 @@
       </header>
 
       <!-- Color Palette -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Color Palette</h2>
         
         <div class="pantone-sections-container">
@@ -200,7 +200,7 @@
       </section>
 
       <!-- Material Design 3 Color Roles -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Material Design 3 Color Roles</h2>
         <p class="step-description">Semantic color mappings following M3 guidelines for consistent UI design.</p>
         
@@ -683,7 +683,7 @@
       </section>
 
       <!-- Color Usage Examples -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Color Usage Examples</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="p-6 bg-primary rounded-lg">
@@ -712,8 +712,269 @@
         </div>
       </section>
 
+      <!-- Elevation -->
+      <section class="mb-16 px-6 py-8">
+        <h2 class="step-title">Elevation</h2>
+        <p class="step-description">Elevation creates visual hierarchy and depth through shadows and layering. Based on Material Design 3 principles.</p>
+        
+        <!-- Elevation Concepts -->
+        <div class="mb-8 p-6 bg-lightest rounded-lg border border-light">
+          <h3 class="text-xl font-semibold text-dark mb-4">Elevation Concepts</h3>
+          <p class="text-medium mb-4">Elevation is the relative distance between two surfaces along the z-axis. It creates depth and hierarchy in your interface.</p>
+          <div class="space-y-3 text-medium">
+            <div class="flex items-start gap-3">
+              <span class="font-semibold text-primary min-w-24">Levels</span>
+              <span>We use a 0-5 scale for elevation levels, from flat surfaces to the highest overlays.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="font-semibold text-primary min-w-24">Tokens</span>
+              <span>Elevation tokens provide consistent shadow values and can be used both numerically and semantically.</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="font-semibold text-primary min-w-24">Z-index</span>
+              <span>Proper layering ensures elements stack correctly and maintain accessibility.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Elevation Levels -->
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-dark mb-6">Elevation Levels</h3>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <!-- Level 0 -->
+            <div class="aspect-square p-4 bg-white border border-light rounded-lg flex flex-col justify-between" style="box-shadow: var(--elevation-0);">
+              <div>
+                <h4 class="text-sm font-semibold text-dark mb-1">Level 0</h4>
+                <p class="text-xs text-medium mb-1">Base Surface</p>
+                <p class="text-xs text-medium opacity-75">No elevation</p>
+              </div>
+              <div class="space-y-1">
+                <div class="text-xs font-mono bg-lightest p-1 rounded">
+                  <div class="font-semibold">$elevation-0</div>
+                </div>
+                <div class="text-xs text-medium">Base layout</div>
+              </div>
+            </div>
+
+            <!-- Level 1 -->
+            <div class="aspect-square p-4 bg-white rounded-lg flex flex-col justify-between" style="box-shadow: 0 1px 2px 0 rgba(26, 26, 26, 0.05), 0 1px 3px 0 rgba(26, 26, 26, 0.1);">
+              <div>
+                <h4 class="text-sm font-semibold text-dark mb-1">Level 1</h4>
+                <p class="text-xs text-medium mb-1">Low Elevation</p>
+                <p class="text-xs text-medium opacity-75">Cards, list items</p>
+              </div>
+              <div class="space-y-1">
+                <div class="text-xs font-mono bg-lightest p-1 rounded">
+                  <div class="font-semibold">$elevation-1</div>
+                </div>
+                <div class="text-xs text-medium">Cards, chips</div>
+              </div>
+            </div>
+
+            <!-- Level 2 -->
+            <div class="aspect-square p-4 bg-white rounded-lg flex flex-col justify-between" style="box-shadow: 0 4px 6px -1px rgba(26, 26, 26, 0.1), 0 2px 4px -1px rgba(26, 26, 26, 0.06);">
+              <div>
+                <h4 class="text-sm font-semibold text-dark mb-1">Level 2</h4>
+                <p class="text-xs text-medium mb-1">Medium Elevation</p>
+                <p class="text-xs text-medium opacity-75">Interactive elements</p>
+              </div>
+              <div class="space-y-1">
+                <div class="text-xs font-mono bg-lightest p-1 rounded">
+                  <div class="font-semibold">$elevation-2</div>
+                </div>
+                <div class="text-xs text-medium">Buttons, dropdowns</div>
+              </div>
+            </div>
+
+            <!-- Level 3 -->
+            <div class="aspect-square p-4 bg-white rounded-lg flex flex-col justify-between" style="box-shadow: 0 10px 15px -3px rgba(26, 26, 26, 0.1), 0 4px 6px -2px rgba(26, 26, 26, 0.05);">
+              <div>
+                <h4 class="text-sm font-semibold text-dark mb-1">Level 3</h4>
+                <p class="text-xs text-medium mb-1">High Elevation</p>
+                <p class="text-xs text-medium opacity-75">Prominent elements</p>
+              </div>
+              <div class="space-y-1">
+                <div class="text-xs font-mono bg-lightest p-1 rounded">
+                  <div class="font-semibold">$elevation-3</div>
+                </div>
+                <div class="text-xs text-medium">FABs, drawers</div>
+              </div>
+            </div>
+
+            <!-- Level 4 -->
+            <div class="aspect-square p-4 bg-white rounded-lg flex flex-col justify-between" style="box-shadow: 0 20px 25px -5px rgba(26, 26, 26, 0.1), 0 10px 10px -5px rgba(26, 26, 26, 0.04);">
+              <div>
+                <h4 class="text-sm font-semibold text-dark mb-1">Level 4</h4>
+                <p class="text-xs text-medium mb-1">Very High Elevation</p>
+                <p class="text-xs text-medium opacity-75">Modal content</p>
+              </div>
+              <div class="space-y-1">
+                <div class="text-xs font-mono bg-lightest p-1 rounded">
+                  <div class="font-semibold">$elevation-4</div>
+                </div>
+                <div class="text-xs text-medium">Modals, dialogs</div>
+              </div>
+            </div>
+
+            <!-- Level 5 -->
+            <div class="aspect-square p-4 bg-white rounded-lg flex flex-col justify-between" style="box-shadow: 0 25px 50px -12px rgba(26, 26, 26, 0.25);">
+              <div>
+                <h4 class="text-sm font-semibold text-dark mb-1">Level 5</h4>
+                <p class="text-xs text-medium mb-1">Highest Elevation</p>
+                <p class="text-xs text-medium opacity-75">Maximum depth</p>
+              </div>
+              <div class="space-y-1">
+                <div class="text-xs font-mono bg-lightest p-1 rounded">
+                  <div class="font-semibold">$elevation-5</div>
+                </div>
+                <div class="text-xs text-medium">Menus, tooltips</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Semantic Elevation Tokens -->
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-dark mb-6">Semantic Elevation Tokens</h3>
+          <p class="text-medium mb-4">Use semantic tokens for component-specific elevation to maintain consistency across your application.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="p-4 bg-lightest rounded-lg border border-light">
+              <div class="font-semibold text-primary mb-1">$elevation-card</div>
+              <div class="text-sm text-medium mb-2">Maps to $elevation-1</div>
+              <div class="text-xs text-medium">Use for content cards</div>
+            </div>
+            <div class="p-4 bg-lightest rounded-lg border border-light">
+              <div class="font-semibold text-primary mb-1">$elevation-button</div>
+              <div class="text-sm text-medium mb-2">Maps to $elevation-2</div>
+              <div class="text-xs text-medium">Use for raised buttons</div>
+            </div>
+            <div class="p-4 bg-lightest rounded-lg border border-light">
+              <div class="font-semibold text-primary mb-1">$elevation-fab</div>
+              <div class="text-sm text-medium mb-2">Maps to $elevation-3</div>
+              <div class="text-xs text-medium">Use for floating action buttons</div>
+            </div>
+            <div class="p-4 bg-lightest rounded-lg border border-light">
+              <div class="font-semibold text-primary mb-1">$elevation-modal</div>
+              <div class="text-sm text-medium mb-2">Maps to $elevation-4</div>
+              <div class="text-xs text-medium">Use for modal dialogs</div>
+            </div>
+            <div class="p-4 bg-lightest rounded-lg border border-light">
+              <div class="font-semibold text-primary mb-1">$elevation-menu</div>
+              <div class="text-sm text-medium mb-2">Maps to $elevation-5</div>
+              <div class="text-xs text-medium">Use for dropdown menus</div>
+            </div>
+            <div class="p-4 bg-lightest rounded-lg border border-light">
+              <div class="font-semibold text-primary mb-1">$elevation-app-bar</div>
+              <div class="text-sm text-medium mb-2">Maps to $elevation-2</div>
+              <div class="text-xs text-medium">Use for top navigation</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Z-index Layering -->
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-dark mb-6">Z-index Layering</h3>
+          <p class="text-medium mb-4">Proper z-index values ensure elements stack correctly and maintain accessibility.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-3">
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Base</span>
+                <span class="text-sm font-mono text-medium">$z-index-base (0)</span>
+              </div>
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Raised</span>
+                <span class="text-sm font-mono text-medium">$z-index-raised (10)</span>
+              </div>
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Dropdown</span>
+                <span class="text-sm font-mono text-medium">$z-index-dropdown (100)</span>
+              </div>
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Sticky</span>
+                <span class="text-sm font-mono text-medium">$z-index-sticky (200)</span>
+              </div>
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Fixed</span>
+                <span class="text-sm font-mono text-medium">$z-index-fixed (300)</span>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Modal Backdrop</span>
+                <span class="text-sm font-mono text-medium">$z-index-modal-backdrop (400)</span>
+              </div>
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Modal</span>
+                <span class="text-sm font-mono text-medium">$z-index-modal (500)</span>
+              </div>
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Popover</span>
+                <span class="text-sm font-mono text-medium">$z-index-popover (600)</span>
+              </div>
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Tooltip</span>
+                <span class="text-sm font-mono text-medium">$z-index-tooltip (700)</span>
+              </div>
+              <div class="flex justify-between items-center p-3 bg-lightest rounded-lg">
+                <span class="font-medium text-dark">Notification</span>
+                <span class="text-sm font-mono text-medium">$z-index-notification (800)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Usage Guidelines -->
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-dark mb-6">Usage Guidelines</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-semibold text-primary mb-3">Best Practices</h4>
+              <ul class="space-y-2 text-medium">
+                <li class="flex items-start gap-2">
+                  <span class="text-primary">•</span>
+                  <span>Use semantic tokens for consistency across components</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary">•</span>
+                  <span>Keep elevation levels minimal (0-5 scale)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary">•</span>
+                  <span>Combine elevation with proper z-index values</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary">•</span>
+                  <span>Consider accessibility when using elevation</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-primary mb-3">Accessibility</h4>
+              <ul class="space-y-2 text-medium">
+                <li class="flex items-start gap-2">
+                  <span class="text-primary">•</span>
+                  <span>Don't rely solely on elevation for hierarchy</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary">•</span>
+                  <span>Use color and typography to supplement depth</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary">•</span>
+                  <span>Ensure sufficient contrast for elevated elements</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary">•</span>
+                  <span>Test elevation in both light and dark themes</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Typography -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Typography</h2>
         
         <div class="space-y-6">
@@ -760,7 +1021,7 @@
       </section>
 
       <!-- Buttons -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Buttons</h2>
         
         <div class="space-y-6">
@@ -782,7 +1043,7 @@
       </section>
 
       <!-- Form Elements -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Form Elements</h2>
         
         <div class="max-w-md space-y-6">
@@ -847,7 +1108,7 @@
       </section>
 
       <!-- Cards -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Cards</h2>
         
         <div class="grid md:grid-cols-3 gap-6">
@@ -872,7 +1133,7 @@
       </section>
 
       <!-- Utility Classes -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Utility Classes</h2>
         
         <div class="space-y-8">
@@ -915,7 +1176,7 @@
       </section>
 
       <!-- Responsive Design -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Responsive Design</h2>
         
         <div class="space-y-6">
@@ -942,7 +1203,7 @@
       </section>
 
       <!-- Animation Examples -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Animations</h2>
         
         <div class="grid md:grid-cols-3 gap-6">
@@ -970,7 +1231,7 @@
       </section>
 
       <!-- Questionnaire Components -->
-      <section class="mb-16">
+      <section class="mb-16 px-6 py-8">
         <h2 class="step-title">Questionnaire Components</h2>
         
         <div class="questionnaire-card">

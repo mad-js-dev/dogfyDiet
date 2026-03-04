@@ -324,6 +324,58 @@ $radius-3xl: 32px !default;
 $radius-full: 9999px !default;
 
 // -----------------------------------------------------------------------------
+// ELEVATION TOKENS
+// -----------------------------------------------------------------------------
+// Based on Material Design 3 elevation system
+// https://m3.material.io/styles/elevation/tokens
+// Elevation is the relative distance between two surfaces along the z-axis
+
+// Elevation Levels (0-5 scale - minimal and effective)
+// Level 0: Base surface (no elevation)
+$elevation-0: none !default;
+
+// Level 1: Cards, list items, low-emphasis elements
+$elevation-1: 0 1px 2px 0 rgba($neutral-darkest, 0.05), 0 1px 3px 0 rgba($neutral-darkest, 0.1) !default;
+
+// Level 2: Raised buttons, dropdowns, floating action buttons
+$elevation-2: 0 4px 6px -1px rgba($neutral-darkest, 0.1), 0 2px 4px -1px rgba($neutral-darkest, 0.06) !default;
+
+// Level 3: Navigation drawers, bottom sheets, elevated cards
+$elevation-3: 0 10px 15px -3px rgba($neutral-darkest, 0.1), 0 4px 6px -2px rgba($neutral-darkest, 0.05) !default;
+
+// Level 4: Modals, dialogs, pickers
+$elevation-4: 0 20px 25px -5px rgba($neutral-darkest, 0.1), 0 10px 10px -5px rgba($neutral-darkest, 0.04) !default;
+
+// Level 5: Highest elevation - overlays, tooltips, menus
+$elevation-5: 0 25px 50px -12px rgba($neutral-darkest, 0.25) !default;
+
+// Functional Elevation Tokens (semantic naming)
+$elevation-card: $elevation-1 !default;
+$elevation-button: $elevation-2 !default;
+$elevation-fab: $elevation-3 !default;
+$elevation-modal: $elevation-4 !default;
+$elevation-menu: $elevation-5 !default;
+
+// Component-specific Elevation
+$elevation-app-bar: $elevation-2 !default;
+$elevation-bottom-nav: $elevation-3 !default;
+$elevation-chip: $elevation-1 !default;
+$elevation-switch: $elevation-1 !default;
+$elevation-slider: $elevation-1 !default;
+
+// Z-index Layering (for proper stacking context)
+$z-index-base: 0 !default;
+$z-index-raised: 10 !default;
+$z-index-dropdown: 100 !default;
+$z-index-sticky: 200 !default;
+$z-index-fixed: 300 !default;
+$z-index-modal-backdrop: 400 !default;
+$z-index-modal: 500 !default;
+$z-index-popover: 600 !default;
+$z-index-tooltip: 700 !default;
+$z-index-notification: 800 !default;
+
+// -----------------------------------------------------------------------------
 // SHADOWS
 // -----------------------------------------------------------------------------
 
