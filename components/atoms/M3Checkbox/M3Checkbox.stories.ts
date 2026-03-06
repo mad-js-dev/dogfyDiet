@@ -46,107 +46,248 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    modelValue: false,
     label: 'I agree to the terms and conditions',
   },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const checked = ref(false)
+      return { checked, args }
+    },
+    template: `
+      <M3Checkbox 
+        v-model="checked" 
+        :label="args.label"
+      />
+    `,
+  }),
 }
 
 export const Checked: Story = {
   args: {
-    modelValue: true,
     label: 'I agree to the terms and conditions',
   },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const checked = ref(true)
+      return { checked, args }
+    },
+    template: `
+      <M3Checkbox 
+        v-model="checked" 
+        :label="args.label"
+      />
+    `,
+  }),
 }
 
 export const Disabled: Story = {
   args: {
-    modelValue: false,
     label: 'Disabled checkbox',
     disabled: true,
   },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const checked = ref(false)
+      return { checked, args }
+    },
+    template: `
+      <M3Checkbox 
+        v-model="checked" 
+        :label="args.label"
+        :disabled="args.disabled"
+      />
+    `,
+  }),
 }
 
 export const DisabledChecked: Story = {
   args: {
-    modelValue: true,
     label: 'Disabled checked checkbox',
     disabled: true,
   },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const checked = ref(true)
+      return { checked, args }
+    },
+    template: `
+      <M3Checkbox 
+        v-model="checked" 
+        :label="args.label"
+        :disabled="args.disabled"
+      />
+    `,
+  }),
 }
 
 export const DisabledIndeterminate: Story = {
   args: {
-    modelValue: false,
     label: 'Disabled indeterminate checkbox',
     disabled: true,
     indeterminate: true,
   },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const checked = ref(false)
+      return { checked, args }
+    },
+    template: `
+      <M3Checkbox 
+        v-model="checked" 
+        :label="args.label"
+        :disabled="args.disabled"
+        :indeterminate="args.indeterminate"
+      />
+    `,
+  }),
 }
 
 export const WithError: Story = {
   args: {
-    modelValue: false,
     label: 'Accept privacy policy',
     required: true,
     errorMessage: 'You must accept privacy policy to continue',
   },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const checked = ref(false)
+      return { checked, args }
+    },
+    template: `
+      <M3Checkbox 
+        v-model="checked" 
+        :label="args.label"
+        :required="args.required"
+        :errorMessage="args.errorMessage"
+      />
+    `,
+  }),
 }
 
 export const NoLabel: Story = {
   args: {
-    modelValue: false,
     'aria-label': 'Standalone checkbox without visible label',
   },
-}
-
-export const LongLabel: Story = {
-  args: {
-    modelValue: true,
-    label: 'I have read and understood the comprehensive terms of service, privacy policy, and all associated legal documents that govern my use of this platform',
-  },
-}
-
-export const Interactive: Story = {
   render: (args) => ({
     components: { M3Checkbox },
     setup() {
-      const checked = ref(args.modelValue || false)
-      const indeterminate = ref(args.indeterminate || false)
-      
-      return { checked, indeterminate, args }
+      const checked = ref(false)
+      return { checked, args }
     },
     template: `
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <div>
-          <h4 style="margin: 0 0 8px 0; font-weight: 600;">Interactive States:</h4>
-          <M3Checkbox 
-            v-model="checked" 
-            v-bind="args"
-            label="Try checking/unchecking me!"
-          />
-          <p style="margin: 8px 0; font-size: 14px; color: #666;">
-            State: {{ checked ? 'Checked' : 'Unchecked' }}
-          </p>
-        </div>
-        
-        <div>
-          <h4 style="margin: 0 0 8px 0; font-weight: 600;">Indeterminate Toggle:</h4>
-          <M3Checkbox 
-            v-model="checked" 
-            :indeterminate="indeterminate"
-            label="Click to toggle indeterminate state"
-          />
-          <button 
-            @click="indeterminate = !indeterminate"
-            style="margin: 8px 0; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; cursor: pointer;"
-          >
-            Toggle Indeterminate: {{ indeterminate ? 'ON' : 'OFF' }}
-          </button>
-        </div>
-      </div>
+      <M3Checkbox 
+        v-model="checked" 
+        :aria-label="args['aria-label']"
+      />
     `,
   }),
+}
+
+export const Indeterminate: Story = {
   args: {
-    label: 'Interactive checkbox with state controls',
+    label: 'Indeterminate checkbox',
   },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const modelValue = ref(true)
+      const indeterminate = ref(false)
+      const handleUpdate = (value) => {
+        if (modelValue.value === true) {
+          modelValue.value = false
+        } else if (modelValue.value === false) {
+          modelValue.value = null
+          indeterminate.value = true
+        } else {
+          indeterminate.value = false
+          modelValue.value = true
+        }
+      }
+      return { modelValue, indeterminate, handleUpdate, args }
+    },
+    template: `
+      <M3Checkbox 
+        :modelValue="modelValue"
+        :indeterminate="indeterminate"
+        @update:modelValue="handleUpdate"
+        :label="args.label"
+      />
+    `,
+  }),
+}
+
+export const IndeterminateWithCross: Story = {
+  args: {
+    label: 'Indeterminate checkbox with cross',
+  },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const modelValue = ref(true)
+      const indeterminate = ref(false)
+      const handleUpdate = (value) => {
+        if (modelValue.value === true) {
+          modelValue.value = false
+        } else if (modelValue.value === false) {
+          modelValue.value = null
+          indeterminate.value = true
+        } else {
+          indeterminate.value = false
+          modelValue.value = true
+        }
+      }
+      return { modelValue, indeterminate, handleUpdate, args }
+    },
+    template: `
+      <M3Checkbox 
+        :modelValue="modelValue"
+        :indeterminate="indeterminate"
+        @update:modelValue="handleUpdate"
+        :label="args.label"
+        :showCross="args.showCross"
+      />
+    `,
+  }),
+}
+
+
+export const IndeterminateEmpty: Story = {
+  args: {
+    label: 'Indeterminate checkbox with empty box',
+    showIndeterminateIcon: false,
+  },
+  render: (args) => ({
+    components: { M3Checkbox },
+    setup() {
+      const modelValue = ref(true)
+      const indeterminate = ref(false)
+      const handleUpdate = (value) => {
+        if (modelValue.value === true) {
+          modelValue.value = false
+        } else if (modelValue.value === false) {
+          modelValue.value = null
+          indeterminate.value = true
+        } else {
+          indeterminate.value = false
+          modelValue.value = true
+        }
+      }
+      return { modelValue, indeterminate, handleUpdate, args }
+    },
+    template: `
+      <M3Checkbox 
+        :modelValue="modelValue"
+        :indeterminate="indeterminate"
+        @update:modelValue="handleUpdate"
+        :label="args.label"
+        :showIndeterminateIcon="args.showIndeterminateIcon"
+      />
+    `,
+  }),
 }

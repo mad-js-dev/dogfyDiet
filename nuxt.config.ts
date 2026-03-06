@@ -16,7 +16,7 @@ export default defineNuxtConfig({
       preprocessorOptions: {
         scss: {
           api: 'modern-compiler',
-          additionalData: '@use "~/assets/styles/_variables.scss" as *;',
+          additionalData: '@use "sass:map" as map; @use "~/assets/styles/_mixins-new.scss" as *;',
           silenceDeprecations: ['legacy-js-api']
         }
       }

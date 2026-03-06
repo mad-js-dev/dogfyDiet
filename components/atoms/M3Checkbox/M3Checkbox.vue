@@ -12,7 +12,16 @@
       @focus="handleFocus"
       :aria-describedby="hasError ? `${inputId}-error` : undefined"
     />
-    <span class="c-m3-checkbox__visual" :class="{ 'c-m3-checkbox__visual--error': hasError }"></span>
+    <span class="c-m3-checkbox__visual" :class="{ 'c-m3-checkbox__visual--error': hasError }">
+    <!-- Cross icon when unchecked and showCross is true -->
+    <span v-if="effectiveShowCross && !modelValue && !indeterminate" class="c-m3-checkbox__cross"></span>
+    
+    <!-- Checkmark icon when checked -->
+    <span v-if="modelValue && !indeterminate" class="c-m3-checkbox__checkmark"></span>
+    
+    <!-- Minus icon when indeterminate -->
+    <span v-if="indeterminate && showIndeterminateIcon" class="c-m3-checkbox__minus"></span>
+  </span>
     <span class="c-m3-checkbox__label-text" :class="{ 'c-m3-checkbox__label-text--error': hasError }" v-if="label">{{ label }}</span>
     <span class="c-m3-checkbox__required" v-if="required && !modelValue">*</span>
     
@@ -34,6 +43,8 @@ interface Props {
   errorMessage?: string
   'aria-label'?: string
   indeterminate?: boolean
+  showCross?: boolean
+  showIndeterminateIcon?: boolean
 }
 
 interface Emits {
@@ -46,7 +57,8 @@ interface Emits {
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   required: false,
-  indeterminate: false
+  indeterminate: false,
+  showIndeterminateIcon: true
 })
 
 const emit = defineEmits<Emits>()
@@ -64,6 +76,9 @@ const inputId = computed(() => props.id || 'checkbox-' + Math.random().toString(
 const hasError = computed(() => {
   return props.required && !props.modelValue && props.errorMessage
 })
+
+// Automatically enable cross when indeterminate icon is disabled
+const effectiveShowCross = computed(() => props.showCross || !props.showIndeterminateIcon)
 
 // Handle input change
 const handleChange = (event: Event) => {
@@ -98,106 +113,90 @@ export default {
 }
 </script>
 
+<style>
+.c-m3-checkbox__checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+  text-align: center;
+  color: #212121;
+  transition: all 0.2s ease;
+}
+
+.c-m3-checkbox__checkmark::before {
+  content: '✓';
+}
+
+.c-m3-checkbox__cross {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+  text-align: center;
+  color: #212121;
+  transition: all 0.2s ease;
+}
+
+.c-m3-checkbox__cross::before {
+  content: '✗';
+}
+
+.c-m3-checkbox__minus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+  text-align: center;
+  color: #212121;
+  transition: all 0.2s ease;
+}
+
+.c-m3-checkbox__minus::before {
+  content: '−';
+}
+</style>
+
 <style scoped lang="scss">
-@use 'sass:map';
-@use '~/assets/styles/_mixins-new.scss' as *;
+@use 'sass:map' as map;
+@use '~/assets/styles/_mixins-new' as *;
 
 .c-m3-checkbox {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  
+  gap: 8px;
+
   &__input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    width: 48px; // Target size
-    height: 48px; // Target size
-    margin: 0;
-    z-index: 2;
-
-    &:checked + .c-m3-checkbox__visual {
-      background-color: map.get($color-roles-light, primary, background);
-      border-color: map.get($color-roles-light, primary, background);
-      
-      &::after {
-        opacity: 1;
-        transform: scale(1);
-        color: map.get($color-roles-light, primary, text);
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
-      }
-    }
-
-    &:indeterminate + .c-m3-checkbox__visual {
-      background-color: map.get($color-roles-light, primary, background);
-      border-color: map.get($color-roles-light, primary, background);
-      
-      &::after {
-        opacity: 1;
-        transform: scale(1);
-        color: map.get($color-roles-light, primary, text);
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M19 13H5v-2h14v2z'/%3E%3C/svg%3E");
-      }
-    }
-
-    &:focus + .c-m3-checkbox__visual {
-      outline: 2px solid map.get($color-roles-light, primary, text);
-      outline-offset: 2px;
-    }
-
-    &:disabled + .c-m3-checkbox__visual {
-      background-color: map.get($color-roles-light, surface-variant, background);
-      border-color: map.get($color-roles-light, surface-variant, border);
-      opacity: 0.6;
-      cursor: not-allowed;
-      
-      &::after {
-        color: map.get($color-roles-light, surface-variant, text);
-      }
-    }
-
-    &:disabled:checked + .c-m3-checkbox__visual,
-    &:disabled:indeterminate + .c-m3-checkbox__visual {
-      background-color: map.get($color-roles-light, surface-variant, background);
-      border-color: map.get($color-roles-light, surface-variant, border);
-    }
+    display: none;
   }
-  
-  // Custom checkbox visual (18dp container)
+
   &__visual {
-    width: 18px;
-    height: 18px;
-    border-radius: 2px; // Container corner shape
+    position: relative;
+    width: 20px;
+    height: 20px;
     border: 2px solid map.get($color-roles-light, surface-variant, border);
     background-color: map.get($color-roles-light, surface, background);
+    border-radius: 4px;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    position: relative;
-    z-index: 1;
-    
-    // Checkmark/minus icon (18dp size, center-aligned)
-    &::after {
-      content: '';
-      width: 18px;
-      height: 18px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: all 0.2s ease;
-      color: transparent;
-    }
-    
-    // Error state - red border
-    &--error {
-      border-color: map.get($color-roles-light, error, border);
-    }
+  }
+
+  &--error {
+    border-color: map.get($color-roles-light, error, border);
   }
 
   // State layer (40dp)
@@ -242,9 +241,10 @@ export default {
   }
 
   &__error {
-    @include typography-role(body-small);
+    @include typography-role(label-small);
     color: map.get($color-roles-light, error, border);
     margin-top: 4px;
+    margin-left: 28px;
     display: block;
   }
 
