@@ -38,6 +38,14 @@ const meta: Meta<typeof M3Checkbox> = {
       control: 'boolean',
       description: 'Whether checkbox is in indeterminate state',
     },
+    showCross: {
+      control: 'boolean',
+      description: 'Whether to show cross icon when unchecked',
+    },
+    showIndeterminateIcon: {
+      control: 'boolean',
+      description: 'Whether to show minus icon when indeterminate',
+    },
   },
 }
 
@@ -225,12 +233,13 @@ export const Indeterminate: Story = {
 export const IndeterminateWithCross: Story = {
   args: {
     label: 'Indeterminate checkbox with cross',
+    showCross: true,
   },
   render: (args) => ({
     components: { M3Checkbox },
     setup() {
-      const modelValue = ref<boolean | null>(true)
-      const indeterminate = ref(false)
+      const modelValue = ref<boolean | null>(null)
+      const indeterminate = ref(true)
       const handleUpdate = (value: boolean | null) => {
         if (modelValue.value === true) {
           modelValue.value = false

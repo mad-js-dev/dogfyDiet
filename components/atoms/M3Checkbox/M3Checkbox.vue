@@ -3,7 +3,7 @@
     <input
       type="checkbox"
       :id="inputId"
-      :checked="indeterminate ? false : modelValue"
+      :checked="indeterminate ? false : Boolean(modelValue)"
       :disabled="disabled"
       :indeterminate="indeterminate"
       class="c-m3-checkbox__input"
@@ -34,38 +34,20 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 
-interface Props {
-  modelValue?: boolean | null
-  label?: string
-  id?: string
-  disabled?: boolean
-  required?: boolean
-  errorMessage?: string
-  'aria-label'?: string
-  indeterminate?: boolean
-  showCross?: boolean
-  showIndeterminateIcon?: boolean
-}
+import type { Props, Emits } from './settings'
+import { defaults } from './settings'
 
-interface Emits {
-  'update:modelValue': [value: boolean]
-  'blur': []
-  'focus': []
-  'click': [value: any]
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  disabled: false,
-  required: false,
-  indeterminate: false,
-  showIndeterminateIcon: true
-})
+const props = withDefaults(defineProps<Props>(), defaults)
 
 const emit = defineEmits<Emits>()
 
 // Debug: Watch modelValue changes
 watch(() => props.modelValue, (newValue) => {
   console.log('modelValue changed to:', newValue)
+})
+
+watch(() => props.showCross, (newValue) => {
+  console.log('showCross changed to:', newValue)
 })
 
 const inputRef = ref<HTMLInputElement>()
@@ -113,153 +95,6 @@ export default {
 }
 </script>
 
-<style>
-.c-m3-checkbox__checkmark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 18px;
-  height: 18px;
-  font-size: 18px;
-  line-height: 18px;
-  text-align: center;
-  color: #212121;
-  transition: all 0.2s ease;
-}
+<style lang="scss" src="./M3Checkbox-icons.scss"></style>
 
-.c-m3-checkbox__checkmark::before {
-  content: '✓';
-}
-
-.c-m3-checkbox__cross {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 18px;
-  height: 18px;
-  font-size: 18px;
-  line-height: 18px;
-  text-align: center;
-  color: #212121;
-  transition: all 0.2s ease;
-}
-
-.c-m3-checkbox__cross::before {
-  content: '✗';
-}
-
-.c-m3-checkbox__minus {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 18px;
-  height: 18px;
-  font-size: 18px;
-  line-height: 18px;
-  text-align: center;
-  color: #212121;
-  transition: all 0.2s ease;
-}
-
-.c-m3-checkbox__minus::before {
-  content: '−';
-}
-</style>
-
-<style scoped lang="scss">
-@use 'sass:map' as map;
-@use '~/assets/styles/_mixins-new' as *;
-
-.c-m3-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  &__input {
-    display: none;
-  }
-
-  &__visual {
-    position: relative;
-    width: 20px;
-    height: 20px;
-    border: 2px solid map.get($color-roles-light, surface-variant, border);
-    background-color: map.get($color-roles-light, surface, background);
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &--error {
-    border-color: map.get($color-roles-light, error, border);
-  }
-
-  // State layer (40dp)
-  &::before {
-    content: '';
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    left: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: transparent;
-    transition: background-color 0.2s ease;
-    z-index: 0;
-  }
-  
-  &:hover::before {
-    background-color: map.get($color-roles-light, primary, text);
-    opacity: 0.08;
-  }
-
-  &:hover .c-m3-checkbox__label-text {
-    color: map.get($color-roles-light, primary, border);
-  }
-
-  &__label-text {
-    @include typography-role(body-medium);
-    color: map.get($color-roles-light, surface, text);
-    transition: color 0.2s ease;
-    z-index: 1;
-    
-    &--error {
-      color: map.get($color-roles-light, error, border);
-    }
-  }
-
-  &__required {
-    @include typography-role(body-small);
-    color: map.get($color-roles-light, error, border);
-    margin-left: 4px;
-  }
-
-  &__error {
-    @include typography-role(label-small);
-    color: map.get($color-roles-light, error, border);
-    margin-top: 4px;
-    margin-left: 28px;
-    display: block;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    
-    &::before {
-      display: none;
-    }
-    
-    .c-m3-checkbox__label-text {
-      color: map.get($color-roles-light, surface-variant, text);
-      cursor: not-allowed;
-    }
-  }
-}
-</style>
+<style scoped lang="scss" src="./M3Checkbox.scss"></style>

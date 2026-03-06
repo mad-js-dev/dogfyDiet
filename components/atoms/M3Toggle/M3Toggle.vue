@@ -1,17 +1,17 @@
 <template>
   <div 
-    class="c-toggle"
+    class="c-m3-toggle"
     :class="{
-      'c-toggle--disabled': disabled,
-      'c-toggle--checked': modelValue
+      'c-m3-toggle--disabled': disabled,
+      'c-m3-toggle--checked': modelValue
     }"
   >
     <button
       type="button"
       :id="inputId"
       :class="{
-        'c-toggle__button': true,
-        'c-toggle__button--active': modelValue
+        'c-m3-toggle__button': true,
+        'c-m3-toggle__button--active': modelValue
       }"
       :disabled="disabled"
       :aria-pressed="modelValue"
@@ -19,8 +19,8 @@
       @click="toggle"
       role="switch"
     >
-      <div class="c-toggle__thumb">
-        <div class="c-toggle__thumb-handle"></div>
+      <div class="c-m3-toggle__thumb">
+        <div class="c-m3-toggle__thumb-handle"></div>
       </div>
     </button>
     
@@ -73,90 +73,96 @@ const ariaLabel = computed(() => {
 })
 </script>
 
-<style scoped>
-.c-toggle {
+<style scoped lang="scss">
+@use 'sass:map';
+@use '~/assets/styles/_mixins-new.scss' as *;
+
+.c-m3-toggle {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 0
+  );
+  
   position: relative;
   display: inline-block;
   width: 52px;
   height: 32px;
-}
 
-.c-toggle__button {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  border-radius: 16px;
-  transition: all 0.2s ease;
-}
+  &__button {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    border-radius: 16px;
+    transition: all 0.2s ease;
 
-.c-toggle__button--active {
-  background-color: #00B67A;
-}
+    &:hover {
+      @include color-role(surface-variant);
+    }
 
-.c-toggle__button:hover {
-  background-color: rgba(0, 183, 205, 0.05);
-}
+    &--active {
+      @include color-role(primary);
+    }
 
-.c-toggle__button--disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  background-color: transparent;
-}
+    &--disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: transparent;
+    }
+  }
 
-.c-toggle__thumb {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 24px;
-  height: 24px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease;
-}
+  &__thumb {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 24px;
+    background-color: map.get($color-roles-light, surface);
+    border-radius: 12px;
+    box-shadow: map.get($elevation-shadows, 1);
+    transition: all 0.2s ease;
+  }
 
-.c-toggle__thumb-handle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 2px;
-  height: 10px;
-  background-color: #00B67A;
-  border-radius: 1px;
-  transform: translate(-50%, -50%);
+  &__thumb-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 10px;
+    background-color: map.get($color-roles-light, primary);
+    border-radius: 1px;
+    transform: translate(-50%, -50%);
+  }
 }
 
 /* Active state */
-.c-toggle--checked .c-toggle__thumb {
-  background-color: #00B67A;
-  box-shadow: 0 2px 8px rgba(0, 183, 205, 0.25);
+.c-m3-toggle--checked {
+  .c-m3-toggle__thumb {
+    background-color: map.get($color-roles-light, primary);
+    box-shadow: map.get($elevation-shadows, 2);
+  }
 }
 
 /* Focus styles */
-.c-toggle:focus-within .c-toggle__button {
-  outline: 2px solid #00B67A;
-  outline-offset: 2px;
+.c-m3-toggle:focus-within {
+  .c-m3-toggle__button {
+    outline: 2px solid map.get($color-roles-light, primary);
+    outline-offset: 2px;
+  }
 }
 
 /* Disabled state */
-.c-toggle--disabled .c-toggle__button {
-  background-color: transparent;
-}
+.c-m3-toggle--disabled {
+  .c-m3-toggle__button {
+    background-color: transparent;
+  }
 
-.c-toggle--disabled .c-toggle__thumb {
-  background-color: #9e9e9e;
-  box-shadow: none;
-}
-
-/* Animation */
-.c-toggle__thumb {
-  transition: all 0.2s ease;
-}
-
-.c-toggle__thumb-handle {
-  transition: all 0.2s ease;
+  .c-m3-toggle__thumb {
+    background-color: map.get($color-roles-light, surface-variant);
+    box-shadow: none;
+  }
 }
 </style>

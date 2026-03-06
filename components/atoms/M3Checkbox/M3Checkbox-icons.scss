@@ -1,0 +1,53 @@
+.c-m3-checkbox__checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+  text-align: center;
+  color: #212121;
+  transition: all 0.2s ease;
+}
+
+.c-m3-checkbox__checkmark::before {
+  content: '✓';
+}
+
+.c-m3-checkbox__cross {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+  text-align: center;
+  color: #212121;
+  transition: all 0.2s ease;
+}
+
+.c-m3-checkbox__cross::before {
+  content: '✗';
+}
+
+.c-m3-checkbox__minus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+  text-align: center;
+  color: #212121;
+  transition: all 0.2s ease;
+}
+
+.c-m3-checkbox__minus::before {
+  content: '−';
+}
