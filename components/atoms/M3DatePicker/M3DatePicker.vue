@@ -336,18 +336,18 @@ export default {
     padding: 12px 16px;
     @include typography-role(body-medium);
     @include color-role(surface);
-    background-color: map.get($color-roles-light, surface);
-    border: 2px solid map.get($color-roles-light, surface-variant);
+    background-color: map.get($color-roles-light, surface, background);
+    border: 2px solid map.get($color-roles-light, surface-variant, border);
     border-radius: $radius-md;
     transition: all 0.2s ease;
 
     &:focus {
-      outline: 2px solid map.get($color-roles-light, primary);
+      outline: 2px solid map.get($color-roles-light, primary, text);
       outline-offset: 2px;
     }
 
     &--error {
-      border-color: map.get($color-roles-light, error);
+      border-color: map.get($color-roles-light, error, border);
     }
   }
 
@@ -355,8 +355,8 @@ export default {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: map.get($color-roles-light, surface);
-    border: 1px solid map.get($color-roles-light, surface-variant);
+    background-color: map.get($color-roles-light, surface, background);
+    border: 1px solid map.get($color-roles-light, surface-variant, border);
     border-radius: $radius-md;
     box-shadow: map.get($elevation-shadows, 2);
     z-index: 10;
@@ -368,15 +368,15 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    border-bottom: 1px solid map.get($color-roles-light, surface-variant);
+    border-bottom: 1px solid map.get($color-roles-light, surface-variant, border);
   }
 
   &__nav-button {
     padding: 8px 12px;
-    border: 1px solid map.get($color-roles-light, surface-variant);
+    border: 1px solid map.get($color-roles-light, surface-variant, border);
     border-radius: $radius-sm;
-    background-color: map.get($color-roles-light, surface);
-    color: map.get($color-roles-light, surface);
+    background-color: map.get($color-roles-light, surface, background);
+    color: map.get($color-roles-light, surface, text);
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -428,11 +428,11 @@ export default {
     justify-content: center;
     height: 40px;
     border-radius: $radius-md;
-    background-color: map.get($color-roles-light, surface);
-    color: map.get($color-roles-light, surface);
+    background-color: map.get($color-roles-light, surface, background);
+    color: map.get($color-roles-light, surface, text);
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid map.get($color-roles-light, surface-variant);
+    border: 1px solid map.get($color-roles-light, surface-variant, border);
 
     &:hover {
       @include color-role(surface-variant);
@@ -440,28 +440,28 @@ export default {
 
     &--other-month {
       opacity: 0.6;
-      color: map.get($color-roles-light, surface-variant);
-      border-color: map.get($color-roles-light, surface-variant);
+      color: map.get($color-roles-light, surface-variant, text);
+      border-color: map.get($color-roles-light, surface-variant, border);
     }
 
     &--selected {
-      background-color: map.get($color-roles-light, primary);
-      color: map.get($color-roles-light, primary);
-      border-color: map.get($color-roles-light, primary);
+      background-color: map.get($color-roles-light, primary, background);
+      color: map.get($color-roles-light, primary, text);
+      border-color: map.get($color-roles-light, primary, border);
     }
 
     &--today {
-      background-color: map.get($color-roles-light, primary);
-      color: map.get($color-roles-light, primary);
-      border: 2px solid map.get($color-roles-light, primary);
+      background-color: map.get($color-roles-light, primary, background);
+      color: map.get($color-roles-light, primary, text);
+      border: 2px solid map.get($color-roles-light, primary, border);
     }
 
     &--disabled {
       opacity: 0.4;
       cursor: not-allowed;
-      background-color: map.get($color-roles-light, surface-variant);
-      color: map.get($color-roles-light, surface-variant);
-      border-color: map.get($color-roles-light, surface-variant);
+      background-color: map.get($color-roles-light, surface-variant, background);
+      color: map.get($color-roles-light, surface-variant, text);
+      border-color: map.get($color-roles-light, surface-variant, border);
     }
   }
 

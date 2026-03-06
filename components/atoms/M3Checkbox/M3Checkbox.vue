@@ -7,20 +7,23 @@
       'c-m3-checkbox--error': hasError
     }"
   >
-    <input
-      type="checkbox"
-      :id="inputId"
-      :checked="modelValue"
-      :disabled="disabled"
-      :class="{
-        'c-m3-checkbox__input': true,
-        'c-m3-checkbox__input--error': hasError
-      }"
-      @change="handleChange"
-      @blur="handleBlur"
-      @focus="handleFocus"
-      :aria-describedby="hasError ? `${inputId}-error` : undefined"
-    />
+    <div class="c-m3-checkbox__input-wrapper">
+      <input
+        type="checkbox"
+        :id="inputId"
+        :checked="modelValue"
+        :disabled="disabled"
+        :class="{
+          'c-m3-checkbox__input': true,
+          'c-m3-checkbox__input--error': hasError
+        }"
+        @change="handleChange"
+        @blur="handleBlur"
+        @focus="handleFocus"
+        :aria-describedby="hasError ? `${inputId}-error` : undefined"
+      />
+      <div class="c-m3-checkbox__visual"></div>
+    </div>
     
     <label 
       :for="inputId"
@@ -129,21 +132,110 @@ export default {
   gap: 12px;
   cursor: pointer;
   user-select: none;
+  position: relative;
+  
+  // State layer (40dp) - centered around the checkbox
+  &::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+    z-index: 0;
+    margin-left: -20px; // Adjust for label positioning
+  }
+  
+  &:hover::before {
+    background-color: map.get($color-roles-light, primary, text);
+    opacity: 0.08;
+  }
+  
+  &__input-wrapper {
+    position: relative;
+    width: 48px; // Target size
+    height: 48px; // Target size
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
   
   &__input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
-    width: 20px;
-    height: 20px;
+    width: 48px; // Target size
+    height: 48px; // Target size
     margin: 0;
+    z-index: 2;
 
     &:checked {
-      opacity: 1;
+      opacity: 0;
     }
 
     &--error {
       accent-color: map.get($color-roles-light, error, text);
+    }
+  }
+  
+  // Custom checkbox visual (18dp container)
+  &__visual {
+    width: 18px;
+    height: 18px;
+    border-radius: 2px; // Container corner shape
+    border: 2px solid map.get($color-roles-light, surface-variant, border);
+    background-color: map.get($color-roles-light, surface, background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+    
+    // Checkmark icon (18dp size, center-aligned)
+    &::after {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Cpath fill='%23currentColor' d='M6.75 12.25L3.5 9l-1.06 1.06L6.75 14.87 15.56 6.06 14.5 5z'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.2s ease;
+      color: transparent;
+    }
+  }
+  
+  // Checked state
+  &--checked &__visual {
+    background-color: map.get($color-roles-light, primary, background);
+    border-color: map.get($color-roles-light, primary, background);
+    
+    &::after {
+      opacity: 1;
+      transform: scale(1);
+      color: map.get($color-roles-light, primary, text);
+    }
+  }
+  
+  // Error state
+  &--error &__visual {
+    border-color: map.get($color-roles-light, error, border);
+  }
+  
+  &--checked&--error &__visual {
+    background-color: map.get($color-roles-light, error, background);
+    border-color: map.get($color-roles-light, error, background);
+    
+    &::after {
+      color: map.get($color-roles-light, error, text);
     }
   }
 
@@ -152,6 +244,8 @@ export default {
     @include typography-role(body-medium);
     @include color-role(surface);
     transition: color 0.2s ease;
+    padding-top: 12px; // Align with checkbox center
+    z-index: 1;
 
     &:hover {
       @include color-role(primary);
@@ -177,8 +271,17 @@ export default {
     opacity: 0.6;
     cursor: not-allowed;
 
-    .c-m3-checkbox__input {
+    .c-m3-checkbox__visual {
       background-color: map.get($color-roles-light, surface-variant, background);
+      border-color: map.get($color-roles-light, surface-variant, border);
+      
+      &::after {
+        color: map.get($color-roles-light, surface-variant, text);
+      }
+    }
+    
+    &::before {
+      display: none;
     }
   }
 
@@ -191,12 +294,7 @@ export default {
 
 /* Focus styles */
 .c-m3-checkbox:focus-within {
-  .c-m3-checkbox__input {
-    outline: 2px solid map.get($color-roles-light, primary, text);
-    outline-offset: 2px;
-  }
-
-  .c-m3-checkbox__label {
+  .c-m3-checkbox__visual {
     outline: 2px solid map.get($color-roles-light, primary, text);
     outline-offset: 2px;
   }
