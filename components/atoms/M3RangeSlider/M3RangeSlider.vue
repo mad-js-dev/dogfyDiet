@@ -1,32 +1,32 @@
 <template>
-  <div class="c-range-slider">
-    <div class="c-range-slider__track-container" ref="trackContainerRef">
+  <div class="c-m3-range-slider">
+    <div class="c-m3-range-slider__track-container" ref="trackContainerRef">
       <!-- Track line -->
-      <div class="c-range-slider__track"></div>
+      <div class="c-m3-range-slider__track"></div>
       
       <!-- Step indicators -->
-      <div class="c-range-slider__steps">
+      <div class="c-m3-range-slider__steps">
         <div
           v-for="(option, index) in reactiveOptions"
           :key="option"
-          class="c-range-slider__step"
+          class="c-m3-range-slider__step"
           :class="{
-            'c-range-slider__step--active': index === activeStepIndex,
-            'c-range-slider__step--completed': index < activeStepIndex
+            'c-m3-range-slider__step--active': index === activeStepIndex,
+            'c-m3-range-slider__step--completed': index < activeStepIndex
           }"
         ></div>
       </div>
       
       <!-- Thumb -->
       <div
-        class="c-range-slider__thumb"
+        class="c-m3-range-slider__thumb"
         :style="{ left: thumbPosition }"
         @mousedown="handleMouseDown"
         @touchstart="handleTouchStart"
         tabindex="0"
         role="slider"
         :aria-valuemin="0"
-        :aria-valuemax="(config.options?.length || 1) - 1"
+        :aria-valuemax="(reactiveOptions?.length || 1) - 1"
         :aria-valuenow="activeStepIndex"
         :aria-valuetext="selectedValue"
         @keydown="handleKeyDown"
@@ -34,13 +34,13 @@
     </div>
     
     <!-- Labels -->
-    <div v-if="showLabels" class="c-range-slider__labels">
+    <div v-if="showLabels" class="c-m3-range-slider__labels">
       <div
         v-for="(option, index) in reactiveOptions"
         :key="option"
-        class="c-range-slider__label"
+        class="c-m3-range-slider__label"
         :class="{
-          'c-range-slider__label--active': index === activeStepIndex
+          'c-m3-range-slider__label--active': index === activeStepIndex
         }"
       >
         {{ getLabel(option) }}
@@ -48,12 +48,12 @@
     </div>
     
     <!-- Value display -->
-    <div v-if="showValue" class="c-range-slider__value">
+    <div v-if="showValue" class="c-m3-range-slider__value">
       {{ selectedValue }}
     </div>
     
     <!-- Error message -->
-    <div v-if="error" class="c-range-slider__error">
+    <div v-if="error" class="c-m3-range-slider__error">
       {{ error }}
     </div>
   </div>
@@ -301,12 +301,15 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-.c-range-slider {
-  --primary-color: #0066cc;
-  --secondary-color: #ff6b6b;
-  --track-height: 4px;
-  --thumb-size: 24px;
-  --step-size: 12px;
+@use 'sass:map';
+@use '~/assets/styles/_mixins-new.scss' as *;
+
+.c-m3-range-slider {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 0
+  );
   
   position: relative;
   max-width: 400px;
@@ -315,7 +318,7 @@ onUnmounted(() => {
 
   &__track-container {
     position: relative;
-    height: var(--thumb-size);
+    height: 24px;
     margin: 1rem 0;
   }
 
@@ -324,8 +327,8 @@ onUnmounted(() => {
     top: 50%;
     left: 0;
     right: 0;
-    height: var(--track-height);
-    background: #e0e0e0;
+    height: 4px;
+    background-color: map.get($color-roles-light, surface-variant);
     border-radius: 2px;
     transform: translateY(-50%);
   }
@@ -341,50 +344,45 @@ onUnmounted(() => {
   }
 
   &__step {
-    width: var(--step-size);
-    height: var(--step-size);
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: #e0e0e0;
-    border: 2px solid white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: map.get($color-roles-light, surface-variant);
+    border: 2px solid map.get($color-roles-light, surface);
+    box-shadow: map.get($elevation-shadows, 0);
     transition: all 0.3s ease;
 
     &--active {
-      background: var(--primary-color);
+      background-color: map.get($color-roles-light, primary);
       transform: scale(1.2);
     }
 
     &--completed {
-      background: var(--primary-color);
+      background-color: map.get($color-roles-light, primary);
     }
   }
 
   &__thumb {
     position: absolute;
     top: 50%;
-    width: var(--thumb-size);
-    height: var(--thumb-size);
-    background: var(--primary-color);
-    border: 3px solid white;
+    width: 24px;
+    height: 24px;
+    background-color: map.get($color-roles-light, primary);
+    border: 3px solid map.get($color-roles-light, surface);
     border-radius: 50%;
     cursor: grab;
     transform: translate(-50%, -50%);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: map.get($elevation-shadows, 2);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
       transform: translate(-50%, -50%) scale(1.1);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: map.get($elevation-shadows, 3);
     }
 
     &:active {
       cursor: grabbing;
       transform: translate(-50%, -50%) scale(1.2);
-    }
-
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.3);
     }
   }
 
@@ -393,17 +391,19 @@ onUnmounted(() => {
     justify-content: space-between;
     margin-top: 1rem;
     padding: 0 0.5rem;
+    @include typography-role(body-small);
+    @include color-role(surface);
   }
 
   &__label {
-    font-size: 0.875rem;
-    color: #666;
+    @include typography-role(body-small);
+    @include color-role(surface);
     text-align: center;
     transition: color 0.3s ease;
 
     &--active {
-      color: var(--primary-color);
-      font-weight: 600;
+      @include color-role(primary);
+      font-weight: map.get($font-weights, medium);
     }
   }
 
@@ -411,16 +411,17 @@ onUnmounted(() => {
     text-align: center;
     margin-top: 1.5rem;
     padding: 0.75rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: #333;
-    border: 1px solid #e0e0e0;
+    @include component-style(
+      $typography-role: body-small,
+      $color-role: surface-variant,
+      $elevation-level: 1,
+      $include-border: true
+    );
   }
 
   &__error {
-    color: var(--secondary-color);
-    font-size: 0.875rem;
+    @include typography-role(body-small);
+    @include color-role(error);
     margin-top: 0.5rem;
     text-align: center;
   }
@@ -430,9 +431,19 @@ onUnmounted(() => {
     opacity: 0.6;
     pointer-events: none;
 
-    .c-range-slider__thumb {
+    .c-m3-range-slider__thumb {
       cursor: not-allowed;
+      background-color: map.get($color-roles-light, surface-variant);
+      border-color: map.get($color-roles-light, surface);
     }
+  }
+}
+
+/* Focus styles */
+.c-m3-range-slider:focus-within {
+  .c-m3-range-slider__thumb {
+    outline: 2px solid map.get($color-roles-light, primary);
+    outline-offset: 2px;
   }
 }
 </style>
