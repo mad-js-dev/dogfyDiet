@@ -7,7 +7,9 @@
 // Import design system
 @use './variables' as *;
 @use './mixins' as *;
+@use './mixins-new' as *;
 @use './typography' as *;
+@use './utilities' as *;
 
 // -----------------------------------------------------------------------------
 // FONT FACES

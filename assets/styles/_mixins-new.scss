@@ -1,0 +1,522 @@
+// =============================================================================
+// DOGFY DIET DESIGN SYSTEM - ADVANCED MIXINS
+// =============================================================================
+// Role-based mixing system that combines typography, colors, and elevation
+
+@use './variables' as *;
+@use 'sass:color';
+@use 'sass:map';
+
+// -----------------------------------------------------------------------------
+// ROLE MAPPINGS
+// -----------------------------------------------------------------------------
+
+// Typography role mappings
+$typography-roles: (
+  'display-large': (
+    size: $font-size-display-large,
+    weight: $font-weight-black,
+    line-height: $line-height-display-large,
+    family: $font-family-primary
+  ),
+  'display-medium': (
+    size: $font-size-display-medium,
+    weight: $font-weight-black,
+    line-height: $line-height-display-medium,
+    family: $font-family-primary
+  ),
+  'display-small': (
+    size: $font-size-display-small,
+    weight: $font-weight-black,
+    line-height: $line-height-display-small,
+    family: $font-family-primary
+  ),
+  'headline-large': (
+    size: $font-size-headline-large,
+    weight: $font-weight-bold,
+    line-height: $line-height-headline-large,
+    family: $font-family-primary
+  ),
+  'headline-medium': (
+    size: $font-size-headline-medium,
+    weight: $font-weight-semibold,
+    line-height: $line-height-headline-medium,
+    family: $font-family-primary
+  ),
+  'headline-small': (
+    size: $font-size-headline-small,
+    weight: $font-weight-medium,
+    line-height: $line-height-headline-small,
+    family: $font-family-primary
+  ),
+  'title-large': (
+    size: $font-size-title-large,
+    weight: $font-weight-medium,
+    line-height: $line-height-title-large,
+    family: $font-family-primary
+  ),
+  'title-medium': (
+    size: $font-size-title-medium,
+    weight: $font-weight-medium,
+    line-height: $line-height-title-medium,
+    family: $font-family-primary
+  ),
+  'title-small': (
+    size: $font-size-title-small,
+    weight: $font-weight-medium,
+    line-height: $line-height-title-small,
+    family: $font-family-primary
+  ),
+  'body-large': (
+    size: $font-size-body-large,
+    weight: $font-weight-regular,
+    line-height: $line-height-body-large,
+    family: $font-family-secondary
+  ),
+  'body-medium': (
+    size: $font-size-body-medium,
+    weight: $font-weight-regular,
+    line-height: $line-height-body-medium,
+    family: $font-family-secondary
+  ),
+  'body-small': (
+    size: $font-size-body-small,
+    weight: $font-weight-regular,
+    line-height: $line-height-body-small,
+    family: $font-family-secondary
+  ),
+  'label-large': (
+    size: $font-size-label-large,
+    weight: $font-weight-medium,
+    line-height: $line-height-label-large,
+    family: $font-family-secondary
+  ),
+  'label-medium': (
+    size: $font-size-label-medium,
+    weight: $font-weight-medium,
+    line-height: $line-height-label-medium,
+    family: $font-family-secondary
+  ),
+  'label-small': (
+    size: $font-size-label-small,
+    weight: $font-weight-medium,
+    line-height: $line-height-label-small,
+    family: $font-family-secondary
+  )
+);
+
+// Color role mappings for light theme
+$color-roles-light: (
+  'primary': (
+    text: $md3-light-on-primary,
+    background: $md3-light-primary-container,
+    border: $md3-light-primary
+  ),
+  'secondary': (
+    text: $md3-light-on-secondary,
+    background: $md3-light-secondary-container,
+    border: $md3-light-secondary
+  ),
+  'tertiary': (
+    text: $md3-light-on-tertiary,
+    background: $md3-light-tertiary-container,
+    border: $md3-light-tertiary
+  ),
+  'surface': (
+    text: $md3-light-on-surface,
+    background: $md3-light-surface,
+    border: $md3-light-outline
+  ),
+  'surface-variant': (
+    text: $md3-light-on-surface-variant,
+    background: $md3-light-surface-variant,
+    border: $md3-light-outline-variant
+  ),
+  'inverse': (
+    text: $md3-light-on-primary,
+    background: $primary-green,
+    border: $primary-green
+  ),
+  'error': (
+    text: $md3-on-error,
+    background: $md3-error-container,
+    border: $md3-error
+  ),
+  'success': (
+    text: $neutral-white,
+    background: $success,
+    border: $success
+  ),
+  'warning': (
+    text: $neutral-darkest,
+    background: $warning,
+    border: $warning
+  ),
+  'info': (
+    text: $neutral-white,
+    background: $info,
+    border: $info
+  )
+);
+
+// Color role mappings for dark theme
+$color-roles-dark: (
+  'primary': (
+    text: $md3-dark-on-primary,
+    background: $md3-dark-primary-container,
+    border: $md3-dark-primary
+  ),
+  'secondary': (
+    text: $md3-dark-on-secondary,
+    background: $md3-dark-secondary-container,
+    border: $md3-dark-secondary
+  ),
+  'tertiary': (
+    text: $md3-dark-on-tertiary,
+    background: $md3-dark-tertiary-container,
+    border: $md3-dark-tertiary
+  ),
+  'surface': (
+    text: $md3-dark-on-surface,
+    background: $md3-dark-surface,
+    border: $md3-dark-outline
+  ),
+  'surface-variant': (
+    text: $md3-dark-on-surface-variant,
+    background: $md3-dark-surface-variant,
+    border: $md3-dark-outline-variant
+  ),
+  'inverse': (
+    text: $md3-dark-on-primary,
+    background: color.adjust($primary-green, $lightness: 20%),
+    border: color.adjust($primary-green, $lightness: 20%)
+  ),
+  'error': (
+    text: $md3-on-error-container,
+    background: $md3-error-container,
+    border: $md3-error
+  ),
+  'success': (
+    text: $neutral-darkest,
+    background: $success-dark,
+    border: $success-dark
+  ),
+  'warning': (
+    text: $neutral-darkest,
+    background: color.adjust($warning, $lightness: -20%),
+    border: color.adjust($warning, $lightness: -20%)
+  ),
+  'info': (
+    text: $neutral-darkest,
+    background: color.adjust($info, $lightness: -20%),
+    border: color.adjust($info, $lightness: -20%)
+  )
+);
+
+// Elevation shadow mappings
+$elevation-shadows: (
+  0: none,
+  1: 0 1px 2px rgba($neutral-darkest, 0.05), 0 1px 3px rgba($neutral-darkest, 0.1),
+  2: 0 1px 2px rgba($neutral-darkest, 0.05), 0 1px 3px rgba($neutral-darkest, 0.1),
+  3: 0 4px 6px rgba($neutral-darkest, 0.07), 0 1px 3px rgba($neutral-darkest, 0.14),
+  4: 0 6px 8px rgba($neutral-darkest, 0.09), 0 2px 4px rgba($neutral-darkest, 0.14),
+  5: 0 8px 10px rgba($neutral-darkest, 0.1), 0 3px 6px rgba($neutral-darkest, 0.14)
+);
+
+// -----------------------------------------------------------------------------
+// CORE MIXINS
+// -----------------------------------------------------------------------------
+
+/// Get typography properties by role
+/// @param {String} $role - Typography role key
+/// @param {String} $weight - Font weight override (light, regular, medium, semibold, bold, black)
+/// @param {Boolean} $emphasis - Apply emphasized letter spacing
+@function get-typography($role, $weight: null, $emphasis: false) {
+  $role-data: map.get($typography-roles, $role);
+  
+  @if not $role-data {
+    @error "Typography role '#{$role}' not found. Available: #{map.keys($typography-roles)}";
+  }
+  
+  $font-size: map.get($role-data, size);
+  $default-weight: map.get($role-data, weight);
+  $font-weight: if($weight, map-get($font-weights, $weight), $default-weight);
+  $line-height: map.get($role-data, line-height);
+  $font-family: map.get($role-data, family);
+  
+  @return (
+    font-size: $font-size,
+    font-weight: $font-weight,
+    line-height: $line-height,
+    font-family: $font-family,
+    letter-spacing: if($emphasis, map.get($letter-spacing-em, $role), null)
+  );;
+}
+
+/// Get color properties by role and theme
+/// @param {String} $role - Color role key
+/// @param {String} $theme - Theme variant (light, dark)
+/// @param {Boolean} $include-border - Include border color
+@function get-colors($role, $theme: light, $include-border: true) {
+  $color-map: if($theme == dark, $color-roles-dark, $color-roles-light);
+  $role-data: map.get($color-map, $role);
+  
+  @if not $role-data {
+    @error "Color role '#{$role}' not found. Available: #{map.keys($color-map)}";
+  }
+  
+  @return (
+    color: map.get($role-data, text),
+    background-color: map.get($role-data, background),
+    border-color: if($include-border, map.get($role-data, border), null)
+  );
+}
+
+/// Get elevation shadow by level
+/// @param {Number} $level - Elevation level (0-5)
+/// @param {Boolean} $include-shadow - Include box-shadow
+@function get-elevation($level, $include-shadow: true) {
+  $shadow: map.get($elevation-shadows, $level);
+  
+  @if not $shadow {
+    @error "Elevation level '#{$level}' not found. Available: 0-5";
+  }
+  
+  @return (
+    z-index: $level * 100,
+    box-shadow: if($include-shadow, $shadow, none)
+  );
+}
+
+/// Font weight mapping for dynamic lookup
+$font-weights: (
+  'light': $font-weight-light,
+  'regular': $font-weight-regular,
+  'medium': $font-weight-medium,
+  'semibold': $font-weight-semibold,
+  'bold': $font-weight-bold,
+  'black': $font-weight-black
+);
+
+/// Letter spacing for emphasized styles
+$letter-spacing-em: (
+  'display-large': $letter-spacing-display-large-em,
+  'display-medium': $letter-spacing-display-medium-em,
+  'display-small': $letter-spacing-display-small-em,
+  'headline-large': $letter-spacing-headline-large-em,
+  'headline-medium': $letter-spacing-headline-medium-em,
+  'headline-small': $letter-spacing-headline-small-em,
+  'title-large': $letter-spacing-title-large-em,
+  'title-medium': $letter-spacing-title-medium-em,
+  'title-small': $letter-spacing-title-small-em,
+  'body-large': $letter-spacing-body-large-em,
+  'body-medium': $letter-spacing-body-medium-em,
+  'body-small': $letter-spacing-body-small-em,
+  'label-large': $letter-spacing-label-large-em,
+  'label-medium': $letter-spacing-label-medium-em,
+  'label-small': $letter-spacing-label-small-em
+);
+
+// -----------------------------------------------------------------------------
+// ADVANCED MIXINS
+// -----------------------------------------------------------------------------
+
+/// Apply typography by role
+/// @param {String} $role - Typography role
+/// @param {String} $weight - Font weight override
+/// @param {Boolean} $emphasis - Apply emphasized letter spacing
+@mixin typography-role($role, $weight: null, $emphasis: false) {
+  $props: get-typography($role, $weight, $emphasis);
+  
+  font-size: map.get($props, font-size);
+  font-weight: map.get($props, font-weight);
+  line-height: map.get($props, line-height);
+  font-family: map.get($props, font-family);
+  @if map.get($props, letter-spacing) {
+    letter-spacing: map.get($props, letter-spacing);
+  }
+}
+
+/// Apply colors by role and theme
+/// @param {String} $role - Color role
+/// @param {String} $theme - Theme variant
+/// @param {Boolean} $include-border - Include border
+@mixin color-role($role, $theme: light, $include-border: true) {
+  $props: get-colors($role, $theme, $include-border);
+  
+  color: map.get($props, color);
+  background-color: map.get($props, background-color);
+  @if map.get($props, border-color) {
+    border-color: map.get($props, border-color);
+  }
+}
+
+/// Apply elevation by level
+/// @param {Number} $level - Elevation level
+/// @param {Boolean} $include-shadow - Include box-shadow
+@mixin elevation-role($level, $include-shadow: true) {
+  $props: get-elevation($level, $include-shadow);
+  
+  z-index: map.get($props, z-index);
+  @if map.get($props, box-shadow) {
+    box-shadow: map.get($props, box-shadow);
+  }
+}
+
+/// Unified component styling mixin
+/// @param {String} $typography-role - Typography role
+/// @param {String} $color-role - Color role
+/// @param {Number} $elevation-level - Elevation level
+/// @param {String} $theme - Theme variant
+/// @param {String} $weight - Font weight
+/// @param {Boolean} $emphasis - Apply emphasized letter spacing
+/// @param {Boolean} $include-border - Include border
+/// @param {Boolean} $include-shadow - Include box-shadow
+@mixin component-style(
+  $typography-role: body-medium,
+  $color-role: surface,
+  $elevation-level: 0,
+  $theme: light,
+  $weight: null,
+  $emphasis: false,
+  $include-border: false,
+  $include-shadow: false
+) {
+  // Apply typography
+  @include typography-role($typography-role, $weight, $emphasis);
+  
+  // Apply colors
+  @include color-role($color-role, $theme, $include-border);
+  
+  // Apply elevation
+  @include elevation-role($elevation-level, $include-shadow);
+  
+  // Common component properties
+  border-radius: $radius-md;
+  transition: all $transition-normal $ease-out;
+}
+
+// -----------------------------------------------------------------------------
+// THEME SWITCHING
+// -----------------------------------------------------------------------------
+
+/// Generate theme-aware styles
+/// @param {Map} $light-styles - Light theme styles
+/// @param {Map} $dark-styles - Dark theme styles
+@mixin theme-aware($light-styles, $dark-styles) {
+  // Light theme (default)
+  @content
+  
+  // Dark theme
+  @media (prefers-color-scheme: dark) {
+    @content $dark-styles;
+  }
+
+/// Create theme variable
+/// @param {String} $light-var - Light theme value
+/// @param {String} $dark-var - Dark theme value
+@mixin theme-variable($light-var, $dark-var) {
+  @content;
+  
+  @media (prefers-color-scheme: dark) {
+    @content $dark-var;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// UTILITY GENERATORS
+// -----------------------------------------------------------------------------
+
+/// Generate text utility classes
+@mixin generate-text-utilities {
+  @each $role, $props in $typography-roles {
+    .text-#{$role} {
+      @include typography-role($role);
+      
+      @each $weight-name, $weight-value in $font-weights {
+        &-#{$weight-name} {
+          @include typography-role($role, $weight-name);
+        }
+      }
+      
+      &-em {
+        @include typography-role($role, null, true);
+      }
+    }
+  }
+}
+
+/// Generate color utility classes
+@mixin generate-color-utilities {
+  @each $role in map.keys($color-roles-light) {
+    .color-#{$role} {
+      @include color-role($role, light);
+      
+      @media (prefers-color-scheme: dark) {
+        @include color-role($role, dark);
+      }
+    }
+  }
+}
+
+/// Generate elevation utility classes
+@mixin generate-elevation-utilities {
+  @each $level in 0, 1, 2, 3, 4, 5 {
+    .elevation-#{$level} {
+      @include elevation-role($level);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// EXAMPLE USAGE
+// -----------------------------------------------------------------------------
+/*
+// Basic usage:
+.my-component {
+  @include component-style(
+    $typography-role: title-large,
+    $color-role: primary,
+    $elevation-level: 2,
+    $theme: light,
+    $weight: semibold,
+    $include-shadow: true
+  );
+}
+
+// Advanced usage with theme awareness:
+.my-card {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 1,
+    $include-shadow: true
+  );
+  
+  @media (prefers-color-scheme: dark) {
+    @include component-style(
+      $typography-role: body-medium,
+      $color-role: surface,
+      $elevation-level: 1,
+      $theme: dark,
+      $include-shadow: true
+    );
+  }
+}
+
+// Individual mixins:
+.my-heading {
+  @include typography-role(display-large, bold);
+  @include color-role(primary, light);
+}
+
+.my-button {
+  @include component-style(
+    $typography-role: label-medium,
+    $color-role: primary,
+    $elevation-level: 2,
+    $weight: medium,
+    $include-shadow: true
+  );
+}
+*/

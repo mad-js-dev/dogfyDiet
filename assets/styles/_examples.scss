@@ -1,0 +1,233 @@
+// =============================================================================
+// DOGFY DIET DESIGN SYSTEM - USAGE EXAMPLES
+// =============================================================================
+// Examples showing how to use the new mixing system
+
+@use './mixins-new' as *;
+@use './variables' as *;
+
+// -----------------------------------------------------------------------------
+// COMPONENT EXAMPLES
+// -----------------------------------------------------------------------------
+
+// Example 1: Button with unified styling
+.button-example {
+  @include component-style(
+    $typography-role: label-medium,
+    $color-role: primary,
+    $elevation-level: 2,
+    $weight: medium,
+    $include-shadow: true
+  );
+  
+  padding: $spacing-4 $spacing-6;
+  border-radius: $radius-md;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all $transition-normal $ease-out;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Example 2: Card with surface colors
+.card-example {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 1,
+    $include-shadow: true
+  );
+  
+  border-radius: $card-border-radius;
+  padding: $card-padding;
+  transition: all $transition-normal $ease-out;
+  
+  &:hover {
+    @include elevation-role(2);
+  }
+}
+
+// Example 3: Heading with primary color
+.heading-example {
+  @include component-style(
+    $typography-role: headline-large,
+    $color-role: primary,
+    $weight: bold,
+    $emphasis: true
+  );
+}
+
+// Example 4: Input with surface colors
+.input-example {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 0,
+    $include-border: true
+  );
+  
+  border: 2px solid;
+  border-radius: $radius-md;
+  padding: $spacing-3 $spacing-4;
+  transition: all $transition-normal $ease-out;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-green;
+    box-shadow: 0 0 0 3px rgba($primary-green, 0.1);
+  }
+  
+  &::placeholder {
+    color: $neutral-medium;
+  }
+}
+
+// Example 5: Theme-aware component
+.theme-aware-example {
+  // Light theme (default)
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 1
+  );
+  
+  // Dark theme
+  @media (prefers-color-scheme: dark) {
+    @include component-style(
+      $typography-role: body-medium,
+      $color-role: surface,
+      $elevation-level: 1,
+      $theme: dark
+    );
+  }
+}
+
+// Example 6: Using individual mixins
+.custom-example {
+  // Typography only
+  @include typography-role(display-large, bold, true);
+  
+  // Colors only
+  @include color-role(primary, light);
+  
+  // Elevation only
+  @include elevation-role(2, true);
+}
+
+// Example 7: Advanced component with multiple states
+.advanced-button {
+  @include component-style(
+    $typography-role: label-medium,
+    $color-role: primary,
+    $elevation-level: 2,
+    $weight: medium,
+    $include-shadow: true
+  );
+  
+  position: relative;
+  overflow: hidden;
+  
+  // Loading state
+  &.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0;
+      border: 2px solid $neutral-white;
+      border-radius: 50%;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  // Success state
+  &.success {
+    @include component-style(
+      $typography-role: label-medium,
+      $color-role: success,
+      $elevation-level: 2,
+      $weight: medium
+    );
+  }
+  
+  // Error state
+  &.error {
+    @include component-style(
+      $typography-role: label-medium,
+      $color-role: error,
+      $elevation-level: 2,
+      $weight: medium
+    );
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// UTILITY CLASS EXAMPLES
+// -----------------------------------------------------------------------------
+
+// Using generated text utilities
+.utility-text-example {
+  @extend .text-headline-large;
+  @extend .text-bold;
+  @extend .text-primary;
+}
+
+// Using generated color utilities
+.utility-color-example {
+  @extend .bg-surface;
+  @extend .text-body-medium;
+  @extend .elevation-1;
+}
+
+// Using generated spacing utilities
+.utility-spacing-example {
+  @extend .p-6;
+  @extend .m-4;
+}
+
+// -----------------------------------------------------------------------------
+// RESPONSIVE EXAMPLES
+// -----------------------------------------------------------------------------
+
+.responsive-example {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface
+  );
+  
+  // Mobile first approach
+  @include respond-to(md) {
+    @include typography-role(body-large);
+    padding: $spacing-8;
+  }
+  
+  @include respond-to(lg) {
+    @include typography-role(body-large);
+    padding: $spacing-12;
+  }
+}

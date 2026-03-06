@@ -1,0 +1,493 @@
+// =============================================================================
+// DOGFY DIET DESIGN SYSTEM - GENERATED UTILITIES
+// =============================================================================
+// Auto-generated utility classes using the mixing system
+
+@use './mixins-new' as *;
+@use './variables' as *;
+
+// -----------------------------------------------------------------------------
+// TEXT UTILITIES
+// -----------------------------------------------------------------------------
+
+@include generate-text-utilities();
+
+// Custom text utilities for common use cases
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// -----------------------------------------------------------------------------
+// COLOR UTILITIES
+// -----------------------------------------------------------------------------
+
+@include generate-color-utilities();
+
+// Custom color utilities
+.text-primary {
+  color: $primary-green;
+}
+
+.text-secondary {
+  color: $accent-orange;
+}
+
+.text-success {
+  color: $success;
+}
+
+.text-error {
+  color: $error;
+}
+
+.text-warning {
+  color: $warning;
+}
+
+.text-info {
+  color: $info;
+}
+
+.bg-primary {
+  background-color: $primary-green;
+}
+
+.bg-secondary {
+  background-color: $accent-orange;
+}
+
+.bg-success {
+  background-color: $success;
+}
+
+.bg-error {
+  background-color: $error;
+}
+
+.bg-warning {
+  background-color: $warning;
+}
+
+.bg-info {
+  background-color: $info;
+}
+
+.bg-surface {
+  background-color: $md3-light-surface;
+}
+
+.bg-surface-variant {
+  background-color: $md3-light-surface-variant;
+}
+
+// Dark theme color utilities
+@media (prefers-color-scheme: dark) {
+  .text-primary {
+    color: $md3-dark-on-primary;
+  }
+  
+  .text-secondary {
+    color: $md3-dark-on-secondary;
+  }
+  
+  .bg-surface {
+    background-color: $md3-dark-surface;
+  }
+  
+  .bg-surface-variant {
+    background-color: $md3-dark-surface-variant;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// ELEVATION UTILITIES
+// -----------------------------------------------------------------------------
+
+@include generate-elevation-utilities();
+
+// Custom elevation utilities
+.shadow-sm {
+  box-shadow: 0 1px 2px rgba($neutral-darkest, 0.05), 0 1px 3px rgba($neutral-darkest, 0.1);
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba($neutral-darkest, 0.07), 0 1px 3px rgba($neutral-darkest, 0.14);
+}
+
+.shadow-lg {
+  box-shadow: 0 6px 8px rgba($neutral-darkest, 0.09), 0 2px 4px rgba($neutral-darkest, 0.14);
+}
+
+.shadow-xl {
+  box-shadow: 0 8px 10px rgba($neutral-darkest, 0.1), 0 3px 6px rgba($neutral-darkest, 0.14);
+}
+
+// -----------------------------------------------------------------------------
+// LAYOUT UTILITIES
+// -----------------------------------------------------------------------------
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-around {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+// -----------------------------------------------------------------------------
+// SPACING UTILITIES
+// -----------------------------------------------------------------------------
+
+@each $name, $value in (
+  '0': 0,
+  '1': $spacing-1,
+  '2': $spacing-2,
+  '3': $spacing-3,
+  '4': $spacing-4,
+  '5': $spacing-5,
+  '6': $spacing-6,
+  '8': $spacing-8,
+  '10': $spacing-10,
+  '12': $spacing-12,
+  '16': $spacing-16,
+  '20': $spacing-20,
+  '24': $spacing-24
+) {
+  .p-#{$name} {
+    padding: $value;
+  }
+  
+  .m-#{$name} {
+    margin: $value;
+  }
+  
+  .px-#{$name} {
+    padding-left: $value;
+    padding-right: $value;
+  }
+  
+  .py-#{$name} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+  
+  .pt-#{$name} {
+    padding-top: $value;
+  }
+  
+  .pb-#{$name} {
+    padding-bottom: $value;
+  }
+  
+  .pl-#{$name} {
+    padding-left: $value;
+  }
+  
+  .pr-#{$name} {
+    padding-right: $value;
+  }
+  
+  .mt-#{$name} {
+    margin-top: $value;
+  }
+  
+  .mb-#{$name} {
+    margin-bottom: $value;
+  }
+  
+  .ml-#{$name} {
+    margin-left: $value;
+  }
+  
+  .mr-#{$name} {
+    margin-right: $value;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// BORDER RADIUS UTILITIES
+// -----------------------------------------------------------------------------
+
+@each $name, $value in (
+  'none': 0,
+  'sm': $radius-sm,
+  'md': $radius-md,
+  'lg': $radius-lg,
+  'xl': $radius-xl,
+  '2xl': $radius-2xl,
+  '3xl': $radius-3xl,
+  'full': 50%
+) {
+  .rounded-#{$name} {
+    border-radius: $value;
+  }
+  
+  .rounded-t-#{$name} {
+    border-top-left-radius: $value;
+    border-top-right-radius: $value;
+  }
+  
+  .rounded-b-#{$name} {
+    border-bottom-left-radius: $value;
+    border-bottom-right-radius: $value;
+  }
+  
+  .rounded-l-#{$name} {
+    border-top-left-radius: $value;
+    border-bottom-left-radius: $value;
+  }
+  
+  .rounded-r-#{$name} {
+    border-top-right-radius: $value;
+    border-bottom-right-radius: $value;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// VISIBILITY UTILITIES
+// -----------------------------------------------------------------------------
+
+.hidden {
+  display: none;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// -----------------------------------------------------------------------------
+// INTERACTIVE STATES
+// -----------------------------------------------------------------------------
+
+.hover-lift {
+  transition: transform $transition-normal $ease-out;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.hover-scale {
+  transition: transform $transition-normal $ease-out;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn $transition-normal $ease-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// RESPONSIVE UTILITIES
+// -----------------------------------------------------------------------------
+
+@each $breakpoint in (sm, md, lg, xl, 2xl) {
+  .block-#{$breakpoint} {
+    @include respond-to($breakpoint) {
+      display: block;
+    }
+  }
+  
+  .inline-block-#{$breakpoint} {
+    @include respond-to($breakpoint) {
+      display: inline-block;
+    }
+  }
+  
+  .hidden-#{$breakpoint} {
+    @include respond-to($breakpoint) {
+      display: none;
+    }
+  }
+  
+  .flex-#{$breakpoint} {
+    @include respond-to($breakpoint) {
+      display: flex;
+    }
+  }
+  
+  .grid-#{$breakpoint} {
+    @include respond-to($breakpoint) {
+      display: grid;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// COMPONENT PRESETS
+// -----------------------------------------------------------------------------
+
+// Button preset using the mixing system
+.button-preset {
+  @include component-style(
+    $typography-role: label-medium,
+    $color-role: primary,
+    $elevation-level: 2,
+    $weight: medium,
+    $include-shadow: true
+  );
+  
+  padding: $spacing-4 $spacing-6;
+  border-radius: $radius-md;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all $transition-normal $ease-out;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Card preset using the mixing system
+.card-preset {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 1,
+    $include-shadow: true
+  );
+  
+  border-radius: $card-border-radius;
+  padding: $card-padding;
+  transition: all $transition-normal $ease-out;
+  
+  &:hover {
+    @include elevation-role(2);
+  }
+}
+
+// Input preset using the mixing system
+.input-preset {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 0,
+    $include-border: true
+  );
+  
+  border: 2px solid;
+  border-radius: $radius-md;
+  padding: $spacing-3 $spacing-4;
+  transition: all $transition-normal $ease-out;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-green;
+    box-shadow: 0 0 0 3px rgba($primary-green, 0.1);
+  }
+  
+  &::placeholder {
+    color: $neutral-medium;
+  }
+}
