@@ -97,7 +97,9 @@ const handleFocus = (event: FocusEvent) => {
 
 // Handle label click
 const handleLabelClick = () => {
-  inputRef.value?.focus()
+  if (!props.disabled) {
+    inputRef.value?.click()
+  }
 }
 
 // Computed aria attributes
@@ -172,11 +174,10 @@ export default {
     width: 48px; // Target size
     height: 48px; // Target size
     margin: 0;
-    z-index: 2;
-
-    &:checked {
-      opacity: 0;
-    }
+    z-index: 3; // Above visual element
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 
     &--error {
       accent-color: map.get($color-roles-light, error, text);
@@ -196,6 +197,7 @@ export default {
     transition: all 0.2s ease;
     position: relative;
     z-index: 1;
+    pointer-events: none; // Allow clicks to pass through to input
     
     // Checkmark icon (18dp size, center-aligned)
     &::after {
@@ -230,7 +232,8 @@ export default {
     border-color: map.get($color-roles-light, error, border);
   }
   
-  &--checked&--error &__visual {
+  // Checked and error state
+  &.c-m3-checkbox--checked.c-m3-checkbox--error &__visual {
     background-color: map.get($color-roles-light, error, background);
     border-color: map.get($color-roles-light, error, background);
     
