@@ -196,9 +196,9 @@ export const Indeterminate: Story = {
   render: (args) => ({
     components: { M3Checkbox },
     setup() {
-      const modelValue = ref(true)
+      const modelValue = ref<boolean | null>(true)
       const indeterminate = ref(false)
-      const handleUpdate = (value) => {
+      const handleUpdate = (value: boolean | null) => {
         if (modelValue.value === true) {
           modelValue.value = false
         } else if (modelValue.value === false) {
@@ -229,9 +229,9 @@ export const IndeterminateWithCross: Story = {
   render: (args) => ({
     components: { M3Checkbox },
     setup() {
-      const modelValue = ref(true)
+      const modelValue = ref<boolean | null>(true)
       const indeterminate = ref(false)
-      const handleUpdate = (value) => {
+      const handleUpdate = (value: boolean | null) => {
         if (modelValue.value === true) {
           modelValue.value = false
         } else if (modelValue.value === false) {
@@ -265,9 +265,9 @@ export const IndeterminateEmpty: Story = {
   render: (args) => ({
     components: { M3Checkbox },
     setup() {
-      const modelValue = ref(true)
+      const modelValue = ref<boolean | null>(true)
       const indeterminate = ref(false)
-      const handleUpdate = (value) => {
+      const handleUpdate = (value: boolean | null) => {
         if (modelValue.value === true) {
           modelValue.value = false
         } else if (modelValue.value === false) {
