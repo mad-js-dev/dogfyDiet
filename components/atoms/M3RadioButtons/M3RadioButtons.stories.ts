@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import RadioButtons from './RadioButtons.vue'
+import M3RadioButtons from './M3RadioButtons.vue'
 
-const meta: Meta<typeof RadioButtons> = {
-  title: 'Atoms/RadioButtons',
-  component: RadioButtons,
+const meta: Meta<typeof M3RadioButtons> = {
+  title: 'Atoms/M3RadioButtons',
+  component: M3RadioButtons,
   parameters: {
     layout: 'centered',
   },

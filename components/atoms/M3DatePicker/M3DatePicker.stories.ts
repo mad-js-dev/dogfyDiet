@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import DatePicker from './DatePicker.vue'
+import M3DatePicker from './M3DatePicker.vue'
 
-const meta: Meta<typeof DatePicker> = {
-  title: 'Atoms/DatePicker',
-  component: DatePicker,
+const meta: Meta<typeof M3DatePicker> = {
+  title: 'Atoms/M3DatePicker',
+  component: M3DatePicker,
   parameters: {
     layout: 'centered',
   },

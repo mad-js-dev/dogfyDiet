@@ -1,25 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import RangeAnswer from './RangeAnswer.vue'
+import M3RangeSlider from './M3RangeSlider.vue'
 
-const meta: Meta<typeof RangeAnswer> = {
-  title: 'Atoms/RangeAnswer',
-  component: RangeAnswer,
+const meta: Meta<typeof M3RangeSlider> = {
+  title: 'Atoms/M3RangeSlider',
+  component: M3RangeSlider,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
-    config: {
-      control: 'object',
-      description: 'Question configuration',
-    },
     modelValue: {
       control: 'text',
       description: 'Current selected value',
     },
+    config: {
+      control: 'object',
+      description: 'Question configuration with options',
+    },
     disabled: {
       control: 'boolean',
-      description: 'Disable the component',
+      description: 'Disable the slider',
     },
   },
 }
@@ -29,35 +29,34 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
+    modelValue: 'ideal',
     config: {
-      id: 'pet_activity_level',
-      type: 'range',
-      question: 'How active is your pet?',
+      id: 'pet_body_shape',
+      type: 'range-slider',
+      question: 'Select your pet\'s body shape',
       appliesTo: 'individual',
       required: true,
-      options: ['Low', 'Medium', 'High'],
       rangeOptions: [
         {
-          value: 'low',
-          label: 'Low',
+          value: 'underweight',
+          label: 'Underweight',
           min: 0,
           max: 33
         },
         {
-          value: 'moderate',
-          label: 'Medium',
+          value: 'ideal',
+          label: 'Ideal Weight',
           min: 34,
           max: 66
         },
         {
-          value: 'high',
-          label: 'High',
+          value: 'overweight',
+          label: 'Overweight',
           min: 67,
           max: 100
         }
       ]
     },
-    modelValue: 'moderate',
-    disabled: false
-  }
+    disabled: false,
+  },
 }

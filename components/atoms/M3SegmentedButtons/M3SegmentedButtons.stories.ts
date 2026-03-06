@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
+import M3SegmentedButtons from './M3SegmentedButtons.vue'
 
-import SegmentedButtons from './SegmentedButtons.vue'
-
-const meta: Meta<typeof SegmentedButtons> = {
-  title: 'Atoms/SegmentedButtons',
-  component: SegmentedButtons,
+const meta: Meta<typeof M3SegmentedButtons> = {
+  title: 'Atoms/M3SegmentedButtons',
+  component: M3SegmentedButtons,
   parameters: {
     layout: 'centered',
   },
@@ -12,7 +11,7 @@ const meta: Meta<typeof SegmentedButtons> = {
 }
 
 export default meta
-type Story = StoryObj<typeof SegmentedButtons>
+type Story = StoryObj<typeof M3SegmentedButtons>
 
 export const Default: Story = {
   args: {

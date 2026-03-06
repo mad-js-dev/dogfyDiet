@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import Checkbox from './Checkbox.vue'
+import M3Checkbox from './M3Checkbox.vue'
 
-const meta: Meta<typeof Checkbox> = {
-  title: 'Atoms/Checkbox',
-  component: Checkbox,
+const meta: Meta<typeof M3Checkbox> = {
+  title: 'Atoms/M3Checkbox',
+  component: M3Checkbox,
   parameters: {
     layout: 'centered',
   },

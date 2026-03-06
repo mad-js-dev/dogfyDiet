@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
+import M3TextInput from './M3TextInput.vue'
 
-import TextInput from './TextInput.vue'
-
-const meta: Meta<typeof TextInput> = {
-  title: 'Atoms/TextInput',
-  component: TextInput,
+const meta: Meta<typeof M3TextInput> = {
+  title: 'Atoms/M3TextInput',
+  component: M3TextInput,
   parameters: {
     layout: 'centered',
   },
@@ -12,7 +11,7 @@ const meta: Meta<typeof TextInput> = {
 }
 
 export default meta
-type Story = StoryObj<typeof TextInput>
+type Story = StoryObj<typeof M3TextInput>
 
 export const Default: Story = {
   args: {

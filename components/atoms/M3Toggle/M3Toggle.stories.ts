@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import Toggle from './Toggle.vue'
+import M3Toggle from './M3Toggle.vue'
 
-const meta: Meta<typeof Toggle> = {
-  title: 'Atoms/Toggle',
-  component: Toggle,
+const meta: Meta<typeof M3Toggle> = {
+  title: 'Atoms/M3Toggle',
+  component: M3Toggle,
   parameters: {
     layout: 'centered',
   },
