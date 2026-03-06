@@ -57,12 +57,12 @@
         <div class="c-date-picker__days">
           <div 
             v-for="week in weeks" 
-            :key="week[0]"
+            :key="`week-${week[0]?.index || 0}`"
             class="c-date-picker__week"
           >
             <div 
               v-for="day in week" 
-              :key="day"
+              :key="day.index"
               :class="{
                 'c-date-picker__day': true,
                 'c-date-picker__day--other-month': !isCurrentMonth(day),
@@ -72,7 +72,7 @@
               }"
               @click="selectDate(day)"
             >
-              {{ day }}
+              {{ day.dayNumber || '' }}
             </div>
           </div>
         </div>
@@ -115,10 +115,18 @@ const inputRef = ref<HTMLInputElement>()
 
 // Calendar data
 const currentDate = ref(new Date())
-const currentMonth = ref(new Date())
+const currentMonth = ref(new Date().getMonth())
 const currentYear = ref(new Date().getFullYear())
+const minDate = computed(() => props.min)
+const maxDate = computed(() => props.max)
 
 // Computed properties
+const inputId = computed(() => props.id || 'date-picker-' + Math.random().toString(36).substr(2, 9))
+
+const hasError = computed(() => !!props.errorMessage)
+
+const isOpen = ref(false)
+
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const monthNames = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -135,12 +143,12 @@ const daysInMonth = computed(() => {
   // Add empty days at beginning
   const firstDayOfWeek = firstDay.getDay()
   for (let i = 0; i < firstDayOfWeek; i++) {
-    days.push({ date: null, dayNumber: null })
+    days.push({ date: null, dayNumber: null, index: `empty-${i}` })
   }
   
   // Add all days of the month
   for (let day = 1; day <= lastDay.getDate(); day++) {
-    days.push({ date: new Date(currentYear.value, currentMonth.value, day), dayNumber: day })
+    days.push({ date: new Date(currentYear.value, currentMonth.value, day), dayNumber: day, index: `day-${day}` })
   }
   
   return days
@@ -165,15 +173,21 @@ const currentMonthName = computed(() => {
 
 // Computed navigation state
 const canGoToPreviousMonth = computed(() => {
-  const currentDate = new Date(currentYear.value, currentMonth.value)
-  const previousMonth = new Date(currentYear.value, currentMonth.value - 1)
-  return previousMonth <= currentDate
+  if (props.min) {
+    const minDate = new Date(props.min)
+    return currentYear.value > minDate.getFullYear() || 
+           (currentYear.value === minDate.getFullYear() && currentMonth.value > minDate.getMonth())
+  }
+  return true
 })
 
 const canGoToNextMonth = computed(() => {
-  const currentDate = new Date(currentYear.value, currentMonth.value)
-  const nextMonth = new Date(currentYear.value, currentMonth.value + 1)
-  return nextMonth > currentDate
+  if (props.max) {
+    const maxDate = new Date(props.max)
+    return currentYear.value < maxDate.getFullYear() || 
+           (currentYear.value === maxDate.getFullYear() && currentMonth.value < maxDate.getMonth())
+  }
+  return true
 })
 
 // Handle date input
@@ -193,22 +207,33 @@ const handleFocus = (event: FocusEvent) => {
 }
 
 // Handle date selection
-const selectDate = (day: { date: Date; dayNumber: number }) => {
+const selectDate = (day: { date: Date | null; dayNumber: number | null }) => {
   if (day.date && day.dayNumber) {
     const dateValue = formatDate(day.date)
     emit('update:modelValue', dateValue)
     currentDate.value = new Date(day.date)
-    currentMonth.value = new Date(day.date.getFullYear(), day.date.getMonth())
+    currentMonth.value = day.date.getMonth()
+    currentYear.value = day.date.getFullYear()
   }
 }
 
 // Navigation methods
 const previousMonth = () => {
-  currentMonth.value = new Date(currentYear.value, currentMonth.value - 1)
+  if (currentMonth.value === 0) {
+    currentMonth.value = 11
+    currentYear.value -= 1
+  } else {
+    currentMonth.value -= 1
+  }
 }
 
 const nextMonth = () => {
-  currentMonth.value = new Date(currentYear.value, currentMonth.value + 1)
+  if (currentMonth.value === 11) {
+    currentMonth.value = 0
+    currentYear.value += 1
+  } else {
+    currentMonth.value += 1
+  }
 }
 
 // Helper functions
@@ -216,19 +241,29 @@ const formatDate = (date: Date) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
 }
 
-const isSelectable = (day: { date: Date; dayNumber: number }) => {
-  const dateValue = formatDate(day.date)
-  return !props.min || new Date(dateValue) >= new Date(props.min) && !props.max || new Date(dateValue) <= new Date(props.max)
+const isSelected = (day: { date: Date | null; dayNumber: number | null }) => {
+  if (!day.date || !day.dayNumber || !props.modelValue) return false
+  return formatDate(day.date) === props.modelValue
 }
 
-const isToday = (day: { date: Date; dayNumber: number }) => {
+const isSelectable = (day: { date: Date | null; dayNumber: number | null }) => {
+  if (!day.date || !day.dayNumber) return false
+  const dateValue = formatDate(day.date)
+  const minCheck = !props.min || new Date(dateValue) >= new Date(props.min)
+  const maxCheck = !props.max || new Date(dateValue) <= new Date(props.max)
+  return minCheck && maxCheck
+}
+
+const isToday = (day: { date: Date | null; dayNumber: number | null }) => {
+  if (!day.date || !day.dayNumber) return false
   const today = new Date()
   return day.date.getDate() === today.getDate() && 
          day.date.getMonth() === today.getMonth() && 
          day.date.getFullYear() === today.getFullYear()
 }
 
-const isCurrentMonth = (day: { date: Date; dayNumber: number }) => {
+const isCurrentMonth = (day: { date: Date | null; dayNumber: number | null }) => {
+  if (!day.date || !day.dayNumber) return false
   return day.date.getMonth() === currentMonth.value && 
          day.date.getFullYear() === currentYear.value
 }

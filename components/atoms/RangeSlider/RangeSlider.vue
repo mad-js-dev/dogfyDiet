@@ -190,19 +190,19 @@ const handleMouseUp = () => {
 const handleTouchStart = (event: TouchEvent) => {
   if (props.disabled) return
   
+  event.preventDefault()
   isDragging.value = true
-  document.addEventListener('touchmove', handleTouchMove)
+  document.addEventListener('touchmove', handleTouchMove, { passive: false })
   document.addEventListener('touchend', handleTouchEnd)
   
   // Calculate initial position
-  const touch = event.touches[0]
-  updatePositionFromEvent(touch as any)
+  updatePositionFromEvent(event)
 }
 
 const handleTouchMove = (event: TouchEvent) => {
   if (!isDragging.value || props.disabled) return
-  const touch = event.touches[0]
-  updatePositionFromEvent(touch as any)
+  event.preventDefault()
+  updatePositionFromEvent(event)
 }
 
 const handleTouchEnd = () => {
@@ -211,11 +211,21 @@ const handleTouchEnd = () => {
   document.removeEventListener('touchend', handleTouchEnd)
 }
 
-const updatePositionFromEvent = (event: MouseEvent | Touch) => {
+const updatePositionFromEvent = (event: MouseEvent | TouchEvent) => {
   if (!trackContainerRef.value) return
   
   const rect = trackContainerRef.value.getBoundingClientRect()
-  const relativeX = event.clientX - rect.left
+  let clientX: number
+  
+  if ('clientX' in event) {
+    clientX = event.clientX
+  } else if (event.touches && event.touches.length > 0) {
+    clientX = event.touches[0].clientX
+  } else {
+    return
+  }
+  
+  const relativeX = clientX - rect.left
   const percentage = Math.max(0, Math.min(1, relativeX / rect.width))
   
   const stepCount = reactiveOptions.value.length || 1

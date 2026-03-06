@@ -1,15 +1,14 @@
-import type { StoryObj } from '@storybook/vue3'
-import type { Meta } from '@storybook/addon-docs'
+import type { Meta, StoryObj } from '@storybook/vue3'
+import DatePicker from './DatePicker.vue'
 
-const meta: Meta = {
+const meta: Meta<typeof DatePicker> = {
   title: 'Atoms/DatePicker',
-  component: 'DatePicker',
-}
-
-export default {
-  title: 'Default',
-  component: 'DatePicker',
+  component: DatePicker,
   parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+  argTypes: {
     modelValue: { control: 'text', description: 'Selected date in YYYY-MM-DD format' },
     min: { control: 'text', description: 'Minimum selectable date' },
     max: { control: 'text', description: 'Maximum selectable date' },
@@ -19,20 +18,19 @@ export default {
     errorMessage: { control: 'text', description: 'Error message to display' },
     'aria-label': { control: 'text', description: 'ARIA label for accessibility' }
   },
+}
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {
   args: {
-    modelValue: { control: 'text', description: '2024-01-15' },
-    min: { control: 'text', description: '2024-01-01' },
-    max: { control: 'text', description: '2024-12-31' },
-    disabled: { control: 'boolean', description: 'false' },
+    modelValue: '2024-01-15',
+    min: '2024-01-01',
+    max: '2024-12-31',
+    disabled: false,
+    label: 'Select a date',
+    placeholder: 'MM/DD/YYYY'
   }
 }
 
-export const Default = (args: any) => ({
-  components: {
-    DatePicker: {
-      args: args
-    }
-  }
-})
-
-export default export default Default

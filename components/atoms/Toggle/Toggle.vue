@@ -27,7 +27,7 @@
     <!-- Hidden input for form compatibility -->
     <input
       type="checkbox"
-      :id="inputId"
+      :id="inputId + '-hidden'"
       :checked="modelValue"
       :disabled="disabled"
       :aria-label="ariaLabel || 'Toggle switch'"
@@ -57,6 +57,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<Emits>()
+
+// Computed properties
+const inputId = computed(() => props.id || 'toggle-' + Math.random().toString(36).substr(2, 9))
 
 // Handle toggle
 const toggle = () => {

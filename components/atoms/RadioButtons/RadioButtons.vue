@@ -37,7 +37,7 @@ import { computed } from 'vue'
 
 interface Props {
   modelValue?: string
-  options?: string[]
+  options?: { value: string; label: string }[]
   name?: string
   disabled?: boolean
   required?: boolean
@@ -55,8 +55,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 // Handle option selection
-const selectOption = (option: string) => {
-  emit('update:modelValue', option)
+const selectOption = (option: { value: string; label: string }) => {
+  emit('update:modelValue', option.value)
 }
 
 // Computed options array
@@ -64,10 +64,15 @@ const actualOptions = computed(() => {
   return props.options || []
 })
 
+// Computed name for form compatibility
+const actualName = computed(() => {
+  return props.name || 'radio-buttons-' + Math.random().toString(36).substr(2, 9)
+})
+
 // Computed selected index
 const selectedIndex = computed(() => {
   if (!props.modelValue || !props.options) return -1
-  return props.options.findIndex(option => option === props.modelValue)
+  return props.options.findIndex(option => option.value === props.modelValue)
 })
 </script>
 

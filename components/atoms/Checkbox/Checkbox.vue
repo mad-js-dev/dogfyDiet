@@ -69,6 +69,13 @@ const emit = defineEmits<Emits>()
 
 const inputRef = ref<HTMLInputElement>()
 
+// Computed properties
+const inputId = computed(() => props.id || 'checkbox-' + Math.random().toString(36).substr(2, 9))
+
+const hasError = computed(() => {
+  return props.required && !props.modelValue && props.errorMessage
+})
+
 // Handle input change
 const handleChange = (event: Event) => {
   const value = (event.target as HTMLInputElement).checked
@@ -90,14 +97,9 @@ const handleLabelClick = () => {
   inputRef.value?.focus()
 }
 
-// Computed class for error state
-const hasError = computed(() => {
-  return props.required && !props.modelValue && props.errorMessage
-})
-
 // Computed aria attributes
 const ariaDescribedBy = computed(() => {
-  return hasError.value ? `${props.id}-error` : undefined
+  return hasError.value ? `${inputId.value}-error` : undefined
 })
 
 const ariaLabel = computed(() => {
