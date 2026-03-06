@@ -35,6 +35,19 @@ const config: StorybookConfig = {
       ...(config.plugins || []),
       vue()
     ]
+    
+    // Add CSS handling for SASS
+    config.css = {
+      postcss: {
+        plugins: [
+          require('postcss-import')({
+            root: resolve(__dirname, '..'),
+            path: 'node_modules/sass'
+          })
+        ]
+      }
+    }
+    
     return config
   }
 };

@@ -1,6 +1,6 @@
 <template>
-  <div class="c-date-picker">
-    <div class="c-date-picker__input-wrapper">
+  <div class="c-m3-date-picker">
+    <div class="c-m3-date-picker__input-wrapper">
       <input
         type="date"
         :id="inputId"
@@ -9,8 +9,8 @@
         :max="maxDate"
         :disabled="disabled"
         :class="{
-          'c-date-picker__input': true,
-          'c-date-picker__input--error': hasError
+          'c-m3-date-picker__input': true,
+          'c-m3-date-picker__input--error': hasError
         }"
         @input="handleDateInput"
         @blur="handleBlur"
@@ -19,24 +19,24 @@
       />
       
       <!-- Calendar -->
-      <div class="c-date-picker__calendar" v-if="isOpen">
-        <div class="c-date-picker__header">
+      <div class="c-m3-date-picker__calendar" v-if="isOpen">
+        <div class="c-m3-date-picker__header">
           <button
             type="button"
-            class="c-date-picker__nav-button"
+            class="c-m3-date-picker__nav-button"
             @click="previousMonth"
             :disabled="!canGoToPreviousMonth"
           >
             ←
           </button>
           
-          <div class="c-date-picker__current-month">
+          <div class="c-m3-date-picker__current-month">
             {{ currentMonthName }} {{ currentYear }}
           </div>
           
           <button
             type="button"
-            class="c-date-picker__nav-button"
+            class="c-m3-date-picker__nav-button"
             @click="nextMonth"
             :disabled="!canGoToNextMonth"
           >
@@ -44,31 +44,31 @@
           </button>
         </div>
         
-        <div class="c-date-picker__weekdays">
+        <div class="c-m3-date-picker__weekdays">
           <div 
             v-for="weekday in weekdays" 
             :key="weekday"
-            class="c-date-picker__weekday"
+            class="c-m3-date-picker__weekday"
           >
             {{ weekday.charAt(0) }}
           </div>
         </div>
         
-        <div class="c-date-picker__days">
+        <div class="c-m3-date-picker__days">
           <div 
             v-for="week in weeks" 
             :key="`week-${week[0]?.index || 0}`"
-            class="c-date-picker__week"
+            class="c-m3-date-picker__week"
           >
             <div 
               v-for="day in week" 
               :key="day.index"
               :class="{
-                'c-date-picker__day': true,
-                'c-date-picker__day--other-month': !isCurrentMonth(day),
-                'c-date-picker__day--selected': isSelected(day),
-                'c-date-picker__day--today': isToday(day),
-                'c-date-picker__day--disabled': !isSelectable(day)
+                'c-m3-date-picker__day': true,
+                'c-m3-date-picker__day--other-month': !isCurrentMonth(day),
+                'c-m3-date-picker__day--selected': isSelected(day),
+                'c-m3-date-picker__day--today': isToday(day),
+                'c-m3-date-picker__day--disabled': !isSelectable(day)
               }"
               @click="selectDate(day)"
             >
@@ -77,6 +77,16 @@
           </div>
         </div>
       </div>
+    </div>
+    
+    <!-- Value display -->
+    <div v-if="showValue" class="c-m3-date-picker__value">
+      {{ selectValue }}
+    </div>
+    
+    <!-- Error message -->
+    <div v-if="hasError" :id="`${inputId}-error`" class="c-m3-date-picker__error">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -132,6 +142,33 @@ const monthNames = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ]
+
+const reactiveOptions = computed(() => {
+  const options = ['2024-01-01', '2024-01-15', '2024-01-31'] // Example options
+  return options
+})
+
+const activeStepIndex = computed(() => {
+  if (!props.modelValue || reactiveOptions.value.length === 0) return 0
+  const index = reactiveOptions.value.indexOf(props.modelValue)
+  return index !== -1 ? index : 0
+})
+
+const selectedValue = computed(() => {
+  return reactiveOptions.value[activeStepIndex.value] || ''
+})
+
+const showValue = computed(() => !!props.modelValue)
+
+const selectValue = computed(() => {
+  if (!props.modelValue) return ''
+  const date = new Date(props.modelValue)
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+})
 
 // Computed calendar days
 const daysInMonth = computed(() => {
@@ -241,17 +278,17 @@ const formatDate = (date: Date) => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
 }
 
-const isSelected = (day: { date: Date | null; dayNumber: number | null }) => {
-  if (!day.date || !day.dayNumber || !props.modelValue) return false
-  return formatDate(day.date) === props.modelValue
-}
-
 const isSelectable = (day: { date: Date | null; dayNumber: number | null }) => {
   if (!day.date || !day.dayNumber) return false
   const dateValue = formatDate(day.date)
   const minCheck = !props.min || new Date(dateValue) >= new Date(props.min)
   const maxCheck = !props.max || new Date(dateValue) <= new Date(props.max)
   return minCheck && maxCheck
+}
+
+const isSelected = (day: { date: Date | null; dayNumber: number | null }) => {
+  if (!day.date || !day.dayNumber || !props.modelValue) return false
+  return formatDate(day.date) === props.modelValue
 }
 
 const isToday = (day: { date: Date | null; dayNumber: number | null }) => {
@@ -269,168 +306,184 @@ const isCurrentMonth = (day: { date: Date | null; dayNumber: number | null }) =>
 }
 </script>
 
-<style scoped>
-.c-date-picker {
+<script lang="ts">
+export default {
+  name: 'M3DatePicker'
+}
+</script>
+
+<style scoped lang="scss">
+@use 'sass:map';
+@use '~/assets/styles/_mixins-new.scss' as *;
+@use '~/assets/styles/_variables.scss' as *;
+
+.c-m3-date-picker {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 0
+  );
+  
   position: relative;
   display: inline-block;
-}
 
-.c-date-picker__input-wrapper {
-  position: relative;
-}
+  &__input-wrapper {
+    position: relative;
+  }
 
-.c-date-picker__input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 16px;
-  line-height: 24px;
-  color: #1a1a1a;
-  background-color: #ffffff;
-  transition: all 0.2s ease;
-}
+  &__input {
+    width: 100%;
+    padding: 12px 16px;
+    @include typography-role(body-medium);
+    @include color-role(surface);
+    background-color: map.get($color-roles-light, surface);
+    border: 2px solid map.get($color-roles-light, surface-variant);
+    border-radius: map.get($radius, md);
+    transition: all 0.2s ease;
 
-.c-date-picker__input--error {
-  border-color: #d80003;
-}
+    &:focus {
+      outline: 2px solid map.get($color-roles-light, primary);
+      outline-offset: 2px;
+    }
 
-.c-date-picker__calendar {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-  min-width: 320px;
-}
+    &--error {
+      border-color: map.get($color-roles-light, error);
+    }
+  }
 
-.c-date-picker__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #e0e0e0;
-}
+  &__calendar {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: map.get($color-roles-light, surface);
+    border: 1px solid map.get($color-roles-light, surface-variant);
+    border-radius: map.get($radius, md);
+    box-shadow: map.get($elevation-shadows, 2);
+    z-index: 10;
+    min-width: 320px;
+  }
 
-.c-date-picker__nav-button {
-  padding: 8px 12px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  background-color: #ffffff;
-  color: #1a1a1a;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid map.get($color-roles-light, surface-variant);
+  }
 
-.c-date-picker__nav-button:hover {
-  background-color: #f5f5f5;
-}
+  &__nav-button {
+    padding: 8px 12px;
+    border: 1px solid map.get($color-roles-light, surface-variant);
+    border-radius: map.get($radius, sm);
+    background-color: map.get($color-roles-light, surface);
+    color: map.get($color-roles-light, surface);
+    cursor: pointer;
+    transition: all 0.2s ease;
 
-.c-date-picker__nav-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+    &:hover {
+      @include color-role(surface-variant);
+    }
 
-.c-date-picker__current-month {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1a1a1a;
-}
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
 
-.c-date-picker__weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  margin-bottom: 8px;
-}
+  &__current-month {
+    @include typography-role(title-medium);
+    @include color-role(surface);
+    font-weight: map.get($font-weights, medium);
+  }
 
-.c-date-picker__weekday {
-  padding: 8px 4px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  color: #6c757d;
-  text-transform: uppercase;
-}
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+  }
 
-.c-date-picker__week {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-}
+  &__weekday {
+    padding: 8px 4px;
+    @include typography-role(body-small);
+    @include color-role(surface);
+    text-align: center;
+    font-weight: map.get($font-weights, medium);
+    text-transform: uppercase;
+  }
 
-.c-date-picker__day {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  border-radius: 8px;
-  background-color: #ffffff;
-  color: #1a1a1a;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid #e0e0e0;
-}
+  &__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
 
-.c-date-picker__day:hover {
-  background-color: #f5f5f5;
-}
+  &__week {
+    display: contents;
+  }
 
-.c-date-picker__day--selected {
-  background-color: #00B67A;
-  color: #ffffff;
-  border-color: #00B67A;
-}
+  &__day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-radius: map.get($radius, md);
+    background-color: map.get($color-roles-light, surface);
+    color: map.get($color-roles-light, surface);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid map.get($color-roles-light, surface-variant);
 
-.c-date-picker__day--today {
-  background-color: #00B67A;
-  color: #ffffff;
-  border: 2px solid #00B67A;
-}
+    &:hover {
+      @include color-role(surface-variant);
+    }
 
-.c-date-picker__day--disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  background-color: #f5f5f5;
-  color: #9e9e9e;
-  border-color: #e0e0e0;
-}
+    &--other-month {
+      opacity: 0.6;
+      color: map.get($color-roles-light, surface-variant);
+      border-color: map.get($color-roles-light, surface-variant);
+    }
 
-.c-date-picker__day--other-month {
-  opacity: 0.6;
-  color: #6c757d;
-  border-color: #e0e0e0;
-}
+    &--selected {
+      background-color: map.get($color-roles-light, primary);
+      color: map.get($color-roles-light, primary);
+      border-color: map.get($color-roles-light, primary);
+    }
 
-.c-date-picker__day--other-month:hover {
-  opacity: 0.8;
-  background-color: #f5f5f5;
-}
+    &--today {
+      background-color: map.get($color-roles-light, primary);
+      color: map.get($color-roles-light, primary);
+      border: 2px solid map.get($color-roles-light, primary);
+    }
 
-/* Focus styles */
-.c-date-picker__input:focus {
-  outline: 2px solid #00B67A;
-  outline-offset: 2px;
-}
+    &--disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background-color: map.get($color-roles-light, surface-variant);
+      color: map.get($color-roles-light, surface-variant);
+      border-color: map.get($color-roles-light, surface-variant);
+    }
+  }
 
-.c-date-picker__day:focus {
-  outline: 2px solid #00B67A;
-  outline-offset: 2px;
-}
+  &__value {
+    @include typography-role(body-medium);
+    @include color-role(surface);
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+    @include component-style(
+      $typography-role: body-small,
+      $color-role: surface-variant,
+      $elevation-level: 1,
+      $include-border: true
+    );
+  }
 
-/* Animation */
-.c-date-picker__day {
-  transition: all 0.2s ease;
-}
-
-.c-date-picker__calendar {
-  transition: all 0.2s ease;
-}
-
-.c-date-picker__header {
-  transition: all 0.2s ease;
+  &__error {
+    @include typography-role(body-small);
+    @include color-role(error);
+    margin-top: 0.5rem;
+    text-align: center;
+  }
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div 
-    class="c-checkbox"
+    class="c-m3-checkbox"
     :class="{
-      'c-checkbox--disabled': disabled,
-      'c-checkbox--checked': modelValue,
-      'c-checkbox--error': hasError
+      'c-m3-checkbox--disabled': disabled,
+      'c-m3-checkbox--checked': modelValue,
+      'c-m3-checkbox--error': hasError
     }"
   >
     <input
@@ -13,8 +13,8 @@
       :checked="modelValue"
       :disabled="disabled"
       :class="{
-        'c-checkbox__input': true,
-        'c-checkbox__input--error': hasError
+        'c-m3-checkbox__input': true,
+        'c-m3-checkbox__input--error': hasError
       }"
       @change="handleChange"
       @blur="handleBlur"
@@ -25,16 +25,16 @@
     <label 
       :for="inputId"
       :class="{
-        'c-checkbox__label': true,
-        'c-checkbox__label--disabled': disabled,
-        'c-checkbox__label--error': hasError
+        'c-m3-checkbox__label': true,
+        'c-m3-checkbox__label--disabled': disabled,
+        'c-m3-checkbox__label--error': hasError
       }"
       @click="handleLabelClick"
     >
       <span v-if="label">{{ label }}</span>
     </label>
     
-    <div v-if="hasError" :id="`${inputId}-error`" class="c-checkbox__error">
+    <div v-if="hasError" :id="`${inputId}-error`" class="c-m3-checkbox__error">
       {{ errorMessage }}
     </div>
   </div>
@@ -107,104 +107,98 @@ const ariaLabel = computed(() => {
 })
 </script>
 
-<style scoped>
-.c-checkbox {
+<script lang="ts">
+export default {
+  name: 'M3Checkbox'
+}
+</script>
+
+<style scoped lang="scss">
+@use 'sass:map';
+@use '~/assets/styles/_mixins-new.scss' as *;
+
+.c-m3-checkbox {
+  @include component-style(
+    $typography-role: body-medium,
+    $color-role: surface,
+    $elevation-level: 0
+  );
+  
   display: flex;
   align-items: flex-start;
   gap: 12px;
   cursor: pointer;
   user-select: none;
-}
+  
+  &__input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 0;
 
-.c-checkbox__input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  margin: 0;
-}
+    &:checked {
+      opacity: 1;
+    }
 
-.c-checkbox__input:checked {
-  opacity: 1;
-}
+    &--error {
+      accent-color: map.get($color-roles-light, error, text);
+    }
+  }
 
-.c-checkbox__input--error {
-  accent-color: #d80003;
-}
+  &__label {
+    cursor: pointer;
+    @include typography-role(body-medium);
+    @include color-role(surface);
+    transition: color 0.2s ease;
 
-.c-checkbox__label {
-  cursor: pointer;
-  font-size: 16px;
-  line-height: 24px;
-  color: #1a1a1a;
-  transition: color 0.2s ease;
-}
+    &:hover {
+      @include color-role(primary);
+    }
 
-.c-checkbox__label:hover {
-  color: #00B67A;
-}
+    &--disabled {
+      @include color-role(surface-variant);
+      cursor: not-allowed;
+    }
 
-.c-checkbox__label--disabled {
-  color: #9e9e9e;
-  cursor: not-allowed;
-}
+    &--error {
+      @include color-role(error);
+    }
+  }
 
-.c-checkbox__label--error {
-  color: #d80003;
-}
+  &__error {
+    @include typography-role(body-small);
+    @include color-role(error);
+    margin-top: 4px;
+  }
 
-.c-checkbox__error {
-  font-size: 14px;
-  line-height: 20px;
-  color: #d80003;
-  margin-top: 4px;
-}
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 
-.c-checkbox--disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+    .c-m3-checkbox__input {
+      background-color: map.get($color-roles-light, surface-variant, background);
+    }
+  }
 
-.c-checkbox--checked {
-  color: #00B67A;
+  &--checked {
+    .c-m3-checkbox__label {
+      @include color-role(primary);
+    }
+  }
 }
 
 /* Focus styles */
-.c-checkbox:focus-within .c-checkbox__input {
-  outline: 2px solid #00B67A;
-  outline-offset: 2px;
-}
+.c-m3-checkbox:focus-within {
+  .c-m3-checkbox__input {
+    outline: 2px solid map.get($color-roles-light, primary, text);
+    outline-offset: 2px;
+  }
 
-.c-checkbox:focus-within .c-checkbox__label {
-  outline: 2px solid #00B67A;
-  outline-offset: 2px;
-}
-
-/* Disabled state */
-.c-checkbox--disabled .c-checkbox__input {
-  background-color: #f5f5f5;
-}
-
-.c-checkbox--disabled .c-checkbox__label {
-  color: #9e9e9e;
-}
-
-/* Error state */
-.c-checkbox--error .c-checkbox__input {
-  border-color: #d80003;
-}
-
-.c-checkbox--error .c-checkbox__label {
-  color: #d80003;
-}
-
-/* Animation */
-.c-checkbox__input {
-  transition: all 0.2s ease;
-}
-
-.c-checkbox__label {
-  transition: color 0.2s ease;
+  .c-m3-checkbox__label {
+    outline: 2px solid map.get($color-roles-light, primary, text);
+    outline-offset: 2px;
+  }
 }
 </style>
