@@ -338,7 +338,7 @@ export default {
     @include color-role(surface);
     background-color: map.get($color-roles-light, surface);
     border: 2px solid map.get($color-roles-light, surface-variant);
-    border-radius: map.get($radius, md);
+    border-radius: $radius-md;
     transition: all 0.2s ease;
 
     &:focus {
@@ -357,7 +357,7 @@ export default {
     left: 0;
     background-color: map.get($color-roles-light, surface);
     border: 1px solid map.get($color-roles-light, surface-variant);
-    border-radius: map.get($radius, md);
+    border-radius: $radius-md;
     box-shadow: map.get($elevation-shadows, 2);
     z-index: 10;
     min-width: 320px;
@@ -374,7 +374,7 @@ export default {
   &__nav-button {
     padding: 8px 12px;
     border: 1px solid map.get($color-roles-light, surface-variant);
-    border-radius: map.get($radius, sm);
+    border-radius: $radius-sm;
     background-color: map.get($color-roles-light, surface);
     color: map.get($color-roles-light, surface);
     cursor: pointer;
@@ -427,7 +427,7 @@ export default {
     align-items: center;
     justify-content: center;
     height: 40px;
-    border-radius: map.get($radius, md);
+    border-radius: $radius-md;
     background-color: map.get($color-roles-light, surface);
     color: map.get($color-roles-light, surface);
     cursor: pointer;
