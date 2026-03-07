@@ -71,7 +71,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useComprehensiveQuestionnaireStore } from '~/stores/comprehensive-questionnaire'
-import TextInput from '~/components/atoms/TextInput/TextInput.vue'
+import TextInput from '~/components/atoms/M3TextInput/M3TextInput.vue'
 import SelectAnswer from '~/components/molecules/SelectAnswer/SelectAnswer.vue'
 import SegmentedAnswer from '~/components/molecules/SegmentedAnswer/SegmentedAnswer.vue'
 import SegmentedButtons from '~/components/atoms/SegmentedButtons/SegmentedButtons.vue'

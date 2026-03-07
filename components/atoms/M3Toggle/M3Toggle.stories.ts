@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
+import { ref, watch } from 'vue'
 import M3Toggle from './M3Toggle.vue'
 
 const meta: Meta<typeof M3Toggle> = {
@@ -40,18 +41,60 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
+  render: (args) => ({
+    components: { M3Toggle },
+    setup() {
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (newVal) => {
+        modelValue.value = newVal
+      })
+      const handleUpdate = (value) => {
+        args.modelValue = value
+      }
+      return { modelValue, handleUpdate }
+    },
+    template: '<M3Toggle ref="toggle" :modelValue="modelValue" @update:modelValue="handleUpdate" />',
+  }),
   args: {
     modelValue: false,
   },
 }
 
-export const On: Story = {
+export const Off: Story = {
+  render: (args) => ({
+    components: { M3Toggle },
+    setup() {
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (newVal) => {
+        modelValue.value = newVal
+      })
+      const handleUpdate = (value) => {
+        args.modelValue = value
+      }
+      return { modelValue, handleUpdate }
+    },
+    template: '<M3Toggle ref="toggle" :modelValue="modelValue" @update:modelValue="handleUpdate" />',
+  }),
   args: {
-    modelValue: true,
+    modelValue: false,
   },
 }
 
 export const Disabled: Story = {
+  render: (args) => ({
+    components: { M3Toggle },
+    setup() {
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (newVal) => {
+        modelValue.value = newVal
+      })
+      const handleUpdate = (value) => {
+        args.modelValue = value
+      }
+      return { modelValue, handleUpdate }
+    },
+    template: '<M3Toggle ref="toggle" :modelValue="modelValue" @update:modelValue="handleUpdate" />',
+  }),
   args: {
     modelValue: false,
     disabled: true,
@@ -59,20 +102,62 @@ export const Disabled: Story = {
 }
 
 export const DisabledOn: Story = {
+  render: (args) => ({
+    components: { M3Toggle },
+    setup() {
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (newVal) => {
+        modelValue.value = newVal
+      })
+      const handleUpdate = (value) => {
+        args.modelValue = value
+      }
+      return { modelValue, handleUpdate }
+    },
+    template: '<M3Toggle ref="toggle" :modelValue="modelValue" @update:modelValue="handleUpdate" />',
+  }),
   args: {
     modelValue: true,
     disabled: true,
   },
 }
 
-export const WithLabel: Story = {
+export const DisabledOff: Story = {
+  render: (args) => ({
+    components: { M3Toggle },
+    setup() {
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (newVal) => {
+        modelValue.value = newVal
+      })
+      const handleUpdate = (value) => {
+        args.modelValue = value
+      }
+      return { modelValue, handleUpdate }
+    },
+    template: '<M3Toggle ref="toggle" :modelValue="modelValue" @update:modelValue="handleUpdate" />',
+  }),
   args: {
     modelValue: false,
-    'aria-label': 'Enable notifications',
+    disabled: true,
   },
 }
 
 export const WithId: Story = {
+  render: (args) => ({
+    components: { M3Toggle },
+    setup() {
+      const modelValue = ref(args.modelValue)
+      watch(() => args.modelValue, (newVal) => {
+        modelValue.value = newVal
+      })
+      const handleUpdate = (value) => {
+        args.modelValue = value
+      }
+      return { modelValue, handleUpdate }
+    },
+    template: '<M3Toggle ref="toggle" :modelValue="modelValue" @update:modelValue="handleUpdate" />',
+  }),
   args: {
     modelValue: true,
     id: 'custom-toggle-id',

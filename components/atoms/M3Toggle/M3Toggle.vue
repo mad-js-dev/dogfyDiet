@@ -116,14 +116,32 @@ const ariaLabel = computed(() => {
 
   &__thumb {
     position: absolute;
-    top: 4px;
-    left: 4px;
+    top: 50%;
     width: 24px;
     height: 24px;
     background-color: map.get(map.get($color-roles-light, surface), background);
-    border-radius: 12px;
-    box-shadow: map.get($elevation-shadows, 1);
-    transition: all 0.2s ease;
+    border: 3px solid map.get(map.get($color-roles-light, surface), border);
+    border-radius: 50%;
+    cursor: grab;
+    transform: translate(-50%, -50%);
+    box-shadow: map.get($elevation-shadows, 2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, left 0.2s ease;
+    left: 16px;
+
+    &:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: map.get($elevation-shadows, 3);
+    }
+
+    &:active {
+      cursor: grabbing;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    &--active {
+      background-color: map.get(map.get($color-roles-light, primary), background);
+      left: 36px;
+    }
   }
 
   &__thumb-handle {

@@ -112,12 +112,6 @@ onMounted(() => {
 })
 </script>
 
-<script>
-export default {
-  name: 'RangeAnswer'
-}
-</script>
-
 <style scoped>
 .range-answer {
   width: 100%;

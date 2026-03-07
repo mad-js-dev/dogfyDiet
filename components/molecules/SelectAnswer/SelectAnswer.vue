@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
-import TextInput from '~/components/atoms/TextInput/TextInput.vue'
+import TextInput from '~/components/atoms/M3TextInput/M3TextInput.vue'
 
 interface Props {
   question?: {
