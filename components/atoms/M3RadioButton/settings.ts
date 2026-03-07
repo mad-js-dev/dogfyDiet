@@ -13,8 +13,8 @@ export interface Props {
 export interface Emits {
   'update:modelValue': [value: string | number | boolean | null]
   'change': [value: string | number | boolean]
-  'blur': []
-  'focus': []
+  'blur': [event: FocusEvent]
+  'focus': [event: FocusEvent]
 }
 
 export const defaults = {

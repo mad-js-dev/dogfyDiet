@@ -8,12 +8,12 @@
       :name="name"
       :disabled="disabled"
       class="c-m3-radio-button__input"
-      @change="handleChange"
+      @click="handleChange"
       @blur="handleBlur"
       @focus="handleFocus"
       :aria-describedby="hasError ? `${inputId}-error` : undefined"
     />
-    <span class="c-m3-radio-button__visual" :class="{ 'c-m3-radio-button__visual--error': hasError }">
+    <span class="c-m3-radio-button__visual" :class="{ 'c-m3-radio-button__visual--error': hasError, 'c-m3-radio-button__visual--selected': modelValue === value }">
     <!-- Dot when selected -->
     <span v-if="modelValue === value" class="c-m3-radio-button__dot"></span>
   </span>
@@ -42,14 +42,14 @@ const inputRef = ref<HTMLInputElement>()
 const inputId = computed(() => props.id || 'radio-' + Math.random().toString(36).substr(2, 9))
 
 const hasError = computed(() => {
-  return props.required && modelValue !== value && props.errorMessage
+  return props.required && props.modelValue !== props.value && props.errorMessage
 })
 
 // Handle input change
 const handleChange = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  if (target.checked) {
-    emit('update:modelValue', props.value)
+  const isSelected = props.modelValue === props.value
+  emit('update:modelValue', isSelected ? null : props.value)
+  if (!isSelected) {
     emit('change', props.value)
   }
 }

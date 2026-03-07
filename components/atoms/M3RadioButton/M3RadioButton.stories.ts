@@ -146,9 +146,9 @@ export const WithError: Story = {
   }),
 }
 
-export const RadioGroup: Story = {
+export const VerticalGroup: Story = {
   args: {
-    name: 'radio-group',
+    name: 'radio-group-vertical',
   },
   render: (args) => ({
     components: { M3RadioButton },
@@ -157,7 +157,7 @@ export const RadioGroup: Story = {
       return { selected, args }
     },
     template: `
-      <div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
         <M3RadioButton 
           v-model="selected" 
           label="Option 1"
@@ -173,6 +173,41 @@ export const RadioGroup: Story = {
         <M3RadioButton 
           v-model="selected" 
           label="Option 3"
+          value="option3"
+          :name="args.name"
+        />
+      </div>
+    `,
+  }),
+}
+
+export const LongLabels: Story = {
+  args: {
+    name: 'radio-group-long',
+  },
+  render: (args) => ({
+    components: { M3RadioButton },
+    setup() {
+      const selected = ref('option1')
+      return { selected, args }
+    },
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <M3RadioButton 
+          v-model="selected" 
+          label="This is a very long label for the first radio button option that tests how the component handles longer text"
+          value="option1"
+          :name="args.name"
+        />
+        <M3RadioButton 
+          v-model="selected" 
+          label="Another long label for the second option to see the wrapping and spacing behavior"
+          value="option2"
+          :name="args.name"
+        />
+        <M3RadioButton 
+          v-model="selected" 
+          label="The third option with an even longer label that might span multiple lines depending on the container width"
           value="option3"
           :name="args.name"
         />
