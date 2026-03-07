@@ -328,7 +328,7 @@ onUnmounted(() => {
     left: 0;
     right: 0;
     height: 4px;
-    background-color: map.get($color-roles-light, surface-variant);
+    background-color: map.get(map.get($color-roles-light, surface-variant), background);
     border-radius: 2px;
     transform: translateY(-50%);
   }
@@ -347,18 +347,18 @@ onUnmounted(() => {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: map.get($color-roles-light, surface-variant);
-    border: 2px solid map.get($color-roles-light, surface);
+    background-color: map.get(map.get($color-roles-light, surface-variant), background);
+    border: 2px solid map.get(map.get($color-roles-light, surface), border);
     box-shadow: map.get($elevation-shadows, 0);
     transition: all 0.3s ease;
 
     &--active {
-      background-color: map.get($color-roles-light, primary);
+      background-color: map.get(map.get($color-roles-light, primary), background);
       transform: scale(1.2);
     }
 
     &--completed {
-      background-color: map.get($color-roles-light, primary);
+      background-color: map.get(map.get($color-roles-light, primary), background);
     }
   }
 
@@ -367,8 +367,8 @@ onUnmounted(() => {
     top: 50%;
     width: 24px;
     height: 24px;
-    background-color: map.get($color-roles-light, primary);
-    border: 3px solid map.get($color-roles-light, surface);
+    background-color: map.get(map.get($color-roles-light, primary), background);
+    border: 3px solid map.get(map.get($color-roles-light, surface), border);
     border-radius: 50%;
     cursor: grab;
     transform: translate(-50%, -50%);
@@ -433,8 +433,8 @@ onUnmounted(() => {
 
     .c-m3-range-slider__thumb {
       cursor: not-allowed;
-      background-color: map.get($color-roles-light, surface-variant);
-      border-color: map.get($color-roles-light, surface);
+      background-color: map.get(map.get($color-roles-light, surface-variant), background);
+      border-color: map.get(map.get($color-roles-light, surface), border);
     }
   }
 }
@@ -442,7 +442,7 @@ onUnmounted(() => {
 /* Focus styles */
 .c-m3-range-slider:focus-within {
   .c-m3-range-slider__thumb {
-    outline: 2px solid map.get($color-roles-light, primary);
+    outline: 2px solid map.get(map.get($color-roles-light, primary), border);
     outline-offset: 2px;
   }
 }

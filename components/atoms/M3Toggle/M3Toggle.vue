@@ -120,7 +120,7 @@ const ariaLabel = computed(() => {
     left: 4px;
     width: 24px;
     height: 24px;
-    background-color: map.get($color-roles-light, surface);
+    background-color: map.get(map.get($color-roles-light, surface), background);
     border-radius: 12px;
     box-shadow: map.get($elevation-shadows, 1);
     transition: all 0.2s ease;
@@ -132,7 +132,7 @@ const ariaLabel = computed(() => {
     left: 50%;
     width: 2px;
     height: 10px;
-    background-color: map.get($color-roles-light, primary);
+    background-color: map.get(map.get($color-roles-light, primary), background);
     border-radius: 1px;
     transform: translate(-50%, -50%);
   }
@@ -141,7 +141,7 @@ const ariaLabel = computed(() => {
 /* Active state */
 .c-m3-toggle--checked {
   .c-m3-toggle__thumb {
-    background-color: map.get($color-roles-light, primary);
+    background-color: map.get(map.get($color-roles-light, primary), background);
     box-shadow: map.get($elevation-shadows, 2);
   }
 }
@@ -149,7 +149,7 @@ const ariaLabel = computed(() => {
 /* Focus styles */
 .c-m3-toggle:focus-within {
   .c-m3-toggle__button {
-    outline: 2px solid map.get($color-roles-light, primary);
+    outline: 2px solid map.get(map.get($color-roles-light, primary), border);
     outline-offset: 2px;
   }
 }
@@ -161,7 +161,7 @@ const ariaLabel = computed(() => {
   }
 
   .c-m3-toggle__thumb {
-    background-color: map.get($color-roles-light, surface-variant);
+    background-color: map.get(map.get($color-roles-light, surface-variant), background);
     box-shadow: none;
   }
 }
