@@ -1,0 +1,93 @@
+@use 'sass:map' as map;
+@use '../../../assets/styles/_mixins-new' as *;
+
+.c-m3-radio-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &__input {
+    display: none;
+  }
+
+  &__visual {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 2px solid map.get($color-roles-light, surface-variant, border);
+    background-color: map.get($color-roles-light, surface, background);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__visual--error {
+    border-color: map.get($color-roles-light, error, border);
+  }
+
+  // State layer (40dp)
+  &::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+    z-index: 0;
+  }
+  
+  &:hover::before {
+    background-color: map.get($color-roles-light, primary, text);
+    opacity: 0.08;
+  }
+
+  &:hover .c-m3-radio-button__label-text {
+    color: map.get($color-roles-light, primary, border);
+  }
+
+  &__label-text {
+    @include typography-role(body-medium);
+    color: map.get($color-roles-light, surface, text);
+    transition: color 0.2s ease;
+    z-index: 1;
+    
+    &--error {
+      color: map.get($color-roles-light, error, border);
+    }
+  }
+
+  &__required {
+    @include typography-role(body-small);
+    color: map.get($color-roles-light, error, border);
+    margin-left: 4px;
+  }
+
+  &__error {
+    @include typography-role(label-small);
+    color: map.get($color-roles-light, error, border);
+    margin-top: 4px;
+    margin-left: 28px;
+    display: block;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    
+    &::before {
+      display: none;
+    }
+    
+    .c-m3-radio-button__label-text {
+      color: map.get($color-roles-light, surface-variant, text);
+      cursor: not-allowed;
+    }
+  }
+}
