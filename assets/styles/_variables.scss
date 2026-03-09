@@ -103,9 +103,23 @@ $md3-dark-shadow: rgba($neutral-darkest, 0.12) !default;
 // Semantic M3 Color Roles
 $md3-surface-bright: $neutral-white !default;
 $md3-surface-dim: color.adjust($neutral-darkest, $lightness: -10%) !default;
+$md3-surface-container-lowest: color.adjust($neutral-white, $lightness: -1%) !default;
+$md3-surface-container-low: color.adjust($neutral-lightest, $lightness: -2%) !default;
 $md3-surface-container: $neutral-lightest !default;
 $md3-surface-container-high: $neutral-lighter !default;
 $md3-surface-container-highest: $neutral-light !default;
+$md3-on-surface-container-low: $md3-light-on-surface !default;
+$md3-on-surface-container-high: $md3-light-on-surface !default;
+
+$md3-dark-surface-container-lowest: color.adjust($neutral-darkest, $lightness: 2%) !default;
+$md3-dark-surface-container-low: color.adjust($neutral-darkest, $lightness: 5%) !default;
+$md3-dark-surface-container: color.adjust($neutral-darkest, $lightness: 8%) !default;
+$md3-dark-surface-container-high: color.adjust($neutral-dark, $lightness: 15%) !default;
+$md3-dark-surface-container-highest: color.adjust($neutral-dark, $lightness: 25%) !default;
+$md3-dark-surface-dim: color.adjust($md3-dark-surface, $lightness: -10%) !default;
+$md3-dark-surface-bright: color.adjust($md3-dark-surface, $lightness: 20%) !default;
+$md3-dark-on-surface-container-low: $md3-dark-on-surface !default;
+$md3-dark-on-surface-container-high: $md3-dark-on-surface !default;
 
 $md3-inverse-primary: $neutral-darkest !default;
 $md3-inverse-on-primary: $neutral-white !default;
@@ -155,7 +169,7 @@ $md3-outline: $md3-light-outline !default;
 // Function to get current theme colors
 @function get-md3-color($role, $theme: 'light') {
   @if $theme == 'dark' {
-    @return map-get((
+    @return map.get((
       'primary': $md3-dark-primary,
       'on-primary': $md3-dark-on-primary,
       'primary-container': $md3-dark-primary-container,
@@ -180,7 +194,7 @@ $md3-outline: $md3-light-outline !default;
       'on-error-container': $md3-on-error-container
     ), $role);
   } @else {
-    @return map-get((
+    @return map.get((
       'primary': $md3-light-primary,
       'on-primary': $md3-light-on-primary,
       'primary-container': $md3-light-primary-container,

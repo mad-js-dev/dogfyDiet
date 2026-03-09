@@ -2296,7 +2296,7 @@ onMounted(() => {
 }
 
 // Responsive adjustments for color swatches
-@include respond-down-to(mobile) {
+/*@include respond-down-to(mobile) {
   .color-swatch-box {
     height: 60px;
   }
@@ -2318,7 +2318,7 @@ onMounted(() => {
       }
     }
   }
-}
+}*/
 
 // Material Design 3 Color Roles Grid
 .md3-color-roles-grid {

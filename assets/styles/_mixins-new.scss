@@ -108,75 +108,104 @@ $typography-roles: (
 // Color role mappings for light theme
 $color-roles-light: (
   'primary': (
-    text: $md3-light-on-primary,
-    background: $md3-light-primary-container,
-    border: $md3-light-primary
+    main: $md3-light-primary,
+    onMain: $md3-light-on-primary,
+    mainContainer: $md3-light-primary-container,
+    onMainContainer: $md3-light-on-primary-container,
   ),
   'secondary': (
-    text: $md3-light-on-secondary,
-    background: $md3-light-secondary-container,
-    border: $md3-light-secondary
+    main: $md3-light-secondary,
+    onMain: $md3-light-on-secondary,
+    mainContainer: $md3-light-secondary-container,
+    onMainContainer: $md3-light-on-secondary-container,
   ),
   'tertiary': (
-    text: $md3-light-on-tertiary,
-    background: $md3-light-tertiary-container,
-    border: $md3-light-tertiary
+    main: $md3-light-tertiary,
+    onMain: $md3-light-on-tertiary,
+    mainContainer: $md3-light-tertiary-container,
+    onMainContainer: $md3-light-on-tertiary-container,
   ),
   'surface': (
-    text: $md3-light-on-surface,
-    background: $md3-light-surface,
-    border: $md3-light-outline
-  ),
-  'surface-variant': (
-    text: $md3-light-on-surface-variant,
-    background: $md3-light-surface-variant,
-    border: $md3-light-outline-variant
-  ),
-  'inverse': (
-    text: $md3-light-on-primary,
-    background: $primary-green,
-    border: $primary-green
+    surface: $md3-light-surface,
+    surfaceDim: $md3-surface-dim,
+    surfaceBright: $md3-surface-bright,
+    surfaceContainerLowest: $md3-surface-container-lowest,
+    surfaceContainerLow: $md3-surface-container-low,
+    surfaceContainer: $md3-surface-container,
+    surfaceContainerHigh: $md3-surface-container-high,
+    surfaceContainerHighest: $md3-surface-container-highest,
+    onSurface: $md3-light-on-surface,
+    onSurfaceVariant: $md3-light-on-surface-variant,
   ),
   'error': (
+    main: $md3-error,
+    onMain: $md3-on-error,
+    mainContainer: $md3-error-container,
+    onMainContainer: $md3-on-error-container,
     text: $md3-on-error,
     background: $md3-error-container,
     border: $md3-error
   ),
   'success': (
-    text: $neutral-white,
-    background: $success,
-    border: $success
+    main: $success,
+    onMain: $neutral-white,
+    mainContainer: color.adjust($success, $lightness: 40%),
+    onMainContainer: color.adjust($success, $lightness: -20%),
   ),
   'warning': (
-    text: $neutral-darkest,
-    background: $warning,
-    border: $warning
+    main: $warning,
+    onMain: $neutral-darkest,
+    mainContainer: color.adjust($warning, $lightness: 40%),
+    onMainContainer: color.adjust($warning, $lightness: -20%),
   ),
   'info': (
-    text: $neutral-white,
-    background: $info,
-    border: $info
+    main: $info,
+    onMain: $neutral-white,
+    mainContainer: color.adjust($info, $lightness: 40%),
+    onMainContainer: color.adjust($info, $lightness: -20%),
   )
 );
 
 // Color role mappings for dark theme
 $color-roles-dark: (
   'primary': (
+    primary: $md3-dark-primary,
+    onPrimary: $md3-dark-on-primary,
+    primaryContainer: $md3-dark-primary-container,
+    onPrimaryContainer: $md3-dark-on-primary-container,
     text: $md3-dark-on-primary,
     background: $md3-dark-primary-container,
     border: $md3-dark-primary
   ),
   'secondary': (
+    secondary: $md3-dark-secondary,
+    onSecondary: $md3-dark-on-secondary,
+    secondaryContainer: $md3-dark-secondary-container,
+    onSecondaryContainer: $md3-dark-on-secondary-container,
     text: $md3-dark-on-secondary,
     background: $md3-dark-secondary-container,
     border: $md3-dark-secondary
   ),
   'tertiary': (
+    tertiary: $md3-dark-tertiary,
+    onTertiary: $md3-dark-on-tertiary,
+    tertiaryContainer: $md3-dark-tertiary-container,
+    onTertiaryContainer: $md3-dark-on-tertiary-container,
     text: $md3-dark-on-tertiary,
     background: $md3-dark-tertiary-container,
     border: $md3-dark-tertiary
   ),
   'surface': (
+    surface: $md3-dark-surface,
+    surfaceDim: $md3-dark-surface-dim,
+    surfaceBright: $md3-dark-surface-bright,
+    surfaceContainerLowest: $md3-dark-surface-container-lowest,
+    surfaceContainerLow: $md3-dark-surface-container-low,
+    surfaceContainer: $md3-dark-surface-container,
+    surfaceContainerHigh: $md3-dark-surface-container-high,
+    surfaceContainerHighest: $md3-dark-surface-container-highest,
+    onSurface: $md3-dark-on-surface,
+    onSurfaceVariant: $md3-dark-on-surface-variant,
     text: $md3-dark-on-surface,
     background: $md3-dark-surface,
     border: $md3-dark-outline
@@ -186,12 +215,21 @@ $color-roles-dark: (
     background: $md3-dark-surface-variant,
     border: $md3-dark-outline-variant
   ),
+  'surface-container-highest': (
+    text: $md3-dark-on-surface,
+    background: $md3-dark-surface-container-highest,
+    border: $md3-dark-outline
+  ),
   'inverse': (
     text: $md3-dark-on-primary,
     background: color.adjust($primary-green, $lightness: 20%),
     border: color.adjust($primary-green, $lightness: 20%)
   ),
   'error': (
+    error: $md3-error,
+    onError: $md3-on-error,
+    errorContainer: $md3-error-container,
+    onErrorContainer: $md3-on-error-container,
     text: $md3-on-error-container,
     background: $md3-error-container,
     border: $md3-error
@@ -240,16 +278,24 @@ $elevation-shadows: (
   
   $font-size: map.get($role-data, size);
   $default-weight: map.get($role-data, weight);
-  $font-weight: if($weight, map-get($font-weights, $weight), $default-weight);
+  $font-weight: $default-weight;
+  @if $weight {
+    $font-weight: map.get($font-weights, $weight);
+  }
   $line-height: map.get($role-data, line-height);
   $font-family: map.get($role-data, family);
+  
+  $letter-spacing: null;
+  @if $emphasis {
+    $letter-spacing: map.get($letter-spacing-em, $role);
+  }
   
   @return (
     font-size: $font-size,
     font-weight: $font-weight,
     line-height: $line-height,
     font-family: $font-family,
-    letter-spacing: if($emphasis, map.get($letter-spacing-em, $role), null)
+    letter-spacing: $letter-spacing
   );;
 }
 
@@ -258,8 +304,16 @@ $elevation-shadows: (
 /// @param {String} $theme - Theme variant (light, dark)
 /// @param {Boolean} $include-border - Include border color
 @function get-colors($role, $theme: light, $include-border: true) {
-  $color-map: if($theme == dark, $color-roles-dark, $color-roles-light);
+  $color-map: $color-roles-light;
+  @if $theme == dark {
+    $color-map: $color-roles-dark;
+  }
   $role-data: map.get($color-map, $role);
+  
+  $border-color: null;
+  @if $include-border {
+    $border-color: map.get($role-data, border);
+  }
   
   @if not $role-data {
     @error "Color role '#{$role}' not found. Available: #{map.keys($color-map)}";
@@ -268,7 +322,7 @@ $elevation-shadows: (
   @return (
     color: map.get($role-data, text),
     background-color: map.get($role-data, background),
-    border-color: if($include-border, map.get($role-data, border), null)
+    border-color: $border-color
   );
 }
 
@@ -278,13 +332,18 @@ $elevation-shadows: (
 @function get-elevation($level, $include-shadow: true) {
   $shadow: map.get($elevation-shadows, $level);
   
+  $box-shadow: none;
+  @if $include-shadow {
+    $box-shadow: $shadow;
+  }
+  
   @if not $shadow {
     @error "Elevation level '#{$level}' not found. Available: 0-5";
   }
   
   @return (
     z-index: $level * 100,
-    box-shadow: if($include-shadow, $shadow, none)
+    box-shadow: $box-shadow
   );
 }
 
