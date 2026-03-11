@@ -5,6 +5,7 @@ const meta = {
   title: 'Design System',
   parameters: {
     layout: 'fullscreen',
+    options: { showPanel: false },
     docs: {
       description: {
         component: 'Complete design system documentation including colors, typography, and usage guidelines.'
@@ -19,7 +20,6 @@ type Story = StoryObj<typeof meta>
 export const Overview: Story = {
   name: 'Design System Overview',
   parameters: {
-    tags: ['!interactions', '!controls', '!actions'],
     options: { showPanel: false },
     docs: {
       description: {
