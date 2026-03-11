@@ -7,7 +7,6 @@ const meta: Meta<typeof M3DatePicker> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     modelValue: { control: 'text', description: 'Selected date in YYYY-MM-DD format' },
     min: { control: 'text', description: 'Minimum selectable date' },

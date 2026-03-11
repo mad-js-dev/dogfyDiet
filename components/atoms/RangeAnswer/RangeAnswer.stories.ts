@@ -7,7 +7,6 @@ const meta: Meta<typeof RangeAnswer> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     config: {
       control: 'object',

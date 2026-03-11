@@ -8,7 +8,6 @@ const meta: Meta<typeof M3Checkbox> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     modelValue: {
       control: 'boolean',

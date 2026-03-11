@@ -7,7 +7,6 @@ const meta: Meta<typeof RangeSlider> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     modelValue: {
       control: 'text',

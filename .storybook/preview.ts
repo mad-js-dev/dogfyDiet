@@ -7,6 +7,7 @@ const preview: Preview = {
     interactions: { disable: false },
     docs: {
       toc: true,
+      autodocs: true,
     },
   },
   initialActiveStory: 'design-system--overview',

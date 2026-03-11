@@ -8,7 +8,6 @@ const meta: Meta<typeof M3Toggle> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
   argTypes: {
     modelValue: {
       control: 'boolean',
