@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>
 export const Overview: Story = {
   name: 'Design System Overview',
   parameters: {
-    options: { showPanel: false },
+    showPanel: false,
     docs: {
       description: {
         story: 'Complete visual documentation of the Dogfy Diet design system.'
