@@ -355,12 +355,15 @@ $elevation-shadows: (
   );
 }
 
-/// Get a specific color property from a color role
 /// @param {String} $role - Color role key
 /// @param {String} $property - Property within the role
 /// @param {String} $theme - Theme variant (light, dark)
 @function get-color-property($role, $property, $theme: light) {
-  $color-map: if($theme == "dark", $color-roles-dark, $color-roles-light);
+  @if $theme == "dark" {
+    $color-map: $color-roles-dark;
+  } @else {
+    $color-map: $color-roles-light;
+  }
   $role-data: map.get($color-map, $role);
   
   @if not $role-data {

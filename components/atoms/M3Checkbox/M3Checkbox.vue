@@ -41,15 +41,6 @@ const props = withDefaults(defineProps<Props>(), defaults)
 
 const emit = defineEmits<Emits>()
 
-// Debug: Watch modelValue changes
-watch(() => props.modelValue, (newValue) => {
-  console.log('modelValue changed to:', newValue)
-})
-
-watch(() => props.showCross, (newValue) => {
-  console.log('showCross changed to:', newValue)
-})
-
 const inputRef = ref<HTMLInputElement>()
 
 // Computed properties
