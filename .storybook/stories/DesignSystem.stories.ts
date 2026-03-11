@@ -5,7 +5,6 @@ const meta = {
   title: 'Design System',
   parameters: {
     layout: 'fullscreen',
-    options: { showPanel: false },
     docs: {
       description: {
         component: 'Complete design system documentation including colors, typography, and usage guidelines.'
