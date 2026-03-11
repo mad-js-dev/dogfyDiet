@@ -27,7 +27,8 @@ export const Overview: Story = {
     docs: {
       description: {
         story: 'Complete visual documentation of the Dogfy Diet design system.'
-      }
+      },
+      panels: { hide: ['controls', 'actions', 'interactions', 'console'] }
     }
   },
   render: () => ({
