@@ -4,12 +4,12 @@ import { resolve } from 'path'
 
 const config: StorybookConfig = {
   stories: [
+    "../.storybook/stories/**/*.stories.@(js|jsx|ts|tsx|mdx)",
     "../components/**/*.mdx",
     "../components/**/*.stories.@(js|jsx|ts|tsx|mdx)"
   ],
   addons: [
-    "@storybook/addon-a11y",
-    "@storybook/addon-docs"
+    // "@storybook/addon-a11y",
   ],
   framework: {
     name: "@storybook/vue3-vite",

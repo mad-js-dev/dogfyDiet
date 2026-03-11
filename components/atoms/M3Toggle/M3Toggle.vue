@@ -80,27 +80,27 @@ const ariaLabel = computed(() => {
 
 // Define theme-aware color properties for the toggle
 .c-m3-toggle {
-  --toggle-track-off: #{get-color-property(surface, surface-container-highest)};
-  --toggle-track-on: #{get-color-property(secondary, onMain)};
-  --toggle-track-disabled: rgba(#{get-color-property(secondary, onMain)}, 0.12);
-  --toggle-thumb-off: #{get-color-property(surface, outline)};
-  --toggle-thumb-on: #{get-color-property(secondary, onMain)};
-  --toggle-handle: #{get-color-property(secondary, text)};
-  --toggle-focus-outline: #{get-color-property(secondary, border)};
-  --toggle-thumb-disabled: #{get-color-property(surface-variant, background)};
-  --toggle-surface-container-highest: #{get-color-property(surface, background)};
+  --toggle-track-off: #{get-color-property('surface', 'surfaceContainerHighest')};
+  --toggle-track-on: #{get-color-property('secondary', 'main')};
+  --toggle-track-disabled: rgba(#{get-color-property('secondary', 'main')}, 0.12);
+  --toggle-thumb-off: #{get-color-property('surface', 'outline')};
+  --toggle-thumb-on: #{get-color-property('secondary', 'main')};
+  --toggle-handle: #{get-color-property('secondary', 'onMain')};
+  --toggle-focus-outline: #{get-color-property('secondary', 'main')};
+  --toggle-thumb-disabled: #{get-color-property('surface-variant', 'background')};
+  --toggle-surface-container-highest: #{get-color-property('surface', 'surface')};
   
   // Dark theme overrides
   @media (prefers-color-scheme: dark) {
-    --toggle-track-off: #{get-color-property(surface-container-highest, background, dark)};
-    --toggle-track-on: rgba(#{get-color-property(primary, background, dark)}, 0.54);
-    --toggle-track-disabled: rgba(#{get-color-property(surface-variant, background, dark)}, 0.12);
-    --toggle-thumb-off: #{get-color-property(surface-variant, border, dark)};
-    --toggle-thumb-on: #{get-color-property(primary, border, dark)};
-    --toggle-handle: #{get-color-property(primary, text, dark)};
-    --toggle-focus-outline: #{get-color-property(primary, border, dark)};
-    --toggle-thumb-disabled: #{get-color-property(surface-variant, background, dark)};
-    --toggle-surface-container-highest: #{get-color-property(surface, background, dark)};
+    --toggle-track-off: #{get-color-property('surface', 'surfaceContainerHighest', 'dark')};
+    --toggle-track-on: rgba(#{get-color-property('primary', 'primary', 'dark')}, 0.54);
+    --toggle-track-disabled: rgba(#{get-color-property('surface-variant', 'background', 'dark')}, 0.12);
+    --toggle-thumb-off: #{get-color-property('surface-variant', 'border', 'dark')};
+    --toggle-thumb-on: #{get-color-property('primary', 'primary', 'dark')};
+    --toggle-handle: #{get-color-property('primary', 'text', 'dark')};
+    --toggle-focus-outline: #{get-color-property('primary', 'border', 'dark')};
+    --toggle-thumb-disabled: #{get-color-property('surface-variant', 'background', 'dark')};
+    --toggle-surface-container-highest: #{get-color-property('surface', 'surface', 'dark')};
   }
   
   @include component-style(
@@ -123,10 +123,6 @@ const ariaLabel = computed(() => {
     cursor: pointer;
     border-radius: 16px;
     transition: all 0.2s ease;
-
-    &:hover {
-      // No background color change on hover
-    }
 
     &--active {
       background-color: #{map.get(map.get($color-roles-light, primary), background)};

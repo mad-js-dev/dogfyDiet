@@ -14,8 +14,8 @@
     position: relative;
     width: 20px;
     height: 20px;
-    border: 2px solid map.get($color-roles-light, surface-variant, border);
-    background-color: map.get($color-roles-light, surface, background);
+    border: 2px solid get-color-property('surface-variant', 'border');
+    background-color: get-color-property('surface', 'surface');
     border-radius: 4px;
     transition: all 0.2s ease;
     display: flex;

@@ -125,6 +125,11 @@ $color-roles-light: (
     mainContainer: $md3-light-tertiary-container,
     onMainContainer: $md3-light-on-tertiary-container,
   ),
+  'surface-variant': (
+    text: $md3-light-on-surface-variant,
+    background: $md3-light-surface-variant,
+    border: $md3-light-outline-variant
+  ),
   'surface': (
     surface: $md3-light-surface,
     surfaceDim: $md3-surface-dim,
@@ -313,13 +318,13 @@ $elevation-shadows: (
   }
   $role-data: map.get($color-map, $role);
   
+  @if not $role-data {
+    @error "Color role '#{$role}' not found. Available: #{map.keys($color-map)}";
+  }
+  
   $border-color: null;
   @if $include-border {
     $border-color: map.get($role-data, border);
-  }
-  
-  @if not $role-data {
-    @error "Color role '#{$role}' not found. Available: #{map.keys($color-map)}";
   }
   
   @return (
@@ -355,7 +360,7 @@ $elevation-shadows: (
 /// @param {String} $property - Property within the role
 /// @param {String} $theme - Theme variant (light, dark)
 @function get-color-property($role, $property, $theme: light) {
-  $color-map: if($theme == 'dark', $color-roles-dark, $color-roles-light);
+  $color-map: if($theme == "dark", $color-roles-dark, $color-roles-light);
   $role-data: map.get($color-map, $role);
   
   @if not $role-data {
