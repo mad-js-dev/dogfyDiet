@@ -359,6 +359,8 @@ $elevation-shadows: (
 /// @param {String} $property - Property within the role
 /// @param {String} $theme - Theme variant (light, dark)
 @function get-color-property($role, $property, $theme: light) {
+  $color-map: null;
+  
   @if $theme == "dark" {
     $color-map: $color-roles-dark;
   } @else {

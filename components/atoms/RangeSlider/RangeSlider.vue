@@ -271,23 +271,15 @@ onMounted(() => {
 
 // Watch for config changes
 watch(() => props.config, (newConfig) => {
-  console.log('RangeSlider config changed:', newConfig)
-  console.log('RangeSlider options:', newConfig?.rangeOptions)
-  console.log('Watch triggered, newConfig.rangeOptions:', newConfig?.rangeOptions)
 }, { immediate: true })
 
 // Update reactive options when config changes
 watch(() => props.config.rangeOptions, (newOptions) => {
-  console.log('Watch triggered, newOptions:', newOptions)
   // No need to manually update reactiveOptions since it's a computed property
-  console.log('RangeSlider reactiveOptions will update automatically')
 })
 
 // Initialize active step based on modelValue
 onMounted(() => {
-  console.log('RangeSlider mounted with config:', props.config)
-  console.log('RangeSlider config.rangeOptions:', props.config.rangeOptions)
-  console.log('RangeSlider reactiveOptions:', reactiveOptions.value)
   // activeStepIndex is now computed, no need to manually set it
 })
 
