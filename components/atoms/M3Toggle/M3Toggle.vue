@@ -80,27 +80,27 @@ const ariaLabel = computed(() => {
 
 // Define theme-aware color properties for the toggle
 .c-m3-toggle {
-  --toggle-track-off: #{map.get(map.get($color-roles-light, surface), surface-container-highest)};
-  --toggle-track-on: #{map.get(map.get($color-roles-light, secondary), main)};
-  --toggle-track-disabled: rgba(#{map.get(map.get($color-roles-light, surface-variant), background)}, 0.12);
-  --toggle-thumb-off: #{map.get(map.get($color-roles-light, surface-variant), border)};
-  --toggle-thumb-on: #{map.get(map.get($color-roles-light, secondary), border)};
-  --toggle-handle: #{map.get(map.get($color-roles-light, secondary), text)};
-  --toggle-focus-outline: #{map.get(map.get($color-roles-light, secondary), border)};
-  --toggle-thumb-disabled: #{map.get(map.get($color-roles-light, surface-variant), background)};
-  --toggle-surface-container-highest: #{map.get(map.get($color-roles-light, surface), background)};
+  --toggle-track-off: #{get-color-property(surface, surface-container-highest)};
+  --toggle-track-on: #{get-color-property(secondary, onMain)};
+  --toggle-track-disabled: rgba(#{get-color-property(secondary, onMain)}, 0.12);
+  --toggle-thumb-off: #{get-color-property(surface, outline)};
+  --toggle-thumb-on: #{get-color-property(secondary, onMain)};
+  --toggle-handle: #{get-color-property(secondary, text)};
+  --toggle-focus-outline: #{get-color-property(secondary, border)};
+  --toggle-thumb-disabled: #{get-color-property(surface-variant, background)};
+  --toggle-surface-container-highest: #{get-color-property(surface, background)};
   
   // Dark theme overrides
   @media (prefers-color-scheme: dark) {
-    --toggle-track-off: #{map.get(map.get($color-roles-dark, surface-container-highest), background)};
-    --toggle-track-on: rgba(#{map.get(map.get($color-roles-dark, primary), background)}, 0.54);
-    --toggle-track-disabled: rgba(#{map.get(map.get($color-roles-dark, surface-variant), background)}, 0.12);
-    --toggle-thumb-off: #{map.get(map.get($color-roles-dark, surface-variant), border)};
-    --toggle-thumb-on: #{map.get(map.get($color-roles-dark, primary), border)};
-    --toggle-handle: #{map.get(map.get($color-roles-dark, primary), text)};
-    --toggle-focus-outline: #{map.get(map.get($color-roles-dark, primary), border)};
-    --toggle-thumb-disabled: #{map.get(map.get($color-roles-dark, surface-variant), background)};
-    --toggle-surface-container-highest: #{map.get(map.get($color-roles-dark, surface), background)};
+    --toggle-track-off: #{get-color-property(surface-container-highest, background, dark)};
+    --toggle-track-on: rgba(#{get-color-property(primary, background, dark)}, 0.54);
+    --toggle-track-disabled: rgba(#{get-color-property(surface-variant, background, dark)}, 0.12);
+    --toggle-thumb-off: #{get-color-property(surface-variant, border, dark)};
+    --toggle-thumb-on: #{get-color-property(primary, border, dark)};
+    --toggle-handle: #{get-color-property(primary, text, dark)};
+    --toggle-focus-outline: #{get-color-property(primary, border, dark)};
+    --toggle-thumb-disabled: #{get-color-property(surface-variant, background, dark)};
+    --toggle-surface-container-highest: #{get-color-property(surface, background, dark)};
   }
   
   @include component-style(

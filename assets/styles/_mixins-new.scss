@@ -136,6 +136,8 @@ $color-roles-light: (
     surfaceContainerHighest: $md3-surface-container-highest,
     onSurface: $md3-light-on-surface,
     onSurfaceVariant: $md3-light-on-surface-variant,
+    outline: $md3-light-outline,
+    outlineVariant: $md3-light-outline-variant
   ),
   'error': (
     main: $md3-error,
@@ -208,7 +210,8 @@ $color-roles-dark: (
     onSurfaceVariant: $md3-dark-on-surface-variant,
     text: $md3-dark-on-surface,
     background: $md3-dark-surface,
-    border: $md3-dark-outline
+    border: $md3-dark-outline,
+    outlineVariant: $md3-dark-outline-variant
   ),
   'surface-variant': (
     text: $md3-dark-on-surface-variant,
@@ -345,6 +348,26 @@ $elevation-shadows: (
     z-index: $level * 100,
     box-shadow: $box-shadow
   );
+}
+
+/// Get a specific color property from a color role
+/// @param {String} $role - Color role key
+/// @param {String} $property - Property within the role
+/// @param {String} $theme - Theme variant (light, dark)
+@function get-color-property($role, $property, $theme: light) {
+  $color-map: if($theme == 'dark', $color-roles-dark, $color-roles-light);
+  $role-data: map.get($color-map, $role);
+  
+  @if not $role-data {
+    @error "Color role '#{$role}' not found in #{$theme} theme. Available: #{map.keys($color-map)}";
+  }
+  
+  $value: map.get($role-data, $property);
+  @if $value == null {
+    @error "Property '#{$property}' not found in color role '#{$role}'. Available: #{map.keys($role-data)}";
+  }
+  
+  @return $value;
 }
 
 /// Font weight mapping for dynamic lookup
