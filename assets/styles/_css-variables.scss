@@ -1,0 +1,34 @@
+// Generate CSS custom properties from Sass variables
+// This file will be processed by Sass and generate CSS variables
+
+@use './variables' as *;
+
+:root {
+  // Brand colors
+  --primary-green: #{$primary-green};
+  --accent-orange: #{$accent-orange};
+  --accent-yellow: #{$accent-yellow};
+
+  // Neutral colors
+  --neutral-darkest: #{$neutral-darkest};
+  --neutral-dark: #{$neutral-dark};
+  --neutral-medium: #{$neutral-medium};
+  --neutral-light: #{$neutral-light};
+  --neutral-lightest: #{$neutral-lightest};
+  --neutral-white: #{$neutral-white};
+
+  // Material Design 3 colors
+  --md3-primary: #{$md3-primary};
+  --md3-on-primary: #{$md3-on-primary};
+  --md3-primary-container: #{$md3-primary-container};
+  --md3-on-primary-container: #{$md3-on-primary-container};
+  --md3-secondary: #{$md3-secondary};
+  --md3-on-secondary: #{$md3-on-secondary};
+  --md3-surface: #{$md3-surface};
+  --md3-on-surface: #{$md3-on-surface};
+  --md3-surface-variant: #{$md3-surface-variant};
+  --md3-on-surface-variant: #{$md3-on-surface-variant};
+  --md3-outline: #{$md3-outline};
+  --md3-error: #{$md3-error};
+  --md3-on-error: #{$md3-on-error};
+}
