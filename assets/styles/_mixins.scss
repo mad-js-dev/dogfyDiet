@@ -607,7 +607,7 @@
   --#{$name}-20: #{color-to-hex(color.adjust($normalized-base, $lightness: -30%))};
   --#{$name}-30: #{color-to-hex(color.adjust($normalized-base, $lightness: -20%))};
   --#{$name}-40: #{color-to-hex(color.adjust($normalized-base, $lightness: -10%))};
-  --#{$name}-50: #{color-to-hex($normalized-base)};
+  --#{$name}-50: #{color-to-hex($base-color)};
   --#{$name}-60: #{color-to-hex(color.adjust($normalized-base, $lightness: 10%))};
   --#{$name}-70: #{color-to-hex(color.adjust($normalized-base, $lightness: 20%))};
   --#{$name}-80: #{color-to-hex(color.adjust($normalized-base, $lightness: 30%))};
@@ -616,17 +616,4 @@
   --#{$name}-98: #{color-to-hex(color.adjust($normalized-base, $lightness: 48%))};
   --#{$name}-99: #{color-to-hex(color.adjust($normalized-base, $lightness: 49%))};
   --#{$name}-100: #{color-to-hex(color.adjust($normalized-base, $lightness: 50%))};
-  --#{$name}-10: #{color.adjust($normalized-base, $lightness: -40%)};
-  --#{$name}-20: #{color.adjust($normalized-base, $lightness: -30%)};
-  --#{$name}-30: #{color.adjust($normalized-base, $lightness: -20%)};
-  --#{$name}-40: #{color.adjust($normalized-base, $lightness: -10%)};
-  --#{$name}-50: #{$normalized-base};
-  --#{$name}-60: #{color.adjust($normalized-base, $lightness: 10%)};
-  --#{$name}-70: #{color.adjust($normalized-base, $lightness: 20%)};
-  --#{$name}-80: #{color.adjust($normalized-base, $lightness: 30%)};
-  --#{$name}-90: #{color.adjust($normalized-base, $lightness: 40%)};
-  --#{$name}-95: #{color.adjust($normalized-base, $lightness: 45%)};
-  --#{$name}-98: #{color.adjust($normalized-base, $lightness: 48%)};
-  --#{$name}-99: #{color.adjust($normalized-base, $lightness: 49%)};
-  --#{$name}-100: #{color.adjust($normalized-base, $lightness: 50%)};
 }

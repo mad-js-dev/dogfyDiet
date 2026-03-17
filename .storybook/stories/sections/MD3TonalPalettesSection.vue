@@ -111,7 +111,11 @@ function hexToLCH(hex: string): string {
     h = h >= 0 ? h : h + 360
   }
   
-  return `LCH(${Math.round(l)} ${Math.round(c)} ${Math.round(h)}°)`
+  // Clamp chroma to CSS-compliant range (0-150) and ensure valid LCH
+  const clampedC = Math.min(Math.max(c, 0), 150)
+  const clampedL = Math.min(Math.max(l, 0), 100)
+  
+  return `LCH(${Math.round(clampedL)} ${Math.round(clampedC)} ${Math.round(h)})`
 }
 
 // Function to convert RGB string to hex
@@ -177,7 +181,6 @@ const brandColors = [
 
 .tonal-palettes-section {
   margin-bottom: 4rem;
-  padding: 0 1.5rem;
 }
 
 .tonal-section-title {
@@ -240,11 +243,12 @@ const brandColors = [
   gap: 0;
   overflow-x: auto;
   padding: 1rem 0;
+  flex-grow: 1;
 }
 
 .tonal-swatch {
-  width: 5rem;
-  height: 5rem;
+  width: 100%;
+  height: 7rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -271,14 +275,16 @@ const brandColors = [
 }
 
 .tonal-hex {
-  font-size: 0.75rem;
+  font-size: 1.1rem;
   font-family: monospace;
   opacity: 0.9;
 }
 
 .tonal-lch {
-  font-size: 0.625rem;
+  font-size: 1rem;
   font-family: monospace;
+  font-weight: bold;
   opacity: 0.8;
+  width: 60%;
 }
 </style>
