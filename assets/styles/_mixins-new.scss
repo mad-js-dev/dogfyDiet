@@ -108,22 +108,31 @@ $typography-roles: (
 // Color role mappings for light theme
 $color-roles-light: (
   'primary': (
-    main: $md3-light-primary,
-    onMain: $md3-light-on-primary,
-    mainContainer: $md3-light-primary-container,
-    onMainContainer: $md3-light-on-primary-container,
+    primary: var(--primary-40),
+    onPrimary: var(--primary-100),
+    primaryContainer: var(--primary-90),
+    onPrimaryContainer: var(--primary-10),
+    text: var(--primary-100),
+    background: var(--primary-90),
+    border: var(--primary-40)
   ),
   'secondary': (
-    main: $md3-light-secondary,
-    onMain: $md3-light-on-secondary,
-    mainContainer: $md3-light-secondary-container,
-    onMainContainer: $md3-light-on-secondary-container,
+    secondary: var(--accent-orange-40),
+    onSecondary: var(--accent-orange-100),
+    secondaryContainer: var(--accent-orange-90),
+    onSecondaryContainer: var(--accent-orange-10),
+    text: var(--accent-orange-100),
+    background: var(--accent-orange-90),
+    border: var(--accent-orange-40)
   ),
   'tertiary': (
-    main: $md3-light-tertiary,
-    onMain: $md3-light-on-tertiary,
-    mainContainer: $md3-light-tertiary-container,
-    onMainContainer: $md3-light-on-tertiary-container,
+    tertiary: var(--accent-yellow-40),
+    onTertiary: var(--accent-yellow-100),
+    tertiaryContainer: var(--accent-yellow-90),
+    onTertiaryContainer: var(--accent-yellow-10),
+    text: var(--accent-yellow-100),
+    background: var(--accent-yellow-90),
+    border: var(--accent-yellow-40)
   ),
   'surface-variant': (
     text: $md3-light-on-surface-variant,
@@ -176,86 +185,67 @@ $color-roles-light: (
 // Color role mappings for dark theme
 $color-roles-dark: (
   'primary': (
-    primary: $md3-dark-primary,
-    onPrimary: $md3-dark-on-primary,
-    primaryContainer: $md3-dark-primary-container,
-    onPrimaryContainer: $md3-dark-on-primary-container,
-    text: $md3-dark-on-primary,
-    background: $md3-dark-primary-container,
-    border: $md3-dark-primary
+    primary: var(--primary-30),
+    onPrimary: var(--primary-80),
+    primaryContainer: var(--primary-20),
+    onPrimaryContainer: var(--primary-90)
   ),
   'secondary': (
-    secondary: $md3-dark-secondary,
-    onSecondary: $md3-dark-on-secondary,
-    secondaryContainer: $md3-dark-secondary-container,
-    onSecondaryContainer: $md3-dark-on-secondary-container,
-    text: $md3-dark-on-secondary,
-    background: $md3-dark-secondary-container,
-    border: $md3-dark-secondary
+    secondary: var(--accent-orange-30),
+    onSecondary: var(--accent-orange-80),
+    secondaryContainer: var(--accent-orange-20),
+    onSecondaryContainer: var(--accent-orange-90)
   ),
   'tertiary': (
-    tertiary: $md3-dark-tertiary,
-    onTertiary: $md3-dark-on-tertiary,
-    tertiaryContainer: $md3-dark-tertiary-container,
-    onTertiaryContainer: $md3-dark-on-tertiary-container,
-    text: $md3-dark-on-tertiary,
-    background: $md3-dark-tertiary-container,
-    border: $md3-dark-tertiary
+    tertiary: var(--accent-yellow-30),
+    onTertiary: var(--accent-yellow-80),
+    tertiaryContainer: var(--accent-yellow-20),
+    onTertiaryContainer: var(--accent-yellow-90)
   ),
   'surface': (
-    surface: $md3-dark-surface,
-    surfaceDim: $md3-dark-surface-dim,
-    surfaceBright: $md3-dark-surface-bright,
-    surfaceContainerLowest: $md3-dark-surface-container-lowest,
-    surfaceContainerLow: $md3-dark-surface-container-low,
-    surfaceContainer: $md3-dark-surface-container,
-    surfaceContainerHigh: $md3-dark-surface-container-high,
-    surfaceContainerHighest: $md3-dark-surface-container-highest,
-    onSurface: $md3-dark-on-surface,
-    onSurfaceVariant: $md3-dark-on-surface-variant,
-    text: $md3-dark-on-surface,
-    background: $md3-dark-surface,
-    border: $md3-dark-outline,
-    outlineVariant: $md3-dark-outline-variant
+    surface: var(--neutral-99),
+    text: var(--neutral-10),
+    background: var(--neutral-99),
+    border: var(--neutral-90)
   ),
   'surface-variant': (
-    text: $md3-dark-on-surface-variant,
-    background: $md3-dark-surface-variant,
-    border: $md3-dark-outline-variant
+    text: var(--neutral-30),
+    background: var(--neutral-90),
+    border: var(--neutral-80)
   ),
   'surface-container-highest': (
-    text: $md3-dark-on-surface,
-    background: $md3-dark-surface-container-highest,
-    border: $md3-dark-outline
+    text: var(--neutral-10),
+    background: var(--neutral-75),
+    border: var(--neutral-90)
   ),
   'inverse': (
-    text: $md3-dark-on-primary,
-    background: color.adjust($primary-green, $lightness: 20%),
-    border: color.adjust($primary-green, $lightness: 20%)
+    text: var(--primary-100),
+    background: var(--primary-20),
+    border: var(--primary-20)
   ),
   'error': (
-    error: $md3-error,
-    onError: $md3-on-error,
-    errorContainer: $md3-error-container,
-    onErrorContainer: $md3-on-error-container,
-    text: $md3-on-error-container,
-    background: $md3-error-container,
-    border: $md3-error
+    error: var(--error-40),
+    onError: var(--error-100),
+    errorContainer: var(--error-90),
+    onErrorContainer: var(--error-10),
+    text: var(--error-10),
+    background: var(--error-90),
+    border: var(--error-40)
   ),
   'success': (
-    text: $neutral-darkest,
-    background: color.adjust($success, $lightness: -20%),
-    border: color.adjust($success, $lightness: -20%)
+    text: var(--neutral-10),
+    background: var(--success-30),
+    border: var(--success-30)
   ),
   'warning': (
-    text: $neutral-darkest,
-    background: color.adjust($warning, $lightness: -20%),
-    border: color.adjust($warning, $lightness: -20%)
+    text: var(--neutral-10),
+    background: var(--warning-30),
+    border: var(--warning-30)
   ),
   'info': (
-    text: $neutral-darkest,
-    background: color.adjust($info, $lightness: -20%),
-    border: color.adjust($info, $lightness: -20%)
+    text: var(--neutral-10),
+    background: var(--info-30),
+    border: var(--info-30)
   )
 );
 

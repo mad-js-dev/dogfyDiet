@@ -36,17 +36,37 @@
   }
 
   // Material Design 3 colors
-  --md3-primary: #{$md3-primary};
-  --md3-on-primary: #{$md3-on-primary};
-  --md3-primary-container: #{$md3-primary-container};
-  --md3-on-primary-container: #{$md3-on-primary-container};
-  --md3-secondary: #{$md3-secondary};
-  --md3-on-secondary: #{$md3-on-secondary};
-  --md3-surface: #{$md3-surface};
-  --md3-on-surface: #{$md3-on-surface};
-  --md3-surface-variant: #{$md3-surface-variant};
-  --md3-on-surface-variant: #{$md3-on-surface-variant};
-  --md3-outline: #{$md3-outline};
-  --md3-error: #{$md3-error};
-  --md3-on-error: #{$md3-on-error};
+  --md3-primary: #{map.get($brand-colors, 'primary')};
+  --md3-on-primary: #{palette-color('primary', 100)};
+  --md3-primary-container: #{palette-color('primary', 90)};
+  --md3-on-primary-container: #{palette-color('primary', 10)};
+  --md3-secondary: #{map.get($brand-colors, 'accent-orange')};
+  --md3-on-secondary: #{palette-color('accent-orange', 100)};
+  --md3-secondary-container: #{palette-color('accent-orange', 90)};
+  --md3-on-secondary-container: #{palette-color('accent-orange', 10)};
+  --md3-tertiary: #{map.get($brand-colors, 'accent-yellow')};
+  --md3-on-tertiary: #{palette-color('accent-yellow', 100)};
+  --md3-tertiary-container: #{palette-color('accent-yellow', 90)};
+  --md3-on-tertiary-container: #{palette-color('accent-yellow', 10)};
+  --md3-surface: #{$md3-light-surface};
+  --md3-on-surface: #{$md3-light-on-surface};
+  --md3-surface-variant: #{$md3-light-surface-variant};
+  --md3-on-surface-variant: #{$md3-light-on-surface-variant};
+  --md3-outline: #{$md3-light-outline};
+  --md3-error: #{map.get($semantic-colors, 'error')};
+  --md3-on-error: #{palette-color('error', 100)};
+  --md3-error-container: #{palette-color('error', 90)};
+  --md3-on-error-container: #{palette-color('error', 10)};
+  --md3-success: #{map.get($semantic-colors, 'success')};
+  --md3-on-success: #{palette-color('success', 100)};
+  --md3-success-container: #{palette-color('success', 90)};
+  --md3-on-success-container: #{palette-color('success', 10)};
+  --md3-warning: #{map.get($semantic-colors, 'warning')};
+  --md3-on-warning: #{palette-color('warning', 100)};
+  --md3-warning-container: #{palette-color('warning', 90)};
+  --md3-on-warning-container: #{palette-color('warning', 10)};
+  --md3-info: #{map.get($semantic-colors, 'info')};
+  --md3-on-info: #{palette-color('info', 100)};
+  --md3-info-container: #{palette-color('info', 90)};
+  --md3-on-info-container: #{palette-color('info', 10)};
 }

@@ -54,6 +54,7 @@
 interface ColorData {
   label: string
   value: string
+  resolvedValue: string
   sassVar: string
 }
 
@@ -86,18 +87,30 @@ function getColorForCell(rowKey: string, columnKey: string): ColorData {
   return props.colorGrid[rowKey]?.[columnKey] || {
     label: '',
     value: '#ffffff',
+    resolvedValue: '#ffffff',
     sassVar: ''
   }
 }
 
 // Helper function to determine text color based on background
-function getTextColor(backgroundColor: string): string {
-  const hex = backgroundColor.replace('#', '')
-  const r = parseInt(hex.substr(0, 2), 16)
-  const g = parseInt(hex.substr(2, 2), 16)
-  const b = parseInt(hex.substr(4, 2), 16)
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  return luminance > 0.5 ? '#1a1a1a' : '#ffffff'
+function getTextColor(colorData: ColorData): string {
+  // Handle undefined colorData
+  if (!colorData) {
+    return '#1a1a1a';
+  }
+
+  // Special handling for 'On' color roles - always use semi-transparent black
+  if (colorData.label && colorData.label.startsWith('On ')) {
+    return 'rgba(0, 0, 0, 0.6)';
+  }
+
+  // For other colors, determine based on background luminance
+  const hex = colorData.value?.replace('#', '') || 'ffffff';
+  const r = parseInt(hex.substr(0, 2), 16) || 255;
+  const g = parseInt(hex.substr(2, 2), 16) || 255;
+  const b = parseInt(hex.substr(4, 2), 16) || 255;
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5 ? '#1a1a1a' : '#ffffff';
 }
 
 // Helper function to get color style with border for white colors

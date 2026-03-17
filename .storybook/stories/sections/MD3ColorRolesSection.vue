@@ -53,6 +53,7 @@ import ColorRolesGrid from '../components/ColorRolesGrid.vue'
 interface ColorData {
   label: string
   value: string
+  resolvedValue: string
   sassVar: string
 }
 
@@ -98,56 +99,56 @@ const colorRows: Row[] = [
 // Brand & Surface color grid data
 const brandColorGrid: ColorGrid = {
   base: {
-    surface: { label: 'Surface', value: '#ffffff', sassVar: '$md3-surface' },
-    primary: { label: 'Primary', value: '#00B67A', sassVar: '$md3-primary' },
-    secondary: { label: 'Secondary', value: '#EF6948', sassVar: '$md3-secondary' },
-    tertiary: { label: 'Tertiary', value: '#ffca4e', sassVar: '$md3-tertiary' }
+    surface: { label: 'Surface', value: 'var(--md3-surface)', resolvedValue: '#ffffff', sassVar: '$md3-light-surface' },
+    primary: { label: 'Primary', value: 'var(--md3-primary)', resolvedValue: '#00B67A', sassVar: '$md3-light-primary' },
+    secondary: { label: 'Secondary', value: 'var(--md3-secondary)', resolvedValue: '#EF6948', sassVar: '$md3-light-secondary' },
+    tertiary: { label: 'Tertiary', value: 'var(--md3-tertiary)', resolvedValue: '#ffca4e', sassVar: '$md3-light-tertiary' }
   },
   on: {
-    surface: { label: 'On Surface', value: '#1a1a1a', sassVar: '$md3-on-surface' },
-    primary: { label: 'On Primary', value: '#ffffff', sassVar: '$md3-on-primary' },
-    secondary: { label: 'On Secondary', value: '#ffffff', sassVar: '$md3-on-secondary' },
-    tertiary: { label: 'On Tertiary', value: '#1a1a1a', sassVar: '$md3-on-tertiary' }
+    surface: { label: 'On Surface', value: 'var(--md3-on-surface)', resolvedValue: '#1a1a1a', sassVar: '$md3-light-on-surface' },
+    primary: { label: 'On Primary', value: 'var(--md3-on-primary)', resolvedValue: '#ffffff', sassVar: '$md3-light-on-primary' },
+    secondary: { label: 'On Secondary', value: 'var(--md3-on-secondary)', resolvedValue: '#ffffff', sassVar: '$md3-light-on-secondary' },
+    tertiary: { label: 'On Tertiary', value: 'var(--md3-on-tertiary)', resolvedValue: '#1a1a1a', sassVar: '$md3-light-on-tertiary' }
   },
   container: {
-    surface: { label: 'Surface Variant', value: '#f7f7f7', sassVar: '$md3-surface-variant' },
-    primary: { label: 'Primary Container', value: '#B3E5CC', sassVar: '$md3-primary-container' },
-    secondary: { label: 'Secondary Container', value: '#FFD4C4', sassVar: '$md3-secondary-container' },
-    tertiary: { label: 'Tertiary Container', value: '#fff5d6', sassVar: '$md3-tertiary-container' }
+    surface: { label: 'Surface Variant', value: 'var(--md3-surface-variant)', resolvedValue: '#f7f7f7', sassVar: '$md3-light-surface-variant' },
+    primary: { label: 'Primary Container', value: 'var(--md3-primary-container)', resolvedValue: '#B3E5CC', sassVar: '$md3-light-primary-container' },
+    secondary: { label: 'Secondary Container', value: 'var(--md3-secondary-container)', resolvedValue: '#FFD4C4', sassVar: '$md3-light-secondary-container' },
+    tertiary: { label: 'Tertiary Container', value: 'var(--md3-tertiary-container)', resolvedValue: '#fff5d6', sassVar: '$md3-light-tertiary-container' }
   },
   onContainer: {
-    surface: { label: 'On Surface Variant', value: '#767676', sassVar: '$md3-on-surface-variant' },
-    primary: { label: 'On Primary Container', value: '#004D29', sassVar: '$md3-on-primary-container' },
-    secondary: { label: 'On Secondary Container', value: '#5D2B1E', sassVar: '$md3-on-secondary-container' },
-    tertiary: { label: 'On Tertiary Container', value: '#cc8a00', sassVar: '$md3-on-tertiary-container' }
+    surface: { label: 'On Surface Variant', value: 'var(--md3-on-surface-variant)', resolvedValue: '#767676', sassVar: '$md3-light-on-surface-variant' },
+    primary: { label: 'On Primary Container', value: 'var(--md3-on-primary-container)', resolvedValue: '#004D29', sassVar: '$md3-light-on-primary-container' },
+    secondary: { label: 'On Secondary Container', value: 'var(--md3-on-secondary-container)', resolvedValue: '#5D2B1E', sassVar: '$md3-light-on-secondary-container' },
+    tertiary: { label: 'On Tertiary Container', value: 'var(--md3-on-tertiary-container)', resolvedValue: '#cc8a00', sassVar: '$md3-light-on-tertiary-container' }
   }
 }
 
 // Semantic color grid data
 const semanticColorGrid: ColorGrid = {
   base: {
-    error: { label: 'Error', value: '#d80003', sassVar: '$md3-error' },
-    success: { label: 'Success', value: '#0aaa46', sassVar: '$md3-success' },
-    warning: { label: 'Warning', value: '#ffc800', sassVar: '$md3-warning' },
-    info: { label: 'Info', value: '#1976D2', sassVar: '$md3-info' }
+    error: { label: 'Error', value: 'var(--md3-error)', resolvedValue: '#d80003', sassVar: '$md3-error' },
+    success: { label: 'Success', value: 'var(--md3-success)', resolvedValue: '#0aaa46', sassVar: '$md3-success' },
+    warning: { label: 'Warning', value: 'var(--md3-warning)', resolvedValue: '#ffc800', sassVar: '$md3-warning' },
+    info: { label: 'Info', value: 'var(--md3-info)', resolvedValue: '#1976D2', sassVar: '$md3-info' }
   },
   on: {
-    error: { label: 'On Error', value: '#ffffff', sassVar: '$md3-on-error' },
-    success: { label: 'On Success', value: '#ffffff', sassVar: '$md3-on-success' },
-    warning: { label: 'On Warning', value: '#1a1a1a', sassVar: '$md3-on-warning' },
-    info: { label: 'On Info', value: '#ffffff', sassVar: '$md3-on-info' }
+    error: { label: 'On Error', value: 'var(--md3-on-error)', resolvedValue: '#ffffff', sassVar: '$md3-on-error' },
+    success: { label: 'On Success', value: 'var(--md3-on-success)', resolvedValue: '#ffffff', sassVar: '$md3-on-success' },
+    warning: { label: 'On Warning', value: 'var(--md3-on-warning)', resolvedValue: '#1a1a1a', sassVar: '$md3-on-warning' },
+    info: { label: 'On Info', value: 'var(--md3-on-info)', resolvedValue: '#ffffff', sassVar: '$md3-on-info' }
   },
   container: {
-    error: { label: 'Error Container', value: '#fef1f1', sassVar: '$md3-error-container' },
-    success: { label: 'Success Container', value: '#005128', sassVar: '$md3-success-container' },
-    warning: { label: 'Warning Container', value: '#fff5d6', sassVar: '$md3-warning-container' },
-    info: { label: 'Info Container', value: '#e3f2fd', sassVar: '$md3-info-container' }
+    error: { label: 'Error Container', value: 'var(--md3-error-container)', resolvedValue: '#fef1f1', sassVar: '$md3-error-container' },
+    success: { label: 'Success Container', value: 'var(--md3-success-container)', resolvedValue: '#005128', sassVar: '$md3-success-container' },
+    warning: { label: 'Warning Container', value: 'var(--md3-warning-container)', resolvedValue: '#fff5d6', sassVar: '$md3-warning-container' },
+    info: { label: 'Info Container', value: 'var(--md3-info-container)', resolvedValue: '#e3f2fd', sassVar: '$md3-info-container' }
   },
   onContainer: {
-    error: { label: 'On Error Container', value: '#93000A', sassVar: '$md3-on-error-container' },
-    success: { label: 'On Success Container', value: '#ffffff', sassVar: '$md3-on-success-container' },
-    warning: { label: 'On Warning Container', value: '#cc8a00', sassVar: '$md3-on-warning-container' },
-    info: { label: 'On Info Container', value: '#0d47a1', sassVar: '$md3-on-info-container' }
+    error: { label: 'On Error Container', value: 'var(--md3-on-error-container)', resolvedValue: '#93000A', sassVar: '$md3-on-error-container' },
+    success: { label: 'On Success Container', value: 'var(--md3-on-success-container)', resolvedValue: '#ffffff', sassVar: '$md3-on-success-container' },
+    warning: { label: 'On Warning Container', value: 'var(--md3-on-warning-container)', resolvedValue: '#cc8a00', sassVar: '$md3-on-warning-container' },
+    info: { label: 'On Info Container', value: 'var(--md3-on-info-container)', resolvedValue: '#0d47a1', sassVar: '$md3-on-info-container' }
   }
 }
 </script>

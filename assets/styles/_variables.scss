@@ -22,7 +22,7 @@ $brand-colors: (
 $semantic-colors: (
   'success': #0aaa46,
   'error': #d80003,
-  'warning': #eeef00,
+  'warning': #ffc800,
   'info': #1976D2
 ) !default;
 
@@ -41,17 +41,21 @@ $neutral-colors: (
 // Dynamic Palette Generation Function
 @function generate-palette($base-color) {
   $palette: ();
-  // Generate tones from 50 (lightest) to 900 (darkest)
-  $palette: map.merge($palette, (50: color.adjust($base-color, $lightness: 52%)));
-  $palette: map.merge($palette, (100: color.adjust($base-color, $lightness: 40%)));
-  $palette: map.merge($palette, (200: color.adjust($base-color, $lightness: 30%)));
-  $palette: map.merge($palette, (300: color.adjust($base-color, $lightness: 20%)));
-  $palette: map.merge($palette, (400: color.adjust($base-color, $lightness: 10%)));
-  $palette: map.merge($palette, (500: $base-color));
-  $palette: map.merge($palette, (600: color.adjust($base-color, $lightness: -10%)));
-  $palette: map.merge($palette, (700: color.adjust($base-color, $lightness: -20%)));
-  $palette: map.merge($palette, (800: color.adjust($base-color, $lightness: -30%)));
-  $palette: map.merge($palette, (900: color.adjust($base-color, $lightness: -40%)));
+  // Generate M3 tonal palette: 0=black, 40=darker base, 90=lighter base, 100=white
+  $palette: map.merge($palette, (0: #000000));
+  $palette: map.merge($palette, (10: color.adjust($base-color, $lightness: -60%, $saturation: -10%)));
+  $palette: map.merge($palette, (20: color.adjust($base-color, $lightness: -45%, $saturation: -5%)));
+  $palette: map.merge($palette, (30: color.adjust($base-color, $lightness: -30%, $saturation: -2%)));
+  $palette: map.merge($palette, (40: color.adjust($base-color, $lightness: -20%)));
+  $palette: map.merge($palette, (50: color.adjust($base-color, $lightness: -10%)));
+  $palette: map.merge($palette, (60: color.adjust($base-color, $lightness: 0%)));
+  $palette: map.merge($palette, (70: color.adjust($base-color, $lightness: 15%)));
+  $palette: map.merge($palette, (80: color.adjust($base-color, $lightness: 30%)));
+  $palette: map.merge($palette, (90: color.adjust($base-color, $lightness: 50%)));
+  $palette: map.merge($palette, (95: color.adjust($base-color, $lightness: 65%)));
+  $palette: map.merge($palette, (98: color.adjust($base-color, $lightness: 80%)));
+  $palette: map.merge($palette, (99: color.adjust($base-color, $lightness: 90%)));
+  $palette: map.merge($palette, (100: #ffffff));
   @return $palette;
 }
 
@@ -100,20 +104,20 @@ $neutral-off-white: map.get($neutral-colors, 'off-white') !default;
 // M3 uses semantic color roles that map to tonal palettes
 
 // Light Theme Color Roles
-$md3-light-primary: $primary-green !default;
-$md3-light-on-primary: $neutral-white !default;
-$md3-light-primary-container: color.adjust($primary-green, $lightness: 40%) !default;
-$md3-light-on-primary-container: color.adjust($primary-green, $lightness: -20%) !default;
+$md3-light-primary: var(--primary-40) !default;
+$md3-light-on-primary: var(--primary-100) !default;
+$md3-light-primary-container: var(--primary-90) !default;
+$md3-light-on-primary-container: var(--primary-10) !default;
 
-$md3-light-secondary: $accent-orange !default;
-$md3-light-on-secondary: $neutral-white !default;
-$md3-light-secondary-container: color.adjust($accent-orange, $lightness: 40%) !default;
-$md3-light-on-secondary-container: color.adjust($accent-orange, $lightness: -20%) !default;
+$md3-light-secondary: var(--accent-orange-40) !default;
+$md3-light-on-secondary: var(--accent-orange-100) !default;
+$md3-light-secondary-container: var(--accent-orange-90) !default;
+$md3-light-on-secondary-container: var(--accent-orange-10) !default;
 
-$md3-light-tertiary: $accent-yellow !default;
-$md3-light-on-tertiary: $neutral-darkest !default;
-$md3-light-tertiary-container: color.adjust($accent-yellow, $lightness: 40%) !default;
-$md3-light-on-tertiary-container: color.adjust($accent-yellow, $lightness: -20%) !default;
+$md3-light-tertiary: var(--accent-yellow-40) !default;
+$md3-light-on-tertiary: var(--accent-yellow-100) !default;
+$md3-light-tertiary-container: var(--accent-yellow-90) !default;
+$md3-light-on-tertiary-container: var(--accent-yellow-10) !default;
 
 $md3-light-surface: $neutral-white !default;
 $md3-light-on-surface: $neutral-darkest !default;
@@ -127,20 +131,20 @@ $md3-light-scrim: rgba($neutral-darkest, 0.32) !default;
 $md3-light-shadow: rgba($neutral-darkest, 0.12) !default;
 
 // Dark Theme Color Roles
-$md3-dark-primary: color.adjust($primary-green, $lightness: 20%) !default;
-$md3-dark-on-primary: color.adjust($primary-green, $lightness: -40%) !default;
-$md3-dark-primary-container: color.adjust($primary-green, $lightness: -30%) !default;
-$md3-dark-on-primary-container: color.adjust($primary-green, $lightness: 30%) !default;
+$md3-dark-primary: var(--primary-30) !default;
+$md3-dark-on-primary: var(--primary-100) !default;
+$md3-dark-primary-container: var(--primary-20) !default;
+$md3-dark-on-primary-container: var(--primary-100) !default;
 
-$md3-dark-secondary: color.adjust($accent-orange, $lightness: 20%) !default;
-$md3-dark-on-secondary: color.adjust($accent-orange, $lightness: -40%) !default;
-$md3-dark-secondary-container: color.adjust($accent-orange, $lightness: -30%) !default;
-$md3-dark-on-secondary-container: color.adjust($accent-orange, $lightness: 30%) !default;
+$md3-dark-secondary: var(--accent-orange-30) !default;
+$md3-dark-on-secondary: var(--accent-orange-100) !default;
+$md3-dark-secondary-container: var(--accent-orange-20) !default;
+$md3-dark-on-secondary-container: var(--accent-orange-100) !default;
 
-$md3-dark-tertiary: color.adjust($accent-yellow, $lightness: 20%) !default;
-$md3-dark-on-tertiary: color.adjust($accent-yellow, $lightness: -40%) !default;
-$md3-dark-tertiary-container: color.adjust($accent-yellow, $lightness: -30%) !default;
-$md3-dark-on-tertiary-container: color.adjust($accent-yellow, $lightness: 30%) !default;
+$md3-dark-tertiary: var(--accent-yellow-30) !default;
+$md3-dark-on-tertiary: var(--accent-yellow-100) !default;
+$md3-dark-tertiary-container: var(--accent-yellow-20) !default;
+$md3-dark-on-tertiary-container: var(--accent-yellow-100) !default;
 
 $md3-dark-surface: $neutral-darkest !default;
 $md3-dark-on-surface: $neutral-lightest !default;
@@ -179,41 +183,30 @@ $md3-inverse-on-primary: $neutral-white !default;
 $md3-inverse-surface: $neutral-darkest !default;
 $md3-inverse-on-surface: $neutral-white !default;
 
-// Error Colors (M3 Standard)
-$md3-error: $error !default;
-$md3-error-container: color.adjust($error, $lightness: 40%) !default;
-$md3-on-error: $neutral-white !default;
-$md3-on-error-container: color.adjust($error, $lightness: -20%) !default;
+// Error Colors (M3 Standard) - using darker base tone
+$md3-error: palette-color('error', 600) !default;
+$md3-error-container: palette-color('error', 90) !default;
+$md3-on-error: palette-color('error', 100) !default;
+$md3-on-error-container: palette-color('error', 10) !default;
 
-// -----------------------------------------------------------------------------
-// M3 COLOR ROLE MAPPINGS (Legacy Support)
-// -----------------------------------------------------------------------------
-// Map existing variables to M3 roles for backward compatibility
+// Success Colors (M3 Standard) - using darker base tone
+$md3-success: palette-color('success', 600) !default;
+$md3-success-container: palette-color('success', 90) !default;
+$md3-on-success: palette-color('success', 100) !default;
+$md3-on-success-container: palette-color('success', 10) !default;
 
-// Primary Mappings
-$md3-primary: $md3-light-primary !default;
-$md3-on-primary: $md3-light-on-primary !default;
-$md3-primary-container: $md3-light-primary-container !default;
-$md3-on-primary-container: $md3-light-on-primary-container !default;
+// Warning Colors (M3 Standard) - using darker base tone
+$md3-warning: palette-color('warning', 600) !default;
+$md3-warning-container: palette-color('warning', 90) !default;
+$md3-on-warning: palette-color('warning', 100) !default;
+$md3-on-warning-container: palette-color('warning', 10) !default;
 
-// Secondary Mappings
-$md3-secondary: $md3-light-secondary !default;
-$md3-on-secondary: $md3-light-on-secondary !default;
-$md3-secondary-container: $md3-light-secondary-container !default;
-$md3-on-secondary-container: $md3-light-on-secondary-container !default;
+// Info Colors (M3 Standard) - using darker base tone
+$md3-info: palette-color('info', 600) !default;
+$md3-info-container: palette-color('info', 90) !default;
+$md3-on-info: palette-color('info', 100) !default;
+$md3-on-info-container: palette-color('info', 10) !default;
 
-// Tertiary Mappings
-$md3-tertiary: $md3-light-tertiary !default;
-$md3-on-tertiary: $md3-light-on-tertiary !default;
-$md3-tertiary-container: $md3-light-tertiary-container !default;
-$md3-on-tertiary-container: $md3-light-on-tertiary-container !default;
-
-// Surface Mappings
-$md3-surface: $md3-light-surface !default;
-$md3-on-surface: $md3-light-on-surface !default;
-$md3-surface-variant: $md3-light-surface-variant !default;
-$md3-on-surface-variant: $md3-light-on-surface-variant !default;
-$md3-outline: $md3-light-outline !default;
 
 // -----------------------------------------------------------------------------
 // THEME SWITCHING HELPERS
