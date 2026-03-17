@@ -1,88 +1,87 @@
 // Color variables from CSS custom properties
 // These values are directly sourced from Sass variables via CSS custom properties
 
-// Utility function to get CSS custom property with fallback
-function getCssProperty(property, fallback) {
+// Utility function to get CSS custom property
+function getCssProperty(property) {
   if (typeof window !== 'undefined' && window.getComputedStyle) {
     const root = document.documentElement
-    const value = getComputedStyle(root).getPropertyValue(property).trim()
-    return value || fallback
+    return getComputedStyle(root).getPropertyValue(property).trim()
   }
-  return fallback
+  return ''
 }
 
 // Export color variables that read from CSS custom properties
 export const colorVariables = {
   // Brand colors (from CSS custom properties)
   get primaryGreen() {
-    return getCssProperty('--primary-green', '#00B67A')
+    return getCssProperty('--primary-green')
   },
   get accentOrange() {
-    return getCssProperty('--accent-orange', '#EF6948')
+    return getCssProperty('--accent-orange')
   },
   get accentYellow() {
-    return getCssProperty('--accent-yellow', '#ffca4e')
+    return getCssProperty('--accent-yellow')
   },
 
   // Neutral colors (from CSS custom properties)
   get neutralDarkest() {
-    return getCssProperty('--neutral-darkest', '#1a1a1a')
+    return getCssProperty('--neutral-darkest')
   },
   get neutralDark() {
-    return getCssProperty('--neutral-dark', '#3d3d3d')
+    return getCssProperty('--neutral-dark')
   },
   get neutralMedium() {
-    return getCssProperty('--neutral-medium', '#767676')
+    return getCssProperty('--neutral-medium')
   },
   get neutralLight() {
-    return getCssProperty('--neutral-light', '#a3a3a3')
+    return getCssProperty('--neutral-light')
   },
   get neutralLightest() {
-    return getCssProperty('--neutral-lightest', '#d4d4d4')
+    return getCssProperty('--neutral-lightest')
   },
   get neutralWhite() {
-    return getCssProperty('--neutral-white', '#ffffff')
+    return getCssProperty('--neutral-white')
   },
 
   // Material Design 3 tokens (from CSS custom properties)
   get md3Primary() {
-    return getCssProperty('--md3-primary', '#00B67A')
+    return getCssProperty('--md3-primary')
   },
   get md3OnPrimary() {
-    return getCssProperty('--md3-on-primary', '#ffffff')
+    return getCssProperty('--md3-on-primary')
   },
   get md3PrimaryContainer() {
-    return getCssProperty('--md3-primary-container', '#00B67A')
+    return getCssProperty('--md3-primary-container')
   },
   get md3OnPrimaryContainer() {
-    return getCssProperty('--md3-on-primary-container', '#000000')
+    return getCssProperty('--md3-on-primary-container')
   },
   get md3Secondary() {
-    return getCssProperty('--md3-secondary', '#767676')
+    return getCssProperty('--md3-secondary')
   },
   get md3OnSecondary() {
-    return getCssProperty('--md3-on-secondary', '#ffffff')
+    return getCssProperty('--md3-on-secondary')
   },
   get md3Surface() {
-    return getCssProperty('--md3-surface', '#ffffff')
+    return getCssProperty('--md3-surface')
   },
   get md3OnSurface() {
-    return getCssProperty('--md3-on-surface', '#1a1a1a')
+    return getCssProperty('--md3-on-surface')
   },
   get md3SurfaceVariant() {
-    return getCssProperty('--md3-surface-variant', '#f5f5f5')
+    return getCssProperty('--md3-surface-variant')
   },
   get md3OnSurfaceVariant() {
-    return getCssProperty('--md3-on-surface-variant', '#3d3d3d')
+    return getCssProperty('--md3-on-surface-variant')
   },
   get md3Outline() {
-    return getCssProperty('--md3-outline', '#767676')
+    return getCssProperty('--md3-outline')
   },
   get md3Error() {
-    return getCssProperty('--md3-error', '#ba1a1a')
+    return getCssProperty('--md3-error')
   },
   get md3OnError() {
-    return getCssProperty('--md3-on-error', '#ffffff')
+    return getCssProperty('--md3-on-error')
   }
 }
 

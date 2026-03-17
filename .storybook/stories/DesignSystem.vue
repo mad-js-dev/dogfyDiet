@@ -34,6 +34,7 @@ import TypographySection from './sections/TypographySection.vue'
 </script>
 
 <style scoped lang="scss">
+@use '~/assets/styles/_css-variables.scss';
 @use '~/assets/styles/_variables.scss' as *;
 @use '~/assets/styles/_mixins.scss' as *;
 

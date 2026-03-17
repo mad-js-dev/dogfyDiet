@@ -15,7 +15,7 @@
     "test:nuxt": "vitest --project nuxt",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "storybook": "storybook dev -p 6006",
+    "sb": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build:gh-pages": "nuxt generate",
     "deploy:gh-pages": "nuxt generate && gh-pages -d .output/public --repo https://github.com/mad-js-dev/dogfyDiet.git --branch gh-pages"
