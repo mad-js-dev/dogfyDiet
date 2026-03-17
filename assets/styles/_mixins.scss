@@ -3,6 +3,7 @@
 // =============================================================================
 
 @use './variables' as *;
+@use 'sass:color';
 
 // -----------------------------------------------------------------------------
 // RESPONSIVE BREAKPOINTS
@@ -549,4 +550,51 @@
       transform: scale(1);
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+// TONAL PALETTE FUNCTIONS & MIXINS
+// -----------------------------------------------------------------------------
+
+/// Adjust tone of a color using simple lightness adjustment
+/// @param {Color} $color - Base color
+/// @param {Number} $tone - Tone value (0-100)
+/// @return {Color} Adjusted color
+@function adjust-tone($color, $tone) {
+  $base-lightness: 50%; // Base color is at 50% tone
+  $target-lightness: $tone * 1%;
+
+  @if $tone < 50 {
+    // For tones below 50, make darker
+    $adjustment: ($base-lightness - $target-lightness);
+    @return color.adjust($color, $lightness: -$adjustment);
+  } @else if $tone > 50 {
+    // For tones above 50, make lighter
+    $adjustment: ($target-lightness - $base-lightness);
+    @return color.adjust($color, $lightness: $adjustment);
+  } @else {
+    // Tone 50 is the base color
+    @return $color;
+  }
+}
+
+/// Generate tonal palette CSS variables from base color
+/// @param {String} $base-color - Base color in hex format
+/// @param {String} $name - Name prefix for CSS variables (e.g., 'primary', 'accent-orange')
+/// @return {CSS Variables} --{name}-0, --{name}-10, --{name}-20, etc.
+@mixin generate-color-variables($base-color, $name) {
+  --#{$name}-0: #{adjust-tone($base-color, 0)};
+  --#{$name}-10: #{adjust-tone($base-color, 10)};
+  --#{$name}-20: #{adjust-tone($base-color, 20)};
+  --#{$name}-30: #{adjust-tone($base-color, 30)};
+  --#{$name}-40: #{adjust-tone($base-color, 40)};
+  --#{$name}-50: #{$base-color};
+  --#{$name}-60: #{adjust-tone($base-color, 60)};
+  --#{$name}-70: #{adjust-tone($base-color, 70)};
+  --#{$name}-80: #{adjust-tone($base-color, 80)};
+  --#{$name}-90: #{adjust-tone($base-color, 90)};
+  --#{$name}-95: #{adjust-tone($base-color, 95)};
+  --#{$name}-98: #{adjust-tone($base-color, 98)};
+  --#{$name}-99: #{adjust-tone($base-color, 99)};
+  --#{$name}-100: #{adjust-tone($base-color, 100)};
 }

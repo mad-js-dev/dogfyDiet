@@ -156,20 +156,20 @@ $color-roles-light: (
   'success': (
     main: $success,
     onMain: $neutral-white,
-    mainContainer: color.adjust($success, $lightness: 40%),
-    onMainContainer: color.adjust($success, $lightness: -20%),
+    mainContainer: color.adjust($success, $lightness: -40%),
+    onMainContainer: color.adjust($success, $lightness: 20%),
   ),
   'warning': (
     main: $warning,
     onMain: $neutral-darkest,
-    mainContainer: color.adjust($warning, $lightness: 40%),
-    onMainContainer: color.adjust($warning, $lightness: -20%),
+    mainContainer: color.adjust($warning, $lightness: -40%),
+    onMainContainer: color.adjust($warning, $lightness: 20%),
   ),
   'info': (
     main: $info,
     onMain: $neutral-white,
-    mainContainer: color.adjust($info, $lightness: 40%),
-    onMainContainer: color.adjust($info, $lightness: -20%),
+    mainContainer: color.adjust($info, $lightness: -40%),
+    onMainContainer: color.adjust($info, $lightness: 20%),
   )
 );
 

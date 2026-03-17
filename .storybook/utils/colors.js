@@ -5,7 +5,8 @@
 function getCssProperty(property) {
   if (typeof window !== 'undefined' && window.getComputedStyle) {
     const root = document.documentElement
-    return getComputedStyle(root).getPropertyValue(property).trim()
+    const value = getComputedStyle(root).getPropertyValue(property).trim()
+    return value || ''
   }
   return ''
 }

@@ -5,33 +5,99 @@
 // =============================================================================
 
 @use "sass:color";
+@use "sass:map";
 
 // -----------------------------------------------------------------------------
 // COLOR PALETTE
 // -----------------------------------------------------------------------------
 
-// Primary Brand Colors
-$primary-green: #00B67A !default;
-$accent-orange: #EF6948 !default;
-$accent-yellow: #ffc800 !default;
+// Primary Brand Colors Map
+$brand-colors: (
+  'primary': #00B67A,
+  'accent-orange': #EF6948,
+  'accent-yellow': #ffc800
+) !default;
 
-// Neutral Palette
-$neutral-darkest: #1a1a1a !default;
-$neutral-dark: #3d3d3d !default;
-$neutral-medium: #767676 !default;
-$neutral-light: #e8e8e8 !default;
-$neutral-lighter: #d6d6d6 !default;
-$neutral-lightest: #f7f7f7 !default;
-$neutral-white: #ffffff !default;
-$neutral-off-white: #f9f8f7 !default;
+// Semantic Colors Map
+$semantic-colors: (
+  'success': #0aaa46,
+  'success-dark': #005128,
+  'error': #d80003,
+  'error-light': #fef1f1,
+  'warning': #ffc800,
+  'info': #1976D2
+) !default;
 
-// Semantic Colors
-$success: #0aaa46 !default;
-$success-dark: #005128 !default;
-$error: #d80003 !default;
-$error-light: #fef1f1 !default;
-$warning: #ffc800 !default;
-$info: #1976D2 !default;
+// Neutral Palette (keeping as is for now)
+$neutral-colors: (
+  'darkest': #1a1a1a,
+  'dark': #3d3d3d,
+  'medium': #767676,
+  'light': #e8e8e8,
+  'lighter': #d6d6d6,
+  'lightest': #f7f7f7,
+  'white': #ffffff,
+  'off-white': #f9f8f7
+) !default;
+
+// Dynamic Palette Generation Function
+@function generate-palette($base-color) {
+  $palette: ();
+  // Generate tones from 50 (lightest) to 900 (darkest)
+  $palette: map.merge($palette, (50: color.adjust($base-color, $lightness: 52%)));
+  $palette: map.merge($palette, (100: color.adjust($base-color, $lightness: 40%)));
+  $palette: map.merge($palette, (200: color.adjust($base-color, $lightness: 30%)));
+  $palette: map.merge($palette, (300: color.adjust($base-color, $lightness: 20%)));
+  $palette: map.merge($palette, (400: color.adjust($base-color, $lightness: 10%)));
+  $palette: map.merge($palette, (500: $base-color));
+  $palette: map.merge($palette, (600: color.adjust($base-color, $lightness: -10%)));
+  $palette: map.merge($palette, (700: color.adjust($base-color, $lightness: -20%)));
+  $palette: map.merge($palette, (800: color.adjust($base-color, $lightness: -30%)));
+  $palette: map.merge($palette, (900: color.adjust($base-color, $lightness: -40%)));
+  @return $palette;
+}
+
+// Function to access specific palette tone
+@function palette-color($color-name, $tone: 500) {
+  $color-map: map.merge($brand-colors, $semantic-colors);
+  $base-color: map.get($color-map, $color-name);
+  $palette: generate-palette($base-color);
+  @return map.get($palette, $tone);
+}
+
+// Dynamically generate palette variables for each brand and semantic color
+$primary-palette: generate-palette(map.get($brand-colors, 'primary')) !default;
+$accent-orange-palette: generate-palette(map.get($brand-colors, 'accent-orange')) !default;
+$accent-yellow-palette: generate-palette(map.get($brand-colors, 'accent-yellow')) !default;
+$success-palette: generate-palette(map.get($semantic-colors, 'success')) !default;
+$success-dark-palette: generate-palette(map.get($semantic-colors, 'success-dark')) !default;
+$error-palette: generate-palette(map.get($semantic-colors, 'error')) !default;
+$error-light-palette: generate-palette(map.get($semantic-colors, 'error-light')) !default;
+$warning-palette: generate-palette(map.get($semantic-colors, 'warning')) !default;
+$info-palette: generate-palette(map.get($semantic-colors, 'info')) !default;
+
+// Backward compatibility - redefine individual color variables from maps
+$primary-green: map.get($brand-colors, 'primary') !default;
+$accent-orange: map.get($brand-colors, 'accent-orange') !default;
+$accent-yellow: map.get($brand-colors, 'accent-yellow') !default;
+$success: map.get($semantic-colors, 'success') !default;
+$success-dark: map.get($semantic-colors, 'success-dark') !default;
+$error: map.get($semantic-colors, 'error') !default;
+$error-light: map.get($semantic-colors, 'error-light') !default;
+$warning: map.get($semantic-colors, 'warning') !default;
+$info: map.get($semantic-colors, 'info') !default;
+
+// Backward compatibility - redefine neutral variables from map
+$neutral-darkest: map.get($neutral-colors, 'darkest') !default;
+$neutral-dark: map.get($neutral-colors, 'dark') !default;
+$neutral-medium: map.get($neutral-colors, 'medium') !default;
+$neutral-light: map.get($neutral-colors, 'light') !default;
+$neutral-lighter: map.get($neutral-colors, 'lighter') !default;
+$neutral-lightest: map.get($neutral-colors, 'lightest') !default;
+$neutral-white: map.get($neutral-colors, 'white') !default;
+$neutral-off-white: map.get($neutral-colors, 'off-white') !default;
+
+
 
 // -----------------------------------------------------------------------------
 // MATERIAL DESIGN 3 COLOR ROLES

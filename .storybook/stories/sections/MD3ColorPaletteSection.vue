@@ -85,6 +85,10 @@ const colorSections: ColorSection[] = [
 ]
 </script>
 
+<style lang="scss">
+@use '~/assets/styles/_css-variables.scss';
+</style>
+
 <style scoped lang="scss">
 @use '~/assets/styles/_variables.scss' as *;
 @use '~/assets/styles/_mixins.scss' as *;
