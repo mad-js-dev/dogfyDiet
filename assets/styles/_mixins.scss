@@ -4,6 +4,8 @@
 
 @use './variables' as *;
 @use 'sass:color';
+@use 'sass:math';
+@use 'sass:string';
 
 // -----------------------------------------------------------------------------
 // RESPONSIVE BREAKPOINTS
@@ -553,29 +555,43 @@
 }
 
 // -----------------------------------------------------------------------------
-// TONAL PALETTE FUNCTIONS & MIXINS
-// -----------------------------------------------------------------------------
+ // TONAL PALETTE FUNCTIONS & MIXINS
+ // -----------------------------------------------------------------------------
 
-/// Adjust tone of a color using simple lightness adjustment
+/// Convert a Sass color to hex string
+/// @param {Color} $color - Sass color object
+/// @return {String} Hex color string
+@function color-to-hex($color) {
+  $r: round(color.channel($color, "red", $space: rgb));
+  $g: round(color.channel($color, "green", $space: rgb));
+  $b: round(color.channel($color, "blue", $space: rgb));
+  
+  // Convert RGB to hex using calc() for division and regular modulo
+  $r1: math.floor(calc($r / 16));
+  $r2: $r % 16;
+  $g1: math.floor(calc($g / 16));
+  $g2: $g % 16;
+  $b1: math.floor(calc($b / 16));
+  $b2: $b % 16;
+  
+  @return '#' + 
+    string.slice('0123456789abcdef', $r1 + 1, $r1 + 1) + 
+    string.slice('0123456789abcdef', $r2 + 1, $r2 + 1) +
+    string.slice('0123456789abcdef', $g1 + 1, $g1 + 1) + 
+    string.slice('0123456789abcdef', $g2 + 1, $g2 + 1) +
+    string.slice('0123456789abcdef', $b1 + 1, $b1 + 1) + 
+    string.slice('0123456789abcdef', $b2 + 1, $b2 + 1);
+}
+
+/// Adjust tone of a color using exact lightness setting
 /// @param {Color} $color - Base color
 /// @param {Number} $tone - Tone value (0-100)
-/// @return {Color} Adjusted color
+/// @return {Color} Adjusted color at exact tone lightness
 @function adjust-tone($color, $tone) {
-  $base-lightness: 50%; // Base color is at 50% tone
+  $current-lightness: color.lightness($color);
   $target-lightness: $tone * 1%;
-
-  @if $tone < 50 {
-    // For tones below 50, make darker
-    $adjustment: ($base-lightness - $target-lightness);
-    @return color.adjust($color, $lightness: -$adjustment);
-  } @else if $tone > 50 {
-    // For tones above 50, make lighter
-    $adjustment: ($target-lightness - $base-lightness);
-    @return color.adjust($color, $lightness: $adjustment);
-  } @else {
-    // Tone 50 is the base color
-    @return $color;
-  }
+  $adjustment: $target-lightness - $current-lightness;
+  @return color.adjust($color, $lightness: $adjustment);
 }
 
 /// Generate tonal palette CSS variables from base color
@@ -583,18 +599,34 @@
 /// @param {String} $name - Name prefix for CSS variables (e.g., 'primary', 'accent-orange')
 /// @return {CSS Variables} --{name}-0, --{name}-10, --{name}-20, etc.
 @mixin generate-color-variables($base-color, $name) {
-  --#{$name}-0: #{adjust-tone($base-color, 0)};
-  --#{$name}-10: #{adjust-tone($base-color, 10)};
-  --#{$name}-20: #{adjust-tone($base-color, 20)};
-  --#{$name}-30: #{adjust-tone($base-color, 30)};
-  --#{$name}-40: #{adjust-tone($base-color, 40)};
-  --#{$name}-50: #{$base-color};
-  --#{$name}-60: #{adjust-tone($base-color, 60)};
-  --#{$name}-70: #{adjust-tone($base-color, 70)};
-  --#{$name}-80: #{adjust-tone($base-color, 80)};
-  --#{$name}-90: #{adjust-tone($base-color, 90)};
-  --#{$name}-95: #{adjust-tone($base-color, 95)};
-  --#{$name}-98: #{adjust-tone($base-color, 98)};
-  --#{$name}-99: #{adjust-tone($base-color, 99)};
-  --#{$name}-100: #{adjust-tone($base-color, 100)};
+  // Normalize base color to 50% lightness for tone 50
+  $normalized-base: color.adjust($base-color, $lightness: 50% - color.channel($base-color, "lightness", $space: hsl));
+
+  --#{$name}-0: #{color-to-hex(color.adjust($normalized-base, $lightness: -50%))};
+  --#{$name}-10: #{color-to-hex(color.adjust($normalized-base, $lightness: -40%))};
+  --#{$name}-20: #{color-to-hex(color.adjust($normalized-base, $lightness: -30%))};
+  --#{$name}-30: #{color-to-hex(color.adjust($normalized-base, $lightness: -20%))};
+  --#{$name}-40: #{color-to-hex(color.adjust($normalized-base, $lightness: -10%))};
+  --#{$name}-50: #{color-to-hex($normalized-base)};
+  --#{$name}-60: #{color-to-hex(color.adjust($normalized-base, $lightness: 10%))};
+  --#{$name}-70: #{color-to-hex(color.adjust($normalized-base, $lightness: 20%))};
+  --#{$name}-80: #{color-to-hex(color.adjust($normalized-base, $lightness: 30%))};
+  --#{$name}-90: #{color-to-hex(color.adjust($normalized-base, $lightness: 40%))};
+  --#{$name}-95: #{color-to-hex(color.adjust($normalized-base, $lightness: 45%))};
+  --#{$name}-98: #{color-to-hex(color.adjust($normalized-base, $lightness: 48%))};
+  --#{$name}-99: #{color-to-hex(color.adjust($normalized-base, $lightness: 49%))};
+  --#{$name}-100: #{color-to-hex(color.adjust($normalized-base, $lightness: 50%))};
+  --#{$name}-10: #{color.adjust($normalized-base, $lightness: -40%)};
+  --#{$name}-20: #{color.adjust($normalized-base, $lightness: -30%)};
+  --#{$name}-30: #{color.adjust($normalized-base, $lightness: -20%)};
+  --#{$name}-40: #{color.adjust($normalized-base, $lightness: -10%)};
+  --#{$name}-50: #{$normalized-base};
+  --#{$name}-60: #{color.adjust($normalized-base, $lightness: 10%)};
+  --#{$name}-70: #{color.adjust($normalized-base, $lightness: 20%)};
+  --#{$name}-80: #{color.adjust($normalized-base, $lightness: 30%)};
+  --#{$name}-90: #{color.adjust($normalized-base, $lightness: 40%)};
+  --#{$name}-95: #{color.adjust($normalized-base, $lightness: 45%)};
+  --#{$name}-98: #{color.adjust($normalized-base, $lightness: 48%)};
+  --#{$name}-99: #{color.adjust($normalized-base, $lightness: 49%)};
+  --#{$name}-100: #{color.adjust($normalized-base, $lightness: 50%)};
 }

@@ -16,8 +16,8 @@
 
       <!-- Sections -->
       <MD3ColorPaletteSection />
-      <MD3ColorRolesSection />
       <MD3TonalPalettesSection />
+      <MD3ColorRolesSection />
       <ColorUsageSection />
       <TypographySection />
     </div>
