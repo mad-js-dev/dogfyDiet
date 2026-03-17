@@ -12,7 +12,7 @@
       <div class="tonal-header">
         <div 
           class="tonal-base-color" 
-          :style="{ backgroundColor: colorVariables?.[brand.key] || brand.fallback }"
+          :style="{ backgroundColor: colorVariables?.[brand.key] }"
         >
           {{ brand.label }}
         </div>
@@ -118,17 +118,67 @@ function hexToLCH(hex: string): string {
   return `LCH(${Math.round(clampedL)} ${Math.round(clampedC)} ${Math.round(h)})`
 }
 
-// Function to convert RGB string to hex
-function rgbToHex(rgb: string): string {
-  // Parse RGB values from string like "rgb(255, 0, 128)" or "rgb(255 0 128)"
-  const rgbMatch = rgb.match(/^rgb\((\d+)[,\s]+(\d+)[,\s]+(\d+)\)$/)
-  if (!rgbMatch) return rgb // Return as-is if not RGB format
+// Function to convert RGB or HSL string to hex
+function rgbToHex(color: string): string {
+  // Handle hex colors
+  if (color.startsWith('#')) {
+    return color;
+  }
   
-  const r = parseInt(rgbMatch[1])
-  const g = parseInt(rgbMatch[2])
-  const b = parseInt(rgbMatch[3])
+  // Handle RGB colors (including decimals)
+  const rgbMatch = color.match(/^rgb\(([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)\)$/)
+  if (rgbMatch) {
+    let r = Math.round(parseFloat(rgbMatch[1]))
+    let g = Math.round(parseFloat(rgbMatch[2]))
+    let b = Math.round(parseFloat(rgbMatch[3]))
+    
+    // Clamp to valid RGB range
+    r = Math.max(0, Math.min(255, r))
+    g = Math.max(0, Math.min(255, g))
+    b = Math.max(0, Math.min(255, b))
+    
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+  }
   
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+  // Handle HSL colors
+  const hslMatch = color.match(/^hsl\(([\d.]+),\s*([\d.]+)%,\s*([\d.]+)%\)$/)
+  if (hslMatch) {
+    const h = parseFloat(hslMatch[1]) / 360
+    const s = Math.min(1, parseFloat(hslMatch[2]) / 100) // Clamp saturation to 100%
+    const l = parseFloat(hslMatch[3]) / 100
+    
+    // Convert HSL to RGB
+    let r, g, b
+    
+    if (s === 0) {
+      r = g = b = l // achromatic
+    } else {
+      const hue2rgb = (p: number, q: number, t: number) => {
+        if (t < 0) t += 1
+        if (t > 1) t -= 1
+        if (t < 1/6) return p + (q - p) * 6 * t
+        if (t < 1/2) return q
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
+        return p
+      }
+      
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+      const p = 2 * l - q
+      r = hue2rgb(p, q, h + 1/3)
+      g = hue2rgb(p, q, h)
+      b = hue2rgb(p, q, h - 1/3)
+    }
+    
+    const rInt = Math.round(r * 255)
+    const gInt = Math.round(g * 255)
+    const bInt = Math.round(b * 255)
+    
+    return `#${rInt.toString(16).padStart(2, '0')}${gInt.toString(16).padStart(2, '0')}${bInt.toString(16).padStart(2, '0')}`
+  }
+  
+  // Fallback for unknown formats
+  console.warn('Unknown color format:', color)
+  return '#000000'
 }
 
 // Get tonal palette colors from CSS custom properties
@@ -142,12 +192,23 @@ function getTonalPalette(prefix: string): TonalValue[] {
     
     // Convert RGB to hex if necessary
     const hexColor = color.startsWith('#') ? color : rgbToHex(color)
+    const lchValue = hexToLCH(hexColor)
+    
+    // Debug only tone 100
+    if (tone === 100) {
+      console.log(`Tone 100 for ${prefix}:`, {
+        cssVar,
+        originalColor: color,
+        hexColor,
+        lchValue
+      })
+    }
     
     return {
       value: tone,
       color: hexColor,
       hex: hexColor,
-      lch: hexToLCH(hexColor)
+      lch: lchValue
     }
   })
 }
@@ -157,19 +218,16 @@ const brandColors = [
   {
     key: 'primaryGreen',
     label: 'Primary Green',
-    fallback: '#00B67A',
     tones: getTonalPalette('primary')
   },
   {
     key: 'accentOrange',
     label: 'Accent Orange',
-    fallback: '#EF6948',
     tones: getTonalPalette('accent-orange')
   },
   {
     key: 'accentYellow',
     label: 'Accent Yellow',
-    fallback: '#FFC800',
     tones: getTonalPalette('accent-yellow')
   }
 ]
