@@ -113,7 +113,7 @@ a {
   transition: color $transition-fast $ease-out;
   
   &:hover {
-    color: $primary-green-dark;
+    color: palette-color('primary', 70);
     text-decoration: underline;
   }
   

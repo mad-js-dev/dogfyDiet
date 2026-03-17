@@ -42,11 +42,11 @@
   --md3-on-primary-container: #{palette-color('primary', 10)};
   --md3-secondary: #{map.get($brand-colors, 'accent-orange')};
   --md3-on-secondary: #{palette-color('accent-orange', 100)};
-  --md3-secondary-container: #{palette-color('accent-orange', 90)};
+  --md3-secondary-container: #{palette-color('accent-orange', 30)};
   --md3-on-secondary-container: #{palette-color('accent-orange', 10)};
   --md3-tertiary: #{map.get($brand-colors, 'accent-yellow')};
   --md3-on-tertiary: #{palette-color('accent-yellow', 100)};
-  --md3-tertiary-container: #{palette-color('accent-yellow', 90)};
+  --md3-tertiary-container: #{palette-color('accent-yellow', 30)};
   --md3-on-tertiary-container: #{palette-color('accent-yellow', 10)};
   --md3-surface: #{$md3-light-surface};
   --md3-on-surface: #{$md3-light-on-surface};
