@@ -1,6 +1,6 @@
 <template>
   <section class="tonal-palettes-section">
-    <h2 class="tonal-section-title">Tonal Palettes</h2>
+    <h2 class="tonal-section-title">Brand Color Palettes</h2>
     <p class="tonal-section-description">Algorithm-generated tonal variations for each key color, with values from 0-100 and special tones (95, 98, 99).</p>
 
     <!-- Dynamic Tonal Palettes -->
@@ -21,6 +21,51 @@
         <div 
           v-for="tone in brand.tones" 
           :key="`${brand.key}-${tone.value}`"
+          class="tonal-swatch"
+          :style="{ backgroundColor: tone.color }"
+        >
+          <div class="tonal-info">
+            <div 
+              class="tonal-value" 
+              :style="{ color: 'rgba(0, 0, 0, 0.6)' }"
+            >
+              {{ tone.value }}
+            </div>
+            <div 
+              class="tonal-hex" 
+              :style="{ color: 'rgba(0, 0, 0, 0.6)' }"
+            >
+              {{ tone.hex }}
+            </div>
+            <div 
+              class="tonal-lch" 
+              :style="{ color: 'rgba(0, 0, 0, 0.6)' }"
+            >
+              {{ tone.lch }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Semantic Tonal Palettes -->
+    <div 
+      v-for="color in semanticColors" 
+      :key="color.key"
+      class="tonal-palette"
+    >
+      <div class="tonal-header">
+        <div 
+          class="tonal-base-color" 
+          :style="{ backgroundColor: colorVariables?.[color.key] }"
+        >
+          {{ color.label }}
+        </div>
+      </div>
+      <div class="tonal-row">
+        <div 
+          v-for="tone in color.tones" 
+          :key="`${color.key}-${tone.value}`"
           class="tonal-swatch"
           :style="{ backgroundColor: tone.color }"
         >
@@ -229,6 +274,30 @@ const brandColors = [
     key: 'accentYellow',
     label: 'Accent Yellow',
     tones: getTonalPalette('accent-yellow')
+  }
+]
+
+// Generate tonal palettes using CSS variables for all semantic colors
+const semanticColors = [
+  {
+    key: 'success',
+    label: 'Success',
+    tones: getTonalPalette('success')
+  },
+  {
+    key: 'error',
+    label: 'Error',
+    tones: getTonalPalette('error')
+  },
+  {
+    key: 'warning',
+    label: 'Warning',
+    tones: getTonalPalette('warning')
+  },
+  {
+    key: 'info',
+    label: 'Info',
+    tones: getTonalPalette('info')
   }
 ]
 </script>

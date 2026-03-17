@@ -44,7 +44,19 @@ export const colorVariables = {
     return getCssProperty('--neutral-white')
   },
 
-  // Material Design 3 tokens (from CSS custom properties)
+  // Semantic colors (from CSS custom properties)
+  get success() {
+    return getCssProperty('--success')
+  },
+  get error() {
+    return getCssProperty('--error')
+  },
+  get warning() {
+    return getCssProperty('--warning')
+  },
+  get info() {
+    return getCssProperty('--info')
+  },
   get md3Primary() {
     return getCssProperty('--md3-primary')
   },

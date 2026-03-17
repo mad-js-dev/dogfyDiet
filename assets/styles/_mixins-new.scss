@@ -244,8 +244,8 @@ $color-roles-dark: (
   ),
   'success': (
     text: $neutral-darkest,
-    background: $success-dark,
-    border: $success-dark
+    background: color.adjust($success, $lightness: -20%),
+    border: color.adjust($success, $lightness: -20%)
   ),
   'warning': (
     text: $neutral-darkest,
