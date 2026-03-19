@@ -89,7 +89,7 @@
   }
   
   &::placeholder {
-    color: $neutral-medium;
+    color: palette-color('base', 50);
   }
 }
 
@@ -151,7 +151,7 @@
       width: 16px;
       height: 16px;
       margin: -8px 0 0;
-      border: 2px solid $neutral-white;
+      border: 2px solid palette-color('base', 100);
       border-radius: 50%;
       border-top-color: transparent;
       border-right-color: transparent;

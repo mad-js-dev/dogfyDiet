@@ -42,20 +42,20 @@ const colorCategories = {
     { name: 'Accent Yellow', value: colorVariables.accentYellow, sassVar: '$accent-yellow' }
   ],
   neutral: [
-    { name: 'Darkest', value: colorVariables.neutralDarkest, sassVar: '$neutral-darkest' },
-    { name: 'Dark', value: colorVariables.neutralDark, sassVar: '$neutral-dark' },
-    { name: 'Medium', value: colorVariables.neutralMedium, sassVar: '$neutral-medium' },
-    { name: 'Light', value: colorVariables.neutralLight, sassVar: '$neutral-light' },
-    { name: 'Lighter', value: '#d6d6d6', sassVar: '$neutral-lighter' },
-    { name: 'Lightest', value: colorVariables.neutralLightest, sassVar: '$neutral-lightest' },
-    { name: 'White', value: colorVariables.neutralWhite, sassVar: '$neutral-white' },
-    { name: 'Off White', value: '#f9f8f7', sassVar: '$neutral-off-white' }
+    { name: 'Darkest', value: colorVariables.neutralDarkest, sassVar: "palette-color('base', 10)" },
+    { name: 'Dark', value: colorVariables.neutralDark, sassVar: "palette-color('base', 20)" },
+    { name: 'Medium', value: colorVariables.neutralMedium, sassVar: "palette-color('base', 50)" },
+    { name: 'Light', value: colorVariables.neutralLight, sassVar: "palette-color('base', 80)" },
+    { name: 'Lighter', value: colorVariables.neutralLightest, sassVar: "palette-color('base', 90)" },
+    { name: 'Lightest', value: colorVariables.neutralLightest, sassVar: "palette-color('base', 95)" },
+    { name: 'White', value: colorVariables.neutralWhite, sassVar: "palette-color('base', 100)" },
+    { name: 'Off White', value: '#f9f8f7', sassVar: "palette-color('base', 98)" }
   ],
   semantic: [
-    { name: 'Success', value: '#0aaa46', sassVar: '$success' },
-    { name: 'Error', value: '#d80003', sassVar: '$error' },
-    { name: 'Warning', value: '#ffc800', sassVar: '$warning' },
-    { name: 'Info', value: '#1976D2', sassVar: '$info' }
+    { name: 'Success', value: colorVariables.success, sassVar: '$success' },
+    { name: 'Error', value: colorVariables.error, sassVar: '$error' },
+    { name: 'Warning', value: colorVariables.warning, sassVar: '$warning' },
+    { name: 'Info', value: colorVariables.info, sassVar: '$info' }
   ]
 }
 

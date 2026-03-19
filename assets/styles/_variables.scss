@@ -26,16 +26,9 @@ $semantic-colors: (
   'info': #1976D2
 ) !default;
 
-// Neutral Palette (keeping as is for now)
+// Neutral Colors - Single base color for dynamic palette generation
 $neutral-colors: (
-  'darkest': #1a1a1a,
-  'dark': #3d3d3d,
-  'medium': #767676,
-  'light': #e8e8e8,
-  'lighter': #d6d6d6,
-  'lightest': #f7f7f7,
-  'white': #ffffff,
-  'off-white': #f9f8f7
+  'base': #767676  // Medium neutral tone that will generate the full palette
 ) !default;
 
 // Dynamic Palette Generation Function
@@ -62,6 +55,7 @@ $neutral-colors: (
 // Function to access specific palette tone
 @function palette-color($color-name, $tone: 500) {
   $color-map: map.merge($brand-colors, $semantic-colors);
+  $color-map: map.merge($color-map, $neutral-colors);
   $base-color: map.get($color-map, $color-name);
   $palette: generate-palette($base-color);
   @return map.get($palette, $tone);
@@ -75,6 +69,7 @@ $success-palette: generate-palette(map.get($semantic-colors, 'success')) !defaul
 $error-palette: generate-palette(map.get($semantic-colors, 'error')) !default;
 $warning-palette: generate-palette(map.get($semantic-colors, 'warning')) !default;
 $info-palette: generate-palette(map.get($semantic-colors, 'info')) !default;
+$neutral-palette: generate-palette(map.get($neutral-colors, 'base')) !default;
 
 // Backward compatibility - redefine individual color variables from maps
 $primary-green: map.get($brand-colors, 'primary') !default;
@@ -84,16 +79,6 @@ $success: map.get($semantic-colors, 'success') !default;
 $error: map.get($semantic-colors, 'error') !default;
 $warning: map.get($semantic-colors, 'warning') !default;
 $info: map.get($semantic-colors, 'info') !default;
-
-// Backward compatibility - redefine neutral variables from map
-$neutral-darkest: map.get($neutral-colors, 'darkest') !default;
-$neutral-dark: map.get($neutral-colors, 'dark') !default;
-$neutral-medium: map.get($neutral-colors, 'medium') !default;
-$neutral-light: map.get($neutral-colors, 'light') !default;
-$neutral-lighter: map.get($neutral-colors, 'lighter') !default;
-$neutral-lightest: map.get($neutral-colors, 'lightest') !default;
-$neutral-white: map.get($neutral-colors, 'white') !default;
-$neutral-off-white: map.get($neutral-colors, 'off-white') !default;
 
 
 
@@ -125,16 +110,16 @@ $md3-light-tertiary: (
   'on-container': var(--accent-yellow-10)
 ) !default;
 
-$md3-light-surface: $neutral-white !default;
-$md3-light-on-surface: $neutral-darkest !default;
-$md3-light-surface-variant: $neutral-lightest !default;
-$md3-light-on-surface-variant: $neutral-medium !default;
+$md3-light-surface: palette-color('base', 100) !default;
+$md3-light-on-surface: palette-color('base', 10) !default;
+$md3-light-surface-variant: palette-color('base', 95) !default;
+$md3-light-on-surface-variant: palette-color('base', 50) !default;
 
-$md3-light-outline: $neutral-lighter !default;
-$md3-light-outline-variant: $neutral-light !default;
+$md3-light-outline: palette-color('base', 90) !default;
+$md3-light-outline-variant: palette-color('base', 80) !default;
 
-$md3-light-scrim: rgba($neutral-darkest, 0.32) !default;
-$md3-light-shadow: rgba($neutral-darkest, 0.12) !default;
+$md3-light-scrim: rgba(palette-color('base', 10), 0.32) !default;
+$md3-light-shadow: rgba(palette-color('base', 10), 0.12) !default;
 
 // Dark Theme Color Roles
 $md3-dark-primary: (
@@ -158,42 +143,42 @@ $md3-dark-tertiary: (
   'on-container': var(--accent-yellow-100)
 ) !default;
 
-$md3-dark-surface: $neutral-darkest !default;
-$md3-dark-on-surface: $neutral-lightest !default;
-$md3-dark-surface-variant: $neutral-dark !default;
-$md3-dark-on-surface-variant: $neutral-lighter !default;
+$md3-dark-surface: palette-color('base', 10) !default;
+$md3-dark-on-surface: palette-color('base', 95) !default;
+$md3-dark-surface-variant: palette-color('base', 20) !default;
+$md3-dark-on-surface-variant: palette-color('base', 90) !default;
 
-$md3-dark-outline: $neutral-medium !default;
-$md3-dark-outline-variant: $neutral-dark !default;
+$md3-dark-outline: palette-color('base', 50) !default;
+$md3-dark-outline-variant: palette-color('base', 20) !default;
 
-$md3-dark-scrim: rgba($neutral-darkest, 0.32) !default;
-$md3-dark-shadow: rgba($neutral-darkest, 0.12) !default;
+$md3-dark-scrim: rgba(palette-color('base', 10), 0.32) !default;
+$md3-dark-shadow: rgba(palette-color('base', 10), 0.12) !default;
 
 // Semantic M3 Color Roles
-$md3-surface-bright: $neutral-white !default;
-$md3-surface-dim: color.adjust($neutral-darkest, $lightness: -10%) !default;
-$md3-surface-container-lowest: color.adjust($neutral-white, $lightness: -1%) !default;
-$md3-surface-container-low: color.adjust($neutral-lightest, $lightness: -2%) !default;
-$md3-surface-container: $neutral-lightest !default;
-$md3-surface-container-high: $neutral-lighter !default;
-$md3-surface-container-highest: $neutral-light !default;
+$md3-surface-bright: palette-color('base', 100) !default;
+$md3-surface-dim: color.adjust(palette-color('base', 10), $lightness: -10%) !default;
+$md3-surface-container-lowest: color.adjust(palette-color('base', 100), $lightness: -1%) !default;
+$md3-surface-container-low: color.adjust(palette-color('base', 95), $lightness: -2%) !default;
+$md3-surface-container: palette-color('base', 95) !default;
+$md3-surface-container-high: palette-color('base', 90) !default;
+$md3-surface-container-highest: palette-color('base', 80) !default;
 $md3-on-surface-container-low: $md3-light-on-surface !default;
 $md3-on-surface-container-high: $md3-light-on-surface !default;
 
-$md3-dark-surface-container-lowest: color.adjust($neutral-darkest, $lightness: 2%) !default;
-$md3-dark-surface-container-low: color.adjust($neutral-darkest, $lightness: 5%) !default;
-$md3-dark-surface-container: color.adjust($neutral-darkest, $lightness: 8%) !default;
-$md3-dark-surface-container-high: color.adjust($neutral-dark, $lightness: 15%) !default;
-$md3-dark-surface-container-highest: color.adjust($neutral-dark, $lightness: 25%) !default;
+$md3-dark-surface-container-lowest: color.adjust(palette-color('base', 10), $lightness: 2%) !default;
+$md3-dark-surface-container-low: color.adjust(palette-color('base', 10), $lightness: 5%) !default;
+$md3-dark-surface-container: color.adjust(palette-color('base', 10), $lightness: 8%) !default;
+$md3-dark-surface-container-high: color.adjust(palette-color('base', 20), $lightness: 15%) !default;
+$md3-dark-surface-container-highest: color.adjust(palette-color('base', 20), $lightness: 25%) !default;
 $md3-dark-surface-dim: color.adjust($md3-dark-surface, $lightness: -10%) !default;
 $md3-dark-surface-bright: color.adjust($md3-dark-surface, $lightness: 20%) !default;
 $md3-dark-on-surface-container-low: $md3-dark-on-surface !default;
 $md3-dark-on-surface-container-high: $md3-dark-on-surface !default;
 
-$md3-inverse-primary: $neutral-darkest !default;
-$md3-inverse-on-primary: $neutral-white !default;
-$md3-inverse-surface: $neutral-darkest !default;
-$md3-inverse-on-surface: $neutral-white !default;
+$md3-inverse-primary: palette-color('base', 10) !default;
+$md3-inverse-on-primary: palette-color('base', 100) !default;
+$md3-inverse-surface: palette-color('base', 10) !default;
+$md3-inverse-on-surface: palette-color('base', 100) !default;
 
 // Error Colors (M3 Standard) - using darker base tone
 $md3-error: palette-color('error', 600) !default;
@@ -407,19 +392,19 @@ $radius-full: 9999px !default;
 $elevation-0: none !default;
 
 // Level 1: Cards, list items, low-emphasis elements
-$elevation-1: 0 1px 2px 0 rgba($neutral-darkest, 0.05), 0 1px 3px 0 rgba($neutral-darkest, 0.1) !default;
+$elevation-1: 0 1px 2px 0 rgba(palette-color('base', 10), 0.05), 0 1px 3px 0 rgba(palette-color('base', 10), 0.1) !default;
 
 // Level 2: Raised buttons, dropdowns, floating action buttons
-$elevation-2: 0 4px 6px -1px rgba($neutral-darkest, 0.1), 0 2px 4px -1px rgba($neutral-darkest, 0.06) !default;
+$elevation-2: 0 4px 6px -1px rgba(palette-color('base', 10), 0.1), 0 2px 4px -1px rgba(palette-color('base', 10), 0.06) !default;
 
 // Level 3: Navigation drawers, bottom sheets, elevated cards
-$elevation-3: 0 10px 15px -3px rgba($neutral-darkest, 0.1), 0 4px 6px -2px rgba($neutral-darkest, 0.05) !default;
+$elevation-3: 0 10px 15px -3px rgba(palette-color('base', 10), 0.1), 0 4px 6px -2px rgba(palette-color('base', 10), 0.05) !default;
 
 // Level 4: Modals, dialogs, pickers
-$elevation-4: 0 20px 25px -5px rgba($neutral-darkest, 0.1), 0 10px 10px -5px rgba($neutral-darkest, 0.04) !default;
+$elevation-4: 0 20px 25px -5px rgba(palette-color('base', 10), 0.1), 0 10px 10px -5px rgba(palette-color('base', 10), 0.04) !default;
 
 // Level 5: Highest elevation - overlays, tooltips, menus
-$elevation-5: 0 25px 50px -12px rgba($neutral-darkest, 0.25) !default;
+$elevation-5: 0 25px 50px -12px rgba(palette-color('base', 10), 0.25) !default;
 
 // Functional Elevation Tokens (semantic naming)
 $elevation-card: $elevation-1 !default;
@@ -451,16 +436,16 @@ $z-index-notification: 800 !default;
 // SHADOWS
 // -----------------------------------------------------------------------------
 
-$shadow-sm: 0 1px 2px 0 rgba($neutral-darkest, 0.05) !default;
-$shadow-md: 0 4px 6px -1px rgba($neutral-darkest, 0.1), 0 2px 4px -1px rgba($neutral-darkest, 0.06) !default;
-$shadow-lg: 0 10px 15px -3px rgba($neutral-darkest, 0.1), 0 4px 6px -2px rgba($neutral-darkest, 0.05) !default;
-$shadow-xl: 0 20px 25px -5px rgba($neutral-darkest, 0.1), 0 10px 10px -5px rgba($neutral-darkest, 0.04) !default;
-$shadow-2xl: 0 25px 50px -12px rgba($neutral-darkest, 0.25) !default;
+$shadow-sm: 0 1px 2px 0 rgba(palette-color('base', 10), 0.05) !default;
+$shadow-md: 0 4px 6px -1px rgba(palette-color('base', 10), 0.1), 0 2px 4px -1px rgba(palette-color('base', 10), 0.06) !default;
+$shadow-lg: 0 10px 15px -3px rgba(palette-color('base', 10), 0.1), 0 4px 6px -2px rgba(palette-color('base', 10), 0.05) !default;
+$shadow-xl: 0 20px 25px -5px rgba(palette-color('base', 10), 0.1), 0 10px 10px -5px rgba(palette-color('base', 10), 0.04) !default;
+$shadow-2xl: 0 25px 50px -12px rgba(palette-color('base', 10), 0.25) !default;
 
 // Colored shadows
-$shadow-primary: 0 4px 14px 0 rgba($primary-green, 0.15) !default;
-$shadow-accent: 0 4px 14px 0 rgba($accent-orange, 0.15) !default;
-$shadow-error: 0 4px 14px 0 rgba($error, 0.15) !default;
+$shadow-primary: 0 4px 14px 0 rgba(map.get($brand-colors, 'primary'), 0.15) !default;
+$shadow-accent: 0 4px 14px 0 rgba(map.get($brand-colors, 'accent-orange'), 0.15) !default;
+$shadow-error: 0 4px 14px 0 rgba(map.get($semantic-colors, 'error'), 0.15) !default;
 
 // -----------------------------------------------------------------------------
 // TRANSITIONS & ANIMATIONS

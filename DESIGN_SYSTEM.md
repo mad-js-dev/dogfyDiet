@@ -51,7 +51,7 @@ The design system is already integrated into the Nuxt.js application. All SASS v
 
 .questionnaire-title {
   @include typography(h1, semibold, primary);
-  color: $primary-green;
+  color: map.get($brand-colors, 'primary');
 }
 
 .questionnaire-subtitle {
@@ -67,10 +67,10 @@ The design system is already integrated into the Nuxt.js application. All SASS v
 
 | Variable | Value | Usage |
 |----------|-------|-------|
-| `$primary-green` | `#00B67A` | Main brand color, CTAs, important elements |
-| `$primary-green-dark` | `#1BB57C` | Hover states, emphasis |
-| `$primary-green-light` | `#0aaa46` | Success states, secondary actions |
-| `$primary-green-darkest` | `#005128` | Dark backgrounds, contrast |
+| `map.get($brand-colors, 'primary')` | `#00B67A` | Main brand color, CTAs, important elements |
+| `map.get($brand-colors, 'primary-dark')` | `#1BB57C` | Hover states, emphasis |
+| `map.get($brand-colors, 'primary-light')` | `#0aaa46` | Success states, secondary actions |
+| `map.get($brand-colors, 'primary-darkest')` | `#005128` | Dark backgrounds, contrast |
 
 ### Accent Colors
 
@@ -504,7 +504,7 @@ $font-weight-new: 600 !default;
 ```scss
 // ✅ Good
 .my-component {
-  background: $primary-green;
+  background: map.get($brand-colors, 'primary');
   padding: $spacing-4;
   @include typography(body, regular, secondary);
 }

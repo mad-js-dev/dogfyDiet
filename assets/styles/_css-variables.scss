@@ -6,29 +6,29 @@
 @use './mixins' as *;
 :root {
   // Brand colors
-  --primary-green: #{$primary-green};
-  --accent-orange: #{$accent-orange};
-  --accent-yellow: #{$accent-yellow};
+  @each $name, $color in $brand-colors {
+    --#{$name}: #{$color};
+  }
 
   // Semantic colors
-  --success: #{$success};
-  --error: #{$error};
-  --warning: #{$warning};
-  --info: #{$info};
+  @each $name, $color in $semantic-colors {
+    --#{$name}: #{$color};
+  }
 
   // Neutral colors
-  --neutral-darkest: #{$neutral-darkest};
-  --neutral-dark: #{$neutral-dark};
-  --neutral-medium: #{$neutral-medium};
-  --neutral-light: #{$neutral-light};
-  --neutral-lightest: #{$neutral-lightest};
-  --neutral-white: #{$neutral-white};
+  @each $name, $color in $neutral-colors {
+    --#{$name}: #{$color};
+  }
   
   // Dynamic tonal palettes for brand colors
   @each $name, $color in $brand-colors {
     @include generate-color-variables($color, $name);
   }
-  @include generate-color-variables($neutral-darkest, 'neutral-darkest');
+
+  // Dynamic tonal palette for neutral color
+  @each $name, $color in $neutral-colors {
+    @include generate-color-variables($color, $name);
+  }
 
   // Dynamic tonal palettes for semantic colors
   @each $name, $color in $semantic-colors {

@@ -158,6 +158,7 @@ const semanticColorGrid: ColorGrid = {
 </style>
 
 <style scoped lang="scss">
+@use 'sass:map';
 @use '~/assets/styles/_variables.scss' as *;
 @use '~/assets/styles/_mixins.scss' as *;
 @use '~/assets/styles/components/pantone.scss';
@@ -171,13 +172,13 @@ const semanticColorGrid: ColorGrid = {
 .md3-section-title {
   font-size: 2rem;
   font-weight: 700;
-  color: $neutral-darkest;
+  color: palette-color('base', 10);
   margin-bottom: 1rem;
 }
 
 .md3-section-description {
   font-size: 1rem;
-  color: $neutral-medium;
+  color: palette-color('base', 50);
   line-height: 1.6;
   margin-bottom: 2rem;
 }
@@ -185,21 +186,21 @@ const semanticColorGrid: ColorGrid = {
 .md3-concepts-section {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background-color: $neutral-lightest;
+  background-color: palette-color('base', 95);
   border-radius: 0.5rem;
-  border: 1px solid $neutral-light;
+  border: 1px solid palette-color('base', 80);
 }
 
 .md3-concepts-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: $neutral-darkest;
+  color: palette-color('base', 10);
   margin-bottom: 1rem;
 }
 
 .md3-concepts-description {
   font-size: 0.875rem;
-  color: $neutral-medium;
+  color: palette-color('base', 50);
   line-height: 1.6;
   margin-bottom: 1rem;
 }
@@ -218,7 +219,7 @@ const semanticColorGrid: ColorGrid = {
 
 .md3-concept-term {
   font-weight: 600;
-  color: $primary-green;
+  color: map.get($brand-colors, 'primary');
   min-width: 6rem;
 }
 </style>

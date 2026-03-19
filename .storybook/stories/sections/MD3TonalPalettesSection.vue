@@ -313,13 +313,13 @@ const semanticColors = [
 .tonal-section-title {
   font-size: 2rem;
   font-weight: 700;
-  color: $neutral-darkest;
+  color: palette-color('base', 10);
   margin-bottom: 1rem;
 }
 
 .tonal-section-description {
   font-size: 1rem;
-  color: $neutral-medium;
+  color: palette-color('base', 50);
   line-height: 1.6;
   margin-bottom: 2rem;
 }
@@ -354,13 +354,13 @@ const semanticColors = [
 .tonal-arrow {
   font-size: 1.5rem;
   font-weight: 600;
-  color: $neutral-medium;
+  color: palette-color('base', 50);
 }
 
 .tonal-palette-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: $neutral-darkest;
+  color: palette-color('base', 10);
   margin-bottom: 1rem;
 }
 
@@ -398,7 +398,7 @@ const semanticColors = [
 .tonal-value {
   font-size: 0.875rem;
   font-weight: 700;
-  color: $neutral-darkest;
+  color: palette-color('base', 10);
 }
 
 .tonal-hex {

@@ -60,13 +60,13 @@ import TypographySection from './sections/TypographySection.vue'
   .design-system-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: $neutral-darkest;
+    color: palette-color('base', 10);
     margin-bottom: 1rem;
   }
   
   .design-system-subtitle {
     font-size: 1.125rem;
-    color: $neutral-medium;
+    color: palette-color('base', 50);
     line-height: 1.6;
   }
 }

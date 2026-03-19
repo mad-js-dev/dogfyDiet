@@ -26,22 +26,22 @@ export const colorVariables = {
 
   // Neutral colors (from CSS custom properties)
   get neutralDarkest() {
-    return getCssProperty('--neutral-darkest')
+    return getCssProperty('--base-10')
   },
   get neutralDark() {
-    return getCssProperty('--neutral-dark')
+    return getCssProperty('--base-20')
   },
   get neutralMedium() {
-    return getCssProperty('--neutral-medium')
+    return getCssProperty('--base-50')
   },
   get neutralLight() {
-    return getCssProperty('--neutral-light')
+    return getCssProperty('--base-80')
   },
   get neutralLightest() {
-    return getCssProperty('--neutral-lightest')
+    return getCssProperty('--base-95')
   },
   get neutralWhite() {
-    return getCssProperty('--neutral-white')
+    return getCssProperty('--base-100')
   },
 
   // Semantic colors (from CSS custom properties)

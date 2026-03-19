@@ -262,11 +262,12 @@ const initNavigation = () => {
 
 <style lang="scss" scoped>
 // Import design system variables
+@use 'sass:map';
 @use '~/assets/styles/_variables' as *;
 
 // Base styles
 .enhanced-design-system {
-  background-color: $neutral-white;
+  background-color: palette-color('base', 100);
   overflow-x: hidden;
 }
 
@@ -287,7 +288,7 @@ const initNavigation = () => {
 // Header section - First panel
 .header-section {
   background: linear-gradient(135deg, map.get($brand-colors, 'primary'), color.adjust(map.get($brand-colors, 'primary'), $lightness: -20%));
-  color: $neutral-white;
+  color: palette-color('base', 100);
   
   .sticky-header {
     position: fixed;
@@ -337,7 +338,7 @@ const initNavigation = () => {
     text-align: center;
     font-size: 3rem;
     margin-bottom: 3rem;
-    color: $neutral-dark;
+    color: palette-color('base', 20);
   }
   
   .color-grid {
@@ -346,7 +347,7 @@ const initNavigation = () => {
     gap: 2rem;
     
     .color-card {
-      background: $neutral-white;
+      background: palette-color('base', 100);
       border-radius: 12px;
       padding: 2rem;
       text-align: center;
@@ -362,11 +363,11 @@ const initNavigation = () => {
       h3 {
         font-size: 1.5rem;
         margin-bottom: 0.5rem;
-        color: $neutral-dark;
+        color: palette-color('base', 20);
       }
       
       p {
-        color: $neutral-medium;
+        color: palette-color('base', 50);
         font-family: monospace;
       }
     }
@@ -381,7 +382,7 @@ const initNavigation = () => {
     text-align: center;
     font-size: 3rem;
     margin-bottom: 3rem;
-    color: $neutral-dark;
+    color: palette-color('base', 20);
   }
   
   .type-scale {
@@ -407,13 +408,13 @@ const initNavigation = () => {
         font-size: 2rem;
         font-weight: 500;
         margin-bottom: 0.5rem;
-        color: $neutral-dark;
+        color: palette-color('base', 20);
       }
       
       .body-text {
         font-size: 1rem;
         line-height: 1.6;
-        color: $neutral-medium;
+        color: palette-color('base', 50);
         max-width: 600px;
         margin: 0 auto;
       }
@@ -429,7 +430,7 @@ const initNavigation = () => {
     text-align: center;
     font-size: 3rem;
     margin-bottom: 3rem;
-    color: $neutral-dark;
+    color: palette-color('base', 20);
   }
   
   .component-grid {
@@ -438,7 +439,7 @@ const initNavigation = () => {
     gap: 2rem;
     
     .component-card {
-      background: $neutral-white;
+      background: palette-color('base', 100);
       border-radius: 12px;
       padding: 2rem;
       text-align: center;
@@ -455,7 +456,7 @@ const initNavigation = () => {
         
         &.primary {
           background-color: map.get($brand-colors, 'primary');
-          color: $neutral-white;
+          color: palette-color('base', 100);
         }
         
         &.secondary {
@@ -473,11 +474,11 @@ const initNavigation = () => {
         
         h4 {
           margin-bottom: 0.5rem;
-          color: $neutral-dark;
+          color: palette-color('base', 20);
         }
         
         p {
-          color: $neutral-medium;
+          color: palette-color('base', 50);
           font-size: 0.9rem;
         }
       }
@@ -507,7 +508,7 @@ const initNavigation = () => {
     }
     
     &.active {
-      background-color: $primary-green;
+      background-color: map.get($brand-colors, 'primary');
       transform: scale(1.5);
     }
   }

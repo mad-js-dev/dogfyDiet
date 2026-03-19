@@ -316,13 +316,13 @@ const getQuestionForPet = (question: Question, petNum: number) => {
 
 .step-title {
   @include typography(h2, semibold, primary);
-  color: $neutral-darkest;
+  color: palette-color('base', 10);
   margin-bottom: $spacing-4;
 }
 
 .step-description {
   @include typography(body-large, regular, secondary);
-  color: $neutral-medium;
+  color: palette-color('base', 50);
   max-width: 600px;
   margin: 0 auto $spacing-6;
 }
@@ -337,13 +337,13 @@ const getQuestionForPet = (question: Question, petNum: number) => {
 
 .question-text {
   @include typography(body, medium, secondary);
-  color: $neutral-dark;
+  color: palette-color('base', 20);
   margin-bottom: $spacing-3;
 }
 
 .question-help {
   @include typography(caption, regular, secondary);
-  color: $neutral-medium;
+  color: palette-color('base', 50);
   margin-top: $spacing-2;
 }
 
@@ -383,8 +383,8 @@ const getQuestionForPet = (question: Question, petNum: number) => {
 .pet-section {
   @include card-base(false, true);
   padding: $spacing-6;
-  background-color: $neutral-lightest;
-  border: 2px solid $neutral-light;
+  background-color: palette-color('base', 95);
+  border: 2px solid palette-color('base', 80);
   border-radius: $radius-lg;
   transition: all $transition-normal $ease-out;
   
@@ -407,7 +407,7 @@ const getQuestionForPet = (question: Question, petNum: number) => {
   
   .pet-info {
     @include typography(caption, regular, secondary);
-    color: $neutral-medium;
+    color: palette-color('base', 50);
     margin-bottom: $spacing-4;
   }
 }
@@ -451,7 +451,7 @@ const getQuestionForPet = (question: Question, petNum: number) => {
   
   .slider-track {
     height: 6px;
-    background: $neutral-light;
+    background: palette-color('base', 80);
     border-radius: $radius-full;
     position: relative;
     
@@ -466,7 +466,7 @@ const getQuestionForPet = (question: Question, petNum: number) => {
       width: 20px;
       height: 20px;
       background: map.get($brand-colors, 'primary');
-      border: 3px solid $neutral-white;
+      border: 3px solid palette-color('base', 100);
       border-radius: $radius-full;
       position: absolute;
       top: 50%;
@@ -489,7 +489,7 @@ const getQuestionForPet = (question: Question, petNum: number) => {
     
     span {
       @include typography(caption, regular, secondary);
-      color: $neutral-medium;
+      color: palette-color('base', 50);
     }
   }
 }
