@@ -286,7 +286,7 @@ const initNavigation = () => {
 
 // Header section - First panel
 .header-section {
-  background: linear-gradient(135deg, $primary-green, $primary-green-dark);
+  background: linear-gradient(135deg, map.get($brand-colors, 'primary'), color.adjust(map.get($brand-colors, 'primary'), $lightness: -20%));
   color: $neutral-white;
   
   .sticky-header {
@@ -393,14 +393,14 @@ const initNavigation = () => {
         font-size: 4rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
-        color: $primary-green;
+        color: map.get($brand-colors, 'primary');
       }
       
       .display-2 {
         font-size: 3rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: $primary-green-dark;
+        color: color.adjust(map.get($brand-colors, 'primary'), $lightness: -20%);
       }
       
       .heading-1 {
@@ -454,14 +454,14 @@ const initNavigation = () => {
         margin-bottom: 1rem;
         
         &.primary {
-          background-color: $primary-green;
+          background-color: map.get($brand-colors, 'primary');
           color: $neutral-white;
         }
         
         &.secondary {
           background-color: transparent;
-          color: $primary-green;
-          border: 2px solid $primary-green;
+          color: map.get($brand-colors, 'primary');
+          border: 2px solid map.get($brand-colors, 'primary');
         }
       }
       

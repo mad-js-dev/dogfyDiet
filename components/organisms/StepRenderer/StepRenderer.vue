@@ -389,19 +389,19 @@ const getQuestionForPet = (question: Question, petNum: number) => {
   transition: all $transition-normal $ease-out;
   
   &:hover {
-    border-color: $primary-green-light;
-    background-color: rgba($primary-green, 0.02);
+    border-color: color.adjust(map.get($brand-colors, 'primary'), $lightness: 20%);
+    background-color: rgba(map.get($brand-colors, 'primary'), 0.02);
   }
   
   &.active {
-    border-color: $primary-green;
-    background-color: rgba($primary-green, 0.05);
+    border-color: map.get($brand-colors, 'primary');
+    background-color: rgba(map.get($brand-colors, 'primary'), 0.05);
     box-shadow: $shadow-primary;
   }
   
   h4 {
     @include typography(h4, semibold, primary);
-    color: $primary-green;
+    color: map.get($brand-colors, 'primary');
     margin-bottom: $spacing-3;
   }
   
@@ -415,8 +415,8 @@ const getQuestionForPet = (question: Question, petNum: number) => {
 .shared-mode-section {
   @include card-base(false, false);
   padding: $spacing-6;
-  background-color: rgba($primary-green, 0.02);
-  border: 2px solid $primary-green;
+  background-color: rgba(map.get($brand-colors, 'primary'), 0.02);
+  border: 2px solid map.get($brand-colors, 'primary');
   border-radius: $radius-lg;
   margin-bottom: $spacing-6;
 }
@@ -457,7 +457,7 @@ const getQuestionForPet = (question: Question, petNum: number) => {
     
     .slider-fill {
       height: 100%;
-      background: $primary-green;
+      background: map.get($brand-colors, 'primary');
       border-radius: $radius-full;
       transition: width $transition-normal $ease-out;
     }
@@ -465,7 +465,7 @@ const getQuestionForPet = (question: Question, petNum: number) => {
     .slider-thumb {
       width: 20px;
       height: 20px;
-      background: $primary-green;
+      background: map.get($brand-colors, 'primary');
       border: 3px solid $neutral-white;
       border-radius: $radius-full;
       position: absolute;

@@ -279,12 +279,12 @@ console.log('Progress:', progressPercentage.value)
 }
 
 .nav-btn.primary {
-  background-color: #4CAF50;
+  background-color: map.get($brand-colors, 'primary');
   color: white;
 }
 
 .nav-btn.primary:hover:not(:disabled) {
-  background-color: #45a049;
+  background-color: color.adjust(map.get($brand-colors, 'primary'), $lightness: -10%);
 }
 
 .nav-btn.secondary {

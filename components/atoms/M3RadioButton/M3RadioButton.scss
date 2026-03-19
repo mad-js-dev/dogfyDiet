@@ -1,4 +1,5 @@
 @use 'sass:map' as map;
+@use '../../../assets/styles/_variables' as *;
 @use '../../../assets/styles/_mixins-new' as *;
 
 .c-m3-radio-button {
@@ -29,7 +30,7 @@
   }
 
   &__visual--selected {
-    border-color: #00B67A;
+    border-color: map.get($brand-colors, 'primary');
   }
 
   // State layer (40dp)

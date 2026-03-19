@@ -190,7 +190,7 @@ The system automatically generates utility classes:
    
    // Avoid
    font-size: $font-size-headline-large;
-   color: $md3-light-on-primary;
+   color: map.get($md3-light-primary, 'on');
    ```
 
 2. **Leverage theme awareness**

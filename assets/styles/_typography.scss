@@ -108,7 +108,7 @@ small {
 
 // Links
 a {
-  color: $primary-green;
+  color: map.get($brand-colors, 'primary');
   text-decoration: none;
   transition: color $transition-fast $ease-out;
   
@@ -118,7 +118,7 @@ a {
   }
   
   &:focus-visible {
-    outline: 2px solid $primary-green;
+    outline: 2px solid map.get($brand-colors, 'primary');
     outline-offset: 2px;
     border-radius: $radius-sm;
   }
@@ -133,7 +133,7 @@ strong, b {
 // Emphasis
 em, i {
   font-style: italic;
-  color: $accent-orange;
+  color: map.get($brand-colors, 'accent-orange');
 }
 
 // -----------------------------------------------------------------------------
@@ -187,7 +187,7 @@ ul, ol {
 blockquote {
   margin: $spacing-6 0;
   padding: $spacing-4 $spacing-6;
-  border-left: 4px solid $primary-green;
+  border-left: 4px solid map.get($brand-colors, 'primary');
   background-color: $neutral-lightest;
   border-radius: $radius-md;
   
@@ -313,12 +313,12 @@ pre {
 .normal-case { text-transform: none; }
 
 // Text color utilities
-.text-primary { color: $primary-green; }
-.text-primary-dark { color: $primary-green-dark; }
-.text-primary-light { color: $primary-green-light; }
-.text-accent { color: $accent-orange; }
-.text-accent-dark { color: $accent-orange-dark; }
-.text-accent-light { color: $accent-yellow; }
+.text-primary { color: map.get($brand-colors, 'primary'); }
+.text-primary-dark { color: color.adjust(map.get($brand-colors, 'primary'), $lightness: -20%); }
+.text-primary-light { color: color.adjust(map.get($brand-colors, 'primary'), $lightness: 20%); }
+.text-accent { color: map.get($brand-colors, 'accent-orange'); }
+.text-accent-dark { color: color.adjust(map.get($brand-colors, 'accent-orange'), $lightness: -20%); }
+.text-accent-light { color: map.get($brand-colors, 'accent-yellow'); }
 
 .text-darkest { color: $neutral-darkest; }
 .text-dark { color: $neutral-dark; }
@@ -433,7 +433,7 @@ pre {
 // Pet sections
 .pet-name {
   @include typography(h4, semibold, primary);
-  color: $primary-green;
+  color: map.get($brand-colors, 'primary');
   margin-bottom: $spacing-3;
 }
 
@@ -522,7 +522,7 @@ pre {
   }
   
   a {
-    color: $primary-green;
+    color: map.get($brand-colors, 'primary');
     text-decoration: underline;
   }
   

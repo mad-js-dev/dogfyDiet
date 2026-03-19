@@ -244,14 +244,14 @@ definePageMeta({
 }
 
 .start-btn.primary {
-  background: linear-gradient(135deg, #0066cc, #0052a3);
+  background: linear-gradient(135deg, map.get($brand-colors, 'primary'), color.adjust(map.get($brand-colors, 'primary'), $lightness: -15%));
   color: white;
-  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+  box-shadow: 0 4px 15px rgba(map.get($brand-colors, 'primary'), 0.3);
 }
 
 .start-btn.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+  box-shadow: 0 6px 20px rgba(map.get($brand-colors, 'primary'), 0.4);
 }
 
 .start-btn.secondary {

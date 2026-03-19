@@ -312,10 +312,13 @@ watch(() => props.modelValue, (newValue) => {
 </script>
 
 <style scoped lang="scss">
+@use "sass:color";
+@use "sass:map";
+@use "../../../assets/styles/_variables" as *;
 .c-select-answer {
-  $primary-color: #ffc800;
-  $primary-surface-color: #fe9;
-  $secondary-color: #ef6948;
+  $primary-color: map.get($brand-colors, 'accent-yellow');
+  $primary-surface-color: color.adjust(map.get($brand-colors, 'accent-yellow'), $lightness: 20%);
+  $secondary-color: map.get($brand-colors, 'accent-orange');
 
   --primary-color: #{$primary-color};
   --primary-surface-color: #{$primary-surface-color};

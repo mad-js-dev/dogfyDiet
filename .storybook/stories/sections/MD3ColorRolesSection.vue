@@ -100,27 +100,27 @@ const colorRows: Row[] = [
 const brandColorGrid: ColorGrid = {
   base: {
     surface: { label: 'Surface', value: 'var(--md3-surface)', resolvedValue: '#ffffff', sassVar: '$md3-light-surface' },
-    primary: { label: 'Primary', value: 'var(--md3-primary)', resolvedValue: '#00B67A', sassVar: '$md3-light-primary' },
-    secondary: { label: 'Secondary', value: 'var(--md3-secondary)', resolvedValue: '#EF6948', sassVar: '$md3-light-secondary' },
-    tertiary: { label: 'Tertiary', value: 'var(--md3-tertiary)', resolvedValue: '#ffca4e', sassVar: '$md3-light-tertiary' }
+    primary: { label: 'Primary', value: 'var(--md3-primary)', resolvedValue: '#00B67A', sassVar: 'map.get($md3-light-primary, "main")' },
+    secondary: { label: 'Secondary', value: 'var(--md3-secondary)', resolvedValue: '#EF6948', sassVar: 'map.get($md3-light-secondary, "main")' },
+    tertiary: { label: 'Tertiary', value: 'var(--md3-tertiary)', resolvedValue: '#ffca4e', sassVar: 'map.get($md3-light-tertiary, "main")' }
   },
   on: {
     surface: { label: 'On Surface', value: 'var(--md3-on-surface)', resolvedValue: '#1a1a1a', sassVar: '$md3-light-on-surface' },
-    primary: { label: 'On Primary', value: 'var(--md3-on-primary)', resolvedValue: '#ffffff', sassVar: '$md3-light-on-primary' },
-    secondary: { label: 'On Secondary', value: 'var(--md3-on-secondary)', resolvedValue: '#ffffff', sassVar: '$md3-light-on-secondary' },
-    tertiary: { label: 'On Tertiary', value: 'var(--md3-on-tertiary)', resolvedValue: '#1a1a1a', sassVar: '$md3-light-on-tertiary' }
+    primary: { label: 'On Primary', value: 'var(--md3-on-primary)', resolvedValue: '#ffffff', sassVar: 'map.get($md3-light-primary, "on")' },
+    secondary: { label: 'On Secondary', value: 'var(--md3-on-secondary)', resolvedValue: '#ffffff', sassVar: 'map.get($md3-light-secondary, "on")' },
+    tertiary: { label: 'On Tertiary', value: 'var(--md3-on-tertiary)', resolvedValue: '#1a1a1a', sassVar: 'map.get($md3-light-tertiary, "on")' }
   },
   container: {
     surface: { label: 'Surface Variant', value: 'var(--md3-surface-variant)', resolvedValue: '#f7f7f7', sassVar: '$md3-light-surface-variant' },
-    primary: { label: 'Primary Container', value: 'var(--md3-primary-container)', resolvedValue: '#B3E5CC', sassVar: '$md3-light-primary-container' },
-    secondary: { label: 'Secondary Container', value: 'var(--md3-secondary-container)', resolvedValue: '#FFD4C4', sassVar: '$md3-light-secondary-container' },
-    tertiary: { label: 'Tertiary Container', value: 'var(--md3-tertiary-container)', resolvedValue: '#fff5d6', sassVar: '$md3-light-tertiary-container' }
+    primary: { label: 'Primary Container', value: 'var(--md3-primary-container)', resolvedValue: '#B3E5CC', sassVar: 'map.get($md3-light-primary, "container")' },
+    secondary: { label: 'Secondary Container', value: 'var(--md3-secondary-container)', resolvedValue: '#FFD4C4', sassVar: 'map.get($md3-light-secondary, "container")' },
+    tertiary: { label: 'Tertiary Container', value: 'var(--md3-tertiary-container)', resolvedValue: '#fff5d6', sassVar: 'map.get($md3-light-tertiary, "container")' }
   },
   onContainer: {
     surface: { label: 'On Surface Variant', value: 'var(--md3-on-surface-variant)', resolvedValue: '#767676', sassVar: '$md3-light-on-surface-variant' },
-    primary: { label: 'On Primary Container', value: 'var(--md3-on-primary-container)', resolvedValue: '#004D29', sassVar: '$md3-light-on-primary-container' },
-    secondary: { label: 'On Secondary Container', value: 'var(--md3-on-secondary-container)', resolvedValue: '#5D2B1E', sassVar: '$md3-light-on-secondary-container' },
-    tertiary: { label: 'On Tertiary Container', value: 'var(--md3-on-tertiary-container)', resolvedValue: '#cc8a00', sassVar: '$md3-light-on-tertiary-container' }
+    primary: { label: 'On Primary Container', value: 'var(--md3-on-primary-container)', resolvedValue: '#004D29', sassVar: 'map.get($md3-light-primary, "on-container")' },
+    secondary: { label: 'On Secondary Container', value: 'var(--md3-on-secondary-container)', resolvedValue: '#5D2B1E', sassVar: 'map.get($md3-light-secondary, "on-container")' },
+    tertiary: { label: 'On Tertiary Container', value: 'var(--md3-on-tertiary-container)', resolvedValue: '#cc8a00', sassVar: 'map.get($md3-light-tertiary, "on-container")' }
   }
 }
 

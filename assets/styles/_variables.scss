@@ -104,20 +104,26 @@ $neutral-off-white: map.get($neutral-colors, 'off-white') !default;
 // M3 uses semantic color roles that map to tonal palettes
 
 // Light Theme Color Roles
-$md3-light-primary: var(--primary-40) !default;
-$md3-light-on-primary: var(--primary-100) !default;
-$md3-light-primary-container: var(--primary-90) !default;
-$md3-light-on-primary-container: var(--primary-10) !default;
+$md3-light-primary: (
+  'main': var(--primary-40),
+  'on': var(--primary-100),
+  'container': var(--primary-90),
+  'on-container': var(--primary-10)
+) !default;
 
-$md3-light-secondary: var(--accent-orange-40) !default;
-$md3-light-on-secondary: var(--accent-orange-100) !default;
-$md3-light-secondary-container: var(--accent-orange-90) !default;
-$md3-light-on-secondary-container: var(--accent-orange-10) !default;
+$md3-light-secondary: (
+  'main': var(--accent-orange-40),
+  'on': var(--accent-orange-100),
+  'container': var(--accent-orange-90),
+  'on-container': var(--accent-orange-10)
+) !default;
 
-$md3-light-tertiary: var(--accent-yellow-40) !default;
-$md3-light-on-tertiary: var(--accent-yellow-100) !default;
-$md3-light-tertiary-container: var(--accent-yellow-90) !default;
-$md3-light-on-tertiary-container: var(--accent-yellow-10) !default;
+$md3-light-tertiary: (
+  'main': var(--accent-yellow-40),
+  'on': var(--accent-yellow-100),
+  'container': var(--accent-yellow-90),
+  'on-container': var(--accent-yellow-10)
+) !default;
 
 $md3-light-surface: $neutral-white !default;
 $md3-light-on-surface: $neutral-darkest !default;
@@ -131,20 +137,26 @@ $md3-light-scrim: rgba($neutral-darkest, 0.32) !default;
 $md3-light-shadow: rgba($neutral-darkest, 0.12) !default;
 
 // Dark Theme Color Roles
-$md3-dark-primary: var(--primary-30) !default;
-$md3-dark-on-primary: var(--primary-100) !default;
-$md3-dark-primary-container: var(--primary-20) !default;
-$md3-dark-on-primary-container: var(--primary-100) !default;
+$md3-dark-primary: (
+  'main': var(--primary-30),
+  'on': var(--primary-100),
+  'container': var(--primary-20),
+  'on-container': var(--primary-100)
+) !default;
 
-$md3-dark-secondary: var(--accent-orange-30) !default;
-$md3-dark-on-secondary: var(--accent-orange-100) !default;
-$md3-dark-secondary-container: var(--accent-orange-20) !default;
-$md3-dark-on-secondary-container: var(--accent-orange-100) !default;
+$md3-dark-secondary: (
+  'main': var(--accent-orange-30),
+  'on': var(--accent-orange-100),
+  'container': var(--accent-orange-20),
+  'on-container': var(--accent-orange-100)
+) !default;
 
-$md3-dark-tertiary: var(--accent-yellow-30) !default;
-$md3-dark-on-tertiary: var(--accent-yellow-100) !default;
-$md3-dark-tertiary-container: var(--accent-yellow-20) !default;
-$md3-dark-on-tertiary-container: var(--accent-yellow-100) !default;
+$md3-dark-tertiary: (
+  'main': var(--accent-yellow-30),
+  'on': var(--accent-yellow-100),
+  'container': var(--accent-yellow-20),
+  'on-container': var(--accent-yellow-100)
+) !default;
 
 $md3-dark-surface: $neutral-darkest !default;
 $md3-dark-on-surface: $neutral-lightest !default;
@@ -241,18 +253,18 @@ $md3-on-info-container: palette-color('info', 10) !default;
     ), $role);
   } @else {
     @return map.get((
-      'primary': $md3-light-primary,
-      'on-primary': $md3-light-on-primary,
-      'primary-container': $md3-light-primary-container,
-      'on-primary-container': $md3-light-on-primary-container,
-      'secondary': $md3-light-secondary,
-      'on-secondary': $md3-light-on-secondary,
-      'secondary-container': $md3-light-secondary-container,
-      'on-secondary-container': $md3-light-on-secondary-container,
-      'tertiary': $md3-light-tertiary,
-      'on-tertiary': $md3-light-on-tertiary,
-      'tertiary-container': $md3-light-tertiary-container,
-      'on-tertiary-container': $md3-light-on-tertiary-container,
+      'primary': map.get($md3-light-primary, 'main'),
+      'on-primary': map.get($md3-light-primary, 'on'),
+      'primary-container': map.get($md3-light-primary, 'container'),
+      'on-primary-container': map.get($md3-light-primary, 'on-container'),
+      'secondary': map.get($md3-light-secondary, 'main'),
+      'on-secondary': map.get($md3-light-secondary, 'on'),
+      'secondary-container': map.get($md3-light-secondary, 'container'),
+      'on-secondary-container': map.get($md3-light-secondary, 'on-container'),
+      'tertiary': map.get($md3-light-tertiary, 'main'),
+      'on-tertiary': map.get($md3-light-tertiary, 'on'),
+      'tertiary-container': map.get($md3-light-tertiary, 'container'),
+      'on-tertiary-container': map.get($md3-light-tertiary, 'on-container'),
       'surface': $md3-light-surface,
       'on-surface': $md3-light-on-surface,
       'surface-variant': $md3-light-surface-variant,

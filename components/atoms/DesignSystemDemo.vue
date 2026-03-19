@@ -342,6 +342,8 @@
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "../../../assets/styles/_variables" as *;
 // This component uses the design system variables and mixins
 // All styles are applied through utility classes and component-specific classes
 // defined in the main.scss file
@@ -367,7 +369,7 @@
 
 // Component-specific styles that use design tokens
 .questionnaire-demo {
-  border: 2px solid $primary-green;
-  background: rgba($primary-green, 0.05);
+  border: 2px solid map.get($brand-colors, 'primary');
+  background: rgba(map.get($brand-colors, 'primary'), 0.05);
 }
 </style>

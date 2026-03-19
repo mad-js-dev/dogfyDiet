@@ -106,10 +106,12 @@ const selectOption = (value: string) => {
 
 <style scoped lang="scss">
 @use "sass:color";
+@use "sass:map";
+@use "../../../assets/styles/_variables" as *;
 .c-segmented-buttons {
   $radius: 25px;
-  $primary-color: #ffc800;
-  $primary-surface-color: #fe9;
+  $primary-color: map.get($brand-colors, 'accent-yellow');
+  $primary-surface-color: color.adjust(map.get($brand-colors, 'accent-yellow'), $lightness: 20%);
   $secondary-color: #c2c2c2;
   
   --radius: #{$radius};

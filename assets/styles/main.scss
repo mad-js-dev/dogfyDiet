@@ -214,12 +214,12 @@ body {
 .p-24 { padding: $spacing-24; }
 
 // Background utilities
-.bg-primary { background-color: $primary-green; }
-.bg-primary-dark { background-color: $primary-green-dark; }
-.bg-primary-light { background-color: $primary-green-light; }
-.bg-accent { background-color: $accent-orange; }
-.bg-accent-dark { background-color: $accent-orange-dark; }
-.bg-accent-light { background-color: $accent-yellow; }
+.bg-primary { background-color: map.get($brand-colors, 'primary'); }
+.bg-primary-dark { background-color: color.adjust(map.get($brand-colors, 'primary'), $lightness: -20%); }
+.bg-primary-light { background-color: color.adjust(map.get($brand-colors, 'primary'), $lightness: 20%); }
+.bg-accent { background-color: map.get($brand-colors, 'accent-orange'); }
+.bg-accent-dark { background-color: color.adjust(map.get($brand-colors, 'accent-orange'), $lightness: -20%); }
+.bg-accent-light { background-color: map.get($brand-colors, 'accent-yellow'); }
 
 .bg-darkest { background-color: $neutral-darkest; }
 .bg-dark { background-color: $neutral-dark; }
@@ -239,8 +239,8 @@ body {
 .border-2 { border: 2px solid $neutral-light; }
 .border-4 { border: 4px solid $neutral-light; }
 
-.border-primary { border-color: $primary-green; }
-.border-accent { border-color: $accent-orange; }
+.border-primary { border-color: map.get($brand-colors, 'primary'); }
+.border-accent { border-color: map.get($brand-colors, 'accent-orange'); }
 .border-dark { border-color: $neutral-dark; }
 .border-light { border-color: $neutral-light; }
 .border-white { border-color: $neutral-white; }
@@ -392,7 +392,7 @@ body {
   
   .progress-fill {
     height: 100%;
-    background-color: $primary-green;
+    background-color: map.get($brand-colors, 'primary');
     transition: width $transition-normal $ease-out;
     border-radius: $radius-full;
   }
@@ -425,8 +425,8 @@ body {
   }
   
   &.active {
-    border-color: $primary-green;
-    background-color: rgba($primary-green, 0.05);
+    border-color: map.get($brand-colors, 'primary');
+    background-color: rgba(map.get($brand-colors, 'primary'), 0.05);
   }
 }
 
