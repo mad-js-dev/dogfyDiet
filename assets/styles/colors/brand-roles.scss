@@ -1,0 +1,32 @@
+// Brand Color Roles (following extractBrandRoles function pattern)
+@use './_palette' as *;
+
+// Primary Green Brand Roles
+$primarygreen-roles: (
+  'base': palette-color('primary-green', 60),
+  'on': palette-color('primary-green', 100),
+  'container': palette-color('primary-green', 90),
+  'on-container': palette-color('primary-green', 10)
+) !default;
+
+// Accent Orange Brand Roles
+$accentorange-roles: (
+  'base': palette-color('accent-orange', 60),
+  'on': palette-color('accent-orange', 100),
+  'container': palette-color('accent-orange', 90),
+  'on-container': palette-color('accent-orange', 10)
+) !default;
+
+// Accent Yellow Brand Roles
+$accentyellow-roles: (
+  'base': palette-color('accent-yellow', 60),
+  'on': palette-color('accent-yellow', 100),
+  'container': palette-color('accent-yellow', 90),
+  'on-container': palette-color('accent-yellow', 10)
+) !default;
+
+$md3-brand: (
+  'primarygreen': $primarygreen-roles,
+  'accentorange': $accentorange-roles,
+  'accentyellow': $accentyellow-roles
+) !default;

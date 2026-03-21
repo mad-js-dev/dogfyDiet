@@ -1,5 +1,5 @@
 // Dark Theme Color Roles
-@use './palette' as *;
+@use './_palette' as *;
 
 $primary-roles: (
   'main': var(--primary-30),

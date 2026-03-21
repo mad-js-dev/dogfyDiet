@@ -1,57 +1,57 @@
 // Light Theme Color Roles
-@use './palette' as *;
+@use './_palette' as *;
 $primary-roles: (
-  'main': palette-color('primary-green', 40),
-  'on': palette-color('primary-green', 100),
-  'container': palette-color('primary-green', 90),
-  'on-container': palette-color('primary-green', 10),
-  'inverse': palette-color('primary-green', 80)
+  'main': var(--md3-roles-primarygreen-base),
+  'on': var(--md3-roles-primarygreen-on),
+  'container': var(--md3-roles-primarygreen-container),
+  'on-container': var(--md3-roles-primarygreen-on-container),
+  'inverse': var(--primary-green-80)
 ) !default;
 
 $secondary-roles: (
-  'main': palette-color('accent-orange', 40),
-  'on': palette-color('accent-orange', 100),
-  'container': palette-color('accent-orange', 90),
-  'on-container': palette-color('accent-orange', 10)
+  'main': var(--md3-roles-accentorange-base),
+  'on': var(--md3-roles-accentorange-on),
+  'container': var(--md3-roles-accentorange-container),
+  'on-container': var(--md3-roles-accentorange-on-container)
 ) !default;
 
 $tertiary-roles: (
-  'main': palette-color('accent-yellow', 40),
-  'on': palette-color('accent-yellow', 100),
-  'container': palette-color('accent-yellow', 90),
-  'on-container': palette-color('accent-yellow', 10)
+  'main': var(--md3-roles-accentyellow-base),
+  'on': var(--md3-roles-accentyellow-on),
+  'container': var(--md3-roles-accentyellow-container),
+  'on-container': var(--md3-roles-accentyellow-on-container)
 ) !default;
 
 $neutral-roles: (
   'surface': (
-    'dim': palette-color('neutral', 70),
-    'regular': palette-color('neutral', 90),
-    'bright': palette-color('neutral', 100),
-    'inverse': palette-color('neutral', 10),
-    'inverse-primary': palette-color('primary-green', 80)
+    'dim': var(--neutral-70),
+    'regular': var(--neutral-90),
+    'bright': var(--neutral-100),
+    'inverse': var(--neutral-10),
+    'inverse-primary': var(--primary-green-80)
   ),
   'container': (
-    'lowest': palette-color('neutral', 98),
-    'low': palette-color('neutral', 95),
-    'medium': palette-color('neutral', 90),
-    'high': palette-color('neutral', 85),
-    'highest': palette-color('neutral', 80)
+    'lowest': var(--neutral-98),
+    'low': var(--neutral-95),
+    'medium': var(--neutral-90),
+    'high': var(--neutral-85),
+    'highest': var(--neutral-80)
   ),
   'onSurface': (
-    'regular': palette-color('neutral', 10),
-    'variant': palette-color('neutral', 50),
-    'inverse': palette-color('neutral', 90),
-    'inverse-primary': palette-color('primary-green', 20)
+    'regular': var(--neutral-10),
+    'variant': var(--neutral-50),
+    'inverse': var(--neutral-90),
+    'inverse-primary': var(--primary-green-20)
   ),
   'outline': (
-    'regular': palette-color('neutral', 90),
-    'variant': palette-color('neutral', 80)
+    'regular': var(--neutral-90),
+    'variant': var(--neutral-80)
   ),
   'scrim': (
-    'regular': rgba(palette-color('neutral', 10), 0.32)
+    'regular': rgba(var(--neutral-10), 0.32)
   ),
    'shadow': (
-    'regular': rgba(palette-color('neutral', 10), 0.12))
+    'regular': rgba(var(--neutral-10), 0.12))
 ) !default;
 
 $md3-light: (

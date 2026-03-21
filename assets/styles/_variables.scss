@@ -7,22 +7,49 @@
 @use "sass:color";
 @use "sass:map";
 
-@use "./colors/palette" as *;
-
-// -----------------------------------------------------------------------------
-// MATERIAL DESIGN 3 COLOR ROLES
-// -----------------------------------------------------------------------------
-// Based on https://m3.material.io/styles/color/roles
-// M3 uses semantic color roles that map to tonal palettes
-
-// Import light theme color roles
+@use "./colors/_palette" as *;
 @use 'colors/light-roles';
-
-// Import dark theme color roles
 @use 'colors/dark-roles';
+
+// Define the $md3-light map using the imported variables
+$md3-light: (
+  'primary': light-roles.$primary-roles,
+  'secondary': light-roles.$secondary-roles,
+  'tertiary': light-roles.$tertiary-roles,
+  'neutral': light-roles.$neutral-roles,
+);
+
+// Define the $md3-dark map using the imported variables
+$md3-dark: (
+  'primary': dark-roles.$primary-roles,
+  'secondary': dark-roles.$secondary-roles,
+  'tertiary': dark-roles.$tertiary-roles,
+  'neutral': dark-roles.$neutral-roles,
+);
 
 // Import semantic color roles
 @use 'colors/semantic-roles';
+
+// Define individual semantic color variables for get-md3-color function
+$md3-error: map.get(semantic-roles.$error-roles, 'main');
+$md3-on-error: map.get(semantic-roles.$error-roles, 'on');
+$md3-error-container: map.get(semantic-roles.$error-roles, 'container');
+$md3-on-error-container: map.get(semantic-roles.$error-roles, 'on-container');
+
+$md3-success: map.get(semantic-roles.$success-roles, 'main');
+$md3-on-success: map.get(semantic-roles.$success-roles, 'on');
+$md3-success-container: map.get(semantic-roles.$success-roles, 'container');
+$md3-on-success-container: map.get(semantic-roles.$success-roles, 'on-container');
+
+$md3-warning: map.get(semantic-roles.$warning-roles, 'main');
+$md3-on-warning: map.get(semantic-roles.$warning-roles, 'on');
+$md3-warning-container: map.get(semantic-roles.$warning-roles, 'container');
+$md3-on-warning-container: map.get(semantic-roles.$warning-roles, 'on-container');
+
+$md3-info: map.get(semantic-roles.$info-roles, 'main');
+$md3-on-info: map.get(semantic-roles.$info-roles, 'on');
+$md3-info-container: map.get(semantic-roles.$info-roles, 'container');
+$md3-on-info-container: map.get(semantic-roles.$info-roles, 'on-container');
 
 
 // -----------------------------------------------------------------------------
@@ -46,8 +73,7 @@
       'tertiary-container': $md3-dark-tertiary-container,
       'on-tertiary-container': $md3-dark-on-tertiary-container,
       'surface': map.get(map.get($md3-dark, 'neutral'), 'surface'),
-      'on-surface': map.get(map.get($md3-dark, 'neutral'), 'on-surface'),
-      'surface-variant': map.get(map.get($md3-dark, 'neutral'), 'surface-variant'),
+      'surface-variant': palette-color('neutral', 85),
       'on-surface-variant': map.get(map.get($md3-dark, 'neutral'), 'on-surface-variant'),
       'outline': map.get(map.get($md3-dark, 'neutral'), 'outline', 'regular'),
       'outline-variant': map.get(map.get($md3-dark, 'neutral'), 'outline', 'variant'),
@@ -58,22 +84,22 @@
     ), $role);
   } @else {
     @return map.get((
-      'primary': map.get($md3-light-primary, 'main'),
-      'on-primary': map.get($md3-light-primary, 'on'),
-      'primary-container': map.get($md3-light-primary, 'container'),
-      'on-primary-container': map.get($md3-light-primary, 'on-container'),
-      'secondary': map.get($md3-light-secondary, 'main'),
-      'on-secondary': map.get($md3-light-secondary, 'on'),
-      'secondary-container': map.get($md3-light-secondary, 'container'),
-      'on-secondary-container': map.get($md3-light-secondary, 'on-container'),
-      'tertiary': map.get($md3-light-tertiary, 'main'),
-      'on-tertiary': map.get($md3-light-tertiary, 'on'),
-      'tertiary-container': map.get($md3-light-tertiary, 'container'),
-      'on-tertiary-container': map.get($md3-light-tertiary, 'on-container'),
-      'surface': map.get(map.get($md3-light, 'neutral'), 'surface'),
-      'on-surface': map.get(map.get($md3-light, 'neutral'), 'on-surface'),
-      'surface-variant': map.get(map.get($md3-light, 'neutral'), 'surface-variant'),
-      'on-surface-variant': map.get(map.get($md3-light, 'neutral'), 'on-surface-variant'),
+      'primary': map.get(map.get($md3-light, 'primary'), 'main'),
+      'on-primary': map.get(map.get($md3-light, 'primary'), 'on'),
+      'primary-container': map.get(map.get($md3-light, 'primary'), 'container'),
+      'on-primary-container': map.get(map.get($md3-light, 'primary'), 'on-container'),
+      'secondary': map.get(map.get($md3-light, 'secondary'), 'main'),
+      'on-secondary': map.get(map.get($md3-light, 'secondary'), 'on'),
+      'secondary-container': map.get(map.get($md3-light, 'secondary'), 'container'),
+      'on-secondary-container': map.get(map.get($md3-light, 'secondary'), 'on-container'),
+      'tertiary': map.get(map.get($md3-light, 'tertiary'), 'main'),
+      'on-tertiary': map.get(map.get($md3-light, 'tertiary'), 'on'),
+      'tertiary-container': map.get(map.get($md3-light, 'tertiary'), 'container'),
+      'on-tertiary-container': map.get(map.get($md3-light, 'tertiary'), 'on-container'),
+      'surface': map.get(map.get($md3-light, 'neutral'), 'surface', 'regular'),
+      'on-surface': map.get(map.get($md3-light, 'neutral'), 'onSurface', 'regular'),
+      'surface-variant': palette-color('neutral', 85),
+      'on-surface-variant': map.get(map.get($md3-light, 'neutral'), 'onSurface', 'variant'),
       'outline': map.get(map.get($md3-light, 'neutral'), 'outline', 'regular'),
       'outline-variant': map.get(map.get($md3-light, 'neutral'), 'outline', 'variant'),
       'error': $md3-error,

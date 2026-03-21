@@ -4,39 +4,48 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
-@use './variables' as *;
-@use './colors/palette' as *;
-@use './colors/light-roles' as *;
-@use './colors/dark-roles' as *;
-@use './colors/semantic-roles' as *;
-@use './mixins' as *;
+@use './variables' as vars;
+@use './colors/_palette' as palette;
+@use './colors/dark-roles' as dark_roles;
+@use './colors/semantic-roles' as semantic_roles;
+@use './colors/brand-roles' as brand_roles;
+@use './mixins' as mixins;
 
 // Define light theme maps for compatibility
 $md3-light-surface: (
-  'surface': map.get(map.get($md3-light, 'neutral'), 'surface', 'regular'),
-  'on-surface': map.get(map.get($md3-light, 'neutral'), 'onSurface', 'regular'),
-  'surface-variant': map.get(map.get($md3-light, 'neutral'), 'surface', 'regular'), // Assuming surface-variant maps to regular surface
-  'on-surface-variant': map.get(map.get($md3-light, 'neutral'), 'onSurface', 'variant'),
+  'surface': map.get(map.get(vars.$md3-light, 'neutral'), 'surface', 'regular'),
+  'on-surface': map.get(map.get(vars.$md3-light, 'neutral'), 'onSurface', 'regular'),
+  'surface-variant': map.get(map.get(vars.$md3-light, 'neutral'), 'surface', 'regular'), // Assuming surface-variant maps to regular surface
+  'on-surface-variant': map.get(map.get(vars.$md3-light, 'neutral'), 'onSurface', 'variant'),
 ) !default;
 
 
 :root {
   // Generate CSS custom properties from color-base
-  @each $category, $colors in $color-base {
+  @each $category, $colors in palette.$color-base {
     @each $color-name, $color-value in $colors {
       --color-base-#{$category}-#{$color-name}: #{$color-value};
     }
   }
 
   // Generate CSS custom properties from color-palettes
-  @each $palette-name, $palette in $color-palettes {
+  @each $palette-name, $palette in palette.$color-palettes {
     @each $tone, $color-value in $palette {
       --#{$palette-name}-#{$tone}: #{$color-value};
     }
   }
 
+  // Generate CSS custom properties from MD3 brand roles (following extractBrandRoles pattern)
+  @each $brand-category, $brand-roles in brand_roles.$md3-brand {
+    @if meta.type-of($brand-roles) == 'map' {
+      @each $role-name, $role-value in $brand-roles {
+        --md3-roles-#{$brand-category}-#{$role-name}: #{$role-value};
+      }
+    }
+  }
+
   // Generate CSS custom properties from MD3 light theme roles
-  @each $role-category, $roles in $md3-light {
+  @each $role-category, $roles in vars.$md3-light {
     @if meta.type-of($roles) == 'map' {
       @each $role-name, $role-value in $roles {
         @if meta.type-of($role-value) == 'map' {
@@ -52,7 +61,7 @@ $md3-light-surface: (
   
 
   // Generate CSS custom properties from MD3 semantic roles
-  @each $semantic-category, $semantic-roles in $md3-semantic {
+  @each $semantic-category, $semantic-roles in semantic_roles.$md3-semantic {
     @if meta.type-of($semantic-roles) == 'map' {
       @each $semantic-name, $semantic-value in $semantic-roles {
         --md3-roles-#{$semantic-category}-#{$semantic-name}: #{$semantic-value};
@@ -65,7 +74,7 @@ $md3-light-surface: (
 @media (prefers-color-scheme: dark) {
   :root {
     // Generate CSS custom properties from MD3 dark theme roles
-    @each $role-category, $roles in $md3-dark {
+    @each $role-category, $roles in dark_roles.$md3-dark {
       @if meta.type-of($roles) == 'map' {
         @each $role-name, $role-value in $roles {
           @if meta.type-of($role-value) == 'map' {

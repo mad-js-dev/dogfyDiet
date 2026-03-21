@@ -1,5 +1,5 @@
 // Semantic Color Roles (M3 Standard)
-@use './palette' as *;
+@use './_palette' as *;
 
 // Error Colors (M3 Standard) - using darker base tone
 $error-roles: (

@@ -41,6 +41,7 @@ const colorSections: ColorSection[] = generateColorSections()
 
 <style lang="scss">
 @use '~/assets/styles/_css-variables.scss';
+
 </style>
 
 <style scoped lang="scss">

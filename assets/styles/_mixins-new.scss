@@ -3,12 +3,11 @@
 // =============================================================================
 // Role-based mixing system that combines typography, colors, and elevation
 
-@use './variables' as *;
-@use './colors/palette' as *;
+@use './variables' as vars;
+@use './colors/palette' as palette;
 @use 'sass:color';
 @use 'sass:map';
-@use './colors/light-roles' as *;
-@use './colors/dark-roles' as *;
+@use './colors/dark-roles' as dark_roles;
 
 // Define error colors using palette system
 $md3-error: palette-color('error', 40);
@@ -18,10 +17,10 @@ $md3-on-error-container: palette-color('error', 10);
 
 // Define light theme maps for compatibility
 $md3-light-surface: (
-  'surface': map.get(map.get(map.get($md3-light, 'neutral'), 'surface'), 'regular'),
-  'on-surface': map.get(map.get(map.get($md3-light, 'neutral'), 'onSurface'), 'regular'),
-  'surface-variant': map.get(map.get(map.get($md3-light, 'neutral'), 'surface'), 'regular'), // Assuming surface-variant maps to regular surface
-  'on-surface-variant': map.get(map.get(map.get($md3-light, 'neutral'), 'onSurface'), 'variant'),
+  'surface': map.get(map.get(vars.$md3-light, 'neutral'), 'surface', 'regular'),
+  'on-surface': map.get(map.get(vars.$md3-light, 'neutral'), 'onSurface', 'regular'),
+  'surface-variant': map.get(map.get(vars.$md3-light, 'neutral'), 'surface', 'regular'), // Assuming surface-variant maps to regular surface
+  'on-surface-variant': map.get(map.get(vars.$md3-light, 'neutral'), 'onSurface', 'variant'),
 ) !default;
 
 // -----------------------------------------------------------------------------
@@ -31,94 +30,94 @@ $md3-light-surface: (
 // Typography role mappings
 $typography-roles: (
   'display-large': (
-    size: $font-size-display-large,
-    weight: $font-weight-black,
-    line-height: $line-height-display-large,
-    family: $font-family-primary
+    size: vars.$font-size-display-large,
+    weight: vars.$font-weight-black,
+    line-height: vars.$line-height-display-large,
+    family: vars.$font-family-primary
   ),
   'display-medium': (
-    size: $font-size-display-medium,
-    weight: $font-weight-black,
-    line-height: $line-height-display-medium,
-    family: $font-family-primary
+    size: vars.$font-size-display-medium,
+    weight: vars.$font-weight-black,
+    line-height: vars.$line-height-display-medium,
+    family: vars.$font-family-primary
   ),
   'display-small': (
-    size: $font-size-display-small,
-    weight: $font-weight-black,
-    line-height: $line-height-display-small,
-    family: $font-family-primary
+    size: vars.$font-size-display-small,
+    weight: vars.$font-weight-black,
+    line-height: vars.$line-height-display-small,
+    family: vars.$font-family-primary
   ),
   'headline-large': (
-    size: $font-size-headline-large,
-    weight: $font-weight-bold,
-    line-height: $line-height-headline-large,
-    family: $font-family-primary
+    size: vars.$font-size-headline-large,
+    weight: vars.$font-weight-bold,
+    line-height: vars.$line-height-headline-large,
+    family: vars.$font-family-primary
   ),
   'headline-medium': (
-    size: $font-size-headline-medium,
-    weight: $font-weight-semibold,
-    line-height: $line-height-headline-medium,
-    family: $font-family-primary
+    size: vars.$font-size-headline-medium,
+    weight: vars.$font-weight-semibold,
+    line-height: vars.$line-height-headline-medium,
+    family: vars.$font-family-primary
   ),
   'headline-small': (
-    size: $font-size-headline-small,
-    weight: $font-weight-medium,
-    line-height: $line-height-headline-small,
-    family: $font-family-primary
+    size: vars.$font-size-headline-small,
+    weight: vars.$font-weight-medium,
+    line-height: vars.$line-height-headline-small,
+    family: vars.$font-family-primary
   ),
   'title-large': (
-    size: $font-size-title-large,
-    weight: $font-weight-medium,
-    line-height: $line-height-title-large,
-    family: $font-family-primary
+    size: vars.$font-size-title-large,
+    weight: vars.$font-weight-medium,
+    line-height: vars.$line-height-title-large,
+    family: vars.$font-family-primary
   ),
   'title-medium': (
-    size: $font-size-title-medium,
-    weight: $font-weight-medium,
-    line-height: $line-height-title-medium,
-    family: $font-family-primary
+    size: vars.$font-size-title-medium,
+    weight: vars.$font-weight-medium,
+    line-height: vars.$line-height-title-medium,
+    family: vars.$font-family-primary
   ),
   'title-small': (
-    size: $font-size-title-small,
-    weight: $font-weight-medium,
-    line-height: $line-height-title-small,
-    family: $font-family-primary
+    size: vars.$font-size-title-small,
+    weight: vars.$font-weight-medium,
+    line-height: vars.$line-height-title-small,
+    family: vars.$font-family-primary
   ),
   'body-large': (
-    size: $font-size-body-large,
-    weight: $font-weight-regular,
-    line-height: $line-height-body-large,
-    family: $font-family-secondary
+    size: vars.$font-size-body-large,
+    weight: vars.$font-weight-regular,
+    line-height: vars.$line-height-body-large,
+    family: vars.$font-family-secondary
   ),
   'body-medium': (
-    size: $font-size-body-medium,
-    weight: $font-weight-regular,
-    line-height: $line-height-body-medium,
-    family: $font-family-secondary
+    size: vars.$font-size-body-medium,
+    weight: vars.$font-weight-regular,
+    line-height: vars.$line-height-body-medium,
+    family: vars.$font-family-secondary
   ),
   'body-small': (
-    size: $font-size-body-small,
-    weight: $font-weight-regular,
-    line-height: $line-height-body-small,
-    family: $font-family-secondary
+    size: vars.$font-size-body-small,
+    weight: vars.$font-weight-regular,
+    line-height: vars.$line-height-body-small,
+    family: vars.$font-family-secondary
   ),
   'label-large': (
-    size: $font-size-label-large,
-    weight: $font-weight-medium,
-    line-height: $line-height-label-large,
-    family: $font-family-secondary
+    size: vars.$font-size-label-large,
+    weight: vars.$font-weight-medium,
+    line-height: vars.$line-height-label-large,
+    family: vars.$font-family-secondary
   ),
   'label-medium': (
-    size: $font-size-label-medium,
-    weight: $font-weight-medium,
-    line-height: $line-height-label-medium,
-    family: $font-family-secondary
+    size: vars.$font-size-label-medium,
+    weight: vars.$font-weight-medium,
+    line-height: vars.$line-height-label-medium,
+    family: vars.$font-family-secondary
   ),
   'label-small': (
-    size: $font-size-label-small,
-    weight: $font-weight-medium,
-    line-height: $line-height-label-small,
-    family: $font-family-secondary
+    size: vars.$font-size-label-small,
+    weight: vars.$font-weight-medium,
+    line-height: vars.$line-height-label-small,
+    family: vars.$font-family-secondary
   )
 );
 
@@ -154,22 +153,22 @@ $color-roles-light: (
   'surface-variant': (
     text: map.get($md3-light-surface, 'on-surface-variant'),
     background: map.get($md3-light-surface, 'surface-variant'),
-    'outline': map.get(map.get($md3-light, 'neutral'), 'outline', 'variant'),
-    border: map.get(map.get($md3-light, 'neutral'), 'outline', 'variant')
+    'outline': map.get(map.get(vars.$md3-light, 'neutral'), 'outline', 'variant'),
+    border: map.get(map.get(vars.$md3-light, 'neutral'), 'outline', 'variant')
   ),
   'surface': (
-    surface: map.get(map.get($md3-light, 'neutral'), 'surface', 'regular'),
-    surfaceDim: map.get(map.get($md3-light, 'neutral'), 'surface', 'dim'),
-    surfaceBright: map.get(map.get($md3-light, 'neutral'), 'surface', 'bright'),
-    surfaceContainerLowest: map.get(map.get($md3-light, 'neutral'), 'container', 'lowest'),
-    surfaceContainerLow: map.get(map.get($md3-light, 'neutral'), 'container', 'low'),
-    surfaceContainer: map.get(map.get($md3-light, 'neutral'), 'container', 'medium'),
-    surfaceContainerHigh: map.get(map.get($md3-light, 'neutral'), 'container', 'high'),
-    surfaceContainerHighest: map.get(map.get($md3-light, 'neutral'), 'container', 'highest'),
-    onSurface: map.get(map.get($md3-light, 'neutral'), 'onSurface', 'regular'),
-    onSurfaceVariant: map.get(map.get($md3-light, 'neutral'), 'onSurface', 'variant'),
-    outline: map.get(map.get($md3-light, 'neutral'), 'outline', 'regular'),
-    outlineVariant: map.get(map.get($md3-light, 'neutral'), 'outline', 'variant')
+    surface: map.get(map.get(vars.$md3-light, 'neutral'), 'surface', 'regular'),
+    surfaceDim: map.get(map.get(vars.$md3-light, 'neutral'), 'surface', 'dim'),
+    surfaceBright: map.get(map.get(vars.$md3-light, 'neutral'), 'surface', 'bright'),
+    surfaceContainerLowest: map.get(map.get(vars.$md3-light, 'neutral'), 'container', 'lowest'),
+    surfaceContainerLow: map.get(map.get(vars.$md3-light, 'neutral'), 'container', 'low'),
+    surfaceContainer: map.get(map.get(vars.$md3-light, 'neutral'), 'container', 'medium'),
+    surfaceContainerHigh: map.get(map.get(vars.$md3-light, 'neutral'), 'container', 'high'),
+    surfaceContainerHighest: map.get(map.get(vars.$md3-light, 'neutral'), 'container', 'highest'),
+    onSurface: map.get(map.get(vars.$md3-light, 'neutral'), 'onSurface', 'regular'),
+    onSurfaceVariant: map.get(map.get(vars.$md3-light, 'neutral'), 'onSurface', 'variant'),
+    outline: map.get(map.get(vars.$md3-light, 'neutral'), 'outline', 'regular'),
+    outlineVariant: map.get(map.get(vars.$md3-light, 'neutral'), 'outline', 'variant')
   ),
   'error': (
     main: $md3-error,
@@ -181,22 +180,22 @@ $color-roles-light: (
     border: $md3-error
   ),
   'success': (
-    main: map.get($semantic-colors, 'success'),
+    main: map.get(palette.$semantic-colors, 'success'),
     onMain: palette-color('neutral', 100),
-    mainContainer: color.adjust(map.get($semantic-colors, 'success'), $lightness: -40%),
-    onMainContainer: color.adjust(map.get($semantic-colors, 'success'), $lightness: 20%),
+    mainContainer: color.adjust(map.get(palette.$semantic-colors, 'success'), $lightness: -40%),
+    onMainContainer: color.adjust(map.get(palette.$semantic-colors, 'success'), $lightness: 20%),
   ),
   'warning': (
-    main: map.get($semantic-colors, 'warning'),
+    main: map.get(palette.$semantic-colors, 'warning'),
     onMain: palette-color('neutral', 10),
-    mainContainer: color.adjust(map.get($semantic-colors, 'warning'), $lightness: -40%),
-    onMainContainer: color.adjust(map.get($semantic-colors, 'warning'), $lightness: 20%),
+    mainContainer: color.adjust(map.get(palette.$semantic-colors, 'warning'), $lightness: -40%),
+    onMainContainer: color.adjust(map.get(palette.$semantic-colors, 'warning'), $lightness: 20%),
   ),
   'info': (
-    main: map.get($semantic-colors, 'info'),
+    main: map.get(palette.$semantic-colors, 'info'),
     onMain: palette-color('neutral', 100),
-    mainContainer: color.adjust(map.get($semantic-colors, 'info'), $lightness: -40%),
-    onMainContainer: color.adjust(map.get($semantic-colors, 'info'), $lightness: 20%),
+    mainContainer: color.adjust(map.get(palette.$semantic-colors, 'info'), $lightness: -40%),
+    onMainContainer: color.adjust(map.get(palette.$semantic-colors, 'info'), $lightness: 20%),
   )
 );
 
@@ -270,11 +269,11 @@ $color-roles-dark: (
 // Elevation shadow mappings
 $elevation-shadows: (
   0: none,
-  1: (0 1px 2px rgba(palette-color('neutral', 10), 0.05), 0 1px 3px rgba(palette-color('neutral', 10), 0.1)),
-  2: (0 1px 2px rgba(palette-color('neutral', 10), 0.05), 0 1px 3px rgba(palette-color('neutral', 10), 0.1)),
-  3: (0 4px 6px rgba(palette-color('neutral', 10), 0.07), 0 1px 3px rgba(palette-color('neutral', 10), 0.14)),
-  4: (0 6px 8px rgba(palette-color('neutral', 10), 0.09), 0 2px 4px rgba(palette-color('neutral', 10), 0.14)),
-  5: (0 8px 10px rgba(palette-color('neutral', 10), 0.1), 0 3px 6px rgba(palette-color('neutral', 10), 0.14))
+  1: (0 1px 2px rgba(palette.palette-color('neutral', 10), 0.05), 0 1px 3px rgba(palette.palette-color('neutral', 10), 0.1)),
+  2: (0 1px 2px rgba(palette.palette-color('neutral', 10), 0.05), 0 1px 3px rgba(palette.palette-color('neutral', 10), 0.1)),
+  3: (0 4px 6px rgba(palette.palette-color('neutral', 10), 0.07), 0 1px 3px rgba(palette.palette-color('neutral', 10), 0.14)),
+  4: (0 6px 8px rgba(palette.palette-color('neutral', 10), 0.09), 0 2px 4px rgba(palette.palette-color('neutral', 10), 0.14)),
+  5: (0 8px 10px rgba(palette.palette-color('neutral', 10), 0.1), 0 3px 6px rgba(palette.palette-color('neutral', 10), 0.14))
 );
 
 // -----------------------------------------------------------------------------
@@ -390,31 +389,31 @@ $elevation-shadows: (
 
 /// Font weight mapping for dynamic lookup
 $font-weights: (
-  'light': $font-weight-light,
-  'regular': $font-weight-regular,
-  'medium': $font-weight-medium,
-  'semibold': $font-weight-semibold,
-  'bold': $font-weight-bold,
-  'black': $font-weight-black
+  'light': vars.$font-weight-light,
+  'regular': vars.$font-weight-regular,
+  'medium': vars.$font-weight-medium,
+  'semibold': vars.$font-weight-semibold,
+  'bold': vars.$font-weight-bold,
+  'black': vars.$font-weight-black
 );
 
 /// Letter spacing for emphasized styles
 $letter-spacing-em: (
-  'display-large': $letter-spacing-display-large-em,
-  'display-medium': $letter-spacing-display-medium-em,
-  'display-small': $letter-spacing-display-small-em,
-  'headline-large': $letter-spacing-headline-large-em,
-  'headline-medium': $letter-spacing-headline-medium-em,
-  'headline-small': $letter-spacing-headline-small-em,
-  'title-large': $letter-spacing-title-large-em,
-  'title-medium': $letter-spacing-title-medium-em,
-  'title-small': $letter-spacing-title-small-em,
-  'body-large': $letter-spacing-body-large-em,
-  'body-medium': $letter-spacing-body-medium-em,
-  'body-small': $letter-spacing-body-small-em,
-  'label-large': $letter-spacing-label-large-em,
-  'label-medium': $letter-spacing-label-medium-em,
-  'label-small': $letter-spacing-label-small-em
+  'display-large': vars.$letter-spacing-display-large-em,
+  'display-medium': vars.$letter-spacing-display-medium-em,
+  'display-small': vars.$letter-spacing-display-small-em,
+  'headline-large': vars.$letter-spacing-headline-large-em,
+  'headline-medium': vars.$letter-spacing-headline-medium-em,
+  'headline-small': vars.$letter-spacing-headline-small-em,
+  'title-large': vars.$letter-spacing-title-large-em,
+  'title-medium': vars.$letter-spacing-title-medium-em,
+  'title-small': vars.$letter-spacing-title-small-em,
+  'body-large': vars.$letter-spacing-body-large-em,
+  'body-medium': vars.$letter-spacing-body-medium-em,
+  'body-small': vars.$letter-spacing-body-small-em,
+  'label-large': vars.$letter-spacing-label-large-em,
+  'label-medium': vars.$letter-spacing-label-medium-em,
+  'label-small': vars.$letter-spacing-label-small-em
 );
 
 // -----------------------------------------------------------------------------
@@ -492,8 +491,8 @@ $letter-spacing-em: (
   @include elevation-role($elevation-level, $include-shadow);
   
   // Common component properties
-  border-radius: $radius-md;
-  transition: all $transition-normal $ease-out;
+  border-radius: vars.$radius-md;
+  transition: all vars.$transition-normal vars.$ease-out;
 }
 
 // -----------------------------------------------------------------------------

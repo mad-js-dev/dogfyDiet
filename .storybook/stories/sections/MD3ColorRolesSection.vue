@@ -31,6 +31,21 @@
       </div>
     </div>
 
+    <div class="theme-selector">
+      <label class="radio-option">
+        <input type="radio" v-model="selectedTheme" value="light" />
+        <span>Light Theme</span>
+      </label>
+      <label class="radio-option">
+        <input type="radio" v-model="selectedTheme" value="dark" />
+        <span>Dark Theme</span>
+      </label>
+    </div>
+
+    <div>
+      <pre>{{ JSON.stringify(displayedBrandRoles, null, 2) }}</pre>
+    </div>
+
     <!-- Brand & Surface Colors Grid -->
     <ColorRolesGrid
       :columns="brandColumns"
@@ -49,6 +64,8 @@
 
 <script setup lang="ts">
 import ColorRolesGrid from '../components/ColorRolesGrid.vue'
+import { semanticRoles, tonalPalettes, brandRoles } from '~/assets/styles/colors/palette.js'
+import { computed, ref } from 'vue'
 
 interface ColorData {
   label: string
@@ -96,74 +113,162 @@ const colorRows: Row[] = [
   { key: 'onContainer', label: 'On Container' }
 ]
 
-// Brand & Surface color grid data
-const brandColorGrid: ColorGrid = {
-  base: {
-    surface: { label: 'Surface', value: 'var(--md3-surface)', resolvedValue: '#ffffff', sassVar: 'map.get($md3-light-surface, "surface")' },
-    primary: { label: 'Primary', value: 'var(--md3-primary)', resolvedValue: '#00B67A', sassVar: 'map.get($md3-light-primary, "main")' },
-    secondary: { label: 'Secondary', value: 'var(--md3-secondary)', resolvedValue: '#EF6948', sassVar: 'map.get($md3-light-secondary, "main")' },
-    tertiary: { label: 'Tertiary', value: 'var(--md3-tertiary)', resolvedValue: '#ffca4e', sassVar: 'map.get($md3-light-tertiary, "main")' }
-  },
-  on: {
-    surface: { label: 'On Surface', value: 'var(--md3-on-surface)', resolvedValue: '#1a1a1a', sassVar: 'map.get($md3-light-surface, "on-surface")' },
-    primary: { label: 'On Primary', value: 'var(--md3-on-primary)', resolvedValue: '#ffffff', sassVar: 'map.get($md3-light-primary, "on")' },
-    secondary: { label: 'On Secondary', value: 'var(--md3-on-secondary)', resolvedValue: '#ffffff', sassVar: 'map.get($md3-light-secondary, "on")' },
-    tertiary: { label: 'On Tertiary', value: 'var(--md3-on-tertiary)', resolvedValue: '#1a1a1a', sassVar: 'map.get($md3-light-tertiary, "on")' }
-  },
-  container: {
-    surface: { label: 'Surface Variant', value: 'var(--md3-surface-variant)', resolvedValue: '#f7f7f7', sassVar: 'map.get($md3-light-surface, "surface-variant")' },
-    primary: { label: 'Primary Container', value: 'var(--md3-primary-container)', resolvedValue: '#B3E5CC', sassVar: 'map.get($md3-light-primary, "container")' },
-    secondary: { label: 'Secondary Container', value: 'var(--md3-secondary-container)', resolvedValue: '#FFD4C4', sassVar: 'map.get($md3-light-secondary, "container")' },
-    tertiary: { label: 'Tertiary Container', value: 'var(--md3-tertiary-container)', resolvedValue: '#fff5d6', sassVar: 'map.get($md3-light-tertiary, "container")' }
-  },
-  onContainer: {
-    surface: { label: 'On Surface Variant', value: 'var(--md3-on-surface-variant)', resolvedValue: '#767676', sassVar: 'map.get($md3-light-surface, "on-surface-variant")' },
-    primary: { label: 'On Primary Container', value: 'var(--md3-on-primary-container)', resolvedValue: '#004D29', sassVar: 'map.get($md3-light-primary, "on-container")' },
-    secondary: { label: 'On Secondary Container', value: 'var(--md3-on-secondary-container)', resolvedValue: '#5D2B1E', sassVar: 'map.get($md3-light-secondary, "on-container")' },
-    tertiary: { label: 'On Tertiary Container', value: 'var(--md3-on-tertiary-container)', resolvedValue: '#cc8a00', sassVar: 'map.get($md3-light-tertiary, "on-container")' }
+// Derive brand color hex values from tonalPalettes (matching the SCSS get-md3-color values)
+function getBrandColorHex() {
+  const brandColors: { [key: string]: { [key: string]: string } } = {};
+
+  // Find tonal palettes for brand colors
+  const primaryGreenPalette = tonalPalettes.find(p => p.key === 'primary-green');
+  const accentOrangePalette = tonalPalettes.find(p => p.key === 'accent-orange');
+  const accentYellowPalette = tonalPalettes.find(p => p.key === 'accent-yellow');
+  const neutralPalette = tonalPalettes.find(p => p.key === 'neutral');
+
+  if (neutralPalette) {
+    brandColors.surface = {
+      base: neutralPalette.tones.find(t => t.value === 90)?.hex || '#e6e6e6',
+      on: neutralPalette.tones.find(t => t.value === 10)?.hex || '#1a1a1a',
+      container: neutralPalette.tones.find(t => t.value === 70)?.hex || '#b3b3b3',
+      onContainer: neutralPalette.tones.find(t => t.value === 50)?.hex || '#808080'
+    };
   }
+
+  if (primaryGreenPalette) {
+    brandColors.primary = {
+      base: primaryGreenPalette.tones.find(t => t.value === 40)?.hex || '#00cc89',
+      on: primaryGreenPalette.tones.find(t => t.value === 100)?.hex || '#ffffff',
+      container: primaryGreenPalette.tones.find(t => t.value === 90)?.hex || '#deede8',
+      onContainer: primaryGreenPalette.tones.find(t => t.value === 10)?.hex || '#12211c'
+    };
+  }
+
+  if (accentOrangePalette) {
+    brandColors.secondary = {
+      base: accentOrangePalette.tones.find(t => t.value === 40)?.hex || '#bc3210',
+      on: accentOrangePalette.tones.find(t => t.value === 100)?.hex || '#ffffff',
+      container: accentOrangePalette.tones.find(t => t.value === 90)?.hex || '#ece2df',
+      onContainer: accentOrangePalette.tones.find(t => t.value === 10)?.hex || '#201613'
+    };
+  }
+
+  if (accentYellowPalette) {
+    brandColors.tertiary = {
+      base: accentYellowPalette.tones.find(t => t.value === 40)?.hex || '#cca000',
+      on: accentYellowPalette.tones.find(t => t.value === 100)?.hex || '#ffffff',
+      container: accentYellowPalette.tones.find(t => t.value === 90)?.hex || '#edeade',
+      onContainer: accentYellowPalette.tones.find(t => t.value === 10)?.hex || '#211e12'
+    };
+  }
+
+  return brandColors;
 }
 
-// Semantic color grid data
-const semanticColorGrid: ColorGrid = {
-  base: {
-    error: { label: 'Error', value: 'var(--md3-error)', resolvedValue: '#d80003', sassVar: '$md3-error' },
-    success: { label: 'Success', value: 'var(--md3-success)', resolvedValue: '#0aaa46', sassVar: '$md3-success' },
-    warning: { label: 'Warning', value: 'var(--md3-warning)', resolvedValue: '#ffc800', sassVar: '$md3-warning' },
-    info: { label: 'Info', value: 'var(--md3-info)', resolvedValue: '#1976D2', sassVar: '$md3-info' }
-  },
-  on: {
-    error: { label: 'On Error', value: 'var(--md3-on-error)', resolvedValue: '#ffffff', sassVar: '$md3-on-error' },
-    success: { label: 'On Success', value: 'var(--md3-on-success)', resolvedValue: '#ffffff', sassVar: '$md3-on-success' },
-    warning: { label: 'On Warning', value: 'var(--md3-on-warning)', resolvedValue: '#1a1a1a', sassVar: '$md3-on-warning' },
-    info: { label: 'On Info', value: 'var(--md3-on-info)', resolvedValue: '#ffffff', sassVar: '$md3-on-info' }
-  },
-  container: {
-    error: { label: 'Error Container', value: 'var(--md3-error-container)', resolvedValue: '#fef1f1', sassVar: '$md3-error-container' },
-    success: { label: 'Success Container', value: 'var(--md3-success-container)', resolvedValue: '#005128', sassVar: '$md3-success-container' },
-    warning: { label: 'Warning Container', value: 'var(--md3-warning-container)', resolvedValue: '#fff5d6', sassVar: '$md3-warning-container' },
-    info: { label: 'Info Container', value: 'var(--md3-info-container)', resolvedValue: '#e3f2fd', sassVar: '$md3-info-container' }
-  },
-  onContainer: {
-    error: { label: 'On Error Container', value: 'var(--md3-on-error-container)', resolvedValue: '#93000A', sassVar: '$md3-on-error-container' },
-    success: { label: 'On Success Container', value: 'var(--md3-on-success-container)', resolvedValue: '#ffffff', sassVar: '$md3-on-success-container' },
-    warning: { label: 'On Warning Container', value: 'var(--md3-on-warning-container)', resolvedValue: '#cc8a00', sassVar: '$md3-on-warning-container' },
-    info: { label: 'On Info Container', value: 'var(--md3-on-info-container)', resolvedValue: '#0d47a1', sassVar: '$md3-on-info-container' }
-  }
+const brandColorHex = getBrandColorHex();
+
+// Generate brand & surface color grid data dynamically
+function generateBrandColorGrid() {
+  const grid: ColorGrid = {}
+
+  // Generate the grid for each row
+  colorRows.forEach(row => {
+    grid[row.key] = {}
+    brandColumns.forEach(column => {
+      let varSuffix = column.key
+      if (column.key === 'surface') {
+        if (row.key === 'base') {
+          varSuffix = 'surface'
+        } else if (row.key === 'on') {
+          varSuffix = 'on-surface'
+        } else if (row.key === 'container') {
+          varSuffix = 'surface-variant'
+        } else if (row.key === 'onContainer') {
+          varSuffix = 'on-surface-variant'
+        }
+      }
+      const cssVar = `--md3-roles-${column.key === 'primary' ? 'primarygreen' : column.key === 'secondary' ? 'accentorange' : column.key === 'tertiary' ? 'accentyellow' : 'neutral'}-${varSuffix}`
+      grid[row.key][column.key] = {
+        label: `${column.label}${row.key === 'base' ? '' : ' ' + row.label}`,
+        value: cssVar,
+        resolvedValue: brandColorHex[column.key][row.key],
+        sassVar: `get-md3-color('${varSuffix}')`
+      }
+    })
+  })
+
+  return grid
 }
+
+const brandColorGrid: ColorGrid = generateBrandColorGrid()
+
+// Generate semantic color grid data dynamically
+function generateSemanticColorGrid() {
+  const grid: ColorGrid = {}
+
+  // Generate the grid for each row
+  colorRows.forEach(row => {
+    grid[row.key] = {}
+    semanticColumns.forEach(column => {
+      const roleKey = row.key as keyof typeof semanticRoles.error
+      grid[row.key][column.key] = {
+        label: `${column.label}${row.key === 'base' ? '' : ' ' + row.label}`,
+        value: `--md3-${column.key}${row.key === 'base' ? '' : '-' + row.key})`,
+        resolvedValue: semanticRoles[column.key][roleKey]
+      }
+    })
+  })
+
+  return grid
+}
+
+const semanticColorGrid: ColorGrid = generateSemanticColorGrid()
+
+// Theme selection
+const selectedTheme = ref('light')
+
+// Computed property to extract only the light version of brandRoles with updated CSS vars
+const lightBrandRoles = computed(() => {
+  const lightRoles: any = {}
+  Object.entries(brandRoles).forEach(([colorKey, colorData]) => {
+    lightRoles[colorKey] = colorData.light
+  })
+  return lightRoles
+})
+
+// Computed property to extract only the dark version of brandRoles
+const darkBrandRoles = computed(() => {
+  const darkRoles: any = {}
+  Object.entries(brandRoles).forEach(([colorKey, colorData]) => {
+    darkRoles[colorKey] = colorData.dark
+  })
+  return darkRoles
+})
+
+// Computed property to display the appropriate theme roles based on selection
+const displayedBrandRoles = computed(() => {
+  return selectedTheme.value === 'dark' ? darkBrandRoles.value : lightBrandRoles.value
+})
+
+// Set CSS custom properties for semantic color roles
+import { onMounted } from 'vue'
+onMounted(() => {
+  const root = document.documentElement
+  Object.entries(semanticRoles).forEach(([semantic, roles]) => {
+    root.style.setProperty(`--md3-${semantic}`, roles.base)
+    root.style.setProperty(`--md3-on-${semantic}`, roles.on)
+    root.style.setProperty(`--md3-${semantic}-container`, roles.container)
+    root.style.setProperty(`--md3-on-${semantic}-container`, roles.onContainer)
+  })
+})
+
 </script>
-
-<style lang="scss">
-@use '~/assets/styles/_css-variables.scss';
-</style>
 
 <style scoped lang="scss">
 @use 'sass:map';
-@use "../../../assets/styles/_variables" as *;
-@use "../../../assets/styles/colors/palette" as *;
+@use '~/assets/styles/_variables.scss' as *;
+@use '../../../assets/styles/colors/_palette.scss' as *;
 @use '~/assets/styles/_mixins.scss' as *;
+
+// Import the same styles that were used in the original design-system page
 @use '~/assets/styles/components/pantone.scss';
-@use '~/assets/styles/components/md3-color-roles.scss';
 
 .md3-color-roles-section {
   margin-bottom: 4rem;
@@ -222,5 +327,78 @@ const semanticColorGrid: ColorGrid = {
   font-weight: 600;
   color: map.get($brand-colors, 'primary');
   min-width: 6rem;
+}
+
+.theme-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: palette-color('neutral', 95);
+  border-radius: 0.5rem;
+  border: 1px solid palette-color('neutral', 80);
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: palette-color('neutral', 30);
+  
+  input[type="radio"] {
+    accent-color: map.get($brand-colors, 'primary');
+  }
+  
+  &:hover {
+    color: palette-color('neutral', 10);
+  }
+}
+</style>
+
+<style lang="scss">
+@use 'sass:map';
+@use '~/assets/styles/_variables.scss' as *;
+@use '../../../assets/styles/colors/_palette.scss' as *;
+
+/* Define CSS custom properties for brand color roles */
+:root {
+  --md3-surface: #{get-md3-color('surface')};
+  --md3-on-surface: #{get-md3-color('on-surface')};
+  --md3-surface-variant: #{get-md3-color('surface-variant')};
+  --md3-on-surface-variant: #{get-md3-color('on-surface-variant')};
+  --md3-primary: #{get-md3-color('primary')};
+  --md3-on-primary: #{get-md3-color('on-primary')};
+  --md3-primary-container: #{get-md3-color('primary-container')};
+  --md3-on-primary-container: #{get-md3-color('on-primary-container')};
+  --md3-secondary: #{get-md3-color('secondary')};
+  --md3-on-secondary: #{get-md3-color('on-secondary')};
+  --md3-secondary-container: #{get-md3-color('secondary-container')};
+  --md3-on-secondary-container: #{get-md3-color('on-secondary-container')};
+  --md3-tertiary: #{get-md3-color('tertiary')};
+  --md3-on-tertiary: #{get-md3-color('on-tertiary')};
+  --md3-tertiary-container: #{get-md3-color('tertiary-container')};
+  --md3-on-tertiary-container: #{get-md3-color('on-tertiary-container')};
+
+  --md3-error: #d80003;
+  --md3-on-error: #ffffff;
+  --md3-error-container: #fef1f1;
+  --md3-on-error-container: #93000a;
+
+  --md3-success: #0aaa46;
+  --md3-on-success: #ffffff;
+  --md3-success-container: #005128;
+  --md3-on-success-container: #ffffff;
+
+  --md3-warning: #ffc800;
+  --md3-on-warning: #ffffff;
+  --md3-warning-container: #fff5d6;
+  --md3-on-warning-container: #000000;
+
+  --md3-info: #1976d2;
+  --md3-on-info: #ffffff;
+  --md3-info-container: #e3f2fd;
+  --md3-on-info-container: #0d47a1;
 }
 </style>

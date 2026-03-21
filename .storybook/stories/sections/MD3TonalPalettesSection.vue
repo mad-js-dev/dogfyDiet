@@ -27,13 +27,13 @@
           <div class="tonal-info">
             <div 
               class="tonal-hex" 
-              :style="{ color: tone.value <= 30 ? '#DDD' : tone.value >= 90 ? '#333' : '#000000' }"
+              :style="{ color: tone.value <= 30 ? '#DDD' : tone.value >= 90 ? '#222' : '#000000' }"
             >
               {{ tone.hex }}
             </div>
             <div 
               class="tonal-css-var" 
-              :style="{ color: tone.value <= 30 ? '#DDD' : tone.value >= 90 ? '#333' : '#000000' }"
+              :style="{ color: tone.value <= 30 ? '#DDD' : tone.value >= 90 ? '#222' : '#000000' }"
             >
               {{ tone.cssVar }}
             </div>
@@ -46,115 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { colorMaps, formatColorName } from '../../../assets/styles/colors/palette.js'
-
-interface TonalValue {
-  value: number
-  color: string
-  hex: string
-  cssVar: string
-}
-
-// Generate tonal palette from base color using Material Design 3 algorithm
-function generateTonalPalette(baseColor: string, paletteKey: string): TonalValue[] {
-  const tones = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100]
-  
-  // Convert hex to HSL for easier manipulation
-  const hex = baseColor.replace('#', '')
-  const r = parseInt(hex.substr(0, 2), 16) / 255
-  const g = parseInt(hex.substr(2, 2), 16) / 255
-  const b = parseInt(hex.substr(4, 2), 16) / 255
-  
-  // RGB to HSL conversion
-  const max = Math.max(r, g, b)
-  const min = Math.min(r, g, b)
-  let h = 0, s = 0, l = (max + min) / 2
-  
-  if (max !== min) {
-    const d = max - min
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
-    switch (max) {
-      case r: h = (g - b) / d + (g < b ? 6 : 0); break
-      case g: h = (b - r) / d + 2; break
-      case b: h = (r - g) / d + 4; break
-    }
-    h /= 6
-  }
-  
-  return tones.map(tone => {
-    let adjustedL = tone / 100
-    let adjustedS = s
-    
-    // Material Design 3 tonal palette adjustments
-    if (tone === 0) {
-      adjustedL = 0
-      adjustedS = 0
-    } else if (tone === 100) {
-      adjustedL = 1
-      adjustedS = 0
-    } else {
-      // Reduce saturation for extreme tones to maintain colorfulness
-      if (tone <= 20 || tone >= 80) {
-        adjustedS = s * 0.6
-      }
-      if (tone <= 10 || tone >= 90) {
-        adjustedS = s * 0.3
-      }
-    }
-    
-    // HSL to RGB conversion
-    const hue2rgb = (p: number, q: number, t: number) => {
-      if (t < 0) t += 1
-      if (t > 1) t -= 1
-      if (t < 1/6) return p + (q - p) * 6 * t
-      if (t < 1/2) return q
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
-      return p
-    }
-    
-    let r, g, b_rgb
-    if (adjustedS === 0) {
-      r = g = b_rgb = adjustedL
-    } else {
-      const q = adjustedL < 0.5 ? adjustedL * (1 + adjustedS) : adjustedL + adjustedS - adjustedL * adjustedS
-      const p = 2 * adjustedL - q
-      r = hue2rgb(p, q, h + 1/3)
-      g = hue2rgb(p, q, h)
-      b_rgb = hue2rgb(p, q, h - 1/3)
-    }
-    
-    const toHex = (c: number) => Math.round(c * 255).toString(16).padStart(2, '0')
-    const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b_rgb)}`
-    
-    return {
-      value: tone,
-      color: hexColor,
-      hex: hexColor,
-      cssVar: `--${paletteKey}-${tone}`
-    }
-  })
-}
-
-// Generate tonal palettes using HCT algorithm for all colors in colorMaps
-function generateTonalPalettes() {
-  const palettes = [];
-
-  Object.entries(colorMaps).forEach(([category, colors]) => {
-    Object.entries(colors).forEach(([key, value]) => {
-      palettes.push({
-        key,
-        label: formatColorName(key),
-        category,
-        baseColor: value,
-        tones: generateTonalPalette(value, key)
-      });
-    });
-  });
-
-  return palettes;
-}
-
-const tonalPalettes = generateTonalPalettes()
+import { tonalPalettes } from '../../../assets/styles/colors/palette.js'
 </script>
 
 <style scoped lang="scss">

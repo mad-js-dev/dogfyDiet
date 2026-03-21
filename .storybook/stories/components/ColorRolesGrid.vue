@@ -34,14 +34,15 @@
               :style="{ color: getTextColor(getColorForCell(row.key, column.key).value) }"
             >
               {{ getColorForCell(row.key, column.key).label }}
+              <div v-if="getColorForCell(row.key, column.key).sassVar" class="md3-color-sass-var">
+                {{ getColorForCell(row.key, column.key).sassVar }}
+              </div>
             </div>
             <div 
               class="md3-color-details" 
               :style="{ color: getTextColor(getColorForCell(row.key, column.key).value) }"
             >
-              <div class="md3-color-name">{{ getColorForCell(row.key, column.key).label }}</div>
               <div class="md3-color-hex">{{ getColorForCell(row.key, column.key).value }}</div>
-              <div class="md3-color-var">{{ getColorForCell(row.key, column.key).sassVar }}</div>
             </div>
           </div>
         </div>
@@ -105,7 +106,7 @@ function getTextColor(colorData: ColorData): string {
   }
 
   // For other colors, determine based on background luminance
-  const hex = colorData.value?.replace('#', '') || 'ffffff';
+  const hex = colorData.resolvedValue?.replace('#', '') || 'ffffff';
   const r = parseInt(hex.substr(0, 2), 16) || 255;
   const g = parseInt(hex.substr(2, 2), 16) || 255;
   const b = parseInt(hex.substr(4, 2), 16) || 255;
@@ -118,7 +119,7 @@ function getColorStyle(colorData: ColorData) {
   const baseStyle = { backgroundColor: colorData.value }
   
   // Add border for white/light colors to make them visible
-  if (colorData.value === '#ffffff' || colorData.value === '#f7f7f7' || colorData.value === '#fff5d6' || colorData.value === '#e3f2fd' || colorData.value === '#fef1f1') {
+  if (colorData.resolvedValue === '#ffffff' || colorData.resolvedValue === '#f7f7f7' || colorData.resolvedValue === '#fff5d6' || colorData.resolvedValue === '#e3f2fd' || colorData.resolvedValue === '#fef1f1') {
     return { ...baseStyle, border: '1px solid #e0e0e0' }
   }
   
