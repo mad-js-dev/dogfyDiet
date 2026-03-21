@@ -16,13 +16,13 @@
 // M3 uses semantic color roles that map to tonal palettes
 
 // Import light theme color roles
-@import 'colors/light-roles';
+@use 'colors/light-roles';
 
 // Import dark theme color roles
-@import 'colors/dark-roles';
+@use 'colors/dark-roles';
 
 // Import semantic color roles
-@import 'colors/semantic-roles';
+@use 'colors/semantic-roles';
 
 
 // -----------------------------------------------------------------------------
