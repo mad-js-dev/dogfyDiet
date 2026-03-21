@@ -59,7 +59,7 @@ $semantic-colors: (
 
 // Neutral Colors - Single base color for dynamic palette generation
 $neutral-colors: (
-  'base': #767676  // Medium neutral tone that will generate the full palette
+  'neutral': #767676  // Medium neutral tone that will generate the full palette
 ) !default;
 
 $color-base: (
@@ -68,14 +68,11 @@ $color-base: (
   'neutral': $neutral-colors
 );
 
-// Color Palettes Map
-$color-palettes: (
-  'primary-green': generate-palette(map.get($color-base, 'brand', 'primary-green')),
-  'accent-orange': generate-palette(map.get($color-base, 'brand', 'accent-orange')),
-  'accent-yellow': generate-palette(map.get($color-base, 'brand', 'accent-yellow')),
-  'success': generate-palette(map.get($color-base, 'semantic', 'success')),
-  'error': generate-palette(map.get($color-base, 'semantic', 'error')),
-  'warning': generate-palette(map.get($color-base, 'semantic', 'warning')),
-  'info': generate-palette(map.get($color-base, 'semantic', 'info')),
-  'neutral': generate-palette(map.get($color-base, 'neutral', 'base'))
-) !default;
+// Color Palettes Map - Generated dynamically from $color-base
+$color-palettes: () !default;
+
+@each $category, $colors in $color-base {
+  @each $name, $color in $colors {
+    $color-palettes: map.merge($color-palettes, (#{$name}: generate-palette($color)));
+  }
+}

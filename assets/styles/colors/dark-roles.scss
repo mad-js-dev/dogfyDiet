@@ -25,34 +25,34 @@ $tertiary-roles: (
 
 $neutral-roles: (
   'surface': (
-    'dim': palette-color('base', 20),
-    'regular': palette-color('base', 10),
-    'bright': palette-color('base', 0),
-    'inverse': palette-color('base', 100),
+    'dim': palette-color('neutral', 20),
+    'regular': palette-color('neutral', 10),
+    'bright': palette-color('neutral', 0),
+    'inverse': palette-color('neutral', 100),
     'inverse-primary': palette-color('primary-green', 80)
   ),
   'container': (
-    'lowest': palette-color('base', 5),
-    'low': palette-color('base', 10),
-    'medium': palette-color('base', 15),
-    'high': palette-color('base', 20),
-    'highest': palette-color('base', 25)
+    'lowest': palette-color('neutral', 5),
+    'low': palette-color('neutral', 10),
+    'medium': palette-color('neutral', 15),
+    'high': palette-color('neutral', 20),
+    'highest': palette-color('neutral', 25)
   ),
   'onSurface': (
-    'regular': palette-color('base', 95),
-    'variant': palette-color('base', 90),
-    'inverse': palette-color('base', 10),
+    'regular': palette-color('neutral', 95),
+    'variant': palette-color('neutral', 90),
+    'inverse': palette-color('neutral', 10),
     'inverse-primary': palette-color('primary-green', 20)
   ),
   'outline': (
-    'regular': palette-color('base', 50),
-    'variant': palette-color('base', 20)
+    'regular': palette-color('neutral', 50),
+    'variant': palette-color('neutral', 20)
   ),
   'scrim': (
-    'regular': rgba(palette-color('base', 10), 0.32)
+    'regular': rgba(palette-color('neutral', 10), 0.32)
   ),
   'shadow': (
-    'regular': rgba(palette-color('base', 10), 0.12)
+    'regular': rgba(palette-color('neutral', 10), 0.12)
   )
 ) !default;
 
