@@ -2,10 +2,12 @@
 // This file will be processed by Sass and generate CSS variables
 
 @use 'sass:map';
+@use 'sass:meta';
 @use './variables' as *;
 @use './colors/palette' as *;
 @use './colors/light-roles' as *;
 @use './colors/dark-roles' as *;
+@use './colors/semantic-roles' as *;
 @use './mixins' as *;
 
 // Define light theme maps for compatibility
