@@ -3,6 +3,7 @@
 
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:color';
 @use './variables' as *;
 @use './colors/palette' as *;
 @use './colors/light-roles' as *;
@@ -36,9 +37,9 @@ $md3-light-surface: (
 
   // Generate CSS custom properties from MD3 light theme roles
   @each $role-category, $roles in $md3-light {
-    @if type-of($roles) == 'map' {
+    @if meta.type-of($roles) == 'map' {
       @each $role-name, $role-value in $roles {
-        @if type-of($role-value) == 'map' {
+        @if meta.type-of($role-value) == 'map' {
           @each $nested-name, $nested-value in $role-value {
             --md3-roles-#{$role-category}-#{$role-name}-#{$nested-name}: #{$nested-value};
           }
@@ -52,7 +53,7 @@ $md3-light-surface: (
 
   // Generate CSS custom properties from MD3 semantic roles
   @each $semantic-category, $semantic-roles in $md3-semantic {
-    @if type-of($semantic-roles) == 'map' {
+    @if meta.type-of($semantic-roles) == 'map' {
       @each $semantic-name, $semantic-value in $semantic-roles {
         --md3-roles-#{$semantic-category}-#{$semantic-name}: #{$semantic-value};
       }
@@ -65,9 +66,9 @@ $md3-light-surface: (
   :root {
     // Generate CSS custom properties from MD3 dark theme roles
     @each $role-category, $roles in $md3-dark {
-      @if type-of($roles) == 'map' {
+      @if meta.type-of($roles) == 'map' {
         @each $role-name, $role-value in $roles {
-          @if type-of($role-value) == 'map' {
+          @if meta.type-of($role-value) == 'map' {
             @each $nested-name, $nested-value in $role-value {
               --md3-roles-#{$role-category}-#{$role-name}-#{$nested-name}: #{$nested-value};
             }

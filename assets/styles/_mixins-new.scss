@@ -7,6 +7,8 @@
 @use './colors/palette' as *;
 @use 'sass:color';
 @use 'sass:map';
+@use './colors/light-roles' as *;
+@use './colors/dark-roles' as *;
 
 // Define error colors using palette system
 $md3-error: palette-color('error', 40);
