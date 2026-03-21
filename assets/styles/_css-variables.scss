@@ -48,11 +48,11 @@
   --md3-on-tertiary: #{palette-color('accent-yellow', 100)};
   --md3-tertiary-container: #{palette-color('accent-yellow', 80)};
   --md3-on-tertiary-container: #{palette-color('accent-yellow', 10)};
-  --md3-surface: #{$md3-light-surface};
-  --md3-on-surface: #{$md3-light-on-surface};
-  --md3-surface-variant: #{$md3-light-surface-variant};
-  --md3-on-surface-variant: #{$md3-light-on-surface-variant};
-  --md3-outline: #{$md3-light-outline};
+  --md3-surface: #{map.get($md3-light-surface, 'surface')};
+  --md3-on-surface: #{map.get($md3-light-surface, 'on-surface')};
+  --md3-surface-variant: #{map.get($md3-light-surface, 'surface-variant')};
+  --md3-on-surface-variant: #{map.get($md3-light-surface, 'on-surface-variant')};
+  --md3-outline: #{map.get($md3-light-outline, 'outline')};
   --md3-error: #{map.get($semantic-colors, 'error')};
   --md3-on-error: #{palette-color('error', 100)};
   --md3-error-container: #{palette-color('error', 90)};

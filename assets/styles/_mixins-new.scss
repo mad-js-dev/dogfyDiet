@@ -135,12 +135,12 @@ $color-roles-light: (
     border: var(--accent-yellow-40)
   ),
   'surface-variant': (
-    text: $md3-light-on-surface-variant,
-    background: $md3-light-surface-variant,
-    border: $md3-light-outline-variant
+    text: map.get($md3-light-surface, 'on-surface-variant'),
+    background: map.get($md3-light-surface, 'surface-variant'),
+    border: map.get($md3-light-outline, 'outline-variant')
   ),
   'surface': (
-    surface: $md3-light-surface,
+    surface: map.get($md3-light-surface, 'surface'),
     surfaceDim: $md3-surface-dim,
     surfaceBright: $md3-surface-bright,
     surfaceContainerLowest: $md3-surface-container-lowest,
@@ -148,10 +148,10 @@ $color-roles-light: (
     surfaceContainer: $md3-surface-container,
     surfaceContainerHigh: $md3-surface-container-high,
     surfaceContainerHighest: $md3-surface-container-highest,
-    onSurface: $md3-light-on-surface,
-    onSurfaceVariant: $md3-light-on-surface-variant,
-    outline: $md3-light-outline,
-    outlineVariant: $md3-light-outline-variant
+    onSurface: map.get($md3-light-surface, 'on-surface'),
+    onSurfaceVariant: map.get($md3-light-surface, 'on-surface-variant'),
+    outline: map.get($md3-light-outline, 'outline'),
+    outlineVariant: map.get($md3-light-outline, 'outline-variant')
   ),
   'error': (
     main: $md3-error,

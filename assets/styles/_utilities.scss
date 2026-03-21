@@ -104,11 +104,11 @@
 }
 
 .bg-surface {
-  background-color: $md3-light-surface;
+  background-color: map.get($md3-light-surface, 'surface');
 }
 
 .bg-surface-variant {
-  background-color: $md3-light-surface-variant;
+  background-color: map.get($md3-light-surface, 'surface-variant');
 }
 
 // Dark theme color utilities
@@ -122,11 +122,11 @@
   }
   
   .bg-surface {
-    background-color: $md3-dark-surface;
+    background-color: map.get($md3-dark-surface, 'surface');
   }
   
   .bg-surface-variant {
-    background-color: $md3-dark-surface-variant;
+    background-color: map.get($md3-dark-surface, 'surface-variant');
   }
 }
 

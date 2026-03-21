@@ -231,7 +231,7 @@ To migrate existing components:
    // Before
    font-size: $font-size-body-medium;
    font-family: $font-family-secondary;
-   color: $md3-light-on-surface;
+   color: map.get($md3-light-surface, 'on-surface');
    box-shadow: $shadow-md;
    
    // After

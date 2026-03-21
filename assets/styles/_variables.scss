@@ -110,16 +110,25 @@ $md3-light-tertiary: (
   'on-container': var(--accent-yellow-10)
 ) !default;
 
-$md3-light-surface: palette-color('base', 100) !default;
-$md3-light-on-surface: palette-color('base', 10) !default;
-$md3-light-surface-variant: palette-color('base', 95) !default;
-$md3-light-on-surface-variant: palette-color('base', 50) !default;
+$md3-light-surface: (
+  'surface': palette-color('base', 100),
+  'on-surface': palette-color('base', 10),
+  'surface-variant': palette-color('base', 95),
+  'on-surface-variant': palette-color('base', 50)
+) !default;
 
-$md3-light-outline: palette-color('base', 90) !default;
-$md3-light-outline-variant: palette-color('base', 80) !default;
+$md3-light-outline: (
+  'outline': palette-color('base', 90),
+  'outline-variant': palette-color('base', 80)
+) !default;
 
-$md3-light-scrim: rgba(palette-color('base', 10), 0.32) !default;
-$md3-light-shadow: rgba(palette-color('base', 10), 0.12) !default;
+$md3-light-scrim: (
+  'scrim': rgba(palette-color('base', 10), 0.32)
+) !default;
+
+$md3-light-shadow: (
+  'shadow': rgba(palette-color('base', 10), 0.12)
+) !default;
 
 // Dark Theme Color Roles
 $md3-dark-primary: (
@@ -143,16 +152,25 @@ $md3-dark-tertiary: (
   'on-container': var(--accent-yellow-100)
 ) !default;
 
-$md3-dark-surface: palette-color('base', 10) !default;
-$md3-dark-on-surface: palette-color('base', 95) !default;
-$md3-dark-surface-variant: palette-color('base', 20) !default;
-$md3-dark-on-surface-variant: palette-color('base', 90) !default;
+$md3-dark-surface: (
+  'surface': palette-color('base', 10),
+  'on-surface': palette-color('base', 95),
+  'surface-variant': palette-color('base', 20),
+  'on-surface-variant': palette-color('base', 90)
+) !default;
 
-$md3-dark-outline: palette-color('base', 50) !default;
-$md3-dark-outline-variant: palette-color('base', 20) !default;
+$md3-dark-outline: (
+  'outline': palette-color('base', 50),
+  'outline-variant': palette-color('base', 20)
+) !default;
 
-$md3-dark-scrim: rgba(palette-color('base', 10), 0.32) !default;
-$md3-dark-shadow: rgba(palette-color('base', 10), 0.12) !default;
+$md3-dark-scrim: (
+  'scrim': rgba(palette-color('base', 10), 0.32)
+) !default;
+
+$md3-dark-shadow: (
+  'shadow': rgba(palette-color('base', 10), 0.12)
+) !default;
 
 // Semantic M3 Color Roles
 $md3-surface-bright: palette-color('base', 100) !default;
@@ -162,18 +180,18 @@ $md3-surface-container-low: color.adjust(palette-color('base', 95), $lightness: 
 $md3-surface-container: palette-color('base', 95) !default;
 $md3-surface-container-high: palette-color('base', 90) !default;
 $md3-surface-container-highest: palette-color('base', 80) !default;
-$md3-on-surface-container-low: $md3-light-on-surface !default;
-$md3-on-surface-container-high: $md3-light-on-surface !default;
+$md3-on-surface-container-low: map.get($md3-light-surface, 'on-surface') !default;
+$md3-on-surface-container-high: map.get($md3-light-surface, 'on-surface') !default;
 
 $md3-dark-surface-container-lowest: color.adjust(palette-color('base', 10), $lightness: 2%) !default;
 $md3-dark-surface-container-low: color.adjust(palette-color('base', 10), $lightness: 5%) !default;
 $md3-dark-surface-container: color.adjust(palette-color('base', 10), $lightness: 8%) !default;
 $md3-dark-surface-container-high: color.adjust(palette-color('base', 20), $lightness: 15%) !default;
 $md3-dark-surface-container-highest: color.adjust(palette-color('base', 20), $lightness: 25%) !default;
-$md3-dark-surface-dim: color.adjust($md3-dark-surface, $lightness: -10%) !default;
-$md3-dark-surface-bright: color.adjust($md3-dark-surface, $lightness: 20%) !default;
-$md3-dark-on-surface-container-low: $md3-dark-on-surface !default;
-$md3-dark-on-surface-container-high: $md3-dark-on-surface !default;
+$md3-dark-surface-dim: color.adjust(map.get($md3-dark-surface, 'surface'), $lightness: -10%) !default;
+$md3-dark-surface-bright: color.adjust(map.get($md3-dark-surface, 'surface'), $lightness: 20%) !default;
+$md3-dark-on-surface-container-low: map.get($md3-dark-surface, 'on-surface') !default;
+$md3-dark-on-surface-container-high: map.get($md3-dark-surface, 'on-surface') !default;
 
 $md3-inverse-primary: palette-color('base', 10) !default;
 $md3-inverse-on-primary: palette-color('base', 100) !default;
@@ -225,12 +243,12 @@ $md3-on-info-container: palette-color('info', 10) !default;
       'on-tertiary': $md3-dark-on-tertiary,
       'tertiary-container': $md3-dark-tertiary-container,
       'on-tertiary-container': $md3-dark-on-tertiary-container,
-      'surface': $md3-dark-surface,
-      'on-surface': $md3-dark-on-surface,
-      'surface-variant': $md3-dark-surface-variant,
-      'on-surface-variant': $md3-dark-on-surface-variant,
-      'outline': $md3-dark-outline,
-      'outline-variant': $md3-dark-outline-variant,
+      'surface': map.get($md3-dark-surface, 'surface'),
+      'on-surface': map.get($md3-dark-surface, 'on-surface'),
+      'surface-variant': map.get($md3-dark-surface, 'surface-variant'),
+      'on-surface-variant': map.get($md3-dark-surface, 'on-surface-variant'),
+      'outline': map.get($md3-dark-outline, 'outline'),
+      'outline-variant': map.get($md3-dark-outline, 'outline-variant'),
       'error': $md3-error,
       'error-container': $md3-error-container,
       'on-error': $md3-on-error,
@@ -250,12 +268,12 @@ $md3-on-info-container: palette-color('info', 10) !default;
       'on-tertiary': map.get($md3-light-tertiary, 'on'),
       'tertiary-container': map.get($md3-light-tertiary, 'container'),
       'on-tertiary-container': map.get($md3-light-tertiary, 'on-container'),
-      'surface': $md3-light-surface,
-      'on-surface': $md3-light-on-surface,
-      'surface-variant': $md3-light-surface-variant,
-      'on-surface-variant': $md3-light-on-surface-variant,
-      'outline': $md3-light-outline,
-      'outline-variant': $md3-light-outline-variant,
+      'surface': map.get($md3-light-surface, 'surface'),
+      'on-surface': map.get($md3-light-surface, 'on-surface'),
+      'surface-variant': map.get($md3-light-surface, 'surface-variant'),
+      'on-surface-variant': map.get($md3-light-surface, 'on-surface-variant'),
+      'outline': map.get($md3-light-outline, 'outline'),
+      'outline-variant': map.get($md3-light-outline, 'outline-variant'),
       'error': $md3-error,
       'error-container': $md3-error-container,
       'on-error': $md3-on-error,
