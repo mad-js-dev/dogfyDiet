@@ -1,10 +1,12 @@
 // Dark Theme Color Roles
 @use './palette' as *;
+
 $primary-roles: (
   'main': var(--primary-30),
   'on': var(--primary-100),
   'container': var(--primary-20),
-  'on-container': var(--primary-100)
+  'on-container': var(--primary-100),
+  'inverse': var(--primary-80)
 ) !default;
 
 $secondary-roles: (
@@ -26,7 +28,8 @@ $neutral-roles: (
     'dim': palette-color('base', 20),
     'regular': palette-color('base', 10),
     'bright': palette-color('base', 0),
-    'inverse': palette-color('base', 100)
+    'inverse': palette-color('base', 100),
+    'inverse-primary': palette-color('primary', 80)
   ),
   'container': (
     'lowest': palette-color('base', 5),
@@ -37,7 +40,9 @@ $neutral-roles: (
   ),
   'onSurface': (
     'regular': palette-color('base', 95),
-    'variant': palette-color('base', 90)
+    'variant': palette-color('base', 90),
+    'inverse': palette-color('base', 10),
+    'inverse-primary': palette-color('primary', 20)
   ),
   'outline': (
     'regular': palette-color('base', 50),

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Test - Dynamic Tonal Palettes</title>
+    <link rel="stylesheet" href="assets/styles/_css-variables.scss">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: var(--base-98);
+            color: var(--base-10);
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .color-card {
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--base-80);
+            background: var(--base-100);
+        }
+        
+        .tone-display {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin: 0.5rem 0;
+        }
+        
+        .tone-swatch {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: white;
+            text-shadow: 0 0 2px rgba(0,0,0,0.8);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-50);
+            color: var(--primary-100);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        h1, h2 {
+            color: var(--base-10);
+        }
+        
+        .demo-text {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .primary-demo { background: var(--primary-50); color: var(--primary-100); }
+        .accent-demo { background: var(--accent-orange-50); color: var(--accent-orange-100); }
+        .success-demo { background: var(--success-50); color: var(--success-100); }
+        .error-demo { background: var(--error-50); color: var(--error-100); }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    
+    <div class="container">
+        <h1>Dynamic Tonal Palettes Test</h1>
+        <p>Testing the generated CSS variables for light and dark themes.</p>
+        
+        <h2>Color Demonstrations</h2>
+        <div class="demo-text primary-demo">Primary color using var(--primary-50)</div>
+        <div class="demo-text accent-demo">Accent orange using var(--accent-orange-50)</div>
+        <div class="demo-text success-demo">Success using var(--success-50)</div>
+        <div class="demo-text error-demo">Error using var(--error-50)</div>
+        
+        <h2>Primary Palette Tones</h2>
+        <div class="tone-display" id="primary-tones"></div>
+        
+        <h2>Accent Orange Palette Tones</h2>
+        <div class="tone-display" id="accent-orange-tones"></div>
+        
+        <h2>Neutral Palette Tones</h2>
+        <div class="tone-display" id="base-tones"></div>
+    </div>
+
+    <script>
+        // Generate tone swatches for a color
+        function generateToneSwatches(colorName, containerId) {
+            const container = document.getElementById(containerId);
+            const tones = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100];
+            
+            tones.forEach(tone => {
+                const swatch = document.createElement('div');
+                swatch.className = 'tone-swatch';
+                swatch.style.backgroundColor = `var(--${colorName}-${tone})`;
+                swatch.textContent = tone;
+                container.appendChild(swatch);
+            });
+        }
+        
+        // Initialize swatches
+        generateToneSwatches('primary', 'primary-tones');
+        generateToneSwatches('accent-orange', 'accent-orange-tones');
+        generateToneSwatches('base', 'base-tones');
+        
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            
+            // Update button text
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+        
+        // Check system preference on load
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.querySelector('.theme-toggle').textContent = '☀️ Light Mode';
+        }
+    </script>
+</body>
+</html>

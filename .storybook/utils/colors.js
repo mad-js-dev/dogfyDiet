@@ -2,7 +2,7 @@
 // These values are directly sourced from Sass variables via CSS custom properties
 
 // Utility function to get CSS custom property
-function getCssProperty(property) {
+export function getCssProperty(property) {
   if (typeof window !== 'undefined' && window.getComputedStyle) {
     const root = document.documentElement
     const value = getComputedStyle(root).getPropertyValue(property).trim()

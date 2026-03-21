@@ -5,26 +5,6 @@
 @use "sass:map";
 @use "sass:color";
 
-// Primary Brand Colors Map
-$brand-colors: (
-  'primary': #00B67A,
-  'accent-orange': #EF6948,
-  'accent-yellow': #ffc800
-) !default;
-
-// Semantic Colors Map
-$semantic-colors: (
-  'success': #0aaa46,
-  'error': #d80003,
-  'warning': #ffc800,
-  'info': #1976D2
-) !default;
-
-// Neutral Colors - Single base color for dynamic palette generation
-$neutral-colors: (
-  'base': #767676  // Medium neutral tone that will generate the full palette
-) !default;
-
 // Dynamic Palette Generation Function
 @function generate-palette($base-color) {
   $palette: ();
@@ -47,7 +27,14 @@ $neutral-colors: (
 }
 
 // Function to access specific palette tone
-@function palette-color($color-name, $tone: 500) {
+@function palette-color($color-name, $tone: 50) {
+  // First check if we have a pre-generated palette
+  $pregen-palette: map.get($color-palettes, $color-name);
+  @if $pregen-palette != null {
+    @return map.get($pregen-palette, $tone);
+  }
+  
+  // Fall back to dynamic palette generation
   $color-map: map.merge($brand-colors, $semantic-colors);
   $color-map: map.merge($color-map, $neutral-colors);
   $base-color: map.get($color-map, $color-name);
@@ -55,14 +42,40 @@ $neutral-colors: (
   @return map.get($palette, $tone);
 }
 
+// Primary Brand Colors Map
+$brand-colors: (
+  'primary-green': #00B67A,
+  'accent-orange': #EF6948,
+  'accent-yellow': #ffc800
+) !default;
+
+// Semantic Colors Map
+$semantic-colors: (
+  'success': #0aaa46,
+  'error': #d80003,
+  'warning': #ffc800,
+  'info': #1976D2
+) !default;
+
+// Neutral Colors - Single base color for dynamic palette generation
+$neutral-colors: (
+  'base': #767676  // Medium neutral tone that will generate the full palette
+) !default;
+
+$color-base: (
+  'brand': $brand-colors,
+  'semantic': $semantic-colors,
+  'neutral': $neutral-colors
+);
+
 // Color Palettes Map
 $color-palettes: (
-  'primary': generate-palette(map.get($brand-colors, 'primary')),
-  'accent-orange': generate-palette(map.get($brand-colors, 'accent-orange')),
-  'accent-yellow': generate-palette(map.get($brand-colors, 'accent-yellow')),
-  'success': generate-palette(map.get($semantic-colors, 'success')),
-  'error': generate-palette(map.get($semantic-colors, 'error')),
-  'warning': generate-palette(map.get($semantic-colors, 'warning')),
-  'info': generate-palette(map.get($semantic-colors, 'info')),
-  'neutral': generate-palette(map.get($neutral-colors, 'base'))
+  'primary-green': generate-palette(map.get($color-base, 'brand', 'primary-green')),
+  'accent-orange': generate-palette(map.get($color-base, 'brand', 'accent-orange')),
+  'accent-yellow': generate-palette(map.get($color-base, 'brand', 'accent-yellow')),
+  'success': generate-palette(map.get($color-base, 'semantic', 'success')),
+  'error': generate-palette(map.get($color-base, 'semantic', 'error')),
+  'warning': generate-palette(map.get($color-base, 'semantic', 'warning')),
+  'info': generate-palette(map.get($color-base, 'semantic', 'info')),
+  'neutral': generate-palette(map.get($color-base, 'neutral', 'base'))
 ) !default;

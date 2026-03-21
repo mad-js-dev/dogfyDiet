@@ -263,8 +263,8 @@ $shadow-xl: 0 20px 25px -5px rgba(palette-color('base', 10), 0.1), 0 10px 10px -
 $shadow-2xl: 0 25px 50px -12px rgba(palette-color('base', 10), 0.25) !default;
 
 // Colored shadows
-$shadow-primary: 0 4px 14px 0 rgba(map.get($brand-colors, 'primary'), 0.15) !default;
-$shadow-accent: 0 4px 14px 0 rgba(map.get($brand-colors, 'accent-orange'), 0.15) !default;
+$shadow-primary: 0 4px 14px 0 rgba(map.get(map.get($color-base, 'brand'), 'primary-green'), 0.15) !default;
+$shadow-accent: 0 4px 14px 0 rgba(map.get(map.get($color-base, 'brand'), 'accent-orange'), 0.15) !default;
 $shadow-error: 0 4px 14px 0 rgba(map.get($semantic-colors, 'error'), 0.15) !default;
 
 // -----------------------------------------------------------------------------

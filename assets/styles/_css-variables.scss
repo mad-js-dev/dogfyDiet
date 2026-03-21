@@ -16,68 +16,62 @@ $md3-light-surface: (
 
 
 :root {
-  // Brand colors
-  @each $name, $color in $brand-colors {
-    --#{$name}: #{$color};
+  // Generate CSS custom properties from color-base
+  @each $category, $colors in $color-base {
+    @each $color-name, $color-value in $colors {
+      --color-base-#{$category}-#{$color-name}: #{$color-value};
+    }
   }
 
-  // Semantic colors
-  @each $name, $color in $semantic-colors {
-    --#{$name}: #{$color};
+  // Generate CSS custom properties from color-palettes
+  @each $palette-name, $palette in $color-palettes {
+    @each $tone, $color-value in $palette {
+      --#{$palette-name}-#{$tone}: #{$color-value};
+    }
   }
 
-  // Neutral colors
-  @each $name, $color in $neutral-colors {
-    --#{$name}: #{$color};
+  // Generate CSS custom properties from MD3 light theme roles
+  @each $role-category, $roles in $md3-light {
+    @if type-of($roles) == 'map' {
+      @each $role-name, $role-value in $roles {
+        @if type-of($role-value) == 'map' {
+          @each $nested-name, $nested-value in $role-value {
+            --md3-roles-#{$role-category}-#{$role-name}-#{$nested-name}: #{$nested-value};
+          }
+        } @else {
+          --md3-roles-#{$role-category}-#{$role-name}: #{$role-value};
+        }
+      }
+    }
   }
   
-  // Dynamic tonal palettes for brand colors
-  @each $name, $color in $brand-colors {
-    @include generate-color-variables($color, $name);
-  }
 
-  // Dynamic tonal palette for neutral color
-  @each $name, $color in $neutral-colors {
-    @include generate-color-variables($color, $name);
+  // Generate CSS custom properties from MD3 semantic roles
+  @each $semantic-category, $semantic-roles in $md3-semantic {
+    @if type-of($semantic-roles) == 'map' {
+      @each $semantic-name, $semantic-value in $semantic-roles {
+        --md3-roles-#{$semantic-category}-#{$semantic-name}: #{$semantic-value};
+      }
+    }
   }
+}
 
-  // Dynamic tonal palettes for semantic colors
-  @each $name, $color in $semantic-colors {
-    @include generate-color-variables($color, $name);
+// Dark theme variables
+@media (prefers-color-scheme: dark) {
+  :root {
+    // Generate CSS custom properties from MD3 dark theme roles
+    @each $role-category, $roles in $md3-dark {
+      @if type-of($roles) == 'map' {
+        @each $role-name, $role-value in $roles {
+          @if type-of($role-value) == 'map' {
+            @each $nested-name, $nested-value in $role-value {
+              --md3-roles-#{$role-category}-#{$role-name}-#{$nested-name}: #{$nested-value};
+            }
+          } @else {
+            --md3-roles-#{$role-category}-#{$role-name}: #{$role-value};
+          }
+        }
+      }
+    }
   }
-
-  // Material Design 3 colors
-  --md3-primary: #{map.get($brand-colors, 'primary')};
-  --md3-on-primary: #{palette-color('primary', 100)};
-  --md3-primary-container: #{palette-color('primary', 90)};
-  --md3-on-primary-container: #{palette-color('primary', 10)};
-  --md3-secondary: #{map.get($brand-colors, 'accent-orange')};
-  --md3-on-secondary: #{palette-color('accent-orange', 100)};
-  --md3-secondary-container: #{palette-color('accent-orange', 80)};
-  --md3-on-secondary-container: #{palette-color('accent-orange', 10)};
-  --md3-tertiary: #{map.get($brand-colors, 'accent-yellow')};
-  --md3-on-tertiary: #{palette-color('accent-yellow', 100)};
-  --md3-tertiary-container: #{palette-color('accent-yellow', 80)};
-  --md3-on-tertiary-container: #{palette-color('accent-yellow', 10)};
-  --md3-surface: #{map.get($md3-light-surface, 'surface')};
-  --md3-on-surface: #{map.get($md3-light-surface, 'on-surface')};
-  --md3-surface-variant: #{map.get($md3-light-surface, 'surface-variant')};
-  --md3-on-surface-variant: #{map.get($md3-light-surface, 'on-surface-variant')};
-  --md3-outline: #{map.get(map.get($md3-light, 'neutral'), 'outline', 'regular')};
-  --md3-error: #{map.get($semantic-colors, 'error')};
-  --md3-on-error: #{palette-color('error', 100)};
-  --md3-error-container: #{palette-color('error', 90)};
-  --md3-on-error-container: #{palette-color('error', 10)};
-  --md3-success: #{map.get($semantic-colors, 'success')};
-  --md3-on-success: #{palette-color('success', 100)};
-  --md3-success-container: #{palette-color('success', 90)};
-  --md3-on-success-container: #{palette-color('success', 10)};
-  --md3-warning: #{map.get($semantic-colors, 'warning')};
-  --md3-on-warning: #{palette-color('warning', 100)};
-  --md3-warning-container: #{palette-color('warning', 80)};
-  --md3-on-warning-container: #{palette-color('warning', 10)};
-  --md3-info: #{map.get($semantic-colors, 'info')};
-  --md3-on-info: #{palette-color('info', 100)};
-  --md3-info-container: #{palette-color('info', 80)};
-  --md3-on-info-container: #{palette-color('info', 10)};
 }

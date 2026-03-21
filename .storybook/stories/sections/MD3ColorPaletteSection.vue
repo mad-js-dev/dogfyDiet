@@ -17,8 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import { colorVariables } from '../../utils/colors.js'
+import { getCssProperty } from '../../utils/colors.js'
 import ColorSection from '../components/ColorSection.vue'
+import { generateColorSections } from '../../../assets/styles/colors/palette.js'
 
 interface ColorData {
   name: string
@@ -28,61 +29,14 @@ interface ColorData {
 
 interface ColorSection {
   sectionId: string
-  sectionType: 'brand' | 'neutral' | 'semantic'
+  sectionType: string
   title: string
   subtitle: string
   colors: ColorData[]
 }
 
-// Color categories with their properties
-const colorCategories = {
-  brand: [
-    { name: 'Primary Green', value: colorVariables.primaryGreen, sassVar: 'map.get($brand-colors, "primary")' },
-    { name: 'Accent Orange', value: colorVariables.accentOrange, sassVar: 'map.get($brand-colors, "accent-orange")' },
-    { name: 'Accent Yellow', value: colorVariables.accentYellow, sassVar: 'map.get($brand-colors, "accent-yellow")' }
-  ],
-  neutral: [
-    { name: 'Darkest', value: colorVariables.neutralDarkest, sassVar: "palette-color('base', 10)" },
-    { name: 'Dark', value: colorVariables.neutralDark, sassVar: "palette-color('base', 20)" },
-    { name: 'Medium', value: colorVariables.neutralMedium, sassVar: "palette-color('base', 50)" },
-    { name: 'Light', value: colorVariables.neutralLight, sassVar: "palette-color('base', 80)" },
-    { name: 'Lighter', value: colorVariables.neutralLightest, sassVar: "palette-color('base', 90)" },
-    { name: 'Lightest', value: colorVariables.neutralLightest, sassVar: "palette-color('base', 95)" },
-    { name: 'White', value: colorVariables.neutralWhite, sassVar: "palette-color('base', 100)" },
-    { name: 'Off White', value: '#f9f8f7', sassVar: "palette-color('base', 98)" }
-  ],
-  semantic: [
-    { name: 'Success', value: colorVariables.success, sassVar: "map.get($semantic-colors, 'success')" },
-    { name: 'Error', value: colorVariables.error, sassVar: "map.get($semantic-colors, 'error')" },
-    { name: 'Warning', value: colorVariables.warning, sassVar: "map.get($semantic-colors, 'warning')" },
-    { name: 'Info', value: colorVariables.info, sassVar: "map.get($semantic-colors, 'info')" }
-  ]
-}
-
-// Color sections data for the loop
-const colorSections: ColorSection[] = [
-  {
-    sectionId: 'brand',
-    sectionType: 'brand',
-    title: 'Brand Colors',
-    subtitle: 'Core brand identity and supporting colors',
-    colors: colorCategories.brand
-  },
-  {
-    sectionId: 'neutral',
-    sectionType: 'neutral',
-    title: 'Neutral Colors',
-    subtitle: 'Typography and UI elements',
-    colors: colorCategories.neutral
-  },
-  {
-    sectionId: 'semantic',
-    sectionType: 'semantic',
-    title: 'Semantic Colors',
-    subtitle: 'UI states and feedback',
-    colors: colorCategories.semantic
-  }
-]
+// Generate color sections dynamically from palette.js
+const colorSections: ColorSection[] = generateColorSections()
 </script>
 
 <style lang="scss">

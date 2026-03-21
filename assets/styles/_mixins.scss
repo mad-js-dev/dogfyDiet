@@ -8,6 +8,19 @@
 @use 'sass:string';
 @use 'sass:map';
 
+/// Generate CSS custom properties from a color map
+/// @param {Map} $color-map - Map of color names and values
+/// @param {String} $prefix [null] - Optional prefix for variable names
+@mixin generate-css-variables($color-map, $prefix: null) {
+  @each $name, $color in $color-map {
+    @if $prefix {
+      --#{$prefix}-#{$name}: #{$color};
+    } @else {
+      --#{$name}: #{$color};
+    }
+  }
+}
+
 // -----------------------------------------------------------------------------
 // RESPONSIVE BREAKPOINTS
 // -----------------------------------------------------------------------------

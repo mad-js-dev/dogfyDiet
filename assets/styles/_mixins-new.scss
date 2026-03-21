@@ -8,6 +8,12 @@
 @use 'sass:color';
 @use 'sass:map';
 
+// Define error colors using palette system
+$md3-error: palette-color('error', 40);
+$md3-on-error: palette-color('error', 100);
+$md3-error-container: palette-color('error', 90);
+$md3-on-error-container: palette-color('error', 10);
+
 // Define light theme maps for compatibility
 $md3-light-surface: (
   'surface': map.get(map.get(map.get($md3-light, 'neutral'), 'surface'), 'regular'),
