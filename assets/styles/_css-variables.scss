@@ -4,6 +4,8 @@
 @use 'sass:map';
 @use './variables' as *;
 @use './colors/palette' as *;
+@use './colors/light-roles' as *;
+@use './colors/dark-roles' as *;
 @use './mixins' as *;
 
 // Define light theme maps for compatibility
