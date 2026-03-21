@@ -24,7 +24,7 @@ export function generateColorSections() {
     const sectionColors = Object.entries(colors).map(([key, value]) => ({
       name: formatColorName(key),
       value: value,
-      sassVar: `--color-base-${category}-${key}`
+      cssVar: `--color-base-${category}-${key}`
     }));
 
     sections.push({

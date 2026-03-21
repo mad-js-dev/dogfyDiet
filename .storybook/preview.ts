@@ -1,5 +1,8 @@
 import type { Preview } from '@storybook-vue/nuxt'
 
+// Import global styles including CSS variables
+import '~/assets/styles/_css-variables.scss'
+
 const preview: Preview = {
   parameters: {
     controls: { expanded: true },

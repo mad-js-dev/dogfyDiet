@@ -24,7 +24,7 @@ import { generateColorSections } from '../../../assets/styles/colors/palette.js'
 interface ColorData {
   name: string
   value: string
-  sassVar: string
+  cssVar: string
 }
 
 interface ColorSection {

@@ -15,7 +15,7 @@
           >
             <div 
               class="pantone-color-display" 
-              :style="getColorDisplayStyle(color.value, sectionType), { color: getTextColor(color.value) }"
+              :style="getColorDisplayStyle(color.value, sectionType, color.cssVar), { color: getTextColor(color.value) }"
             ></div>
             <div class="pantone-color-info">
               <p class="pantone-color-name">
@@ -25,7 +25,7 @@
                 {{ color.value }}
               </p>
               <p class="pantone-color-formula">
-                {{ color.sassVar }}
+                {{ color.cssVar }}
               </p>
             </div>
           </div>
@@ -39,7 +39,7 @@
 interface ColorData {
   name: string
   value: string
-  sassVar: string
+  cssVar: string
 }
 
 interface Props {
@@ -64,8 +64,8 @@ function getTextColor(backgroundColor: string): string {
 }
 
 // Helper function to get color display style with special handling for white and brand colors
-function getColorDisplayStyle(colorValue: string, sectionType: string) {
-  const baseStyle = { backgroundColor: colorValue }
+function getColorDisplayStyle(colorValue: string, sectionType: string, cssVar: string) {
+  const baseStyle = { backgroundColor: `var(${cssVar})` }
   
   // Special handling for white color
   if (colorValue === '#ffffff') {

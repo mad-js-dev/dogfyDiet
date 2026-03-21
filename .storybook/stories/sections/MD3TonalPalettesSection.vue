@@ -263,7 +263,7 @@ const brandColors = [
   {
     key: 'primaryGreen',
     label: 'Primary Green',
-    tones: getTonalPalette('primary')
+    tones: getTonalPalette('primary-green')
   },
   {
     key: 'accentOrange',
