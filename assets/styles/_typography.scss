@@ -4,6 +4,7 @@
 
 @use './variables' as *;
 @use './mixins' as *;
+@use 'sass:map';
 
 // -----------------------------------------------------------------------------
 // TYPOGRAPHY BASE STYLES
@@ -326,10 +327,10 @@ pre {
 .text-light { color: $neutral-light; }
 .text-white { color: $neutral-white; }
 
-.text-success { color: $success; }
-.text-error { color: $error; }
-.text-warning { color: $warning; }
-.text-info { color: $info; }
+.text-success { color: map.get($semantic-colors, 'success'); }
+.text-error { color: map.get($semantic-colors, 'error'); }
+.text-warning { color: map.get($semantic-colors, 'warning'); }
+.text-info { color: map.get($semantic-colors, 'info'); }
 
 // Text overflow utilities
 .truncate {
@@ -412,13 +413,13 @@ pre {
 
 .form-error {
   @include typography(caption, regular, secondary);
-  color: $error;
+  color: map.get($semantic-colors, 'error');
   margin-top: $spacing-2;
 }
 
 .form-success {
   @include typography(caption, regular, secondary);
-  color: $success;
+  color: map.get($semantic-colors, 'success');
   margin-top: $spacing-2;
 }
 

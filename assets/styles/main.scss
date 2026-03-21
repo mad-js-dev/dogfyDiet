@@ -6,6 +6,7 @@
 
 // Import design system
 @use './variables' as *;
+@use './colors/palette' as *;
 @use './css-variables' as *;
 @use './mixins' as *;
 @use './mixins-new' as *;
@@ -229,10 +230,10 @@ body {
 .bg-lightest { background-color: $neutral-lightest; }
 .bg-white { background-color: $neutral-white; }
 
-.bg-success { background-color: $success; }
-.bg-error { background-color: $error; }
-.bg-warning { background-color: $warning; }
-.bg-info { background-color: $info; }
+.bg-success { background-color: map.get($semantic-colors, 'success'); }
+.bg-error { background-color: map.get($semantic-colors, 'error'); }
+.bg-warning { background-color: map.get($semantic-colors, 'warning'); }
+.bg-info { background-color: map.get($semantic-colors, 'info'); }
 
 // Border utilities
 .border { border: 1px solid $neutral-light; }
@@ -245,9 +246,9 @@ body {
 .border-light { border-color: $neutral-light; }
 .border-white { border-color: $neutral-white; }
 
-.border-success { border-color: $success; }
-.border-error { border-color: $error; }
-.border-warning { border-color: $warning; }
+.border-success { border-color: map.get($semantic-colors, 'success'); }
+.border-error { border-color: map.get($semantic-colors, 'error'); }
+.border-warning { border-color: map.get($semantic-colors, 'warning'); }
 
 // Border radius utilities
 .rounded-none { border-radius: $radius-none; }

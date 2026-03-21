@@ -108,6 +108,7 @@ const selectOption = (value: string) => {
 @use "sass:color";
 @use "sass:map";
 @use "../../../assets/styles/_variables" as *;
+@use "../../../assets/styles/colors/palette" as *;
 .c-segmented-buttons {
   $radius: 25px;
   $primary-color: map.get($brand-colors, 'accent-yellow');

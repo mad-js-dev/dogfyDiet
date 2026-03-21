@@ -96,10 +96,12 @@ The design system is already integrated into the Nuxt.js application. All SASS v
 
 | Variable | Value | Usage |
 |----------|-------|-------|
-| `$success` | `#0aaa46` | Success messages, valid states |
-| `$error` | `#d80003` | Error messages, invalid states |
-| `$warning` | `#ffc800` | Warnings, caution |
-| `$info` | `#1976D2` | Information messages |
+| `map.get($semantic-colors, 'success')` | `#0aaa46` | Success messages, valid states |
+| `map.get($semantic-colors, 'error')` | `#d80003` | Error messages, invalid states |
+| `map.get($semantic-colors, 'warning')` | `#ffc800` | Warnings, caution |
+| `map.get($semantic-colors, 'info')` | `#1976D2` | Information messages |
+
+**Note:** Individual variables (`$success`, `$error`, `$warning`, `$info`) are maintained for backward compatibility but new code should use the map syntax above.
 
 ### Color Utilities
 

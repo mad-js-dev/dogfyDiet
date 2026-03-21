@@ -541,7 +541,7 @@ const getQuestionForPet = (question: Question, petNum: number) => {
 
 :deep(.form-error) {
   @include typography(caption, regular, secondary);
-  color: $error;
+  color: map.get($semantic-colors, 'error');
   margin-top: $spacing-2;
 }
 
@@ -553,7 +553,7 @@ const getQuestionForPet = (question: Question, petNum: number) => {
 
 :deep(.form-success) {
   @include typography(caption, regular, secondary);
-  color: $success;
+  color: map.get($semantic-colors, 'success');
   margin-top: $spacing-2;
 }
 </style>

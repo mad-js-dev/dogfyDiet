@@ -1,0 +1,68 @@
+// -----------------------------------------------------------------------------
+// COLOR PALETTE
+// -----------------------------------------------------------------------------
+
+@use "sass:map";
+@use "sass:color";
+
+// Primary Brand Colors Map
+$brand-colors: (
+  'primary': #00B67A,
+  'accent-orange': #EF6948,
+  'accent-yellow': #ffc800
+) !default;
+
+// Semantic Colors Map
+$semantic-colors: (
+  'success': #0aaa46,
+  'error': #d80003,
+  'warning': #ffc800,
+  'info': #1976D2
+) !default;
+
+// Neutral Colors - Single base color for dynamic palette generation
+$neutral-colors: (
+  'base': #767676  // Medium neutral tone that will generate the full palette
+) !default;
+
+// Dynamic Palette Generation Function
+@function generate-palette($base-color) {
+  $palette: ();
+  // Generate M3 tonal palette: 0=black, 40=darker base, 90=lighter base, 100=white
+  $palette: map.merge($palette, (0: #000000));
+  $palette: map.merge($palette, (10: color.adjust($base-color, $lightness: -60%, $saturation: -10%)));
+  $palette: map.merge($palette, (20: color.adjust($base-color, $lightness: -45%, $saturation: -5%)));
+  $palette: map.merge($palette, (30: color.adjust($base-color, $lightness: -30%, $saturation: -2%)));
+  $palette: map.merge($palette, (40: color.adjust($base-color, $lightness: -20%)));
+  $palette: map.merge($palette, (50: color.adjust($base-color, $lightness: -10%)));
+  $palette: map.merge($palette, (60: color.adjust($base-color, $lightness: 0%)));
+  $palette: map.merge($palette, (70: color.adjust($base-color, $lightness: 15%)));
+  $palette: map.merge($palette, (80: color.adjust($base-color, $lightness: 30%)));
+  $palette: map.merge($palette, (90: color.adjust($base-color, $lightness: 50%)));
+  $palette: map.merge($palette, (95: color.adjust($base-color, $lightness: 65%)));
+  $palette: map.merge($palette, (98: color.adjust($base-color, $lightness: 80%)));
+  $palette: map.merge($palette, (99: color.adjust($base-color, $lightness: 90%)));
+  $palette: map.merge($palette, (100: #ffffff));
+  @return $palette;
+}
+
+// Function to access specific palette tone
+@function palette-color($color-name, $tone: 500) {
+  $color-map: map.merge($brand-colors, $semantic-colors);
+  $color-map: map.merge($color-map, $neutral-colors);
+  $base-color: map.get($color-map, $color-name);
+  $palette: generate-palette($base-color);
+  @return map.get($palette, $tone);
+}
+
+// Color Palettes Map
+$color-palettes: (
+  'primary': generate-palette(map.get($brand-colors, 'primary')),
+  'accent-orange': generate-palette(map.get($brand-colors, 'accent-orange')),
+  'accent-yellow': generate-palette(map.get($brand-colors, 'accent-yellow')),
+  'success': generate-palette(map.get($semantic-colors, 'success')),
+  'error': generate-palette(map.get($semantic-colors, 'error')),
+  'warning': generate-palette(map.get($semantic-colors, 'warning')),
+  'info': generate-palette(map.get($semantic-colors, 'info')),
+  'neutral': generate-palette(map.get($neutral-colors, 'base'))
+) !default;

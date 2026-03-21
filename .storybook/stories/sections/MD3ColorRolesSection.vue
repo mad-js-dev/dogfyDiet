@@ -159,7 +159,8 @@ const semanticColorGrid: ColorGrid = {
 
 <style scoped lang="scss">
 @use 'sass:map';
-@use '~/assets/styles/_variables.scss' as *;
+@use "../../../assets/styles/_variables" as *;
+@use "../../../assets/styles/colors/palette" as *;
 @use '~/assets/styles/_mixins.scss' as *;
 @use '~/assets/styles/components/pantone.scss';
 @use '~/assets/styles/components/md3-color-roles.scss';

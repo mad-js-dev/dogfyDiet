@@ -37,9 +37,9 @@ interface ColorSection {
 // Color categories with their properties
 const colorCategories = {
   brand: [
-    { name: 'Primary Green', value: colorVariables.primaryGreen, sassVar: '$primary-green' },
-    { name: 'Accent Orange', value: colorVariables.accentOrange, sassVar: '$accent-orange' },
-    { name: 'Accent Yellow', value: colorVariables.accentYellow, sassVar: '$accent-yellow' }
+    { name: 'Primary Green', value: colorVariables.primaryGreen, sassVar: 'map.get($brand-colors, "primary")' },
+    { name: 'Accent Orange', value: colorVariables.accentOrange, sassVar: 'map.get($brand-colors, "accent-orange")' },
+    { name: 'Accent Yellow', value: colorVariables.accentYellow, sassVar: 'map.get($brand-colors, "accent-yellow")' }
   ],
   neutral: [
     { name: 'Darkest', value: colorVariables.neutralDarkest, sassVar: "palette-color('base', 10)" },
@@ -52,10 +52,10 @@ const colorCategories = {
     { name: 'Off White', value: '#f9f8f7', sassVar: "palette-color('base', 98)" }
   ],
   semantic: [
-    { name: 'Success', value: colorVariables.success, sassVar: '$success' },
-    { name: 'Error', value: colorVariables.error, sassVar: '$error' },
-    { name: 'Warning', value: colorVariables.warning, sassVar: '$warning' },
-    { name: 'Info', value: colorVariables.info, sassVar: '$info' }
+    { name: 'Success', value: colorVariables.success, sassVar: "map.get($semantic-colors, 'success')" },
+    { name: 'Error', value: colorVariables.error, sassVar: "map.get($semantic-colors, 'error')" },
+    { name: 'Warning', value: colorVariables.warning, sassVar: "map.get($semantic-colors, 'warning')" },
+    { name: 'Info', value: colorVariables.info, sassVar: "map.get($semantic-colors, 'info')" }
   ]
 }
 

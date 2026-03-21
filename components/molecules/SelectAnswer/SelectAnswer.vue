@@ -315,6 +315,7 @@ watch(() => props.modelValue, (newValue) => {
 @use "sass:color";
 @use "sass:map";
 @use "../../../assets/styles/_variables" as *;
+@use "../../../assets/styles/colors/palette" as *;
 .c-select-answer {
   $primary-color: map.get($brand-colors, 'accent-yellow');
   $primary-surface-color: color.adjust(map.get($brand-colors, 'accent-yellow'), $lightness: 20%);

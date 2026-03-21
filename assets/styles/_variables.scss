@@ -7,80 +7,7 @@
 @use "sass:color";
 @use "sass:map";
 
-// -----------------------------------------------------------------------------
-// COLOR PALETTE
-// -----------------------------------------------------------------------------
-
-// Primary Brand Colors Map
-$brand-colors: (
-  'primary': #00B67A,
-  'accent-orange': #EF6948,
-  'accent-yellow': #ffc800
-) !default;
-
-// Semantic Colors Map
-$semantic-colors: (
-  'success': #0aaa46,
-  'error': #d80003,
-  'warning': #ffc800,
-  'info': #1976D2
-) !default;
-
-// Neutral Colors - Single base color for dynamic palette generation
-$neutral-colors: (
-  'base': #767676  // Medium neutral tone that will generate the full palette
-) !default;
-
-// Dynamic Palette Generation Function
-@function generate-palette($base-color) {
-  $palette: ();
-  // Generate M3 tonal palette: 0=black, 40=darker base, 90=lighter base, 100=white
-  $palette: map.merge($palette, (0: #000000));
-  $palette: map.merge($palette, (10: color.adjust($base-color, $lightness: -60%, $saturation: -10%)));
-  $palette: map.merge($palette, (20: color.adjust($base-color, $lightness: -45%, $saturation: -5%)));
-  $palette: map.merge($palette, (30: color.adjust($base-color, $lightness: -30%, $saturation: -2%)));
-  $palette: map.merge($palette, (40: color.adjust($base-color, $lightness: -20%)));
-  $palette: map.merge($palette, (50: color.adjust($base-color, $lightness: -10%)));
-  $palette: map.merge($palette, (60: color.adjust($base-color, $lightness: 0%)));
-  $palette: map.merge($palette, (70: color.adjust($base-color, $lightness: 15%)));
-  $palette: map.merge($palette, (80: color.adjust($base-color, $lightness: 30%)));
-  $palette: map.merge($palette, (90: color.adjust($base-color, $lightness: 50%)));
-  $palette: map.merge($palette, (95: color.adjust($base-color, $lightness: 65%)));
-  $palette: map.merge($palette, (98: color.adjust($base-color, $lightness: 80%)));
-  $palette: map.merge($palette, (99: color.adjust($base-color, $lightness: 90%)));
-  $palette: map.merge($palette, (100: #ffffff));
-  @return $palette;
-}
-
-// Function to access specific palette tone
-@function palette-color($color-name, $tone: 500) {
-  $color-map: map.merge($brand-colors, $semantic-colors);
-  $color-map: map.merge($color-map, $neutral-colors);
-  $base-color: map.get($color-map, $color-name);
-  $palette: generate-palette($base-color);
-  @return map.get($palette, $tone);
-}
-
-// Dynamically generate palette variables for each brand and semantic color
-$primary-palette: generate-palette(map.get($brand-colors, 'primary')) !default;
-$accent-orange-palette: generate-palette(map.get($brand-colors, 'accent-orange')) !default;
-$accent-yellow-palette: generate-palette(map.get($brand-colors, 'accent-yellow')) !default;
-$success-palette: generate-palette(map.get($semantic-colors, 'success')) !default;
-$error-palette: generate-palette(map.get($semantic-colors, 'error')) !default;
-$warning-palette: generate-palette(map.get($semantic-colors, 'warning')) !default;
-$info-palette: generate-palette(map.get($semantic-colors, 'info')) !default;
-$neutral-palette: generate-palette(map.get($neutral-colors, 'base')) !default;
-
-// Backward compatibility - redefine individual color variables from maps
-$primary-green: map.get($brand-colors, 'primary') !default;
-$accent-orange: map.get($brand-colors, 'accent-orange') !default;
-$accent-yellow: map.get($brand-colors, 'accent-yellow') !default;
-$success: map.get($semantic-colors, 'success') !default;
-$error: map.get($semantic-colors, 'error') !default;
-$warning: map.get($semantic-colors, 'warning') !default;
-$info: map.get($semantic-colors, 'info') !default;
-
-
+@use "./colors/palette" as *;
 
 // -----------------------------------------------------------------------------
 // MATERIAL DESIGN 3 COLOR ROLES
@@ -88,139 +15,14 @@ $info: map.get($semantic-colors, 'info') !default;
 // Based on https://m3.material.io/styles/color/roles
 // M3 uses semantic color roles that map to tonal palettes
 
-// Light Theme Color Roles
-$md3-light-primary: (
-  'main': var(--primary-40),
-  'on': var(--primary-100),
-  'container': var(--primary-90),
-  'on-container': var(--primary-10)
-) !default;
+// Import light theme color roles
+@import 'colors/light-roles';
 
-$md3-light-secondary: (
-  'main': var(--accent-orange-40),
-  'on': var(--accent-orange-100),
-  'container': var(--accent-orange-90),
-  'on-container': var(--accent-orange-10)
-) !default;
+// Import dark theme color roles
+@import 'colors/dark-roles';
 
-$md3-light-tertiary: (
-  'main': var(--accent-yellow-40),
-  'on': var(--accent-yellow-100),
-  'container': var(--accent-yellow-90),
-  'on-container': var(--accent-yellow-10)
-) !default;
-
-$md3-light-surface: (
-  'surface': palette-color('base', 100),
-  'on-surface': palette-color('base', 10),
-  'surface-variant': palette-color('base', 95),
-  'on-surface-variant': palette-color('base', 50)
-) !default;
-
-$md3-light-outline: (
-  'outline': palette-color('base', 90),
-  'outline-variant': palette-color('base', 80)
-) !default;
-
-$md3-light-scrim: (
-  'scrim': rgba(palette-color('base', 10), 0.32)
-) !default;
-
-$md3-light-shadow: (
-  'shadow': rgba(palette-color('base', 10), 0.12)
-) !default;
-
-// Dark Theme Color Roles
-$md3-dark-primary: (
-  'main': var(--primary-30),
-  'on': var(--primary-100),
-  'container': var(--primary-20),
-  'on-container': var(--primary-100)
-) !default;
-
-$md3-dark-secondary: (
-  'main': var(--accent-orange-30),
-  'on': var(--accent-orange-100),
-  'container': var(--accent-orange-20),
-  'on-container': var(--accent-orange-100)
-) !default;
-
-$md3-dark-tertiary: (
-  'main': var(--accent-yellow-30),
-  'on': var(--accent-yellow-100),
-  'container': var(--accent-yellow-20),
-  'on-container': var(--accent-yellow-100)
-) !default;
-
-$md3-dark-surface: (
-  'surface': palette-color('base', 10),
-  'on-surface': palette-color('base', 95),
-  'surface-variant': palette-color('base', 20),
-  'on-surface-variant': palette-color('base', 90)
-) !default;
-
-$md3-dark-outline: (
-  'outline': palette-color('base', 50),
-  'outline-variant': palette-color('base', 20)
-) !default;
-
-$md3-dark-scrim: (
-  'scrim': rgba(palette-color('base', 10), 0.32)
-) !default;
-
-$md3-dark-shadow: (
-  'shadow': rgba(palette-color('base', 10), 0.12)
-) !default;
-
-// Semantic M3 Color Roles
-$md3-surface-bright: palette-color('base', 100) !default;
-$md3-surface-dim: color.adjust(palette-color('base', 10), $lightness: -10%) !default;
-$md3-surface-container-lowest: color.adjust(palette-color('base', 100), $lightness: -1%) !default;
-$md3-surface-container-low: color.adjust(palette-color('base', 95), $lightness: -2%) !default;
-$md3-surface-container: palette-color('base', 95) !default;
-$md3-surface-container-high: palette-color('base', 90) !default;
-$md3-surface-container-highest: palette-color('base', 80) !default;
-$md3-on-surface-container-low: map.get($md3-light-surface, 'on-surface') !default;
-$md3-on-surface-container-high: map.get($md3-light-surface, 'on-surface') !default;
-
-$md3-dark-surface-container-lowest: color.adjust(palette-color('base', 10), $lightness: 2%) !default;
-$md3-dark-surface-container-low: color.adjust(palette-color('base', 10), $lightness: 5%) !default;
-$md3-dark-surface-container: color.adjust(palette-color('base', 10), $lightness: 8%) !default;
-$md3-dark-surface-container-high: color.adjust(palette-color('base', 20), $lightness: 15%) !default;
-$md3-dark-surface-container-highest: color.adjust(palette-color('base', 20), $lightness: 25%) !default;
-$md3-dark-surface-dim: color.adjust(map.get($md3-dark-surface, 'surface'), $lightness: -10%) !default;
-$md3-dark-surface-bright: color.adjust(map.get($md3-dark-surface, 'surface'), $lightness: 20%) !default;
-$md3-dark-on-surface-container-low: map.get($md3-dark-surface, 'on-surface') !default;
-$md3-dark-on-surface-container-high: map.get($md3-dark-surface, 'on-surface') !default;
-
-$md3-inverse-primary: palette-color('base', 10) !default;
-$md3-inverse-on-primary: palette-color('base', 100) !default;
-$md3-inverse-surface: palette-color('base', 10) !default;
-$md3-inverse-on-surface: palette-color('base', 100) !default;
-
-// Error Colors (M3 Standard) - using darker base tone
-$md3-error: palette-color('error', 600) !default;
-$md3-error-container: palette-color('error', 90) !default;
-$md3-on-error: palette-color('error', 100) !default;
-$md3-on-error-container: palette-color('error', 10) !default;
-
-// Success Colors (M3 Standard) - using darker base tone
-$md3-success: palette-color('success', 600) !default;
-$md3-success-container: palette-color('success', 90) !default;
-$md3-on-success: palette-color('success', 100) !default;
-$md3-on-success-container: palette-color('success', 10) !default;
-
-// Warning Colors (M3 Standard) - using darker base tone
-$md3-warning: palette-color('warning', 600) !default;
-$md3-warning-container: palette-color('warning', 90) !default;
-$md3-on-warning: palette-color('warning', 100) !default;
-$md3-on-warning-container: palette-color('warning', 10) !default;
-
-// Info Colors (M3 Standard) - using darker base tone
-$md3-info: palette-color('info', 600) !default;
-$md3-info-container: palette-color('info', 90) !default;
-$md3-on-info: palette-color('info', 100) !default;
-$md3-on-info-container: palette-color('info', 10) !default;
+// Import semantic color roles
+@import 'colors/semantic-roles';
 
 
 // -----------------------------------------------------------------------------
@@ -243,12 +45,12 @@ $md3-on-info-container: palette-color('info', 10) !default;
       'on-tertiary': $md3-dark-on-tertiary,
       'tertiary-container': $md3-dark-tertiary-container,
       'on-tertiary-container': $md3-dark-on-tertiary-container,
-      'surface': map.get($md3-dark-surface, 'surface'),
-      'on-surface': map.get($md3-dark-surface, 'on-surface'),
-      'surface-variant': map.get($md3-dark-surface, 'surface-variant'),
-      'on-surface-variant': map.get($md3-dark-surface, 'on-surface-variant'),
-      'outline': map.get($md3-dark-outline, 'outline'),
-      'outline-variant': map.get($md3-dark-outline, 'outline-variant'),
+      'surface': map.get(map.get($md3-dark, 'neutral'), 'surface'),
+      'on-surface': map.get(map.get($md3-dark, 'neutral'), 'on-surface'),
+      'surface-variant': map.get(map.get($md3-dark, 'neutral'), 'surface-variant'),
+      'on-surface-variant': map.get(map.get($md3-dark, 'neutral'), 'on-surface-variant'),
+      'outline': map.get(map.get($md3-dark, 'neutral'), 'outline', 'regular'),
+      'outline-variant': map.get(map.get($md3-dark, 'neutral'), 'outline', 'variant'),
       'error': $md3-error,
       'error-container': $md3-error-container,
       'on-error': $md3-on-error,
@@ -268,12 +70,12 @@ $md3-on-info-container: palette-color('info', 10) !default;
       'on-tertiary': map.get($md3-light-tertiary, 'on'),
       'tertiary-container': map.get($md3-light-tertiary, 'container'),
       'on-tertiary-container': map.get($md3-light-tertiary, 'on-container'),
-      'surface': map.get($md3-light-surface, 'surface'),
-      'on-surface': map.get($md3-light-surface, 'on-surface'),
-      'surface-variant': map.get($md3-light-surface, 'surface-variant'),
-      'on-surface-variant': map.get($md3-light-surface, 'on-surface-variant'),
-      'outline': map.get($md3-light-outline, 'outline'),
-      'outline-variant': map.get($md3-light-outline, 'outline-variant'),
+      'surface': map.get(map.get($md3-light, 'neutral'), 'surface'),
+      'on-surface': map.get(map.get($md3-light, 'neutral'), 'on-surface'),
+      'surface-variant': map.get(map.get($md3-light, 'neutral'), 'surface-variant'),
+      'on-surface-variant': map.get(map.get($md3-light, 'neutral'), 'on-surface-variant'),
+      'outline': map.get(map.get($md3-light, 'neutral'), 'outline', 'regular'),
+      'outline-variant': map.get(map.get($md3-light, 'neutral'), 'outline', 'variant'),
       'error': $md3-error,
       'error-container': $md3-error-container,
       'on-error': $md3-on-error,

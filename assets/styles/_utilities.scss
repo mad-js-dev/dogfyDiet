@@ -6,6 +6,7 @@
 @use './mixins' as *;
 @use './mixins-new' as *;
 @use './variables' as *;
+@use 'sass:map';
 
 // -----------------------------------------------------------------------------
 // TEXT UTILITIES
@@ -64,19 +65,19 @@
 }
 
 .text-success {
-  color: $success;
+  color: map.get($semantic-colors, 'success');
 }
 
 .text-error {
-  color: $error;
+  color: map.get($semantic-colors, 'error');
 }
 
 .text-warning {
-  color: $warning;
+  color: map.get($semantic-colors, 'warning');
 }
 
 .text-info {
-  color: $info;
+  color: map.get($semantic-colors, 'info');
 }
 
 .bg-primary {
@@ -88,19 +89,19 @@
 }
 
 .bg-success {
-  background-color: $success;
+  background-color: map.get($semantic-colors, 'success');
 }
 
 .bg-error {
-  background-color: $error;
+  background-color: map.get($semantic-colors, 'error');
 }
 
 .bg-warning {
-  background-color: $warning;
+  background-color: map.get($semantic-colors, 'warning');
 }
 
 .bg-info {
-  background-color: $info;
+  background-color: map.get($semantic-colors, 'info');
 }
 
 .bg-surface {

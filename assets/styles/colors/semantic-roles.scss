@@ -1,0 +1,41 @@
+// Semantic Color Roles (M3 Standard)
+@use './palette' as *;
+
+// Error Colors (M3 Standard) - using darker base tone
+$error-roles: (
+  'main': palette-color('error', 600),
+  'container': palette-color('error', 90),
+  'on': palette-color('error', 100),
+  'on-container': palette-color('error', 10)
+) !default;
+
+// Success Colors (M3 Standard) - using darker base tone
+$success-roles: (
+  'main': palette-color('success', 600),
+  'container': palette-color('success', 90),
+  'on': palette-color('success', 100),
+  'on-container': palette-color('success', 10)
+) !default;
+
+// Warning Colors (M3 Standard) - using darker base tone
+$warning-roles: (
+  'main': palette-color('warning', 600),
+  'container': palette-color('warning', 90),
+  'on': palette-color('warning', 100),
+  'on-container': palette-color('warning', 10)
+) !default;
+
+// Info Colors (M3 Standard) - using darker base tone
+$info-roles: (
+  'main': palette-color('info', 600),
+  'container': palette-color('info', 90),
+  'on': palette-color('info', 100),
+  'on-container': palette-color('info', 10)
+) !default;
+
+$md3-semantic: (
+  'error': $error-roles,
+  'success': $success-roles,
+  'warning': $warning-roles,
+  'info': $info-roles
+) !default;

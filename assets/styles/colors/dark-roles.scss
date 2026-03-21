@@ -1,0 +1,59 @@
+// Dark Theme Color Roles
+@use './palette' as *;
+$primary-roles: (
+  'main': var(--primary-30),
+  'on': var(--primary-100),
+  'container': var(--primary-20),
+  'on-container': var(--primary-100)
+) !default;
+
+$secondary-roles: (
+  'main': var(--accent-orange-30),
+  'on': var(--accent-orange-100),
+  'container': var(--accent-orange-20),
+  'on-container': var(--accent-orange-100)
+) !default;
+
+$tertiary-roles: (
+  'main': var(--accent-yellow-30),
+  'on': var(--accent-yellow-100),
+  'container': var(--accent-yellow-20),
+  'on-container': var(--accent-yellow-100)
+) !default;
+
+$neutral-roles: (
+  'surface': (
+    'dim': palette-color('base', 20),
+    'regular': palette-color('base', 10),
+    'bright': palette-color('base', 0),
+    'inverse': palette-color('base', 100)
+  ),
+  'container': (
+    'lowest': palette-color('base', 5),
+    'low': palette-color('base', 10),
+    'medium': palette-color('base', 15),
+    'high': palette-color('base', 20),
+    'highest': palette-color('base', 25)
+  ),
+  'onSurface': (
+    'regular': palette-color('base', 95),
+    'variant': palette-color('base', 90)
+  ),
+  'outline': (
+    'regular': palette-color('base', 50),
+    'variant': palette-color('base', 20)
+  ),
+  'scrim': (
+    'regular': rgba(palette-color('base', 10), 0.32)
+  ),
+  'shadow': (
+    'regular': rgba(palette-color('base', 10), 0.12)
+  )
+) !default;
+
+$md3-dark: (
+  'primary': $primary-roles,
+  'secondary': $secondary-roles,
+  'tertiary': $tertiary-roles,
+  'neutral': $neutral-roles,
+)
