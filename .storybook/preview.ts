@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook-vue/nuxt'
 
-// Import global styles including CSS variables
-import '~/assets/styles/_css-variables.scss'
+// Import global styles including generated CSS variables
+import '~/assets/styles/_css-variables-generated.css'
 
 const preview: Preview = {
   parameters: {

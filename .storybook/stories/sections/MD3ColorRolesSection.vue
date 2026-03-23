@@ -59,14 +59,14 @@
     <ColorRolesGrid
       :columns="semanticColumns"
       :rows="colorRows"
-      :color-grid="semanticColorGrid"
+      :color-grid="reactiveSemanticColorGrid"
     />
   </section>
 </template>
 
 <script setup lang="ts">
 import ColorRolesGrid from '../components/ColorRolesGrid.vue'
-import { semanticRoles, tonalPalettes, brandRoles } from '~/assets/styles/colors/palette.js'
+import paletteData from '~/assets/styles/colors/palette.json'
 import { computed, ref } from 'vue'
 
 interface ColorData {
@@ -109,57 +109,44 @@ const semanticColumns: Column[] = [
 
 // Row definitions
 const colorRows: Row[] = [
-  { key: 'base', label: 'Base' },
+  { key: 'main', label: 'Main' },
   { key: 'on', label: 'On' },
   { key: 'container', label: 'Container' },
-  { key: 'onContainer', label: 'On Container' }
+  { key: 'on-container', label: 'On Container' }
 ]
 
-// Derive brand color hex values from tonalPalettes (matching the SCSS get-md3-color values)
+// Derive brand color hex values from tonalPalettes (we'll need to create this from palette data)
 function getBrandColorHex() {
   const brandColors: { [key: string]: { [key: string]: string } } = {};
 
-  // Find tonal palettes for brand colors
-  const primaryGreenPalette = tonalPalettes.find(p => p.key === 'primary-green');
-  const accentOrangePalette = tonalPalettes.find(p => p.key === 'accent-orange');
-  const accentYellowPalette = tonalPalettes.find(p => p.key === 'accent-yellow');
-  const neutralPalette = tonalPalettes.find(p => p.key === 'neutral');
+  // For now, use static values from the JSON structure
+  brandColors.surface = {
+    main: '#e6e6e6',
+    on: '#1a1a1a',
+    container: '#b3b3b3',
+    'on-container': '#808080'
+  };
 
-  if (neutralPalette) {
-    brandColors.surface = {
-      base: neutralPalette.tones.find(t => t.value === 90)?.hex || '#e6e6e6',
-      on: neutralPalette.tones.find(t => t.value === 10)?.hex || '#1a1a1a',
-      container: neutralPalette.tones.find(t => t.value === 70)?.hex || '#b3b3b3',
-      onContainer: neutralPalette.tones.find(t => t.value === 50)?.hex || '#808080'
-    };
-  }
+  brandColors.primary = {
+    main: '#00b67a',
+    on: '#ffffff',
+    container: '#b6ffe7',
+    'on-container': '#000000'
+  };
 
-  if (primaryGreenPalette) {
-    brandColors.primary = {
-      base: primaryGreenPalette.tones.find(t => t.value === 40)?.hex || '#00cc89',
-      on: primaryGreenPalette.tones.find(t => t.value === 100)?.hex || '#ffffff',
-      container: primaryGreenPalette.tones.find(t => t.value === 90)?.hex || '#deede8',
-      onContainer: primaryGreenPalette.tones.find(t => t.value === 10)?.hex || '#12211c'
-    };
-  }
+  brandColors.secondary = {
+    main: '#ef6948',
+    on: '#ffffff',
+    container: '#ffe2df',
+    'on-container': '#000000'
+  };
 
-  if (accentOrangePalette) {
-    brandColors.secondary = {
-      base: accentOrangePalette.tones.find(t => t.value === 40)?.hex || '#bc3210',
-      on: accentOrangePalette.tones.find(t => t.value === 100)?.hex || '#ffffff',
-      container: accentOrangePalette.tones.find(t => t.value === 90)?.hex || '#ece2df',
-      onContainer: accentOrangePalette.tones.find(t => t.value === 10)?.hex || '#201613'
-    };
-  }
-
-  if (accentYellowPalette) {
-    brandColors.tertiary = {
-      base: accentYellowPalette.tones.find(t => t.value === 40)?.hex || '#cca000',
-      on: accentYellowPalette.tones.find(t => t.value === 100)?.hex || '#ffffff',
-      container: accentYellowPalette.tones.find(t => t.value === 90)?.hex || '#edeade',
-      onContainer: accentYellowPalette.tones.find(t => t.value === 10)?.hex || '#211e12'
-    };
-  }
+  brandColors.tertiary = {
+    main: '#cca000',
+    on: '#ffffff',
+    container: '#edeade',
+    'on-container': '#000000'
+  };
 
   return brandColors;
 }
@@ -172,58 +159,60 @@ const selectedTheme = ref('light')
 // Generate brand & surface color grid data dynamically
 function generateBrandColorGrid() {
   const grid: ColorGrid = {}
+  const currentTheme = selectedTheme?.value || 'light'
+  const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
 
   // Generate the grid for each row
   colorRows.forEach(row => {
     grid[row.key] = {}
     brandColumns.forEach(column => {
-      let varSuffix = column.key
-      if (column.key === 'surface') {
-        if (row.key === 'base') {
-          varSuffix = 'surface'
-        } else if (row.key === 'on') {
-          varSuffix = 'on-surface'
-        } else if (row.key === 'container') {
-          varSuffix = 'surface-variant'
-        } else if (row.key === 'onContainer') {
-          varSuffix = 'on-surface-variant'
-        }
-      }
-      
-      // Get the actual CSS variable from the selected theme with safety check
-      const currentTheme = selectedTheme?.value || 'light'
-      const themeData = currentTheme === 'dark' ? darkBrandRoles.value : lightBrandRoles.value
-      
-      let actualCssVar = ''
-      let columnKey = column.key
+      let cssVar = ''
+      let roleValue = ''
       
       if (column.key === 'surface') {
-        // For surface, use neutral palette CSS variables
-        if (row.key === 'base') {
-          actualCssVar = currentTheme === 'dark' ? '--neutral-10' : '--neutral-90'
+        // Map surface colors to neutral CSS variables
+        if (row.key === 'main') {
+          cssVar = `--md3-neutral-surface-regular`
+          roleValue = themeData.neutral.surface.regular
         } else if (row.key === 'on') {
-          actualCssVar = currentTheme === 'dark' ? '--neutral-100' : '--neutral-10'
+          cssVar = `--md3-neutral-on-surface-regular`
+          roleValue = themeData.neutral['on-surface'].regular
         } else if (row.key === 'container') {
-          actualCssVar = currentTheme === 'dark' ? '--neutral-20' : '--neutral-70'
-        } else if (row.key === 'onContainer') {
-          actualCssVar = currentTheme === 'dark' ? '--neutral-100' : '--neutral-50'
+          cssVar = `--md3-neutral-surface-variant-regular`
+          roleValue = themeData.neutral['surface-variant'].regular
+        } else if (row.key === 'on-container') {
+          cssVar = `--md3-neutral-on-surface-variant-regular`
+          roleValue = themeData.neutral['on-surface-variant'].regular
         }
-        columnKey = 'neutral'
+        
+        grid[row.key][column.key] = {
+          label: `${column.label}${row.key === 'main' ? '' : ' ' + row.label}`,
+          value: cssVar,
+          resolvedValue: brandColorHex[column.key][row.key],
+          cssVar: roleValue || ''
+        }
       } else {
-        // For brand colors, use brand roles
-        columnKey = column.key === 'primary' ? 'primary-green' : 
-                   column.key === 'secondary' ? 'accent-orange' : 
-                   column.key === 'tertiary' ? 'accent-yellow' : 
-                   column.key
-        actualCssVar = themeData[columnKey]?.[row.key]?.cssVar || ''
-      }
-      
-      const cssVar = `--md3-roles-${column.key === 'primary' ? 'primarygreen' : column.key === 'secondary' ? 'accentorange' : column.key === 'tertiary' ? 'accentyellow' : 'neutral'}-${varSuffix}`
-      grid[row.key][column.key] = {
-        label: `${column.label}${row.key === 'base' ? '' : ' ' + row.label}`,
-        value: cssVar,
-        resolvedValue: brandColorHex[column.key][row.key],
-        cssVar: actualCssVar
+        // Map brand colors to their CSS variables
+        if (row.key === 'main') {
+          cssVar = `--md3-${column.key}-main`
+          roleValue = themeData[column.key]?.main
+        } else if (row.key === 'on') {
+          cssVar = `--md3-${column.key}-on`
+          roleValue = themeData[column.key]?.on
+        } else if (row.key === 'container') {
+          cssVar = `--md3-${column.key}-container`
+          roleValue = themeData[column.key]?.container
+        } else if (row.key === 'on-container') {
+          cssVar = `--md3-${column.key}-on-container`
+          roleValue = themeData[column.key]?.['on-container']
+        }
+        
+        grid[row.key][column.key] = {
+          label: `${column.label}${row.key === 'main' ? '' : ' ' + row.label}`,
+          value: cssVar,
+          resolvedValue: brandColorHex[column.key][row.key],
+          cssVar: roleValue || ''
+        }
       }
     })
   })
@@ -237,18 +226,19 @@ const reactiveBrandColorGrid = computed(() => generateBrandColorGrid())
 // Generate semantic color grid data dynamically
 function generateSemanticColorGrid() {
   const grid: ColorGrid = {}
+  const semanticData = paletteData['semantic-roles']
 
   // Generate the grid for each row
   colorRows.forEach(row => {
     grid[row.key] = {}
     semanticColumns.forEach(column => {
-      const roleKey = row.key as keyof typeof semanticRoles.error
+      const roleKey = row.key as keyof typeof semanticData.success
       const semanticKey = column.key
-      const cssVar = `--md3-${semanticKey}${row.key === 'base' ? '' : '-' + row.key}`
+      const cssVar = `--md3-${semanticKey}${row.key === 'main' ? '' : '-' + row.key}`
       grid[row.key][column.key] = {
-        label: `${column.label}${row.key === 'base' ? '' : ' ' + row.label}`,
+        label: `${column.label}${row.key === 'main' ? '' : ' ' + row.label}`,
         value: cssVar,
-        resolvedValue: semanticRoles[semanticKey][roleKey],
+        resolvedValue: semanticData[semanticKey][roleKey],
         cssVar: cssVar
       }
     })
@@ -257,40 +247,18 @@ function generateSemanticColorGrid() {
   return grid
 }
 
-const semanticColorGrid: ColorGrid = generateSemanticColorGrid()
-
-// Computed property to extract only the light version of brandRoles with updated CSS vars
-const lightBrandRoles = computed(() => {
-  const lightRoles: any = {}
-  Object.entries(brandRoles).forEach(([colorKey, colorData]) => {
-    lightRoles[colorKey] = colorData.light
-  })
-  return lightRoles
-})
-
-// Computed property to extract only the dark version of brandRoles
-const darkBrandRoles = computed(() => {
-  const darkRoles: any = {}
-  Object.entries(brandRoles).forEach(([colorKey, colorData]) => {
-    darkRoles[colorKey] = colorData.dark
-  })
-  return darkRoles
-})
-
-// Computed property to display the appropriate theme roles based on selection
-const displayedBrandRoles = computed(() => {
-  return selectedTheme.value === 'dark' ? darkBrandRoles.value : lightBrandRoles.value
-})
+// Make semanticColorGrid reactive to theme changes
+const reactiveSemanticColorGrid = computed(() => generateSemanticColorGrid())
 
 // Set CSS custom properties for semantic color roles
 import { onMounted } from 'vue'
 onMounted(() => {
   const root = document.documentElement
-  Object.entries(semanticRoles).forEach(([semantic, roles]) => {
-    root.style.setProperty(`--md3-${semantic}`, roles.base)
-    root.style.setProperty(`--md3-on-${semantic}`, roles.on)
-    root.style.setProperty(`--md3-${semantic}-container`, roles.container)
-    root.style.setProperty(`--md3-on-${semantic}-container`, roles.onContainer)
+  const semanticData = paletteData['semantic-roles']
+  Object.entries(semanticData).forEach(([semantic, roles]) => {
+    Object.entries(roles).forEach(([role, value]) => {
+      root.style.setProperty(`--md3-${semantic}-${role}`, value)
+    })
   })
 })
 

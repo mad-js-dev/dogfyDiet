@@ -1,0 +1,54 @@
+// Generate CSS custom properties from JSON using sass-embedded
+@use 'sass:map';
+@use './colors/_palette' as palette;
+
+// Import JSON color roles
+@import './colors/palette.json';
+
+:root {
+  // Generate CSS custom properties from color-palettes
+  @each $palette-name, $palette in palette.$color-palettes {
+    @each $tone, $color-value in $palette {
+      --#{$palette-name}-#{$tone}: #{$color-value};
+    }
+  }
+
+  // Generate CSS custom properties from light theme roles
+  @each $role-category, $roles in map.get($json, 'light-roles') {
+    @if meta.type-of($roles) == 'map' {
+      @each $role-name, $role-value in $roles {
+        @if meta.type-of($role-value) == 'map' {
+          @each $nested-name, $nested-value in $role-value {
+            --md3-#{$role-category}-#{$role-name}-#{$nested-name}: #{$nested-value};
+          }
+        } @else {
+          --md3-#{$role-category}-#{$role-name}: #{$role-value};
+        }
+      }
+    }
+  }
+
+  // Generate semantic colors
+  @each $semantic, $roles in map.get($json, 'semantic-roles') {
+    @each $role, $value in $roles {
+      --md3-#{$semantic}-#{$role}: #{$value};
+    }
+  }
+}
+
+[data-theme="dark"] {
+  // Generate CSS custom properties from dark theme roles
+  @each $role-category, $roles in map.get($json, 'dark-roles') {
+    @if meta.type-of($roles) == 'map' {
+      @each $role-name, $role-value in $roles {
+        @if meta.type-of($role-value) == 'map' {
+          @each $nested-name, $nested-value in $role-value {
+            --md3-#{$role-category}-#{$role-name}-#{$nested-name}: #{$nested-value};
+          }
+        } @else {
+          --md3-#{$role-category}-#{$role-name}: #{$role-value};
+        }
+      }
+    }
+  }
+}

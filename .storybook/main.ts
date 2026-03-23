@@ -31,22 +31,47 @@ const config: StorybookConfig = {
         '@': resolve(__dirname, '..')
       }
     }
+    
+    // Override TypeScript configuration for Storybook
+    config.esbuild = {
+      ...config.esbuild,
+      tsconfigRaw: {
+        compilerOptions: {
+          target: "ES2020",
+          module: "ESNext",
+          moduleResolution: "node",
+          strict: false,
+          esModuleInterop: true,
+          skipLibCheck: true,
+          forceConsistentCasingInFileNames: true,
+          resolveJsonModule: true,
+          isolatedModules: true,
+          noEmit: true,
+          jsx: "preserve",
+          baseUrl: ".",
+          paths: {
+            "~/*": ["./*"],
+            "@/*": ["./*"]
+          }
+        },
+        include: [
+          "**/*.ts",
+          "**/*.tsx",
+          "**/*.vue",
+          "**/*.js"
+        ],
+        exclude: [
+          "node_modules",
+          ".nuxt",
+          "dist"
+        ]
+      }
+    }
+    
     config.plugins = [
       ...(config.plugins || []),
       vue()
     ]
-    
-    // Add CSS handling for SASS
-    config.css = {
-      postcss: {
-        plugins: [
-          require('postcss-import')({
-            root: resolve(__dirname, '..'),
-            path: 'node_modules/sass'
-          })
-        ]
-      }
-    }
     
     return config
   }
