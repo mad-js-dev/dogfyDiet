@@ -34,15 +34,15 @@
               :style="{ color: getTextColor(getColorForCell(row.key, column.key).value) }"
             >
               {{ getColorForCell(row.key, column.key).label }}
-              <div v-if="getColorForCell(row.key, column.key).sassVar" class="md3-color-sass-var">
-                {{ getColorForCell(row.key, column.key).sassVar }}
-              </div>
             </div>
             <div 
               class="md3-color-details" 
               :style="{ color: getTextColor(getColorForCell(row.key, column.key).value) }"
             >
               <div class="md3-color-hex">{{ getColorForCell(row.key, column.key).value }}</div>
+              <div v-if="getColorForCell(row.key, column.key).cssVar" class="md3-color-css-var">
+                {{ getColorForCell(row.key, column.key).cssVar }}
+              </div>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@ interface ColorData {
   label: string
   value: string
   resolvedValue: string
-  sassVar: string
+  cssVar: string
 }
 
 interface Column {
@@ -89,7 +89,7 @@ function getColorForCell(rowKey: string, columnKey: string): ColorData {
     label: '',
     value: '#ffffff',
     resolvedValue: '#ffffff',
-    sassVar: ''
+    cssVar: ''
   }
 }
 
@@ -133,4 +133,12 @@ function getColorStyle(colorData: ColorData) {
 
 // Import the same styles that were used in the original design-system page
 @use '~/assets/styles/components/md3-color-roles.scss';
+
+.md3-color-css-var {
+  font-size: 0.75rem;
+  font-family: 'Courier New', monospace;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+  word-break: break-all;
+}
 </style>

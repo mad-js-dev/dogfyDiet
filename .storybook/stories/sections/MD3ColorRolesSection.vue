@@ -33,24 +33,26 @@
 
     <div class="theme-selector">
       <label class="radio-option">
-        <input type="radio" v-model="selectedTheme" value="light" />
+        <input type="radio" v-model="selectedTheme" name="theme" value="light" />
         <span>Light Theme</span>
       </label>
       <label class="radio-option">
-        <input type="radio" v-model="selectedTheme" value="dark" />
+        <input type="radio" v-model="selectedTheme" name="theme" value="dark" />
         <span>Dark Theme</span>
       </label>
     </div>
 
     <div>
-      <pre>{{ JSON.stringify(displayedBrandRoles, null, 2) }}</pre>
+      <pre>Selected Theme: {{ selectedTheme }}</pre>
+      <pre>Brand Grid Data:</pre>
+      <pre>{{ JSON.stringify(reactiveBrandColorGrid, null, 2) }}</pre>
     </div>
 
     <!-- Brand & Surface Colors Grid -->
     <ColorRolesGrid
       :columns="brandColumns"
       :rows="colorRows"
-      :color-grid="brandColorGrid"
+      :color-grid="reactiveBrandColorGrid"
     />
 
     <!-- Semantic Colors Grid -->
@@ -71,7 +73,7 @@ interface ColorData {
   label: string
   value: string
   resolvedValue: string
-  sassVar: string
+  cssVar: string
 }
 
 interface Column {
@@ -164,6 +166,9 @@ function getBrandColorHex() {
 
 const brandColorHex = getBrandColorHex();
 
+// Theme selection - must be declared before grid generation
+const selectedTheme = ref('light')
+
 // Generate brand & surface color grid data dynamically
 function generateBrandColorGrid() {
   const grid: ColorGrid = {}
@@ -184,12 +189,41 @@ function generateBrandColorGrid() {
           varSuffix = 'on-surface-variant'
         }
       }
+      
+      // Get the actual CSS variable from the selected theme with safety check
+      const currentTheme = selectedTheme?.value || 'light'
+      const themeData = currentTheme === 'dark' ? darkBrandRoles.value : lightBrandRoles.value
+      
+      let actualCssVar = ''
+      let columnKey = column.key
+      
+      if (column.key === 'surface') {
+        // For surface, use neutral palette CSS variables
+        if (row.key === 'base') {
+          actualCssVar = currentTheme === 'dark' ? '--neutral-10' : '--neutral-90'
+        } else if (row.key === 'on') {
+          actualCssVar = currentTheme === 'dark' ? '--neutral-100' : '--neutral-10'
+        } else if (row.key === 'container') {
+          actualCssVar = currentTheme === 'dark' ? '--neutral-20' : '--neutral-70'
+        } else if (row.key === 'onContainer') {
+          actualCssVar = currentTheme === 'dark' ? '--neutral-100' : '--neutral-50'
+        }
+        columnKey = 'neutral'
+      } else {
+        // For brand colors, use brand roles
+        columnKey = column.key === 'primary' ? 'primary-green' : 
+                   column.key === 'secondary' ? 'accent-orange' : 
+                   column.key === 'tertiary' ? 'accent-yellow' : 
+                   column.key
+        actualCssVar = themeData[columnKey]?.[row.key]?.cssVar || ''
+      }
+      
       const cssVar = `--md3-roles-${column.key === 'primary' ? 'primarygreen' : column.key === 'secondary' ? 'accentorange' : column.key === 'tertiary' ? 'accentyellow' : 'neutral'}-${varSuffix}`
       grid[row.key][column.key] = {
         label: `${column.label}${row.key === 'base' ? '' : ' ' + row.label}`,
         value: cssVar,
         resolvedValue: brandColorHex[column.key][row.key],
-        sassVar: `get-md3-color('${varSuffix}')`
+        cssVar: actualCssVar
       }
     })
   })
@@ -197,7 +231,8 @@ function generateBrandColorGrid() {
   return grid
 }
 
-const brandColorGrid: ColorGrid = generateBrandColorGrid()
+// Make brandColorGrid reactive to theme changes
+const reactiveBrandColorGrid = computed(() => generateBrandColorGrid())
 
 // Generate semantic color grid data dynamically
 function generateSemanticColorGrid() {
@@ -208,10 +243,13 @@ function generateSemanticColorGrid() {
     grid[row.key] = {}
     semanticColumns.forEach(column => {
       const roleKey = row.key as keyof typeof semanticRoles.error
+      const semanticKey = column.key
+      const cssVar = `--md3-${semanticKey}${row.key === 'base' ? '' : '-' + row.key}`
       grid[row.key][column.key] = {
         label: `${column.label}${row.key === 'base' ? '' : ' ' + row.label}`,
-        value: `--md3-${column.key}${row.key === 'base' ? '' : '-' + row.key})`,
-        resolvedValue: semanticRoles[column.key][roleKey]
+        value: cssVar,
+        resolvedValue: semanticRoles[semanticKey][roleKey],
+        cssVar: cssVar
       }
     })
   })
@@ -220,9 +258,6 @@ function generateSemanticColorGrid() {
 }
 
 const semanticColorGrid: ColorGrid = generateSemanticColorGrid()
-
-// Theme selection
-const selectedTheme = ref('light')
 
 // Computed property to extract only the light version of brandRoles with updated CSS vars
 const lightBrandRoles = computed(() => {
