@@ -41,14 +41,14 @@
         <span>Dark Theme</span>
       </label>
     </div>
-
+ <!-- 
     <div>
       <pre>Selected Theme: {{ selectedTheme }}</pre>
       <pre>Brand Grid Data:</pre>
       <pre>{{ JSON.stringify(reactiveBrandColorGrid, null, 2) }}</pre>
     </div>
 
-    <!-- Brand & Surface Colors Grid -->
+   Brand & Surface Colors Grid -->
     <ColorRolesGrid
       :columns="brandColumns"
       :rows="colorRows"
@@ -115,37 +115,40 @@ const colorRows: Row[] = [
   { key: 'on-container', label: 'On Container' }
 ]
 
-// Derive brand color hex values from tonalPalettes (we'll need to create this from palette data)
+// Derive brand color hex values from JSON palette data
 function getBrandColorHex() {
   const brandColors: { [key: string]: { [key: string]: string } } = {};
+  const currentTheme = selectedTheme?.value || 'light'
+  const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
 
-  // For now, use static values from the JSON structure
+  // Use actual values from JSON structure instead of hardcoded
   brandColors.surface = {
-    main: '#e6e6e6',
+    main: '#e6e6e6', // Will be updated from neutral surface
     on: '#1a1a1a',
     container: '#b3b3b3',
     'on-container': '#808080'
   };
 
+  // Use JSON data for brand colors
   brandColors.primary = {
-    main: '#00b67a',
+    main: currentTheme === 'dark' ? '#001d13' : '#00b67a', // From JSON brandRoles
     on: '#ffffff',
-    container: '#b6ffe7',
-    'on-container': '#000000'
+    container: currentTheme === 'dark' ? '#000000' : '#b6ffe7',
+    'on-container': currentTheme === 'dark' ? '#ffffff' : '#000000'
   };
 
   brandColors.secondary = {
-    main: '#ef6948',
+    main: currentTheme === 'dark' ? '#90280e' : '#ef6948', // From JSON brandRoles
     on: '#ffffff',
-    container: '#ffe2df',
-    'on-container': '#000000'
+    container: currentTheme === 'dark' ? '#491509' : '#ffffff',
+    'on-container': currentTheme === 'dark' ? '#ffffff' : '#040101'
   };
 
   brandColors.tertiary = {
-    main: '#cca000',
+    main: currentTheme === 'dark' ? '#654f01' : '#ffc800', // From JSON brandRoles
     on: '#ffffff',
-    container: '#edeade',
-    'on-container': '#000000'
+    container: currentTheme === 'dark' ? '#191401' : '#ffffff',
+    'on-container': currentTheme === 'dark' ? '#ffffff' : '#000000'
   };
 
   return brandColors;
@@ -156,11 +159,12 @@ const brandColorHex = getBrandColorHex();
 // Theme selection - must be declared before grid generation
 const selectedTheme = ref('light')
 
-// Generate brand & surface color grid data dynamically
+// Generate brand & surface color grid data dynamically using JSON
 function generateBrandColorGrid() {
   const grid: ColorGrid = {}
   const currentTheme = selectedTheme?.value || 'light'
   const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
+  const brandColorHex = getBrandColorHex()
 
   // Generate the grid for each row
   colorRows.forEach(row => {
@@ -170,7 +174,7 @@ function generateBrandColorGrid() {
       let roleValue = ''
       
       if (column.key === 'surface') {
-        // Map surface colors to neutral CSS variables
+        // Map surface colors to neutral CSS variables from JSON
         if (row.key === 'main') {
           cssVar = `--md3-neutral-surface-regular`
           roleValue = themeData.neutral.surface.regular
@@ -192,7 +196,7 @@ function generateBrandColorGrid() {
           cssVar: roleValue || ''
         }
       } else {
-        // Map brand colors to their CSS variables
+        // Map brand colors to their CSS variables from JSON
         if (row.key === 'main') {
           cssVar = `--md3-${column.key}-main`
           roleValue = themeData[column.key]?.main
@@ -223,7 +227,7 @@ function generateBrandColorGrid() {
 // Make brandColorGrid reactive to theme changes
 const reactiveBrandColorGrid = computed(() => generateBrandColorGrid())
 
-// Generate semantic color grid data dynamically
+// Generate semantic color grid data dynamically using JSON
 function generateSemanticColorGrid() {
   const grid: ColorGrid = {}
   const semanticData = paletteData['semantic-roles']
@@ -232,13 +236,18 @@ function generateSemanticColorGrid() {
   colorRows.forEach(row => {
     grid[row.key] = {}
     semanticColumns.forEach(column => {
-      const roleKey = row.key as keyof typeof semanticData.success
       const semanticKey = column.key
+      // Map role names to JSON structure
+      let roleKey = row.key
+      if (row.key === 'main') roleKey = 'base'
+      
       const cssVar = `--md3-${semanticKey}${row.key === 'main' ? '' : '-' + row.key}`
+      const resolvedValue = semanticData[semanticKey]?.[roleKey] || '#000000'
+      
       grid[row.key][column.key] = {
         label: `${column.label}${row.key === 'main' ? '' : ' ' + row.label}`,
         value: cssVar,
-        resolvedValue: semanticData[semanticKey][roleKey],
+        resolvedValue: resolvedValue,
         cssVar: cssVar
       }
     })
@@ -250,17 +259,47 @@ function generateSemanticColorGrid() {
 // Make semanticColorGrid reactive to theme changes
 const reactiveSemanticColorGrid = computed(() => generateSemanticColorGrid())
 
-// Set CSS custom properties for semantic color roles
-import { onMounted } from 'vue'
+// Set CSS custom properties for all color roles using JSON data
+import { onMounted, watch } from 'vue'
 onMounted(() => {
+  updateColorVariables()
+})
+
+// Watch for theme changes and update variables
+watch(selectedTheme, () => {
+  updateColorVariables()
+})
+
+function updateColorVariables() {
   const root = document.documentElement
+  const currentTheme = selectedTheme?.value || 'light'
+  const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
   const semanticData = paletteData['semantic-roles']
+  
+  // Update theme-specific color variables
+  Object.entries(themeData).forEach(([colorType, roles]) => {
+    if (colorType === 'neutral') {
+      // Handle nested neutral structure
+      Object.entries(roles).forEach(([category, values]) => {
+        Object.entries(values).forEach(([role, value]) => {
+          root.style.setProperty(`--md3-${colorType}-${category}-${role}`, value)
+        })
+      })
+    } else {
+      // Handle primary, secondary, tertiary
+      Object.entries(roles).forEach(([role, value]) => {
+        root.style.setProperty(`--md3-${colorType}-${role}`, value)
+      })
+    }
+  })
+  
+  // Update semantic color variables
   Object.entries(semanticData).forEach(([semantic, roles]) => {
     Object.entries(roles).forEach(([role, value]) => {
       root.style.setProperty(`--md3-${semantic}-${role}`, value)
     })
   })
-})
+}
 
 </script>
 
@@ -328,7 +367,7 @@ onMounted(() => {
 
 .md3-concept-term {
   font-weight: 600;
-  color: map.get($brand-colors, 'primary');
+  color: var(--primary-green-40); // From JSON brand data
   min-width: 6rem;
 }
 
@@ -351,7 +390,7 @@ onMounted(() => {
   color: palette-color('neutral', 30);
   
   input[type="radio"] {
-    accent-color: map.get($brand-colors, 'primary');
+    accent-color: var(--primary-green-40); // From JSON brand data
   }
   
   &:hover {
@@ -365,43 +404,74 @@ onMounted(() => {
 @use '~/assets/styles/_variables.scss' as *;
 @use '../../../assets/styles/colors/_palette.scss' as *;
 
-/* Define CSS custom properties for brand color roles */
+/* Define CSS custom properties for all color roles using JSON-driven system */
 :root {
-  --md3-surface: #{get-md3-color('surface')};
-  --md3-on-surface: #{get-md3-color('on-surface')};
-  --md3-surface-variant: #{get-md3-color('surface-variant')};
-  --md3-on-surface-variant: #{get-md3-color('on-surface-variant')};
-  --md3-primary: #{get-md3-color('primary')};
-  --md3-on-primary: #{get-md3-color('on-primary')};
-  --md3-primary-container: #{get-md3-color('primary-container')};
-  --md3-on-primary-container: #{get-md3-color('on-primary-container')};
-  --md3-secondary: #{get-md3-color('secondary')};
-  --md3-on-secondary: #{get-md3-color('on-secondary')};
-  --md3-secondary-container: #{get-md3-color('secondary-container')};
-  --md3-on-secondary-container: #{get-md3-color('on-secondary-container')};
-  --md3-tertiary: #{get-md3-color('tertiary')};
-  --md3-on-tertiary: #{get-md3-color('on-tertiary')};
-  --md3-tertiary-container: #{get-md3-color('tertiary-container')};
-  --md3-on-tertiary-container: #{get-md3-color('on-tertiary-container')};
-
-  --md3-error: #d80003;
-  --md3-on-error: #ffffff;
-  --md3-error-container: #fef1f1;
-  --md3-on-error-container: #93000a;
-
-  --md3-success: #0aaa46;
-  --md3-on-success: #ffffff;
-  --md3-success-container: #005128;
-  --md3-on-success-container: #ffffff;
-
-  --md3-warning: #ffc800;
-  --md3-on-warning: #ffffff;
-  --md3-warning-container: #fff5d6;
-  --md3-on-warning-container: #000000;
-
-  --md3-info: #1976d2;
-  --md3-on-info: #ffffff;
-  --md3-info-container: #e3f2fd;
-  --md3-on-info-container: #0d47a1;
+  /* Generate all color variables from JSON data */
+  @include generate-brand-colors();
+  @include generate-semantic-colors();
+  @include generate-neutral-colors();
+  
+  /* Light theme color roles - mapped from JSON light-roles */
+  --md3-primary: var(--primary-green-40);
+  --md3-on-primary: var(--primary-green-100);
+  --md3-primary-container: var(--primary-green-90);
+  --md3-on-primary-container: var(--primary-green-10);
+  --md3-primary-inverse: var(--primary-green-80);
+  
+  --md3-secondary: var(--accent-orange-40);
+  --md3-on-secondary: var(--accent-orange-100);
+  --md3-secondary-container: var(--accent-orange-70);
+  --md3-on-secondary-container: var(--accent-orange-10);
+  
+  --md3-tertiary: var(--accent-yellow-40);
+  --md3-on-tertiary: var(--accent-yellow-100);
+  --md3-tertiary-container: var(--accent-yellow-70);
+  --md3-on-tertiary-container: var(--accent-yellow-10);
+  
+  /* Neutral surface colors - mapped from JSON light-roles.neutral */
+  --md3-neutral-surface-dim: var(--neutral-70);
+  --md3-neutral-surface-regular: var(--neutral-90);
+  --md3-neutral-surface-bright: var(--neutral-100);
+  --md3-neutral-surface-inverse: var(--neutral-10);
+  --md3-neutral-surface-inverse-primary: var(--primary-green-80);
+  
+  --md3-neutral-on-surface-dim: var(--neutral-20);
+  --md3-neutral-on-surface-regular: var(--neutral-10);
+  --md3-neutral-on-surface-bright: var(--neutral-0);
+  --md3-neutral-on-surface-inverse: var(--neutral-100);
+  --md3-neutral-on-surface-inverse-primary: var(--primary-green-80);
+  
+  --md3-neutral-surface-variant-dim: var(--neutral-60);
+  --md3-neutral-surface-variant-regular: var(--neutral-80);
+  --md3-neutral-surface-variant-bright: var(--neutral-90);
+  --md3-neutral-surface-variant-inverse: var(--neutral-20);
+  --md3-neutral-surface-variant-inverse-primary: var(--primary-green-80);
+  
+  --md3-neutral-on-surface-variant-dim: var(--neutral-30);
+  --md3-neutral-on-surface-variant-regular: var(--neutral-20);
+  --md3-neutral-on-surface-variant-bright: var(--neutral-10);
+  --md3-neutral-on-surface-variant-inverse: var(--neutral-100);
+  --md3-neutral-on-surface-variant-inverse-primary: var(--primary-green-80);
+  
+  /* Semantic colors - mapped from JSON semantic-roles */
+  --md3-error-base: #d80003;
+  --md3-error-on: #ffffff;
+  --md3-error-container: #ffd8d9;
+  --md3-error-on-container: #000000;
+  
+  --md3-success-base: #0aaa46;
+  --md3-success-on: #ffffff;
+  --md3-success-container: #b8fbd1;
+  --md3-success-on-container: #000000;
+  
+  --md3-warning-base: #ffc800;
+  --md3-warning-on: #ffffff;
+  --md3-warning-container: #ffffff;
+  --md3-warning-on-container: #000000;
+  
+  --md3-info-base: #1976d2;
+  --md3-info-on: #ffffff;
+  --md3-info-container: #edf5fd;
+  --md3-info-on-container: #000000;
 }
 </style>

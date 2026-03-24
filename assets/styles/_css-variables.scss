@@ -6,6 +6,7 @@
 @use 'sass:color';
 @use './variables' as vars;
 @use './colors/_palette' as palette;
+@use './colors/_palette-generated' as generated;
 @use './colors/dark-roles' as dark_roles;
 @use './colors/semantic-roles' as semantic_roles;
 @use './colors/brand-roles' as brand_roles;
@@ -22,14 +23,14 @@ $md3-light-surface: (
 
 :root {
   // Generate CSS custom properties from color-base
-  @each $category, $colors in palette.$color-base {
+  @each $category, $colors in generated.$color-base {
     @each $color-name, $color-value in $colors {
       --color-base-#{$category}-#{$color-name}: #{$color-value};
     }
   }
 
   // Generate CSS custom properties from color-palettes
-  @each $palette-name, $palette in palette.$color-palettes {
+  @each $palette-name, $palette in generated.$color-palettes {
     @each $tone, $color-value in $palette {
       --#{$palette-name}-#{$tone}: #{$color-value};
     }

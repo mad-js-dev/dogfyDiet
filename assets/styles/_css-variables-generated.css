@@ -8,11 +8,11 @@
   --md3-primary-inverse: var(--primary-green-80);
   --md3-secondary-main: var(--accent-orange-40);
   --md3-secondary-on: var(--accent-orange-100);
-  --md3-secondary-container: var(--accent-orange-80);
+  --md3-secondary-container: var(--accent-orange-70);
   --md3-secondary-on-container: var(--accent-orange-10);
   --md3-tertiary-main: var(--accent-yellow-40);
   --md3-tertiary-on: var(--accent-yellow-100);
-  --md3-tertiary-container: var(--accent-yellow-80);
+  --md3-tertiary-container: var(--accent-yellow-70);
   --md3-tertiary-on-container: var(--accent-yellow-10);
   --md3-neutral-surface-dim: var(--neutral-70);
   --md3-neutral-surface-regular: var(--neutral-90);

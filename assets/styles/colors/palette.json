@@ -1,4 +1,10 @@
 {
+  "base-colors": {
+    "primary-green": "#00B67A",
+    "accent-orange": "#EF6948",
+    "accent-yellow": "#ffc800",
+    "neutral": "#767676"
+  },
   "light-roles": {
     "primary": {
       "main": "var(--primary-green-40)",
@@ -10,13 +16,13 @@
     "secondary": {
       "main": "var(--accent-orange-40)",
       "on": "var(--accent-orange-100)",
-      "container": "var(--accent-orange-80)",
+      "container": "var(--accent-orange-70)",
       "on-container": "var(--accent-orange-10)"
     },
     "tertiary": {
       "main": "var(--accent-yellow-40)",
       "on": "var(--accent-yellow-100)",
-      "container": "var(--accent-yellow-80)",
+      "container": "var(--accent-yellow-70)",
       "on-container": "var(--accent-yellow-10)"
     },
     "neutral": {

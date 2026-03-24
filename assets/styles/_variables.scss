@@ -31,22 +31,22 @@ $md3-dark: (
 @use 'colors/semantic-roles';
 
 // Define individual semantic color variables for get-md3-color function
-$md3-error: map.get(semantic-roles.$error-roles, 'main');
+$md3-error: map.get(semantic-roles.$error-roles, 'base');
 $md3-on-error: map.get(semantic-roles.$error-roles, 'on');
 $md3-error-container: map.get(semantic-roles.$error-roles, 'container');
 $md3-on-error-container: map.get(semantic-roles.$error-roles, 'on-container');
 
-$md3-success: map.get(semantic-roles.$success-roles, 'main');
+$md3-success: map.get(semantic-roles.$success-roles, 'base');
 $md3-on-success: map.get(semantic-roles.$success-roles, 'on');
 $md3-success-container: map.get(semantic-roles.$success-roles, 'container');
 $md3-on-success-container: map.get(semantic-roles.$success-roles, 'on-container');
 
-$md3-warning: map.get(semantic-roles.$warning-roles, 'main');
+$md3-warning: map.get(semantic-roles.$warning-roles, 'base');
 $md3-on-warning: map.get(semantic-roles.$warning-roles, 'on');
 $md3-warning-container: map.get(semantic-roles.$warning-roles, 'container');
 $md3-on-warning-container: map.get(semantic-roles.$warning-roles, 'on-container');
 
-$md3-info: map.get(semantic-roles.$info-roles, 'main');
+$md3-info: map.get(semantic-roles.$info-roles, 'base');
 $md3-on-info: map.get(semantic-roles.$info-roles, 'on');
 $md3-info-container: map.get(semantic-roles.$info-roles, 'container');
 $md3-on-info-container: map.get(semantic-roles.$info-roles, 'on-container');
@@ -288,10 +288,10 @@ $shadow-lg: 0 10px 15px -3px rgba(palette-color('neutral', 10), 0.1), 0 4px 6px 
 $shadow-xl: 0 20px 25px -5px rgba(palette-color('neutral', 10), 0.1), 0 10px 10px -5px rgba(palette-color('neutral', 10), 0.04) !default;
 $shadow-2xl: 0 25px 50px -12px rgba(palette-color('neutral', 10), 0.25) !default;
 
-// Colored shadows
-$shadow-primary: 0 4px 14px 0 rgba(map.get(map.get($color-base, 'brand'), 'primary-green'), 0.15) !default;
-$shadow-accent: 0 4px 14px 0 rgba(map.get(map.get($color-base, 'brand'), 'accent-orange'), 0.15) !default;
-$shadow-error: 0 4px 14px 0 rgba(map.get($semantic-colors, 'error'), 0.15) !default;
+// Colored shadows - using JSON-first approach with CSS custom properties
+$shadow-primary: 0 4px 14px 0 rgba(var(--primary-green-60), 0.15) !default;
+$shadow-accent: 0 4px 14px 0 rgba(var(--accent-orange-60), 0.15) !default;
+$shadow-error: 0 4px 14px 0 rgba(var(--md3-error-base), 0.15) !default;
 
 // -----------------------------------------------------------------------------
 // TRANSITIONS & ANIMATIONS

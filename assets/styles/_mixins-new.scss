@@ -5,6 +5,7 @@
 
 @use './variables' as vars;
 @use './colors/palette' as palette;
+@use './colors/_palette-generated' as generated;
 @use 'sass:color';
 @use 'sass:map';
 @use './colors/dark-roles' as dark_roles;
@@ -180,22 +181,22 @@ $color-roles-light: (
     border: $md3-error
   ),
   'success': (
-    main: map.get(palette.$semantic-colors, 'success'),
+    main: map.get(generated.$semantic-colors, 'success'),
     onMain: palette-color('neutral', 100),
-    mainContainer: color.adjust(map.get(palette.$semantic-colors, 'success'), $lightness: -40%),
-    onMainContainer: color.adjust(map.get(palette.$semantic-colors, 'success'), $lightness: 20%),
+    mainContainer: color.adjust(map.get(generated.$semantic-colors, 'success'), $lightness: -40%),
+    onMainContainer: color.adjust(map.get(generated.$semantic-colors, 'success'), $lightness: 20%),
   ),
   'warning': (
-    main: map.get(palette.$semantic-colors, 'warning'),
+    main: map.get(generated.$semantic-colors, 'warning'),
     onMain: palette-color('neutral', 10),
-    mainContainer: color.adjust(map.get(palette.$semantic-colors, 'warning'), $lightness: -40%),
-    onMainContainer: color.adjust(map.get(palette.$semantic-colors, 'warning'), $lightness: 20%),
+    mainContainer: color.adjust(map.get(generated.$semantic-colors, 'warning'), $lightness: -40%),
+    onMainContainer: color.adjust(map.get(generated.$semantic-colors, 'warning'), $lightness: 20%),
   ),
   'info': (
-    main: map.get(palette.$semantic-colors, 'info'),
+    main: map.get(generated.$semantic-colors, 'info'),
     onMain: palette-color('neutral', 100),
-    mainContainer: color.adjust(map.get(palette.$semantic-colors, 'info'), $lightness: -40%),
-    onMainContainer: color.adjust(map.get(palette.$semantic-colors, 'info'), $lightness: 20%),
+    mainContainer: color.adjust(map.get(generated.$semantic-colors, 'info'), $lightness: -40%),
+    onMainContainer: color.adjust(map.get(generated.$semantic-colors, 'info'), $lightness: 20%),
   )
 );
 

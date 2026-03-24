@@ -1,34 +1,41 @@
 // Light Theme Color Roles
+// JSON-FIRST APPROACH: All colors come from palette.json
+// These maps are just for Sass compilation compatibility
 @use './_palette' as *;
+
+// Primary Roles - JSON references (light-roles.primary)
 $primary-roles: (
-  'main': var(--md3-roles-primarygreen-base),
-  'on': var(--md3-roles-primarygreen-on),
-  'container': var(--md3-roles-primarygreen-container),
-  'on-container': var(--md3-roles-primarygreen-on-container),
-  'inverse': var(--primary-green-80)
+  'main': var(--md3-primary),           // From JSON light-roles.primary.main
+  'on': var(--md3-on-primary),         // From JSON light-roles.primary.on
+  'container': var(--md3-primary-container), // From JSON light-roles.primary.container
+  'on-container': var(--md3-on-primary-container), // From JSON light-roles.primary.on-container
+  'inverse': var(--md3-primary-inverse)  // From JSON light-roles.primary.inverse
 ) !default;
 
+// Secondary Roles - JSON references (light-roles.secondary)
 $secondary-roles: (
-  'main': var(--md3-roles-accentorange-base),
-  'on': var(--md3-roles-accentorange-on),
-  'container': var(--md3-roles-accentorange-container),
-  'on-container': var(--md3-roles-accentorange-on-container)
+  'main': var(--md3-secondary),           // From JSON light-roles.secondary.main
+  'on': var(--md3-on-secondary),         // From JSON light-roles.secondary.on
+  'container': var(--md3-secondary-container), // From JSON light-roles.secondary.container
+  'on-container': var(--md3-on-secondary-container) // From JSON light-roles.secondary.on-container
 ) !default;
 
+// Tertiary Roles - JSON references (light-roles.tertiary)
 $tertiary-roles: (
-  'main': var(--md3-roles-accentyellow-base),
-  'on': var(--md3-roles-accentyellow-on),
-  'container': var(--md3-roles-accentyellow-container),
-  'on-container': var(--md3-roles-accentyellow-on-container)
+  'main': var(--md3-tertiary),           // From JSON light-roles.tertiary.main
+  'on': var(--md3-on-tertiary),         // From JSON light-roles.tertiary.on
+  'container': var(--md3-tertiary-container), // From JSON light-roles.tertiary.container
+  'on-container': var(--md3-on-tertiary-container) // From JSON light-roles.tertiary.on-container
 ) !default;
 
+// Neutral Roles - JSON references (light-roles.neutral)
 $neutral-roles: (
   'surface': (
-    'dim': var(--neutral-70),
-    'regular': var(--neutral-90),
-    'bright': var(--neutral-100),
-    'inverse': var(--neutral-10),
-    'inverse-primary': var(--primary-green-80)
+    'dim': var(--md3-neutral-surface-dim),           // From JSON light-roles.neutral.surface.dim
+    'regular': var(--md3-neutral-surface-regular),     // From JSON light-roles.neutral.surface.regular
+    'bright': var(--md3-neutral-surface-bright),       // From JSON light-roles.neutral.surface.bright
+    'inverse': var(--md3-neutral-surface-inverse),     // From JSON light-roles.neutral.surface.inverse
+    'inverse-primary': var(--md3-neutral-surface-inverse-primary) // From JSON light-roles.neutral.surface.inverse-primary
   ),
   'container': (
     'lowest': var(--neutral-98),
@@ -38,14 +45,14 @@ $neutral-roles: (
     'highest': var(--neutral-80)
   ),
   'onSurface': (
-    'regular': var(--neutral-10),
-    'variant': var(--neutral-50),
-    'inverse': var(--neutral-90),
-    'inverse-primary': var(--primary-green-20)
+    'regular': var(--md3-neutral-on-surface-regular),     // From JSON light-roles.neutral.on-surface.regular
+    'variant': var(--md3-neutral-on-surface-variant),     // From JSON light-roles.neutral.on-surface.variant
+    'inverse': var(--md3-neutral-on-surface-inverse),     // From JSON light-roles.neutral.on-surface.inverse
+    'inverse-primary': var(--md3-neutral-on-surface-inverse-primary) // From JSON light-roles.neutral.on-surface.inverse-primary
   ),
   'outline': (
-    'regular': var(--neutral-90),
-    'variant': var(--neutral-80)
+    'regular': var(--md3-neutral-surface-variant-regular), // From JSON light-roles.neutral.surface-variant.regular
+    'variant': var(--md3-neutral-surface-variant-inverse)  // From JSON light-roles.neutral.surface-variant.inverse
   ),
   'scrim': (
     'regular': rgba(var(--neutral-10), 0.32)
@@ -54,9 +61,21 @@ $neutral-roles: (
     'regular': rgba(var(--neutral-10), 0.12))
 ) !default;
 
+// Complete MD3 Light Theme Structure
+// All values reference JSON-generated CSS custom properties
 $md3-light: (
   'primary': $primary-roles,
   'secondary': $secondary-roles,
   'tertiary': $tertiary-roles,
   'neutral': $neutral-roles,
-)
+) !default;
+
+// Helper function to access light theme roles
+// Returns JSON-generated CSS custom property references
+@function light-role($color-type, $role) {
+  $suffix: '';
+  @if $role != 'main' {
+    $suffix: '-' + $role;
+  }
+  @return var(--md3-#{$color-type}#{$suffix});
+}

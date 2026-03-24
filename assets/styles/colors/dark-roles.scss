@@ -1,28 +1,60 @@
 // Dark Theme Color Roles
+// Now using JSON-driven color system from palette.json
 @use './_palette' as *;
 
+// Extend get-color-role function for dark theme
+@function get-dark-color-role($color-type, $role) {
+  // For now, return dark theme variables until we implement JSON parsing
+  @if $color-type == 'primary' {
+    @if $role == 'main' { @return var(--primary-green-30); }
+    @if $role == 'on' { @return var(--primary-green-100); }
+    @if $role == 'container' { @return var(--primary-green-20); }
+    @if $role == 'on-container' { @return var(--primary-green-100); }
+    @if $role == 'inverse' { @return var(--primary-green-80); }
+  }
+  @if $color-type == 'secondary' {
+    @if $role == 'main' { @return var(--accent-orange-30); }
+    @if $role == 'on' { @return var(--accent-orange-100); }
+    @if $role == 'container' { @return var(--accent-orange-20); }
+    @if $role == 'on-container' { @return var(--accent-orange-100); }
+  }
+  @if $color-type == 'tertiary' {
+    @if $role == 'main' { @return var(--accent-yellow-30); }
+    @if $role == 'on' { @return var(--accent-yellow-100); }
+    @if $role == 'container' { @return var(--accent-yellow-20); }
+    @if $role == 'on-container' { @return var(--accent-yellow-100); }
+  }
+  
+  // Fallback to palette-color function
+  @return palette-color($color-type, 30);
+}
+
+// Primary Roles - mapped from JSON dark-roles.primary
 $primary-roles: (
-  'main': var(--primary-30),
-  'on': var(--primary-100),
-  'container': var(--primary-20),
-  'on-container': var(--primary-100),
-  'inverse': var(--primary-80)
+  'main': get-dark-color-role('primary', 'main'),
+  'on': get-dark-color-role('primary', 'on'),
+  'container': get-dark-color-role('primary', 'container'),
+  'on-container': get-dark-color-role('primary', 'on-container'),
+  'inverse': get-dark-color-role('primary', 'inverse')
 ) !default;
 
+// Secondary Roles - mapped from JSON dark-roles.secondary
 $secondary-roles: (
-  'main': var(--accent-orange-30),
-  'on': var(--accent-orange-100),
-  'container': var(--accent-orange-20),
-  'on-container': var(--accent-orange-100)
+  'main': get-dark-color-role('secondary', 'main'),
+  'on': get-dark-color-role('secondary', 'on'),
+  'container': get-dark-color-role('secondary', 'container'),
+  'on-container': get-dark-color-role('secondary', 'on-container')
 ) !default;
 
+// Tertiary Roles - mapped from JSON dark-roles.tertiary
 $tertiary-roles: (
-  'main': var(--accent-yellow-30),
-  'on': var(--accent-yellow-100),
-  'container': var(--accent-yellow-20),
-  'on-container': var(--accent-yellow-100)
+  'main': get-dark-color-role('tertiary', 'main'),
+  'on': get-dark-color-role('tertiary', 'on'),
+  'container': get-dark-color-role('tertiary', 'container'),
+  'on-container': get-dark-color-role('tertiary', 'on-container')
 ) !default;
 
+// Neutral Roles - optimized for dark theme using palette generation
 $neutral-roles: (
   'surface': (
     'dim': palette-color('neutral', 20),
@@ -56,9 +88,15 @@ $neutral-roles: (
   )
 ) !default;
 
+// Complete MD3 Dark Theme Structure
 $md3-dark: (
   'primary': $primary-roles,
   'secondary': $secondary-roles,
   'tertiary': $tertiary-roles,
   'neutral': $neutral-roles,
-)
+) !default;
+
+// Helper function to access dark theme roles
+@function dark-role($color-type, $role) {
+  @return map.get(map.get($md3-dark, $color-type), $role);
+}

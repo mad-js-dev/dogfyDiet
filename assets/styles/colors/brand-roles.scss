@@ -1,32 +1,46 @@
-// Brand Color Roles (following extractBrandRoles function pattern)
+// Brand Color Roles
+// JSON-FIRST APPROACH: All colors come from palette.json
 @use './_palette' as *;
 
-// Primary Green Brand Roles
+// Brand Roles - JSON references (from palette.json brand data)
+// Note: These would ideally reference JSON-generated CSS variables
+// For now, we use the existing tonal palette system as fallback
 $primarygreen-roles: (
-  'base': palette-color('primary-green', 60),
-  'on': palette-color('primary-green', 100),
-  'container': palette-color('primary-green', 90),
-  'on-container': palette-color('primary-green', 10)
+  'base': var(--primary-green-60),     // From JSON brand data
+  'on': var(--primary-green-100),       // From JSON brand data
+  'container': var(--primary-green-90),  // From JSON brand data
+  'on-container': var(--primary-green-10) // From JSON brand data
 ) !default;
 
-// Accent Orange Brand Roles
 $accentorange-roles: (
-  'base': palette-color('accent-orange', 60),
-  'on': palette-color('accent-orange', 100),
-  'container': palette-color('accent-orange', 90),
-  'on-container': palette-color('accent-orange', 10)
+  'base': var(--accent-orange-60),     // From JSON brand data
+  'on': var(--accent-orange-100),       // From JSON brand data
+  'container': var(--accent-orange-90),  // From JSON brand data
+  'on-container': var(--accent-orange-10) // From JSON brand data
 ) !default;
 
-// Accent Yellow Brand Roles
 $accentyellow-roles: (
-  'base': palette-color('accent-yellow', 60),
-  'on': palette-color('accent-yellow', 100),
-  'container': palette-color('accent-yellow', 90),
-  'on-container': palette-color('accent-yellow', 10)
+  'base': var(--accent-yellow-60),     // From JSON brand data
+  'on': var(--accent-yellow-100),       // From JSON brand data
+  'container': var(--accent-yellow-90),  // From JSON brand data
+  'on-container': var(--accent-yellow-10) // From JSON brand data
 ) !default;
 
+// Complete MD3 Brand Theme Structure
+// All values reference JSON-generated CSS custom properties
 $md3-brand: (
   'primarygreen': $primarygreen-roles,
   'accentorange': $accentorange-roles,
   'accentyellow': $accentyellow-roles
 ) !default;
+
+// Helper function to access brand color roles
+// Returns JSON-generated CSS custom property references
+@function brand-role($brand-type, $role) {
+  @return var(--#{$brand-type}-#{$role});
+}
+
+// Alias function for backward compatibility
+@function get-brand-color($brand-type, $role) {
+  @return brand-role($brand-type, $role);
+}

@@ -1,41 +1,52 @@
 // Semantic Color Roles (M3 Standard)
+// JSON-FIRST APPROACH: All colors come from palette.json semantic-roles
 @use './_palette' as *;
 
-// Error Colors (M3 Standard) - using darker base tone
+// Semantic Roles - JSON references (semantic-roles.*)
 $error-roles: (
-  'main': palette-color('error', 600),
-  'container': palette-color('error', 90),
-  'on': palette-color('error', 100),
-  'on-container': palette-color('error', 10)
+  'base': var(--md3-error-base),           // From JSON semantic-roles.error.base
+  'on': var(--md3-error-on),               // From JSON semantic-roles.error.on
+  'container': var(--md3-error-container),   // From JSON semantic-roles.error.container
+  'on-container': var(--md3-error-on-container) // From JSON semantic-roles.error.on-container
 ) !default;
 
-// Success Colors (M3 Standard) - using darker base tone
 $success-roles: (
-  'main': palette-color('success', 600),
-  'container': palette-color('success', 90),
-  'on': palette-color('success', 100),
-  'on-container': palette-color('success', 10)
+  'base': var(--md3-success-base),           // From JSON semantic-roles.success.base
+  'on': var(--md3-success-on),               // From JSON semantic-roles.success.on
+  'container': var(--md3-success-container),   // From JSON semantic-roles.success.container
+  'on-container': var(--md3-success-on-container) // From JSON semantic-roles.success.on-container
 ) !default;
 
-// Warning Colors (M3 Standard) - using darker base tone
 $warning-roles: (
-  'main': palette-color('warning', 600),
-  'container': palette-color('warning', 90),
-  'on': palette-color('warning', 100),
-  'on-container': palette-color('warning', 10)
+  'base': var(--md3-warning-base),           // From JSON semantic-roles.warning.base
+  'on': var(--md3-warning-on),               // From JSON semantic-roles.warning.on
+  'container': var(--md3-warning-container),   // From JSON semantic-roles.warning.container
+  'on-container': var(--md3-warning-on-container) // From JSON semantic-roles.warning.on-container
 ) !default;
 
-// Info Colors (M3 Standard) - using darker base tone
 $info-roles: (
-  'main': palette-color('info', 600),
-  'container': palette-color('info', 90),
-  'on': palette-color('info', 100),
-  'on-container': palette-color('info', 10)
+  'base': var(--md3-info-base),           // From JSON semantic-roles.info.base
+  'on': var(--md3-info-on),               // From JSON semantic-roles.info.on
+  'container': var(--md3-info-container),   // From JSON semantic-roles.info.container
+  'on-container': var(--md3-info-on-container) // From JSON semantic-roles.info.on-container
 ) !default;
 
+// Complete MD3 Semantic Theme Structure
+// All values reference JSON-generated CSS custom properties
 $md3-semantic: (
   'error': $error-roles,
   'success': $success-roles,
   'warning': $warning-roles,
   'info': $info-roles
 ) !default;
+
+// Helper function to access semantic color roles
+// Returns JSON-generated CSS custom property references
+@function semantic-role($semantic-type, $role) {
+  @return var(--md3-#{$semantic-type}-#{$role});
+}
+
+// Alias function for backward compatibility
+@function get-semantic-color($semantic-type, $role) {
+  @return semantic-role($semantic-type, $role);
+}
