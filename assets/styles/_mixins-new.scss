@@ -2,10 +2,11 @@
 // DOGFY DIET DESIGN SYSTEM - ADVANCED MIXINS
 // =============================================================================
 // Role-based mixing system that combines typography, colors, and elevation
+// Updated: Fixed semantic-colors namespace
 
 @use './variables' as vars;
 @use './colors/palette' as palette;
-@use './colors/_palette-generated' as generated;
+@use './colors/_colors-palette-generated' as generated;
 @use 'sass:color';
 @use 'sass:map';
 @use './colors/dark-roles' as dark_roles;

@@ -36,22 +36,22 @@
   --md3-neutral-on-surface-variant-inverse-primary: var(--primary-green-80);
 
   /* Semantic colors */
-  --md3-success-base: #0aaa46;
-  --md3-success-on: #ffffff;
-  --md3-success-container: #b8fbd1;
-  --md3-success-on-container: #000000;
-  --md3-error-base: #d80003;
-  --md3-error-on: #ffffff;
-  --md3-error-container: #ffd8d9;
-  --md3-error-on-container: #000000;
-  --md3-warning-base: #ffc800;
-  --md3-warning-on: #ffffff;
-  --md3-warning-container: #ffffff;
-  --md3-warning-on-container: #000000;
-  --md3-info-base: #1976d2;
-  --md3-info-on: #ffffff;
-  --md3-info-container: #edf5fd;
-  --md3-info-on-container: #000000;
+  --md3-success-base: var(--success-60);
+  --md3-success-on: var(--success-100);
+  --md3-success-container: var(--success-90);
+  --md3-success-on-container: var(--success-0);
+  --md3-error-base: var(--error-60);
+  --md3-error-on: var(--error-100);
+  --md3-error-container: var(--error-90);
+  --md3-error-on-container: var(--error-0);
+  --md3-warning-base: var(--warning-60);
+  --md3-warning-on: var(--warning-100);
+  --md3-warning-container: var(--warning-100);
+  --md3-warning-on-container: var(--warning-0);
+  --md3-info-base: var(--info-60);
+  --md3-info-on: var(--info-100);
+  --md3-info-container: var(--info-95);
+  --md3-info-on-container: var(--info-0);
 }
 
 [data-theme="dark"] {

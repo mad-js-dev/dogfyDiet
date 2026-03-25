@@ -443,6 +443,18 @@ $z-index-popover: 1060 !default;
 $z-index-tooltip: 1070 !default;
 
 // -----------------------------------------------------------------------------
+// BRAND COLORS MAP
+// -----------------------------------------------------------------------------
+
+// Brand colors map for backward compatibility
+// Maps to the base colors from JSON palette data
+$brand-colors: (
+  'primary': #00B67A,
+  'accent-orange': #EF6948,
+  'accent-yellow': #ffc800
+) !default;
+
+// -----------------------------------------------------------------------------
 // COMPONENT SPECIFIC
 // -----------------------------------------------------------------------------
 

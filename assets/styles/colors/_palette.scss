@@ -80,98 +80,28 @@
   // Try to get CSS custom property first (set from JSON)
   $css-var: get-json-color($color-name, $tone);
   
-  // Use generated Sass variables as fallback for compilation
-  // These are generated from JSON data, maintaining single source of truth
-  @if $color-name == 'primary-green' {
-    @if $tone == 0 { @return palette.$primary-green-0; }
-    @if $tone == 10 { @return palette.$primary-green-10; }
-    @if $tone == 20 { @return palette.$primary-green-20; }
-    @if $tone == 30 { @return palette.$primary-green-30; }
-    @if $tone == 40 { @return palette.$primary-green-40; }
-    @if $tone == 50 { @return palette.$primary-green-50; }
-    @if $tone == 60 { @return palette.$primary-green-60; }
-    @if $tone == 70 { @return palette.$primary-green-70; }
-    @if $tone == 80 { @return palette.$primary-green-80; }
-    @if $tone == 90 { @return palette.$primary-green-90; }
-    @if $tone == 95 { @return palette.$primary-green-95; }
-    @if $tone == 98 { @return palette.$primary-green-98; }
-    @if $tone == 99 { @return palette.$primary-green-99; }
-    @if $tone == 100 { @return palette.$primary-green-100; }
-  }
-  @if $color-name == 'accent-orange' {
-    @if $tone == 0 { @return palette.$accent-orange-0; }
-    @if $tone == 10 { @return palette.$accent-orange-10; }
-    @if $tone == 20 { @return palette.$accent-orange-20; }
-    @if $tone == 30 { @return palette.$accent-orange-30; }
-    @if $tone == 40 { @return palette.$accent-orange-40; }
-    @if $tone == 50 { @return palette.$accent-orange-50; }
-    @if $tone == 60 { @return palette.$accent-orange-60; }
-    @if $tone == 70 { @return palette.$accent-orange-70; }
-    @if $tone == 80 { @return palette.$accent-orange-80; }
-    @if $tone == 90 { @return palette.$accent-orange-90; }
-    @if $tone == 95 { @return palette.$accent-orange-95; }
-    @if $tone == 98 { @return palette.$accent-orange-98; }
-    @if $tone == 99 { @return palette.$accent-orange-99; }
-    @if $tone == 100 { @return palette.$accent-orange-100; }
-  }
-  @if $color-name == 'accent-yellow' {
-    @if $tone == 0 { @return palette.$accent-yellow-0; }
-    @if $tone == 10 { @return palette.$accent-yellow-10; }
-    @if $tone == 20 { @return palette.$accent-yellow-20; }
-    @if $tone == 30 { @return palette.$accent-yellow-30; }
-    @if $tone == 40 { @return palette.$accent-yellow-40; }
-    @if $tone == 50 { @return palette.$accent-yellow-50; }
-    @if $tone == 60 { @return palette.$accent-yellow-60; }
-    @if $tone == 70 { @return palette.$accent-yellow-70; }
-    @if $tone == 80 { @return palette.$accent-yellow-80; }
-    @if $tone == 90 { @return palette.$accent-yellow-90; }
-    @if $tone == 95 { @return palette.$accent-yellow-95; }
-    @if $tone == 98 { @return palette.$accent-yellow-98; }
-    @if $tone == 99 { @return palette.$accent-yellow-99; }
-    @if $tone == 100 { @return palette.$accent-yellow-100; }
-  }
-  @if $color-name == 'neutral' {
-    @if $tone == 0 { @return palette.$neutral-0; }
-    @if $tone == 10 { @return palette.$neutral-10; }
-    @if $tone == 20 { @return palette.$neutral-20; }
-    @if $tone == 30 { @return palette.$neutral-30; }
-    @if $tone == 40 { @return palette.$neutral-40; }
-    @if $tone == 50 { @return palette.$neutral-50; }
-    @if $tone == 60 { @return palette.$neutral-60; }
-    @if $tone == 70 { @return palette.$neutral-70; }
-    @if $tone == 80 { @return palette.$neutral-80; }
-    @if $tone == 90 { @return palette.$neutral-90; }
-    @if $tone == 95 { @return palette.$neutral-95; }
-    @if $tone == 98 { @return palette.$neutral-98; }
-    @if $tone == 99 { @return palette.$neutral-99; }
-    @if $tone == 100 { @return palette.$neutral-100; }
-  }
-  
-  // Handle semantic colors
-  @if $color-name == 'success' {
-    @if $tone == 'base' { @return palette.$success-base; }
-    @if $tone == 'on' { @return palette.$success-on; }
-    @if $tone == 'container' { @return palette.$success-container; }
-    @if $tone == 'on-container' { @return palette.$success-on-container; }
-  }
+  // Use color-palettes map as fallback for compilation
+  // This is generated from JSON data, maintaining single source of truth
   @if $color-name == 'error' {
-    @if $tone == 'base' { @return palette.$error-base; }
-    @if $tone == 'on' { @return palette.$error-on; }
-    @if $tone == 'container' { @return palette.$error-container; }
-    @if $tone == 'on-container' { @return palette.$error-on-container; }
+    @if $tone == 'base' { @return generated.$error-base; }
+    @if $tone == 'on' { @return generated.$error-on; }
+    @if $tone == 'container' { @return generated.$error-container; }
+    @if $tone == 'on-container' { @return generated.$error-on-container; }
   }
   @if $color-name == 'warning' {
-    @if $tone == 'base' { @return palette.$warning-base; }
-    @if $tone == 'on' { @return palette.$warning-on; }
-    @if $tone == 'container' { @return palette.$warning-container; }
-    @if $tone == 'on-container' { @return palette.$warning-on-container; }
+    @if $tone == 'base' { @return generated.$warning-base; }
+    @if $tone == 'on' { @return generated.$warning-on; }
+    @if $tone == 'container' { @return generated.$warning-container; }
+    @if $tone == 'on-container' { @return generated.$warning-on-container; }
   }
   @if $color-name == 'info' {
-    @if $tone == 'base' { @return palette.$info-base; }
-    @if $tone == 'on' { @return palette.$info-on; }
-    @if $tone == 'container' { @return palette.$info-container; }
-    @if $tone == 'on-container' { @return palette.$info-on-container; }
+    @if $tone == 'base' { @return generated.$info-base; }
+    @if $tone == 'on' { @return generated.$info-on; }
+    @if $tone == 'container' { @return generated.$info-container; }
+    @if $tone == 'on-container' { @return generated.$info-on-container; }
   }
+  
+  @return map-get(map-get(generated.$color-palettes, $color-name), $tone);
   
   // Generate fallback palette for other colors
   $base-colors: (

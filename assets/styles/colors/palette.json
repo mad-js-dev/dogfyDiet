@@ -1,9 +1,30 @@
 {
-  "base-colors": {
+  "base-brand-colors": {
     "primary-green": "#00B67A",
     "accent-orange": "#EF6948",
     "accent-yellow": "#ffc800",
     "neutral": "#767676"
+  },
+  "base-semantic-colors": {
+    "success": "#0aaa46",
+    "error": "#d80003",
+    "warning": "#ffc800",
+    "info": "#1976d2"
+  },
+  "palette-adjustments": {
+    "10": {"lightness": "-60%", "saturation": "-10%"},
+    "20": {"lightness": "-45%", "saturation": "-5%"},
+    "30": {"lightness": "-30%", "saturation": "-2%"},
+    "40": {"lightness": "-20%"},
+    "50": {"lightness": "-10%"},
+    "60": {"lightness": "0%"},
+    "70": {"lightness": "15%"},
+    "80": {"lightness": "30%"},
+    "90": {"lightness": "45%"},
+    "95": {"lightness": "55%", "saturation": "-20%"},
+    "98": {"lightness": "65%", "saturation": "-40%"},
+    "99": {"lightness": "75%", "saturation": "-60%"},
+    "100": {"lightness": "100%"}
   },
   "light-roles": {
     "primary": {
@@ -109,28 +130,28 @@
   },
   "semantic-roles": {
     "success": {
-      "base": "#0aaa46",
-      "on": "#ffffff",
-      "container": "#b8fbd1",
-      "on-container": "#000000"
+      "base": "var(--success-60)",
+      "on": "var(--success-100)",
+      "container": "var(--success-90)",
+      "on-container": "var(--success-0)"
     },
     "error": {
-      "base": "#d80003",
-      "on": "#ffffff",
-      "container": "#ffd8d9",
-      "on-container": "#000000"
+      "base": "var(--error-60)",
+      "on": "var(--error-100)",
+      "container": "var(--error-90)",
+      "on-container": "var(--error-0)"
     },
     "warning": {
-      "base": "#ffc800",
-      "on": "#ffffff",
-      "container": "#ffffff",
-      "on-container": "#000000"
+      "base": "var(--warning-60)",
+      "on": "var(--warning-100)",
+      "container": "var(--warning-100)",
+      "on-container": "var(--warning-0)"
     },
     "info": {
-      "base": "#1976d2",
-      "on": "#ffffff",
-      "container": "#edf5fd",
-      "on-container": "#000000"
+      "base": "var(--info-60)",
+      "on": "var(--info-100)",
+      "container": "var(--info-95)",
+      "on-container": "var(--info-0)"
     }
   }
 }

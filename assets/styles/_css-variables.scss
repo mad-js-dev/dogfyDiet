@@ -6,7 +6,7 @@
 @use 'sass:color';
 @use './variables' as vars;
 @use './colors/_palette' as palette;
-@use './colors/_palette-generated' as generated;
+@use './colors/_colors-palette-generated' as generated;
 @use './colors/dark-roles' as dark_roles;
 @use './colors/semantic-roles' as semantic_roles;
 @use './colors/brand-roles' as brand_roles;
