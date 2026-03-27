@@ -3,7 +3,7 @@
     <h2 class="step-title">Color Palette</h2>
 
     <div class="pantone-sections-container">
-      <ColorSection
+      <BaseColors
         v-for="section in colorSections"
         :key="section.sectionId"
         :section-id="section.sectionId"
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { getCssProperty } from '../../utils/colors.js'
-import ColorSection from '../components/ColorSection.vue'
+import BaseColors from '../components/baseColors.vue'
 import { generateColorSections } from '../../../assets/styles/colors/palette.js'
 
 interface ColorData {

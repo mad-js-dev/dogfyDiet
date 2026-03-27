@@ -101,7 +101,7 @@
     @if $tone == 'on-container' { @return generated.$info-on-container; }
   }
   
-  @return map-get(map-get(generated.$color-palettes, $color-name), $tone);
+  @return map.get(map.get(generated.$color-palettes, $color-name), $tone);
   
   // Generate fallback palette for other colors
   $base-colors: (

@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import ColorsShowcase from './components/ColorsShowcase.vue'
+import Colors from './Colors.vue'
+import MD3TonalPalettesSection from './sections/MD3TonalPalettesSection.vue'
 
 const meta = {
   title: 'Styleguide/Colors',
-  component: ColorsShowcase,
+  component: Colors,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -17,8 +18,8 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Palette: Story = {
-  name: 'Color Palette',
+export const BaseColors: Story = {
+  name: 'Base colors',
   parameters: {
     showPanel: false,
     docs: {
@@ -28,7 +29,23 @@ export const Palette: Story = {
     }
   },
   render: () => ({
-    components: { ColorsShowcase },
-    template: '<ColorsShowcase />'
+    components: { Colors },
+    template: '<Colors />'
+  })
+}
+
+export const DynamicPalettes: Story = {
+  name: 'Dynamic palettes',
+  parameters: {
+    showPanel: false,
+    docs: {
+      description: {
+        story: 'All color tokens in the design system.'
+      }
+    }
+  },
+  render: () => ({
+    components: { MD3TonalPalettesSection },
+    template: '<MD3TonalPalettesSection />'
   })
 }

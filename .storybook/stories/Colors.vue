@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import paletteData from '../../../assets/styles/colors/palette.json'
-import ColorSection from './ColorSection.vue'
+import paletteData from '../../assets/styles/colors/palette.json'
+import BaseColors from './components/baseColors.vue'
 
 // Format color name for display (e.g., "primary-green" -> "Primary Green")
 function formatColorName(name: string): string {
@@ -56,7 +56,7 @@ const lightRoles = Object.entries(paletteData['light-roles']).flatMap(([category
     <h1 class="text-3xl font-bold mb-8">Color Palette</h1>
 
     <!-- Brand Colors -->
-    <ColorSection
+    <BaseColors
       section-id="brand"
       section-type="brand"
       title="Brand Colors"
@@ -65,7 +65,7 @@ const lightRoles = Object.entries(paletteData['light-roles']).flatMap(([category
     />
 
     <!-- Semantic Colors -->
-    <ColorSection
+    <BaseColors
       section-id="semantic"
       section-type="semantic"
       title="Semantic Colors"
