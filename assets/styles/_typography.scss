@@ -109,7 +109,7 @@ small {
 
 // Links
 a {
-  color: map.get($brand-colors, 'primary');
+  color: map.get($brand-colors, 'primary-green');
   text-decoration: none;
   transition: color $transition-fast $ease-out;
   
@@ -119,7 +119,7 @@ a {
   }
   
   &:focus-visible {
-    outline: 2px solid map.get($brand-colors, 'primary');
+    outline: 2px solid map.get($brand-colors, 'primary-green');
     outline-offset: 2px;
     border-radius: $radius-sm;
   }
@@ -188,7 +188,7 @@ ul, ol {
 blockquote {
   margin: $spacing-6 0;
   padding: $spacing-4 $spacing-6;
-  border-left: 4px solid map.get($brand-colors, 'primary');
+  border-left: 4px solid map.get($brand-colors, 'primary-green');
   background-color: $neutral-lightest;
   border-radius: $radius-md;
   
@@ -314,9 +314,9 @@ pre {
 .normal-case { text-transform: none; }
 
 // Text color utilities
-.text-primary { color: map.get($brand-colors, 'primary'); }
-.text-primary-dark { color: color.adjust(map.get($brand-colors, 'primary'), $lightness: -20%); }
-.text-primary-light { color: color.adjust(map.get($brand-colors, 'primary'), $lightness: 20%); }
+.text-primary { color: map.get($brand-colors, 'primary-green'); }
+.text-primary-dark { color: color.adjust(map.get($brand-colors, 'primary-green'), $lightness: -20%); }
+.text-primary-light { color: color.adjust(map.get($brand-colors, 'primary-green'), $lightness: 20%); }
 .text-accent { color: map.get($brand-colors, 'accent-orange'); }
 .text-accent-dark { color: color.adjust(map.get($brand-colors, 'accent-orange'), $lightness: -20%); }
 .text-accent-light { color: map.get($brand-colors, 'accent-yellow'); }
@@ -434,7 +434,7 @@ pre {
 // Pet sections
 .pet-name {
   @include typography(h4, semibold, primary);
-  color: map.get($brand-colors, 'primary');
+  color: map.get($brand-colors, 'primary-green');
   margin-bottom: $spacing-3;
 }
 
@@ -523,7 +523,7 @@ pre {
   }
   
   a {
-    color: map.get($brand-colors, 'primary');
+    color: map.get($brand-colors, 'primary-green');
     text-decoration: underline;
   }
   

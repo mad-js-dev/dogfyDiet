@@ -43,8 +43,9 @@ function generateColorTones() {
   // Generate semantic-colors map for compatibility
   sass += '// Semantic colors map for compatibility\n';
   sass += '$semantic-colors: (\n';
-  Object.entries(paletteData['semantic-roles']).forEach(([semantic, roles]) => {
-    sass += `  '${semantic}': ${roles.base},\n`;
+  Object.entries(baseSemanticColors).forEach(([semantic, baseColor]) => {
+    const palette = generateTonalPalette(baseColor);
+    sass += `  '${semantic}': ${palette[60]},\n`;
   });
   sass += ') !default;\n\n';
   
@@ -191,6 +192,18 @@ function generateRoles() {
   let css = '\n// Generated role variables\n';
   css += ':root {\n';
   
+  // Base brand colors as CSS variables
+  css += '  /* Base Brand Colors */\n';
+  Object.entries(paletteData['base-brand-colors']).forEach(([colorName, value]) => {
+    css += `  --base-brand-${colorName}: ${value};\n`;
+  });
+  
+  // Base semantic colors as CSS variables
+  css += '  /* Base Semantic Colors */\n';
+  Object.entries(paletteData['base-semantic-colors']).forEach(([colorName, value]) => {
+    css += `  --base-semantic-${colorName}: ${value};\n`;
+  });
+  
   // Light theme roles (default)
   const lightRoles = paletteData['light-roles'];
   css += '  /* Light Theme Roles */\n';
@@ -245,6 +258,6 @@ function generateRoleEntries(roles, css, callback) {
 const sassContent = generateColorTones() + generateRoles();
 
 // Write to generated Sass file
-fs.writeFileSync(path.join(__dirname, '../assets/styles/colors/_colors-palette-generated.scss'), sassContent);
+fs.writeFileSync(path.join(__dirname, '../assets/styles/colors/_palette-generated.scss'), sassContent);
 
 console.log('Sass variables generated successfully!');

@@ -215,9 +215,9 @@ body {
 .p-24 { padding: $spacing-24; }
 
 // Background utilities
-.bg-primary { background-color: map.get($brand-colors, 'primary'); }
-.bg-primary-dark { background-color: color.adjust(map.get($brand-colors, 'primary'), $lightness: -20%); }
-.bg-primary-light { background-color: color.adjust(map.get($brand-colors, 'primary'), $lightness: 20%); }
+.bg-primary { background-color: map.get($brand-colors, 'primary-green'); }
+.bg-primary-dark { background-color: color.adjust(map.get($brand-colors, 'primary-green'), $lightness: -20%); }
+.bg-primary-light { background-color: color.adjust(map.get($brand-colors, 'primary-green'), $lightness: 20%); }
 .bg-accent { background-color: map.get($brand-colors, 'accent-orange'); }
 .bg-accent-dark { background-color: color.adjust(map.get($brand-colors, 'accent-orange'), $lightness: -20%); }
 .bg-accent-light { background-color: map.get($brand-colors, 'accent-yellow'); }
@@ -240,7 +240,7 @@ body {
 .border-2 { border: 2px solid $neutral-light; }
 .border-4 { border: 4px solid $neutral-light; }
 
-.border-primary { border-color: map.get($brand-colors, 'primary'); }
+.border-primary { border-color: map.get($brand-colors, 'primary-green'); }
 .border-accent { border-color: map.get($brand-colors, 'accent-orange'); }
 .border-dark { border-color: $neutral-dark; }
 .border-light { border-color: $neutral-light; }
@@ -393,7 +393,7 @@ body {
   
   .progress-fill {
     height: 100%;
-    background-color: map.get($brand-colors, 'primary');
+    background-color: map.get($brand-colors, 'primary-green');
     transition: width $transition-normal $ease-out;
     border-radius: $radius-full;
   }
@@ -426,8 +426,8 @@ body {
   }
   
   &.active {
-    border-color: map.get($brand-colors, 'primary');
-    background-color: rgba(map.get($brand-colors, 'primary'), 0.05);
+    border-color: map.get($brand-colors, 'primary-green');
+    background-color: rgba(map.get($brand-colors, 'primary-green'), 0.05);
   }
 }
 

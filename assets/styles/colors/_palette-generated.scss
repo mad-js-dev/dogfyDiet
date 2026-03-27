@@ -12,10 +12,10 @@ $brand-colors: (
 
 // Semantic colors map for compatibility
 $semantic-colors: (
-  'success': var(--success-60),
-  'error': var(--error-60),
-  'warning': var(--warning-60),
-  'info': var(--info-60),
+  'success': #0aaa46,
+  'error': #d80003,
+  'warning': #ffc800,
+  'info': #1976d2,
 ) !default;
 
 // Color palettes map for compatibility

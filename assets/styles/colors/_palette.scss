@@ -6,7 +6,7 @@
 @use "sass:color";
 
 // Import generated color variables from JSON
-@use 'palette-generated' as palette;
+@use 'palette-generated' as generated;
 
 // Dynamic Palette Generation Function
 // Enhanced to work with JSON-driven color definitions

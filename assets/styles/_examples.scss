@@ -85,8 +85,8 @@
   
   &:focus {
     outline: none;
-    border-color: map.get($brand-colors, 'primary');
-    box-shadow: 0 0 0 3px rgba(map.get($brand-colors, 'primary'), 0.1);
+    border-color: map.get($brand-colors, 'primary-green');
+    box-shadow: 0 0 0 3px rgba(map.get($brand-colors, 'primary-green'), 0.1);
   }
   
   &::placeholder {

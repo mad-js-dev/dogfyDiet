@@ -309,7 +309,7 @@
 /// Focus visible styles
 @mixin focus-visible {
   &:focus-visible {
-    outline: 2px solid map.get($brand-colors, 'primary');
+    outline: 2px solid map.get($brand-colors, 'primary-green');
     outline-offset: 2px;
   }
 }
@@ -321,7 +321,7 @@
   }
   
   &:focus-visible {
-    outline: 2px solid map.get($brand-colors, 'primary');
+    outline: 2px solid map.get($brand-colors, 'primary-green');
     outline-offset: 2px;
   }
 }
@@ -367,11 +367,11 @@
 
   // Color variants
   @if $variant == primary {
-    background-color: map.get($brand-colors, 'primary');
+    background-color: map.get($brand-colors, 'primary-green');
     color: $neutral-white;
     
     &:hover:not(:disabled) {
-      background-color: color.adjust(map.get($brand-colors, 'primary'), $lightness: -20%);
+      background-color: color.adjust(map.get($brand-colors, 'primary-green'), $lightness: -20%);
       transform: translateY(-1px);
       box-shadow: $shadow-primary;
     }
@@ -398,11 +398,11 @@
   }
   @else if $variant == outline {
     background-color: transparent;
-    color: map.get($brand-colors, 'primary');
-    border: 2px solid map.get($brand-colors, 'primary');
+    color: map.get($brand-colors, 'primary-green');
+    border: 2px solid map.get($brand-colors, 'primary-green');
     
     &:hover:not(:disabled) {
-      background-color: map.get($brand-colors, 'primary');
+      background-color: map.get($brand-colors, 'primary-green');
       color: $neutral-white;
       transform: translateY(-1px);
       box-shadow: $shadow-primary;
@@ -415,10 +415,10 @@
   }
   @else if $variant == ghost {
     background-color: transparent;
-    color: map.get($brand-colors, 'primary');
+    color: map.get($brand-colors, 'primary-green');
     
     &:hover:not(:disabled) {
-      background-color: rgba(map.get($brand-colors, 'primary'), 0.1);
+      background-color: rgba(map.get($brand-colors, 'primary-green'), 0.1);
     }
   }
 
@@ -477,8 +477,8 @@
   @else {
     &:focus {
       outline: none;
-      border-color: map.get($brand-colors, 'primary');
-      box-shadow: 0 0 0 3px rgba(map.get($brand-colors, 'primary'), 0.1);
+      border-color: map.get($brand-colors, 'primary-green');
+      box-shadow: 0 0 0 3px rgba(map.get($brand-colors, 'primary-green'), 0.1);
     }
   }
 

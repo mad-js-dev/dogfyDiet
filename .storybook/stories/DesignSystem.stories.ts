@@ -10,7 +10,8 @@ const meta = {
         component: 'Complete design system documentation including colors, typography, and usage guidelines.'
       }
     }
-  }
+  },
+  tags: ['hidden']
 } satisfies Meta
 
 export default meta
