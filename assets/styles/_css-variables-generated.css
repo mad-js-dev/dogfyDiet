@@ -162,6 +162,16 @@
   --md3-neutral-on-surface-variant-bright: var(--neutral-10);
   --md3-neutral-on-surface-variant-inverse: var(--neutral-100);
   --md3-neutral-on-surface-variant-inverse-primary: var(--primary-green-80);
+  --md3-neutral-container-container-lowest: var(--neutral-95);
+  --md3-neutral-container-container-low: var(--neutral-90);
+  --md3-neutral-container-container: var(--neutral-85);
+  --md3-neutral-container-container-high: var(--neutral-80);
+  --md3-neutral-container-container-highest: var(--neutral-70);
+  --md3-neutral-on-container-container-lowest: var(--neutral-10);
+  --md3-neutral-on-container-container-low: var(--neutral-10);
+  --md3-neutral-on-container-container: var(--neutral-10);
+  --md3-neutral-on-container-container-high: var(--neutral-10);
+  --md3-neutral-on-container-container-highest: var(--neutral-10);
 
   /* Semantic colors */
   --md3-success-base: var(--success-60);
@@ -216,4 +226,14 @@
   --md3-neutral-on-surface-variant-bright: var(--neutral-100);
   --md3-neutral-on-surface-variant-inverse: var(--neutral-20);
   --md3-neutral-on-surface-variant-inverse-primary: var(--primary-green-80);
+  --md3-neutral-container-container-lowest: var(--neutral-10);
+  --md3-neutral-container-container-low: var(--neutral-15);
+  --md3-neutral-container-container: var(--neutral-20);
+  --md3-neutral-container-container-high: var(--neutral-25);
+  --md3-neutral-container-container-highest: var(--neutral-30);
+  --md3-neutral-on-container-container-lowest: var(--neutral-100);
+  --md3-neutral-on-container-container-low: var(--neutral-100);
+  --md3-neutral-on-container-container: var(--neutral-100);
+  --md3-neutral-on-container-container-high: var(--neutral-100);
+  --md3-neutral-on-container-container-highest: var(--neutral-100);
 }

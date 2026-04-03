@@ -100,18 +100,27 @@ function getTextColor(colorData: ColorData): string {
     return '#1a1a1a';
   }
 
-  // Special handling for 'On' color roles - always use semi-transparent black
-  if (colorData.label && colorData.label.startsWith('On ')) {
-    return 'rgba(0, 0, 0, 0.6)';
-  }
-
-  // For other colors, determine based on background luminance
+  // For all colors, determine based on background luminance
   const hex = colorData.resolvedValue?.replace('#', '') || 'ffffff';
-  const r = parseInt(hex.substr(0, 2), 16) || 255;
-  const g = parseInt(hex.substr(2, 2), 16) || 255;
-  const b = parseInt(hex.substr(4, 2), 16) || 255;
+  
+  // Handle empty or invalid hex values
+  if (!hex || hex.length !== 6) {
+    return '#1a1a1a';
+  }
+  
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  // Check if parsing failed
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return '#1a1a1a';
+  }
+  
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.5 ? '#1a1a1a' : '#ffffff';
+  
+  // Use more aggressive threshold for better contrast - use 0.35
+  return luminance > 0.35 ? '#000000' : '#ffffff';
 }
 
 // Helper function to get color style with border for white colors

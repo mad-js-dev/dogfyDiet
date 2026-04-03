@@ -19,6 +19,8 @@ interface Props {
   role?: 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'error' | 'warning' | 'info'
   theme?: 'light' | 'dark'
   variant?: 'surface' | 'on-surface' | 'surface-variant' | 'on-surface-variant' | 'main' | 'on' | 'container' | 'on-container'
+  surfaceSubVariant?: 'dim' | 'regular' | 'bright' | 'inverse'
+  containerSubVariant?: 'container-lowest' | 'container-low' | 'container' | 'container-high' | 'container-highest'
   border?: boolean
   rounded?: boolean
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -32,6 +34,8 @@ const props = withDefaults(defineProps<Props>(), {
   role: 'neutral',
   theme: 'light',
   variant: 'main',
+  surfaceSubVariant: 'regular',
+  containerSubVariant: 'container',
   border: false,
   rounded: false,
   padding: 'none',
@@ -40,16 +44,36 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // Get color value from JSON data
-function getColorValue(role: string, variant: string, theme: string): string {
+function getColorValue(role: string, variant: string, theme: string, subVariant?: string, containerSubVariant?: string): string {
   const themeData = theme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
   const semanticData = paletteData['semantic-roles']
   
   if (role === 'neutral') {
-    // Handle neutral colors with nested structure
-    if (variant === 'surface') return themeData.neutral.surface.regular
-    if (variant === 'on-surface') return themeData.neutral['on-surface'].regular
-    if (variant === 'surface-variant') return themeData.neutral['surface-variant'].regular
-    if (variant === 'on-surface-variant') return themeData.neutral['on-surface-variant'].regular
+    // Handle neutral colors with nested structure and sub-variants
+    if (variant === 'surface') {
+      const subVar = subVariant || 'regular'
+      return themeData.neutral.surface[subVar as keyof typeof themeData.neutral.surface]
+    }
+    if (variant === 'on-surface') {
+      const subVar = subVariant || 'regular'
+      return themeData.neutral['on-surface'][subVar as keyof typeof themeData.neutral['on-surface']]
+    }
+    if (variant === 'surface-variant') {
+      const subVar = subVariant || 'regular'
+      return themeData.neutral['surface-variant'][subVar as keyof typeof themeData.neutral['surface-variant']]
+    }
+    if (variant === 'on-surface-variant') {
+      const subVar = subVariant || 'regular'
+      return themeData.neutral['on-surface-variant'][subVar as keyof typeof themeData.neutral['on-surface-variant']]
+    }
+    if (variant === 'container') {
+      const containerVar = containerSubVariant || 'container'
+      return themeData.neutral.container[containerVar as keyof typeof themeData.neutral.container]
+    }
+    if (variant === 'on-container') {
+      const containerVar = containerSubVariant || 'container'
+      return themeData.neutral['on-container'][containerVar as keyof typeof themeData.neutral['on-container']]
+    }
   } else if (role === 'primary' || role === 'secondary' || role === 'tertiary') {
     // Handle brand colors
     if (variant === 'main') return themeData[role].main
@@ -96,7 +120,7 @@ const computedStyles = computed(() => {
   const semanticData = paletteData['semantic-roles']
   
   // Get color based on theme, role, and variant from JSON data
-  const color = getColorValue(props.role, props.variant, props.theme)
+  const color = getColorValue(props.role, props.variant, props.theme, props.surfaceSubVariant, props.containerSubVariant)
   
   // Apply background color for element type
   if (props.md3Type === 'element' || props.md3Type === 'container') {
@@ -107,11 +131,33 @@ const computedStyles = computed(() => {
   if (props.textColor === 'auto') {
     // Get the appropriate "on" color for text contrast
     if (props.role === 'neutral') {
-      if (props.variant === 'surface') styles.color = themeData.neutral['on-surface'].regular
-      else if (props.variant === 'on-surface') styles.color = themeData.neutral.surface.regular
-      else if (props.variant === 'surface-variant') styles.color = themeData.neutral['on-surface-variant'].regular
-      else if (props.variant === 'on-surface-variant') styles.color = themeData.neutral['surface-variant'].regular
-      else styles.color = themeData.neutral['on-surface'].regular
+      if (props.variant === 'surface') {
+        const subVar = props.surfaceSubVariant || 'regular'
+        styles.color = themeData.neutral['on-surface'][subVar as keyof typeof themeData.neutral['on-surface']]
+      }
+      else if (props.variant === 'on-surface') {
+        const subVar = props.surfaceSubVariant || 'regular'
+        styles.color = themeData.neutral.surface[subVar as keyof typeof themeData.neutral.surface]
+      }
+      else if (props.variant === 'surface-variant') {
+        const subVar = props.surfaceSubVariant || 'regular'
+        styles.color = themeData.neutral['on-surface-variant'][subVar as keyof typeof themeData.neutral['on-surface-variant']]
+      }
+      else if (props.variant === 'on-surface-variant') {
+        const subVar = props.surfaceSubVariant || 'regular'
+        styles.color = themeData.neutral['surface-variant'][subVar as keyof typeof themeData.neutral['surface-variant']]
+      }
+      else if (props.variant === 'container') {
+        const containerVar = props.containerSubVariant || 'container'
+        styles.color = themeData.neutral['on-container'][containerVar as keyof typeof themeData.neutral['on-container']]
+      }
+      else if (props.variant === 'on-container') {
+        const containerVar = props.containerSubVariant || 'container'
+        styles.color = themeData.neutral.container[containerVar as keyof typeof themeData.neutral.container]
+      }
+      else {
+        styles.color = themeData.neutral['on-surface'].regular
+      }
     } else if (props.role === 'primary' || props.role === 'secondary' || props.role === 'tertiary') {
       if (props.variant === 'main') styles.color = themeData[props.role].on
       else if (props.variant === 'on') styles.color = themeData[props.role].main
@@ -137,45 +183,17 @@ const computedStyles = computed(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .md3-generic {
   /* Base styles */
   display: inline-block;
   transition: all 0.2s ease-in-out;
   
   /* Type modifiers */
-  &--element {
-    /* Element-specific styles */
-  }
-  
   &--container {
     /* Container-specific styles */
     width: 100%;
   }
-  
-  /* Role modifiers */
-  &--neutral { /* Neutral role styles */ }
-  &--primary { /* Primary role styles */ }
-  &--secondary { /* Secondary role styles */ }
-  &--tertiary { /* Tertiary role styles */ }
-  &--success { /* Success role styles */ }
-  &--error { /* Error role styles */ }
-  &--warning { /* Warning role styles */ }
-  &--info { /* Info role styles */ }
-  
-  /* Theme modifiers */
-  &--light { /* Light theme specific styles */ }
-  &--dark { /* Dark theme specific styles */ }
-  
-  /* Variant modifiers */
-  &--surface { /* Surface variant */ }
-  &--on-surface { /* On surface variant */ }
-  &--surface-variant { /* Surface variant */ }
-  &--on-surface-variant { /* On surface variant */ }
-  &--main { /* Main variant */ }
-  &--on { /* On variant */ }
-  &--container { /* Container variant */ }
-  &--on-container { /* On container variant */ }
   
   /* Optional modifiers */
   &--border {

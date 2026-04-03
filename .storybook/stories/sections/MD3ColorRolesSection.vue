@@ -41,14 +41,19 @@
         <span>Dark Theme</span>
       </label>
     </div>
- <!-- 
-    <div>
-      <pre>Selected Theme: {{ selectedTheme }}</pre>
-      <pre>Brand Grid Data:</pre>
-      <pre>{{ JSON.stringify(reactiveBrandColorGrid, null, 2) }}</pre>
+
+    <!-- Neutral Colors Grid -->
+    <div class="neutral-colors-section">
+      <h3 class="md3-subsection-title">Neutral Colors</h3>
+      <p class="md3-subsection-description">Complete neutral color system including surface variants and container hierarchy.</p>
+      <ColorRolesGrid
+        :columns="neutralColumns"
+        :rows="neutralRows"
+        :color-grid="reactiveNeutralGrid"
+      />
     </div>
 
-   Brand & Surface Colors Grid -->
+    <!-- Brand & Surface Colors Grid -->
     <ColorRolesGrid
       :columns="brandColumns"
       :rows="colorRows"
@@ -91,6 +96,27 @@ interface ColorGrid {
     [columnKey: string]: ColorData
   }
 }
+
+// Combined neutral columns for surface variants and container hierarchy
+const neutralColumns: Column[] = [
+  { key: 'surface', label: 'Surface' },
+  { key: 'surface-variant', label: 'Surface Variant' },
+  { key: 'container', label: 'Container' },
+  { key: 'on-container', label: 'On Container' }
+]
+
+// Combined neutral rows
+const neutralRows: Row[] = [
+  { key: 'dim', label: 'Dim' },
+  { key: 'regular', label: 'Regular' },
+  { key: 'bright', label: 'Bright' },
+  { key: 'inverse', label: 'Inverse' },
+  { key: 'container-lowest', label: 'Container Lowest' },
+  { key: 'container-low', label: 'Container Low' },
+  { key: 'container', label: 'Container Regular' },
+  { key: 'container-high', label: 'Container High' },
+  { key: 'container-highest', label: 'Container Highest' }
+]
 
 // Column definitions
 const brandColumns: Column[] = [
@@ -144,6 +170,28 @@ function resolveCssVar(cssVar: string): string {
     '--neutral-40': '#434343', '--neutral-50': '#5d5d5d', '--neutral-60': '#767676', '--neutral-70': '#9c9c9c',
     '--neutral-80': '#c3c3c3', '--neutral-90': '#c4baba', '--neutral-95': '#cac4c4', '--neutral-98': '#dad8d8',
     '--neutral-99': '#ebeaea', '--neutral-100': '#ffffff',
+    // Container hierarchy (light theme)
+    '--md3-neutral-container-container-lowest': '#f5f5f5',
+    '--md3-neutral-container-container-low': '#f0f0f0', 
+    '--md3-neutral-container-container': '#ebebeb',
+    '--md3-neutral-container-container-high': '#e6e6e6',
+    '--md3-neutral-container-container-highest': '#dcdcdc',
+    '--md3-neutral-on-container-container-lowest': '#060505',
+    '--md3-neutral-on-container-container-low': '#060505',
+    '--md3-neutral-on-container-container': '#060505',
+    '--md3-neutral-on-container-container-high': '#060505',
+    '--md3-neutral-on-container-container-highest': '#060505',
+    // Container hierarchy (dark theme)
+    '--md3-neutral-container-container-lowest': '#060505',
+    '--md3-neutral-container-container-low': '#0a0a0a', 
+    '--md3-neutral-container-container': '#0f0f0f',
+    '--md3-neutral-container-container-high': '#141414',
+    '--md3-neutral-container-container-highest': '#191919',
+    '--md3-neutral-on-container-container-lowest': '#ffffff',
+    '--md3-neutral-on-container-container-low': '#ffffff',
+    '--md3-neutral-on-container-container': '#ffffff',
+    '--md3-neutral-on-container-container-high': '#ffffff',
+    '--md3-neutral-on-container-container-highest': '#ffffff',
     // Semantic colors
     '--success-0': '#000000', '--success-10': '#010904', '--success-20': '#000000', '--success-30': '#02190b',
     '--success-40': '#044a1e', '--success-50': '#077a32', '--success-60': '#0aaa46', '--success-70': '#10f164',
@@ -207,6 +255,74 @@ function getBrandColorHex() {
 // Theme selection - must be declared before grid generation
 const selectedTheme = ref('light')
 
+// Generate combined neutral grid data dynamically using JSON
+function generateNeutralGrid() {
+  const grid: ColorGrid = {}
+  const currentTheme = selectedTheme?.value || 'light'
+  const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
+
+  // Generate grid for each neutral row
+  neutralRows.forEach(row => {
+    grid[row.key] = {}
+    neutralColumns.forEach(column => {
+      let cssVar = ''
+      let roleValue = ''
+      
+      // Map neutral colors to CSS variables from JSON
+      if (column.key === 'surface') {
+        if (row.key.startsWith('container')) {
+          // Skip surface for container rows
+          return
+        }
+        cssVar = `--md3-neutral-surface-${row.key}`
+        roleValue = themeData.neutral.surface[row.key as keyof typeof themeData.neutral.surface]
+      } else if (column.key === 'surface-variant') {
+        if (row.key.startsWith('container')) {
+          // Skip surface-variant for container rows
+          return
+        }
+        cssVar = `--md3-neutral-surface-variant-${row.key}`
+        roleValue = themeData.neutral['surface-variant'][row.key as keyof typeof themeData.neutral['surface-variant']]
+      } else if (column.key === 'container') {
+        if (!row.key.startsWith('container')) {
+          // Skip container for surface variant rows
+          return
+        }
+        const containerVarMap: { [key: string]: string } = {
+          'container-lowest': '--neutral-95',
+          'container-low': '--neutral-90', 
+          'container': '--neutral-85',
+          'container-high': '--neutral-80',
+          'container-highest': '--neutral-70'
+        }
+        cssVar = containerVarMap[row.key] || '--neutral-85'
+        roleValue = themeData.neutral.container[row.key as keyof typeof themeData.neutral.container]
+      } else if (column.key === 'on-container') {
+        if (!row.key.startsWith('container')) {
+          // Skip on-container for surface variant rows
+          return
+        }
+        cssVar = '--neutral-10'
+        roleValue = themeData.neutral['on-container'][row.key as keyof typeof themeData.neutral['on-container']]
+      }
+      
+      if (cssVar && roleValue) {
+        grid[row.key][column.key] = {
+          label: `${column.label} ${row.label}`,
+          value: cssVar,
+          resolvedValue: resolveCssVar(roleValue),
+          cssVar: roleValue
+        }
+      }
+    })
+  })
+
+  return grid
+}
+
+// Make neutralGrid reactive to theme changes
+const reactiveNeutralGrid = computed(() => generateNeutralGrid())
+
 // Generate brand & surface color grid data dynamically using JSON
 function generateBrandColorGrid() {
   const grid: ColorGrid = {}
@@ -222,7 +338,6 @@ function generateBrandColorGrid() {
       let roleValue = ''
       
       if (column.key === 'surface') {
-        // Map surface colors to neutral CSS variables from JSON
         if (row.key === 'main') {
           cssVar = `--md3-neutral-surface-regular`
           roleValue = themeData.neutral.surface.regular
@@ -455,6 +570,28 @@ function updateColorVariables() {
   background-color: palette-color('neutral', 95);
   border-radius: 0.5rem;
   border: 1px solid palette-color('neutral', 80);
+}
+
+.surface-variants-section {
+  margin-bottom: 3rem;
+}
+
+.container-hierarchy-section {
+  margin-bottom: 3rem;
+}
+
+.md3-subsection-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: palette-color('neutral', 10);
+  margin-bottom: 1rem;
+}
+
+.md3-subsection-description {
+  font-size: 0.875rem;
+  color: palette-color('neutral', 50);
+  line-height: 1.6;
+  margin-bottom: 2rem;
 }
 
 .radio-option {
