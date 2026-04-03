@@ -91,6 +91,10 @@ const computedClasses = computed(() => {
 const computedStyles = computed(() => {
   const styles: Record<string, string> = {}
   
+  // Get theme data for text color calculations
+  const themeData = props.theme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
+  const semanticData = paletteData['semantic-roles']
+  
   // Get color based on theme, role, and variant from JSON data
   const color = getColorValue(props.role, props.variant, props.theme)
   
@@ -101,9 +105,25 @@ const computedStyles = computed(() => {
   
   // Apply text color
   if (props.textColor === 'auto') {
-    // Since we're using CSS variables, let CSS handle the contrast
-    // You could use CSS mix-blend-mode or CSS custom properties for this
-    styles.color = 'inherit' // Let the CSS variables handle contrast
+    // Get the appropriate "on" color for text contrast
+    if (props.role === 'neutral') {
+      if (props.variant === 'surface') styles.color = themeData.neutral['on-surface'].regular
+      else if (props.variant === 'on-surface') styles.color = themeData.neutral.surface.regular
+      else if (props.variant === 'surface-variant') styles.color = themeData.neutral['on-surface-variant'].regular
+      else if (props.variant === 'on-surface-variant') styles.color = themeData.neutral['surface-variant'].regular
+      else styles.color = themeData.neutral['on-surface'].regular
+    } else if (props.role === 'primary' || props.role === 'secondary' || props.role === 'tertiary') {
+      if (props.variant === 'main') styles.color = themeData[props.role].on
+      else if (props.variant === 'on') styles.color = themeData[props.role].main
+      else if (props.variant === 'container') styles.color = themeData[props.role]['on-container']
+      else if (props.variant === 'on-container') styles.color = themeData[props.role].container
+      else styles.color = themeData[props.role].on
+    } else if (semanticData[props.role]) {
+      const semanticKey = props.variant === 'main' ? 'base' : props.variant
+      styles.color = semanticData[props.role].on
+    } else {
+      styles.color = themeData.neutral['on-surface'].regular
+    }
   } else if (props.textColor === 'inherit') {
     styles.color = 'inherit'
   }
