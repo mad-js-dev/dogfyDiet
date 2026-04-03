@@ -33,7 +33,7 @@
 
     <div class="theme-selector">
       <label class="radio-option">
-        <input type="radio" v-model="selectedTheme" name="theme" value="light" />
+        <input type="radio" v-model="selectedTheme" name="theme" value="light" checked />
         <span>Light Theme</span>
       </label>
       <label class="radio-option">
@@ -115,46 +115,94 @@ const colorRows: Row[] = [
   { key: 'on-container', label: 'On Container' }
 ]
 
+// Helper function to resolve CSS variables to hex values
+function resolveCssVar(cssVar: string): string {
+  // Map CSS variables to their hex values from generated palette
+  const cssVarMap: { [key: string]: string } = {
+    // Primary green
+    '--primary-green-0': '#000000', '--primary-green-10': '#010a07', '--primary-green-20': '#000000', '--primary-green-30': '#001d13',
+    '--primary-green-40': '#005036', '--primary-green-50': '#008358', '--primary-green-60': '#00B67A', '--primary-green-70': '#03ffac',
+    '--primary-green-80': '#50ffc5', '--primary-green-90': '#93ecce', '--primary-green-95': '#ace2d0', '--primary-green-98': '#d0e2dc',
+    '--primary-green-99': '#e8edeb', '--primary-green-100': '#ffffff',
+    // Shortened names for dark theme
+    '--primary-0': '#000000', '--primary-10': '#010a07', '--primary-20': '#000000', '--primary-30': '#001d13',
+    '--primary-40': '#005036', '--primary-50': '#008358', '--primary-60': '#00B67A', '--primary-70': '#03ffac',
+    '--primary-80': '#50ffc5', '--primary-90': '#93ecce', '--primary-95': '#ace2d0', '--primary-98': '#d0e2dc',
+    '--primary-99': '#e8edeb', '--primary-100': '#ffffff',
+    // Accent orange
+    '--accent-orange-0': '#000000', '--accent-orange-10': '#090301', '--accent-orange-20': '#491509', '--accent-orange-30': '#90280e',
+    '--accent-orange-40': '#c03311', '--accent-orange-50': '#eb4319', '--accent-orange-60': '#ef6948', '--accent-orange-70': '#f5a38e',
+    '--accent-orange-80': '#fbdcd5', '--accent-orange-90': '#e5a99a', '--accent-orange-95': '#dcbab1', '--accent-orange-98': '#dfd5d2',
+    '--accent-orange-99': '#eceae9', '--accent-orange-100': '#ffffff',
+    // Accent yellow
+    '--accent-yellow-0': '#000000', '--accent-yellow-10': '#0a0801', '--accent-yellow-20': '#191401', '--accent-yellow-30': '#654f01',
+    '--accent-yellow-40': '#997800', '--accent-yellow-50': '#cca000', '--accent-yellow-60': '#ffc800', '--accent-yellow-70': '#ffd94d',
+    '--accent-yellow-80': '#ffe999', '--accent-yellow-90': '#ecd993', '--accent-yellow-95': '#e2d6ac', '--accent-yellow-98': '#e2ded0',
+    '--accent-yellow-99': '#edece8', '--accent-yellow-100': '#ffffff',
+    // Neutral
+    '--neutral-0': '#000000', '--neutral-10': '#060505', '--neutral-20': '#030303', '--neutral-30': '#2a2a2a',
+    '--neutral-40': '#434343', '--neutral-50': '#5d5d5d', '--neutral-60': '#767676', '--neutral-70': '#9c9c9c',
+    '--neutral-80': '#c3c3c3', '--neutral-90': '#c4baba', '--neutral-95': '#cac4c4', '--neutral-98': '#dad8d8',
+    '--neutral-99': '#ebeaea', '--neutral-100': '#ffffff',
+    // Semantic colors
+    '--success-0': '#000000', '--success-10': '#010904', '--success-20': '#000000', '--success-30': '#02190b',
+    '--success-40': '#044a1e', '--success-50': '#077a32', '--success-60': '#0aaa46', '--success-70': '#10f164',
+    '--success-80': '#58f593', '--success-90': '#98e7b5', '--success-95': '#b0dec1', '--success-98': '#d1e0d7',
+    '--success-99': '#e9ecea', '--success-100': '#ffffff',
+    '--error-0': '#000000', '--error-10': '#0a0101', '--error-20': '#000000', '--error-30': '#3e0101',
+    '--error-40': '#720002', '--error-50': '#a50002', '--error-60': '#d80003', '--error-70': '#ff2529',
+    '--error-80': '#ff7274', '--error-90': '#ec9394', '--error-95': '#e2acad', '--error-98': '#e2d0d0',
+    '--error-99': '#ede8e8', '--error-100': '#ffffff',
+    '--warning-0': '#000000', '--warning-10': '#0a0801', '--warning-20': '#191401', '--warning-30': '#654f01',
+    '--warning-40': '#997800', '--warning-50': '#cca000', '--warning-60': '#ffc800', '--warning-70': '#ffd94d',
+    '--warning-80': '#ffe999', '--warning-90': '#ecd993', '--warning-95': '#e2d6ac', '--warning-98': '#e2ded0',
+    '--warning-99': '#edece8', '--warning-100': '#ffffff',
+    '--info-0': '#000000', '--info-10': '#020509', '--info-20': '#010305', '--info-30': '#0a2948',
+    '--info-40': '#0e4377', '--info-50': '#145ca4', '--info-60': '#1976d2', '--info-70': '#4e9cea',
+    '--info-80': '#92c2f2', '--info-90': '#9cbfe2', '--info-95': '#b3c7db', '--info-98': '#d3d9df',
+    '--info-99': '#e9ebec', '--info-100': '#ffffff'
+  };
+  
+  return cssVarMap[cssVar] || cssVar;
+}
+
 // Derive brand color hex values from JSON palette data
 function getBrandColorHex() {
   const brandColors: { [key: string]: { [key: string]: string } } = {};
   const currentTheme = selectedTheme?.value || 'light'
   const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
-
-  // Use actual values from JSON structure instead of hardcoded
+  
+  // Use JSON data and resolve CSS variables to hex values
   brandColors.surface = {
-    main: '#e6e6e6', // Will be updated from neutral surface
-    on: '#1a1a1a',
-    container: '#b3b3b3',
-    'on-container': '#808080'
+    main: resolveCssVar(themeData.neutral.surface.regular),
+    on: resolveCssVar(themeData.neutral['on-surface'].regular),
+    container: resolveCssVar(themeData.neutral['surface-variant'].regular),
+    'on-container': resolveCssVar(themeData.neutral['on-surface-variant'].regular)
   };
 
-  // Use JSON data for brand colors
   brandColors.primary = {
-    main: currentTheme === 'dark' ? '#001d13' : '#00b67a', // From JSON brandRoles
-    on: '#ffffff',
-    container: currentTheme === 'dark' ? '#000000' : '#b6ffe7',
-    'on-container': currentTheme === 'dark' ? '#ffffff' : '#000000'
+    main: resolveCssVar(themeData.primary.main),
+    on: resolveCssVar(themeData.primary.on),
+    container: resolveCssVar(themeData.primary.container),
+    'on-container': resolveCssVar(themeData.primary['on-container'])
   };
 
   brandColors.secondary = {
-    main: currentTheme === 'dark' ? '#90280e' : '#ef6948', // From JSON brandRoles
-    on: '#ffffff',
-    container: currentTheme === 'dark' ? '#491509' : '#ffffff',
-    'on-container': currentTheme === 'dark' ? '#ffffff' : '#040101'
+    main: resolveCssVar(themeData.secondary.main),
+    on: resolveCssVar(themeData.secondary.on),
+    container: resolveCssVar(themeData.secondary.container),
+    'on-container': resolveCssVar(themeData.secondary['on-container'])
   };
 
   brandColors.tertiary = {
-    main: currentTheme === 'dark' ? '#654f01' : '#ffc800', // From JSON brandRoles
-    on: '#ffffff',
-    container: currentTheme === 'dark' ? '#191401' : '#ffffff',
-    'on-container': currentTheme === 'dark' ? '#ffffff' : '#000000'
+    main: resolveCssVar(themeData.tertiary.main),
+    on: resolveCssVar(themeData.tertiary.on),
+    container: resolveCssVar(themeData.tertiary.container),
+    'on-container': resolveCssVar(themeData.tertiary['on-container'])
   };
 
   return brandColors;
 }
-
-const brandColorHex = getBrandColorHex();
 
 // Theme selection - must be declared before grid generation
 const selectedTheme = ref('light')
@@ -232,7 +280,35 @@ function generateSemanticColorGrid() {
   const grid: ColorGrid = {}
   const semanticData = paletteData['semantic-roles']
 
-  // Generate the grid for each row
+  // Define hex values for semantic colors by resolving CSS variables
+  const semanticHexValues = {
+    success: {
+      base: resolveCssVar(semanticData.success.base),
+      on: resolveCssVar(semanticData.success.on),
+      container: resolveCssVar(semanticData.success.container),
+      'on-container': resolveCssVar(semanticData.success['on-container'])
+    },
+    error: {
+      base: resolveCssVar(semanticData.error.base),
+      on: resolveCssVar(semanticData.error.on),
+      container: resolveCssVar(semanticData.error.container),
+      'on-container': resolveCssVar(semanticData.error['on-container'])
+    },
+    warning: {
+      base: resolveCssVar(semanticData.warning.base),
+      on: resolveCssVar(semanticData.warning.on),
+      container: resolveCssVar(semanticData.warning.container),
+      'on-container': resolveCssVar(semanticData.warning['on-container'])
+    },
+    info: {
+      base: resolveCssVar(semanticData.info.base),
+      on: resolveCssVar(semanticData.info.on),
+      container: resolveCssVar(semanticData.info.container),
+      'on-container': resolveCssVar(semanticData.info['on-container'])
+    }
+  }
+
+  // Generate grid for each row
   colorRows.forEach(row => {
     grid[row.key] = {}
     semanticColumns.forEach(column => {
@@ -242,7 +318,7 @@ function generateSemanticColorGrid() {
       if (row.key === 'main') roleKey = 'base'
       
       const cssVar = `--md3-${semanticKey}${row.key === 'main' ? '' : '-' + row.key}`
-      const resolvedValue = semanticData[semanticKey]?.[roleKey] || '#000000'
+      const resolvedValue = semanticHexValues[semanticKey as keyof typeof semanticHexValues]?.[roleKey as keyof typeof semanticHexValues.success] || '#000000'
       
       grid[row.key][column.key] = {
         label: `${column.label}${row.key === 'main' ? '' : ' ' + row.label}`,

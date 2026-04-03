@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import Colors from './Colors.vue'
 import MD3TonalPalettesSection from './sections/MD3TonalPalettesSection.vue'
+import MD3ColorRolesSection from './sections/MD3ColorRolesSection.vue'
 
 const meta = {
   title: 'Styleguide/Colors',
@@ -47,5 +48,22 @@ export const DynamicPalettes: Story = {
   render: () => ({
     components: { MD3TonalPalettesSection },
     template: '<MD3TonalPalettesSection />'
+  })
+}
+
+
+export const ColorRoles: Story = {
+  name: 'Color roles',
+  parameters: {
+    showPanel: false,
+    docs: {
+      description: {
+        story: 'All color tokens in the design system.'
+      }
+    }
+  },
+  render: () => ({
+    components: { MD3ColorRolesSection },
+    template: '<MD3ColorRolesSection />'
   })
 }

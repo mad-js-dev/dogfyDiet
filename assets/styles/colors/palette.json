@@ -79,22 +79,22 @@
   },
   "dark-roles": {
     "primary": {
-      "main": "var(--primary-30)",
-      "on": "var(--primary-100)",
-      "container": "var(--primary-20)",
-      "on-container": "var(--primary-100)",
-      "inverse": "var(--primary-80)"
+      "main": "var(--primary-green-30)",
+      "on": "var(--primary-green-100)",
+      "container": "var(--primary-green-50)",
+      "on-container": "var(--primary-green-100)",
+      "inverse": "var(--primary-green-80)"
     },
     "secondary": {
       "main": "var(--accent-orange-30)",
       "on": "var(--accent-orange-100)",
-      "container": "var(--accent-orange-20)",
+      "container": "var(--accent-orange-50)",
       "on-container": "var(--accent-orange-100)"
     },
     "tertiary": {
       "main": "var(--accent-yellow-30)",
       "on": "var(--accent-yellow-100)",
-      "container": "var(--accent-yellow-20)",
+      "container": "var(--accent-yellow-50)",
       "on-container": "var(--accent-yellow-100)"
     },
     "neutral": {
