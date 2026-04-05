@@ -12,6 +12,9 @@
 @use './colors/brand-roles' as brand_roles;
 @use './mixins' as mixins;
 
+// Import the generated CSS variables
+@import './_css-variables-generated.css';
+
 // Define light theme maps for compatibility
 $md3-light-surface: (
   'surface': map.get(map.get(vars.$md3-light, 'neutral'), 'surface', 'regular'),

@@ -63,6 +63,7 @@ css += `  --neutral-50: ${adjustColor(neutralHex, -10, 0)};\n`;
 css += `  --neutral-60: ${neutralHex};\n`;
 css += `  --neutral-70: ${adjustColor(neutralHex, 15, 0)};\n`;
 css += `  --neutral-80: ${adjustColor(neutralHex, 30, 0)};\n`;
+css += `  --neutral-85: ${adjustColor(neutralHex, 40, 0)};\n`;
 css += `  --neutral-90: ${adjustColor(neutralHex, 50, 0)};\n`;
 css += `  --neutral-95: ${adjustColor(neutralHex, 65, -20)};\n`;
 css += `  --neutral-98: ${adjustColor(neutralHex, 80, -40)};\n`;
@@ -91,8 +92,8 @@ function adjustColor(hex, lightness, saturation) {
     },
     '#767676': {
       '-60,-10': '#060505', '-45,-5': '#030303', '-30,-2': '#2a2a2a', '-20,0': '#434343',
-      '-10,0': '#5d5d5d', '15,0': '#9c9c9c', '30,0': '#c3c3c3', '50,0': '#c4baba',
-      '65,-20': '#cac4c4', '80,-40': '#dad8d8', '90,-60': '#ebeaea'
+      '-10,0': '#5d5d5d', '15,0': '#9c9c9c', '30,0': '#c3c3c3', '40,0': '#d4d4d4',
+      '50,0': '#c4baba', '65,-20': '#cac4c4', '80,-40': '#dad8d8', '90,-60': '#ebeaea'
     },
     '#0aaa46': {
       '-60,-10': '#010904', '-45,-5': '#000000', '-30,-2': '#02190b', '-20,0': '#044a1e',

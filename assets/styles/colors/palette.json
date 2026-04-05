@@ -48,46 +48,24 @@
     },
     "neutral": {
       "surface": {
-        "dim": "var(--neutral-70)",
+        "dim": "var(--neutral-85)",
         "regular": "var(--neutral-90)",
-        "bright": "var(--neutral-100)",
-        "inverse": "var(--neutral-10)",
-        "inverse-primary": "var(--primary-green-80)"
+        "bright": "var(--neutral-99)"
+      },
+      "surface-container": {
+        "lowest": "var(--neutral-100)",
+        "low": "var(--neutral-95)",
+        "regular": "var(--neutral-90)",
+        "high": "var(--neutral-85)",
+        "highest": "var(--neutral-80)"
       },
       "on-surface": {
-        "dim": "var(--neutral-20)",
         "regular": "var(--neutral-10)",
-        "bright": "var(--neutral-0)",
-        "inverse": "var(--neutral-100)",
-        "inverse-primary": "var(--primary-green-80)"
+        "variant": "var(--neutral-20)"
       },
-      "surface-variant": {
-        "dim": "var(--neutral-60)",
-        "regular": "var(--neutral-80)",
-        "bright": "var(--neutral-90)",
-        "inverse": "var(--neutral-20)",
-        "inverse-primary": "var(--primary-green-80)"
-      },
-      "on-surface-variant": {
-        "dim": "var(--neutral-30)",
-        "regular": "var(--neutral-20)",
-        "bright": "var(--neutral-10)",
-        "inverse": "var(--neutral-100)",
-        "inverse-primary": "var(--primary-green-80)"
-      },
-      "container": {
-        "container-lowest": "var(--neutral-95)",
-        "container-low": "var(--neutral-90)",
-        "container": "var(--neutral-85)",
-        "container-high": "var(--neutral-80)",
-        "container-highest": "var(--neutral-70)"
-      },
-      "on-container": {
-        "container-lowest": "var(--neutral-10)",
-        "container-low": "var(--neutral-10)",
-        "container": "var(--neutral-10)",
-        "container-high": "var(--neutral-10)",
-        "container-highest": "var(--neutral-10)"
+      "outline": {
+        "regular": "var(--neutral-10)",
+        "variant": "var(--neutral-20)"
       }
     }
   },
@@ -113,46 +91,24 @@
     },
     "neutral": {
       "surface": {
+        "regular": "var(--neutral-6)",
         "dim": "var(--neutral-20)",
-        "regular": "var(--neutral-10)",
-        "bright": "var(--neutral-0)",
-        "inverse": "var(--neutral-100)",
-        "inverse-primary": "var(--primary-green-80)"
+        "bright": "var(--neutral-5)"
       },
       "on-surface": {
-        "dim": "var(--neutral-70)",
         "regular": "var(--neutral-100)",
-        "bright": "var(--neutral-100)",
-        "inverse": "var(--neutral-10)",
-        "inverse-primary": "var(--primary-green-80)"
+        "variant": "var(--neutral-90)"
       },
-      "surface-variant": {
-        "dim": "var(--neutral-30)",
+      "surface-container": {
+        "lowest": "var(--neutral-10)",
+        "low": "var(--neutral-15)",
         "regular": "var(--neutral-20)",
-        "bright": "var(--neutral-10)",
-        "inverse": "var(--neutral-90)",
-        "inverse-primary": "var(--primary-green-80)"
+        "high": "var(--neutral-25)",
+        "highest": "var(--neutral-30)"
       },
-      "on-surface-variant": {
-        "dim": "var(--neutral-80)",
-        "regular": "var(--neutral-100)",
-        "bright": "var(--neutral-100)",
-        "inverse": "var(--neutral-20)",
-        "inverse-primary": "var(--primary-green-80)"
-      },
-      "container": {
-        "container-lowest": "var(--neutral-10)",
-        "container-low": "var(--neutral-15)",
-        "container": "var(--neutral-20)",
-        "container-high": "var(--neutral-25)",
-        "container-highest": "var(--neutral-30)"
-      },
-      "on-container": {
-        "container-lowest": "var(--neutral-100)",
-        "container-low": "var(--neutral-100)",
-        "container": "var(--neutral-100)",
-        "container-high": "var(--neutral-100)",
-        "container-highest": "var(--neutral-100)"
+      "outline": {
+        "regular": "var(--neutral-40)",
+        "variant": "var(--neutral-60)"
       }
     }
   },

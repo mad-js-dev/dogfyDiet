@@ -42,14 +42,21 @@
       </label>
     </div>
 
-    <!-- Neutral Colors Grid -->
-    <div class="neutral-colors-section">
-      <h3 class="md3-subsection-title">Neutral Colors</h3>
-      <p class="md3-subsection-description">Complete neutral color system including surface variants and container hierarchy.</p>
+    <!-- Surface Variants Grid -->
+    <div class="surface-variants-section">
+      <h3 class="md3-subsection-title">Surface Variants (Neutral Colors)</h3>
+      <p class="md3-subsection-description">Surface variants including dim, regular, bright, and inverse options.</p>
+      <NeutralColorRolesGrid :neutral-data="neutralColorsData" />
+    </div>
+
+    <!-- Container Hierarchy Grid -->
+    <div class="container-hierarchy-section">
+      <h3 class="md3-subsection-title">Container Hierarchy (Neutral Colors)</h3>
+      <p class="md3-subsection-description">5-level container elevation hierarchy from lowest to highest elevation levels.</p>
       <ColorRolesGrid
-        :columns="neutralColumns"
-        :rows="neutralRows"
-        :color-grid="reactiveNeutralGrid"
+        :columns="containerColumns"
+        :rows="containerRows"
+        :color-grid="reactiveContainerGrid"
       />
     </div>
 
@@ -71,6 +78,7 @@
 
 <script setup lang="ts">
 import ColorRolesGrid from '../components/ColorRolesGrid.vue'
+import NeutralColorRolesGrid from '../components/NeutralColorRolesGrid.vue'
 import paletteData from '~/assets/styles/colors/palette.json'
 import { computed, ref } from 'vue'
 
@@ -97,26 +105,44 @@ interface ColorGrid {
   }
 }
 
-// Combined neutral columns for surface variants and container hierarchy
-const neutralColumns: Column[] = [
-  { key: 'surface', label: 'Surface' },
-  { key: 'surface-variant', label: 'Surface Variant' },
-  { key: 'container', label: 'Container' },
-  { key: 'on-container', label: 'On Container' }
+// Surface columns (M3 standard)
+const surfaceColumns: Column[] = [
+  { key: 'surface', label: 'Surface' }
 ]
 
-// Combined neutral rows
-const neutralRows: Row[] = [
-  { key: 'dim', label: 'Dim' },
-  { key: 'regular', label: 'Regular' },
-  { key: 'bright', label: 'Bright' },
-  { key: 'inverse', label: 'Inverse' },
-  { key: 'container-lowest', label: 'Container Lowest' },
-  { key: 'container-low', label: 'Container Low' },
-  { key: 'container', label: 'Container Regular' },
-  { key: 'container-high', label: 'Container High' },
-  { key: 'container-highest', label: 'Container Highest' }
+// Surface container columns (M3 standard)
+const containerColumns: Column[] = [
+  { key: 'surface-container', label: 'Surface Container' }
 ]
+
+// Surface rows (M3 standard - only surface roles)
+const surfaceRows: Row[] = [
+  { key: 'regular', label: 'Regular' },
+  { key: 'dim', label: 'Dim' },
+  { key: 'bright', label: 'Bright' }
+]
+
+// Surface container rows (M3 standard - container hierarchy)
+const containerRows: Row[] = [
+  { key: 'lowest', label: 'Lowest' },
+  { key: 'low', label: 'Low' },
+  { key: 'regular', label: 'Regular' },
+  { key: 'high', label: 'High' },
+  { key: 'highest', label: 'Highest' }
+]
+
+// Combined neutral rows (not used anymore - replaced by separate sections)
+// const neutralRows: Row[] = [
+//   { key: 'dim', label: 'Dim' },
+//   { key: 'regular', label: 'Regular' },
+//   { key: 'bright', label: 'Bright' },
+//   { key: 'inverse', label: 'Inverse' },
+//   { key: 'container-lowest', label: 'Container Lowest' },
+//   { key: 'container-low', label: 'Container Low' },
+//   { key: 'container', label: 'Container Regular' },
+//   { key: 'container-high', label: 'Container High' },
+//   { key: 'container-highest', label: 'Container Highest' }
+// ]
 
 // Column definitions
 const brandColumns: Column[] = [
@@ -143,75 +169,8 @@ const colorRows: Row[] = [
 
 // Helper function to resolve CSS variables to hex values
 function resolveCssVar(cssVar: string): string {
-  // Map CSS variables to their hex values from generated palette
-  const cssVarMap: { [key: string]: string } = {
-    // Primary green
-    '--primary-green-0': '#000000', '--primary-green-10': '#010a07', '--primary-green-20': '#000000', '--primary-green-30': '#001d13',
-    '--primary-green-40': '#005036', '--primary-green-50': '#008358', '--primary-green-60': '#00B67A', '--primary-green-70': '#03ffac',
-    '--primary-green-80': '#50ffc5', '--primary-green-90': '#93ecce', '--primary-green-95': '#ace2d0', '--primary-green-98': '#d0e2dc',
-    '--primary-green-99': '#e8edeb', '--primary-green-100': '#ffffff',
-    // Shortened names for dark theme
-    '--primary-0': '#000000', '--primary-10': '#010a07', '--primary-20': '#000000', '--primary-30': '#001d13',
-    '--primary-40': '#005036', '--primary-50': '#008358', '--primary-60': '#00B67A', '--primary-70': '#03ffac',
-    '--primary-80': '#50ffc5', '--primary-90': '#93ecce', '--primary-95': '#ace2d0', '--primary-98': '#d0e2dc',
-    '--primary-99': '#e8edeb', '--primary-100': '#ffffff',
-    // Accent orange
-    '--accent-orange-0': '#000000', '--accent-orange-10': '#090301', '--accent-orange-20': '#491509', '--accent-orange-30': '#90280e',
-    '--accent-orange-40': '#c03311', '--accent-orange-50': '#eb4319', '--accent-orange-60': '#ef6948', '--accent-orange-70': '#f5a38e',
-    '--accent-orange-80': '#fbdcd5', '--accent-orange-90': '#e5a99a', '--accent-orange-95': '#dcbab1', '--accent-orange-98': '#dfd5d2',
-    '--accent-orange-99': '#eceae9', '--accent-orange-100': '#ffffff',
-    // Accent yellow
-    '--accent-yellow-0': '#000000', '--accent-yellow-10': '#0a0801', '--accent-yellow-20': '#191401', '--accent-yellow-30': '#654f01',
-    '--accent-yellow-40': '#997800', '--accent-yellow-50': '#cca000', '--accent-yellow-60': '#ffc800', '--accent-yellow-70': '#ffd94d',
-    '--accent-yellow-80': '#ffe999', '--accent-yellow-90': '#ecd993', '--accent-yellow-95': '#e2d6ac', '--accent-yellow-98': '#e2ded0',
-    '--accent-yellow-99': '#edece8', '--accent-yellow-100': '#ffffff',
-    // Neutral
-    '--neutral-0': '#000000', '--neutral-10': '#060505', '--neutral-20': '#030303', '--neutral-30': '#2a2a2a',
-    '--neutral-40': '#434343', '--neutral-50': '#5d5d5d', '--neutral-60': '#767676', '--neutral-70': '#9c9c9c',
-    '--neutral-80': '#c3c3c3', '--neutral-90': '#c4baba', '--neutral-95': '#cac4c4', '--neutral-98': '#dad8d8',
-    '--neutral-99': '#ebeaea', '--neutral-100': '#ffffff',
-    // Container hierarchy (light theme)
-    '--md3-neutral-container-container-lowest': '#f5f5f5',
-    '--md3-neutral-container-container-low': '#f0f0f0', 
-    '--md3-neutral-container-container': '#ebebeb',
-    '--md3-neutral-container-container-high': '#e6e6e6',
-    '--md3-neutral-container-container-highest': '#dcdcdc',
-    '--md3-neutral-on-container-container-lowest': '#060505',
-    '--md3-neutral-on-container-container-low': '#060505',
-    '--md3-neutral-on-container-container': '#060505',
-    '--md3-neutral-on-container-container-high': '#060505',
-    '--md3-neutral-on-container-container-highest': '#060505',
-    // Container hierarchy (dark theme)
-    '--md3-neutral-container-container-lowest': '#060505',
-    '--md3-neutral-container-container-low': '#0a0a0a', 
-    '--md3-neutral-container-container': '#0f0f0f',
-    '--md3-neutral-container-container-high': '#141414',
-    '--md3-neutral-container-container-highest': '#191919',
-    '--md3-neutral-on-container-container-lowest': '#ffffff',
-    '--md3-neutral-on-container-container-low': '#ffffff',
-    '--md3-neutral-on-container-container': '#ffffff',
-    '--md3-neutral-on-container-container-high': '#ffffff',
-    '--md3-neutral-on-container-container-highest': '#ffffff',
-    // Semantic colors
-    '--success-0': '#000000', '--success-10': '#010904', '--success-20': '#000000', '--success-30': '#02190b',
-    '--success-40': '#044a1e', '--success-50': '#077a32', '--success-60': '#0aaa46', '--success-70': '#10f164',
-    '--success-80': '#58f593', '--success-90': '#98e7b5', '--success-95': '#b0dec1', '--success-98': '#d1e0d7',
-    '--success-99': '#e9ecea', '--success-100': '#ffffff',
-    '--error-0': '#000000', '--error-10': '#0a0101', '--error-20': '#000000', '--error-30': '#3e0101',
-    '--error-40': '#720002', '--error-50': '#a50002', '--error-60': '#d80003', '--error-70': '#ff2529',
-    '--error-80': '#ff7274', '--error-90': '#ec9394', '--error-95': '#e2acad', '--error-98': '#e2d0d0',
-    '--error-99': '#ede8e8', '--error-100': '#ffffff',
-    '--warning-0': '#000000', '--warning-10': '#0a0801', '--warning-20': '#191401', '--warning-30': '#654f01',
-    '--warning-40': '#997800', '--warning-50': '#cca000', '--warning-60': '#ffc800', '--warning-70': '#ffd94d',
-    '--warning-80': '#ffe999', '--warning-90': '#ecd993', '--warning-95': '#e2d6ac', '--warning-98': '#e2ded0',
-    '--warning-99': '#edece8', '--warning-100': '#ffffff',
-    '--info-0': '#000000', '--info-10': '#020509', '--info-20': '#010305', '--info-30': '#0a2948',
-    '--info-40': '#0e4377', '--info-50': '#145ca4', '--info-60': '#1976d2', '--info-70': '#4e9cea',
-    '--info-80': '#92c2f2', '--info-90': '#9cbfe2', '--info-95': '#b3c7db', '--info-98': '#d3d9df',
-    '--info-99': '#e9ebec', '--info-100': '#ffffff'
-  };
-  
-  return cssVarMap[cssVar] || cssVar;
+  // Simply return the CSS variable name - let the browser resolve it to actual value
+  return cssVar
 }
 
 // Derive brand color hex values from JSON palette data
@@ -224,8 +183,8 @@ function getBrandColorHex() {
   brandColors.surface = {
     main: resolveCssVar(themeData.neutral.surface.regular),
     on: resolveCssVar(themeData.neutral['on-surface'].regular),
-    container: resolveCssVar(themeData.neutral['surface-variant'].regular),
-    'on-container': resolveCssVar(themeData.neutral['on-surface-variant'].regular)
+    container: resolveCssVar(themeData.neutral['surface-container'].regular),
+    'on-container': resolveCssVar(themeData.neutral['on-surface'].regular)
   };
 
   brandColors.primary = {
@@ -255,55 +214,26 @@ function getBrandColorHex() {
 // Theme selection - must be declared before grid generation
 const selectedTheme = ref('light')
 
-// Generate combined neutral grid data dynamically using JSON
-function generateNeutralGrid() {
+// Generate surface grid data dynamically using JSON (M3 standard)
+function generateSurfaceGrid() {
   const grid: ColorGrid = {}
   const currentTheme = selectedTheme?.value || 'light'
   const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
 
-  // Generate grid for each neutral row
-  neutralRows.forEach(row => {
+  // Generate grid for each surface row
+  surfaceRows.forEach(row => {
     grid[row.key] = {}
-    neutralColumns.forEach(column => {
+    surfaceColumns.forEach(column => {
       let cssVar = ''
       let roleValue = ''
       
-      // Map neutral colors to CSS variables from JSON
+      // Map surface colors to neutral CSS variables from JSON (M3 standard)
       if (column.key === 'surface') {
-        if (row.key.startsWith('container')) {
-          // Skip surface for container rows
-          return
-        }
         cssVar = `--md3-neutral-surface-${row.key}`
         roleValue = themeData.neutral.surface[row.key as keyof typeof themeData.neutral.surface]
       } else if (column.key === 'surface-variant') {
-        if (row.key.startsWith('container')) {
-          // Skip surface-variant for container rows
-          return
-        }
-        cssVar = `--md3-neutral-surface-variant-${row.key}`
-        roleValue = themeData.neutral['surface-variant'][row.key as keyof typeof themeData.neutral['surface-variant']]
-      } else if (column.key === 'container') {
-        if (!row.key.startsWith('container')) {
-          // Skip container for surface variant rows
-          return
-        }
-        const containerVarMap: { [key: string]: string } = {
-          'container-lowest': '--neutral-95',
-          'container-low': '--neutral-90', 
-          'container': '--neutral-85',
-          'container-high': '--neutral-80',
-          'container-highest': '--neutral-70'
-        }
-        cssVar = containerVarMap[row.key] || '--neutral-85'
-        roleValue = themeData.neutral.container[row.key as keyof typeof themeData.neutral.container]
-      } else if (column.key === 'on-container') {
-        if (!row.key.startsWith('container')) {
-          // Skip on-container for surface variant rows
-          return
-        }
-        cssVar = '--neutral-10'
-        roleValue = themeData.neutral['on-container'][row.key as keyof typeof themeData.neutral['on-container']]
+        cssVar = '--md3-neutral-surface-variant-regular'
+        roleValue = themeData.neutral['surface-variant'].regular
       }
       
       if (cssVar && roleValue) {
@@ -320,8 +250,45 @@ function generateNeutralGrid() {
   return grid
 }
 
-// Make neutralGrid reactive to theme changes
-const reactiveNeutralGrid = computed(() => generateNeutralGrid())
+// Make surfaceGrid reactive to theme changes
+const reactiveSurfaceGrid = computed(() => generateSurfaceGrid())
+
+// Generate surface container grid data dynamically using JSON (M3 standard)
+function generateContainerGrid() {
+  const grid: ColorGrid = {}
+  const currentTheme = selectedTheme?.value || 'light'
+  const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
+
+  // Generate grid for each surface container row
+  containerRows.forEach(row => {
+    grid[row.key] = {}
+    containerColumns.forEach(column => {
+      let cssVar = ''
+      let roleValue = ''
+      
+      // Map surface container colors to neutral CSS variables from JSON (M3 standard)
+      if (column.key === 'surface-container') {
+        cssVar = `--md3-neutral-surface-container-${row.key}`
+        roleValue = themeData.neutral['surface-container'][row.key as keyof typeof themeData.neutral['surface-container']]
+      } else if (column.key === 'on-surface-container') {
+        cssVar = `--md3-neutral-on-surface-container-${row.key}`
+        roleValue = themeData.neutral['on-surface-container'][row.key as keyof typeof themeData.neutral['on-surface-container']]
+      }
+      
+      grid[row.key][column.key] = {
+        label: `${column.label} ${row.label}`,
+        value: cssVar,
+        resolvedValue: resolveCssVar(roleValue),
+        cssVar: roleValue
+      }
+    })
+  })
+
+  return grid
+}
+
+// Make containerGrid reactive to theme changes
+const reactiveContainerGrid = computed(() => generateContainerGrid())
 
 // Generate brand & surface color grid data dynamically using JSON
 function generateBrandColorGrid() {
@@ -345,11 +312,11 @@ function generateBrandColorGrid() {
           cssVar = `--md3-neutral-on-surface-regular`
           roleValue = themeData.neutral['on-surface'].regular
         } else if (row.key === 'container') {
-          cssVar = `--md3-neutral-surface-variant-regular`
-          roleValue = themeData.neutral['surface-variant'].regular
+          cssVar = `--md3-neutral-surface-container-regular`
+          roleValue = themeData.neutral['surface-container'].regular
         } else if (row.key === 'on-container') {
-          cssVar = `--md3-neutral-on-surface-variant-regular`
-          roleValue = themeData.neutral['on-surface-variant'].regular
+          cssVar = `--md3-neutral-on-surface-regular`
+          roleValue = themeData.neutral['on-surface'].regular
         }
         
         grid[row.key][column.key] = {
@@ -449,6 +416,114 @@ function generateSemanticColorGrid() {
 
 // Make semanticColorGrid reactive to theme changes
 const reactiveSemanticColorGrid = computed(() => generateSemanticColorGrid())
+
+// Generate neutral colors data for the new NeutralColorRolesGrid component
+const neutralColorsData = computed(() => {
+  const currentTheme = selectedTheme?.value || 'light'
+  const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
+  
+  // Row 1: All surfaces (dim, regular, bright) - note: inverse doesn't exist in the data
+  const surfaces = [
+    {
+      key: 'surface-dim',
+      label: 'Surface Dim',
+      value: `--md3-neutral-surface-dim`,
+      resolvedValue: resolveCssVar(themeData.neutral.surface.dim),
+      cssVar: themeData.neutral.surface.dim
+    },
+    {
+      key: 'surface-regular',
+      label: 'Surface Regular',
+      value: `--md3-neutral-surface-regular`,
+      resolvedValue: resolveCssVar(themeData.neutral.surface.regular),
+      cssVar: themeData.neutral.surface.regular
+    },
+    {
+      key: 'surface-bright',
+      label: 'Surface Bright',
+      value: `--md3-neutral-surface-bright`,
+      resolvedValue: resolveCssVar(themeData.neutral.surface.bright),
+      cssVar: themeData.neutral.surface.bright
+    }
+  ]
+  
+  // Row 2: All containers (lowest, low, regular, high, highest)
+  const containers = [
+    {
+      key: 'container-lowest',
+      label: 'Container Lowest',
+      value: `--md3-neutral-surface-container-lowest`,
+      resolvedValue: resolveCssVar(themeData.neutral['surface-container'].lowest),
+      cssVar: themeData.neutral['surface-container'].lowest
+    },
+    {
+      key: 'container-low',
+      label: 'Container Low',
+      value: `--md3-neutral-surface-container-low`,
+      resolvedValue: resolveCssVar(themeData.neutral['surface-container'].low),
+      cssVar: themeData.neutral['surface-container'].low
+    },
+    {
+      key: 'container-regular',
+      label: 'Container Regular',
+      value: `--md3-neutral-surface-container-regular`,
+      resolvedValue: resolveCssVar(themeData.neutral['surface-container'].regular),
+      cssVar: themeData.neutral['surface-container'].regular
+    },
+    {
+      key: 'container-high',
+      label: 'Container High',
+      value: `--md3-neutral-surface-container-high`,
+      resolvedValue: resolveCssVar(themeData.neutral['surface-container'].high),
+      cssVar: themeData.neutral['surface-container'].high
+    },
+    {
+      key: 'container-highest',
+      label: 'Container Highest',
+      value: `--md3-neutral-surface-container-highest`,
+      resolvedValue: resolveCssVar(themeData.neutral['surface-container'].highest),
+      cssVar: themeData.neutral['surface-container'].highest
+    }
+  ]
+  
+  // Row 3: onSurface, surface-variant, outline, outline-variant
+  const thirdRow = [
+    {
+      key: 'on-surface',
+      label: 'On Surface',
+      value: `--md3-neutral-on-surface-regular`,
+      resolvedValue: resolveCssVar(themeData.neutral['on-surface'].regular),
+      cssVar: themeData.neutral['on-surface'].regular
+    },
+    {
+      key: 'surface-variant',
+      label: 'Surface Variant',
+      value: `--md3-neutral-surface-variant-regular`,
+      resolvedValue: resolveCssVar(themeData.neutral['surface-variant']?.regular || themeData.neutral['on-surface'].variant),
+      cssVar: themeData.neutral['surface-variant']?.regular || themeData.neutral['on-surface'].variant
+    },
+    {
+      key: 'outline',
+      label: 'Outline',
+      value: `--md3-neutral-outline-regular`,
+      resolvedValue: resolveCssVar(themeData.neutral.outline.regular),
+      cssVar: themeData.neutral.outline.regular
+    },
+    {
+      key: 'outline-variant',
+      label: 'Outline Variant',
+      value: `--md3-neutral-outline-variant-regular`,
+      resolvedValue: resolveCssVar(themeData.neutral.outline.variant),
+      cssVar: themeData.neutral.outline.variant
+    }
+  ]
+  
+  return {
+    surfaces,
+    containers,
+    thirdRow
+  }
+})
 
 // Set CSS custom properties for all color roles using JSON data
 import { onMounted, watch } from 'vue'
