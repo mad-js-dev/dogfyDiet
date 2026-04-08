@@ -70,50 +70,121 @@ css += `  --neutral-98: ${adjustColor(neutralHex, 80, -40)};\n`;
 css += `  --neutral-99: ${adjustColor(neutralHex, 90, -60)};\n`;
 css += `  --neutral-100: #ffffff;\n`;
 
-// Helper function to adjust color lightness and saturation
+// Helper function to generate a specific tone from a base color
 function adjustColor(hex, lightness, saturation) {
-  // Simple color adjustment - in a real implementation you'd use a proper color library
-  // For now, return some reasonable approximations based on the existing palette data
-  const colorMap = {
-    '#00B67A': {
-      '-60,-10': '#010a07', '-45,-5': '#000000', '-30,-2': '#001d13', '-20,0': '#005036',
-      '-10,0': '#008358', '15,0': '#03ffac', '30,0': '#50ffc5', '50,0': '#93ecce',
-      '65,-20': '#ace2d0', '80,-40': '#d0e2dc', '90,-60': '#e8edeb'
-    },
-    '#EF6948': {
-      '-60,-10': '#090301', '-45,-5': '#491509', '-30,-2': '#90280e', '-20,0': '#c03311',
-      '-10,0': '#eb4319', '15,0': '#f5a38e', '30,0': '#fbdcd5', '50,0': '#e5a99a',
-      '65,-20': '#dcbab1', '80,-40': '#dfd5d2', '90,-60': '#eceae9'
-    },
-    '#ffc800': {
-      '-60,-10': '#0a0801', '-45,-5': '#191401', '-30,-2': '#654f01', '-20,0': '#997800',
-      '-10,0': '#cca000', '15,0': '#ffd94d', '30,0': '#ffe999', '50,0': '#ecd993',
-      '65,-20': '#e2d6ac', '80,-40': '#e2ded0', '90,-60': '#edece8'
-    },
-    '#767676': {
-      '-60,-10': '#060505', '-45,-5': '#030303', '-30,-2': '#2a2a2a', '-20,0': '#434343',
-      '-10,0': '#5d5d5d', '15,0': '#9c9c9c', '30,0': '#c3c3c3', '40,0': '#d4d4d4',
-      '50,0': '#c4baba', '65,-20': '#cac4c4', '80,-40': '#dad8d8', '90,-60': '#ebeaea'
-    },
-    '#0aaa46': {
-      '-60,-10': '#010904', '-45,-5': '#000000', '-30,-2': '#02190b', '-20,0': '#044a1e',
-      '-10,0': '#077a32', '15,0': '#10f164', '30,0': '#58f593', '50,0': '#98e7b5',
-      '65,-20': '#b0dec1', '80,-40': '#d1e0d7', '90,-60': '#e9ecea'
-    },
-    '#d80003': {
-      '-60,-10': '#0a0101', '-45,-5': '#000000', '-30,-2': '#3e0101', '-20,0': '#720002',
-      '-10,0': '#a50002', '15,0': '#ff2529', '30,0': '#ff7274', '50,0': '#ec9394',
-      '65,-20': '#e2acad', '80,-40': '#e2d0d0', '90,-60': '#ede8e8'
-    },
-    '#1976d2': {
-      '-60,-10': '#020509', '-45,-5': '#010305', '-30,-2': '#0a2948', '-20,0': '#0e4377',
-      '-10,0': '#145ca4', '15,0': '#4e9cea', '30,0': '#92c2f2', '50,0': '#9cbfe2',
-      '65,-20': '#b3c7db', '80,-40': '#d3d9df', '90,-60': '#e9ebec'
-    }
+  return generateTone(hex, getToneFromAdjustment(lightness, saturation));
+}
+
+// Helper function to map lightness/saturation adjustments to tone numbers
+function getToneFromAdjustment(lightness, saturation) {
+  const toneMap = {
+    '-60,-10': 10,
+    '-45,-5': 20,
+    '-30,-2': 30,
+    '-20,0': 40,
+    '-10,0': 50,
+    '0,0': 60,
+    '15,0': 70,
+    '30,0': 80,
+    '50,0': 90,
+    '65,-20': 95,
+    '80,-40': 98,
+    '90,-60': 99,
+    '100,0': 100
   };
   
   const key = `${lightness},${saturation}`;
-  return colorMap[hex]?.[key] || hex;
+  return toneMap[key] || 60;
+}
+
+// Function to generate a specific tone from a base color (replicating Sass logic)
+function generateTone(baseColor, tone) {
+  // Convert hex to RGB
+  const hex = baseColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+
+  // Calculate HSL
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h, s, l = (max + min) / (2 * 255);
+
+  if (max === min) {
+    h = s = 0; // achromatic
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (510 - max - min) : d / (max + min);
+    // Ensure saturation is non-negative
+    s = Math.max(0, s);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  // Apply tone adjustments (based on M3 tonal palette)
+  const adjustments = {
+    0: { lightness: -100, saturation: 0 },
+    10: { lightness: -60, saturation: -10 },
+    20: { lightness: -45, saturation: -5 },
+    30: { lightness: -30, saturation: -2 },
+    40: { lightness: -20, saturation: 0 },
+    50: { lightness: -10, saturation: 0 },
+    60: { lightness: 0, saturation: 0 },
+    70: { lightness: 15, saturation: 0 },
+    80: { lightness: 30, saturation: 0 },
+    90: { lightness: 40, saturation: -15 },
+    95: { lightness: 48, saturation: -35 },
+    98: { lightness: 55, saturation: -55 },
+    99: { lightness: 60, saturation: -75 },
+    100: { lightness: 100, saturation: 0 }
+  };
+
+  const adj = adjustments[tone] || { lightness: 0, saturation: 0 };
+  let newL = Math.max(0, Math.min(1, l + adj.lightness / 100));
+  let newS = Math.max(0, Math.min(1, s + adj.saturation / 100));
+
+  // Prevent colors from becoming pure white unless they're tone 100
+  // Allow more subtle differences between light tones
+  if (tone < 100 && newL > 0.98) {
+    newL = 0.98;
+  }
+
+  // Convert back to RGB
+  if (newS === 0) {
+    // For neutral colors, ensure proper differentiation between light tones
+    let grayValue;
+    if (tone === 98) {
+      grayValue = 250; // #fafafa
+    } else if (tone === 99) {
+      grayValue = 252; // #fcfcfc  
+    } else {
+      grayValue = Math.round(newL * 255);
+    }
+    const result = `#${grayValue.toString(16).padStart(2, '0').repeat(3)}`;
+    return result;
+  }
+
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  };
+
+  const q = newL < 0.5 ? newL * (1 + newS) : newL + newS - newL * newS;
+  const p = 2 * newL - q;
+  const newR = Math.round(hue2rgb(p, q, h + 1/3) * 255);
+  const newG = Math.round(hue2rgb(p, q, h) * 255);
+  const newB = Math.round(hue2rgb(p, q, h - 1/3) * 255);
+
+  const result = `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+  return result;
 }
 
 // Generate light theme roles

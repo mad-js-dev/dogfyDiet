@@ -542,29 +542,144 @@ function updateColorVariables() {
   const themeData = currentTheme === 'dark' ? paletteData['dark-roles'] : paletteData['light-roles']
   const semanticData = paletteData['semantic-roles']
   
-  // Update theme-specific color variables
-  Object.entries(themeData).forEach(([colorType, roles]) => {
-    if (colorType === 'neutral') {
-      // Handle nested neutral structure
-      Object.entries(roles).forEach(([category, values]) => {
-        Object.entries(values).forEach(([role, value]) => {
-          root.style.setProperty(`--md3-${colorType}-${category}-${role}`, value)
-        })
-      })
-    } else {
-      // Handle primary, secondary, tertiary
-      Object.entries(roles).forEach(([role, value]) => {
-        root.style.setProperty(`--md3-${colorType}-${role}`, value)
-      })
+  // Helper function to get actual hex value from CSS variable
+  function getHexValue(cssVar: string): string {
+    // Extract the neutral tone from CSS variable like "var(--neutral-95)"
+    const match = cssVar.match(/var\(--neutral-(\d+)\)/)
+    if (match) {
+      const tone = match[1]
+      
+      // Method 1: Direct property access
+      let computedValue = getComputedStyle(root).getPropertyValue(`--neutral-${tone}`).trim()
+      if (computedValue && computedValue !== '') {
+        console.log(`Found --neutral-${tone}: ${computedValue}`)
+        // Always convert to hex, even if we found it directly
+        return convertToHex(computedValue)
+      }
+      
+      // Method 2: Test element approach
+      try {
+        const testElement = document.createElement('div')
+        testElement.style.color = cssVar
+        testElement.style.display = 'none'
+        document.body.appendChild(testElement)
+        const resolvedColor = getComputedStyle(testElement).color
+        document.body.removeChild(testElement)
+        
+        if (resolvedColor && resolvedColor !== '') {
+          return convertToHex(resolvedColor)
+        }
+      } catch (e) {
+        console.warn('Could not resolve CSS variable:', cssVar, e)
+      }
+      
+      console.warn(`Could not resolve ${cssVar}, falling back to original`)
+      return cssVar
     }
-  })
+    return cssVar
+  }
   
-  // Update semantic color variables
-  Object.entries(semanticData).forEach(([semantic, roles]) => {
-    Object.entries(roles).forEach(([role, value]) => {
-      root.style.setProperty(`--md3-${semantic}-${role}`, value)
+  // Helper function to convert any color format to hex
+  function convertToHex(color: string): string {
+    console.log(`Converting ${color} to hex`)
+    
+    // Handle hex values directly
+    if (color.startsWith('#')) {
+      console.log(`Using hex value ${color}`)
+      return color
+    }
+    
+    // Handle RGB values
+    if (color.startsWith('rgb')) {
+      const rgbMatch = color.match(/\d+\.?\d*/g)
+      if (rgbMatch && rgbMatch.length >= 3) {
+        const r = Math.round(parseFloat(rgbMatch[0]))
+        const g = Math.round(parseFloat(rgbMatch[1]))
+        const b = Math.round(parseFloat(rgbMatch[2]))
+        const hexValue = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+        console.log(`Converted ${color} to ${hexValue}`)
+        return hexValue
+      }
+    }
+    
+    // Handle HSL values - convert to RGB then hex
+    if (color.startsWith('hsl')) {
+      const hslMatch = color.match(/hsl\((\d+\.?\d*),\s*(\d+\.?\d*)%,\s*(\d+\.?\d*)%\)/)
+      if (hslMatch && hslMatch.length >= 4) {
+        const h = parseFloat(hslMatch[1]) / 360
+        const s = parseFloat(hslMatch[2]) / 100
+        const l = parseFloat(hslMatch[3]) / 100
+        
+        // Clamp lightness to 0-1 range
+        const clampedL = Math.max(0, Math.min(1, l))
+        
+        // Convert HSL to RGB
+        let r, g, b
+        if (s === 0) {
+          r = g = b = clampedL // achromatic
+        } else {
+          const hue2rgb = (p, q, t) => {
+            if (t < 0) t += 1
+            if (t > 1) t -= 1
+            if (t < 1/6) return p + (q - p) * 6 * t
+            if (t < 1/2) return q
+            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
+            return p
+          }
+          const q = clampedL < 0.5 ? clampedL * (1 + s) : clampedL + s - clampedL * s
+          const p = 2 * clampedL - q
+          r = hue2rgb(p, q, h + 1/3)
+          g = hue2rgb(p, q, h)
+          b = hue2rgb(p, q, h - 1/3)
+        }
+        
+        const hexValue = `#${Math.round(r * 255).toString(16).padStart(2, '0')}${Math.round(g * 255).toString(16).padStart(2, '0')}${Math.round(b * 255).toString(16).padStart(2, '0')}`
+        console.log(`Converted ${color} (clamped to ${clampedL * 100}%) to ${hexValue}`)
+        return hexValue
+      }
+    }
+    
+    console.log(`Could not convert ${color}, returning as-is`)
+    return color
+  }
+  
+  // Add a small delay to ensure CSS is loaded
+  setTimeout(() => {
+    console.log('Updating color variables...')
+    
+    // Update theme-specific color variables
+    Object.entries(themeData).forEach(([colorType, roles]) => {
+      if (colorType === 'neutral') {
+        // Handle nested neutral structure
+        Object.entries(roles).forEach(([category, values]) => {
+          Object.entries(values).forEach(([role, value]) => {
+            const hexValue = getHexValue(value)
+            const propertyName = `--md3-${colorType}-${category}-${role}`
+            console.log(`Setting ${propertyName} to ${hexValue}`)
+            root.style.setProperty(propertyName, hexValue)
+          })
+        })
+      } else {
+        // Handle primary, secondary, tertiary
+        Object.entries(roles).forEach(([role, value]) => {
+          const hexValue = getHexValue(value)
+          const propertyName = `--md3-${colorType}-${role}`
+          console.log(`Setting ${propertyName} to ${hexValue}`)
+          root.style.setProperty(propertyName, hexValue)
+        })
+      }
     })
-  })
+    
+    // Update semantic color variables
+    Object.entries(semanticData).forEach(([semantic, roles]) => {
+      Object.entries(roles).forEach(([role, value]) => {
+        const hexValue = getHexValue(value)
+        const propertyName = `--md3-${semantic}-${role}`
+        console.log(`Setting ${propertyName} to ${hexValue}`)
+        root.style.setProperty(propertyName, hexValue)
+      })
+    })
+  }, 100) // 100ms delay
 }
 
 </script>

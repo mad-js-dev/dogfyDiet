@@ -78,13 +78,13 @@
           <div class="neutral-color-content">
             <div 
               class="neutral-color-label" 
-              :style="{ color: getTextColor(item) }"
+              :style="{ color: getTextColor(item, true) }"
             >
               {{ item.label }}
             </div>
             <div 
               class="neutral-color-details" 
-              :style="{ color: getTextColor(item) }"
+              :style="{ color: getTextColor(item, true) }"
             >
               <div class="neutral-color-hex">{{ item.resolvedValue }}</div>
               <div v-if="item.value" class="neutral-color-css-var">
@@ -121,9 +121,14 @@ const containers = props.neutralData.containers
 const thirdRowItems = props.neutralData.thirdRow
 
 // Helper function to determine text color based on background
-function getTextColor(colorData: ColorData): string {
+function getTextColor(colorData: ColorData, isThirdRow: boolean = false): string {
   if (!colorData) {
     return '#1a1a1a';
+  }
+
+  // Force white text for third row
+  if (isThirdRow) {
+    return '#ffffff';
   }
 
   const hex = colorData.resolvedValue?.replace('#', '') || 'ffffff';
