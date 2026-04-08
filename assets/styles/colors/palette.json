@@ -27,13 +27,13 @@
         "40": {"lightness": "-15%"},
         "50": {"lightness": "-10%"},
         "60": {"lightness": "0%"},
-        "70": {"lightness": "15%"},
-        "80": {"lightness": "30%"},
-        "90": {"lightness": "35%", "saturation": "-5%"},
-        "95": {"lightness": "45%", "saturation": "-25%"},
-        "98": {"lightness": "52%", "saturation": "-45%"},
-        "99": {"lightness": "58%", "saturation": "-65%"},
-        "100": {"lightness": "100%"}
+        "70": {"lightness": "5%"},
+        "80": {"lightness": "10%"},
+        "90": {"lightness": "20%", "saturation": "-5%"},
+        "95": {"lightness": "25%", "saturation": "-10%"},
+        "98": {"lightness": "30%", "saturation": "-15%"},
+        "99": {"lightness": "38%", "saturation": "-20%"},
+        "100": {"lightness": "45%"}
       }
     },
     "accent-yellow": {
@@ -45,12 +45,12 @@
         "40": {"lightness": "-15%"},
         "50": {"lightness": "-10%"},
         "60": {"lightness": "0%"},
-        "70": {"lightness": "15%"},
-        "80": {"lightness": "30%"},
-        "90": {"lightness": "35%", "saturation": "-5%"},
-        "95": {"lightness": "45%", "saturation": "-25%"},
-        "98": {"lightness": "52%", "saturation": "-45%"},
-        "99": {"lightness": "58%", "saturation": "-65%"},
+        "70": {"lightness": "10%"},
+        "80": {"lightness": "20%"},
+        "90": {"lightness": "25%", "saturation": "-5%"},
+        "95": {"lightness": "30%", "saturation": "-25%"},
+        "98": {"lightness": "38%", "saturation": "-45%"},
+        "99": {"lightness": "45%", "saturation": "-65%"},
         "100": {"lightness": "100%"}
       }
     },

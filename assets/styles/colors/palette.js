@@ -342,38 +342,38 @@ export const tonalPalettes = [
       },
       {
         "value": 70,
-        "color": "#f5a38e",
-        "hex": "#f5a38e",
+        "color": "#f17c5f",
+        "hex": "#f17c5f",
         "cssVar": "--accent-orange-70"
       },
       {
         "value": 80,
-        "color": "#fbdcd5",
-        "hex": "#fbdcd5",
+        "color": "#f38f77",
+        "hex": "#f38f77",
         "cssVar": "--accent-orange-80"
       },
       {
         "value": 90,
-        "color": "#fdf0ed",
-        "hex": "#fdf0ed",
+        "color": "#f5b7a8",
+        "hex": "#f5b7a8",
         "cssVar": "--accent-orange-90"
       },
       {
         "value": 95,
-        "color": "#fdf8f7",
-        "hex": "#fdf8f7",
+        "color": "#f6cbc1",
+        "hex": "#f6cbc1",
         "cssVar": "--accent-orange-95"
       },
       {
         "value": 98,
-        "color": "#fcf9f8",
-        "hex": "#fcf9f8",
+        "color": "#f8ded8",
+        "hex": "#f8ded8",
         "cssVar": "--accent-orange-98"
       },
       {
         "value": 99,
-        "color": "#fbf9f9",
-        "hex": "#fbf9f9",
+        "color": "#fdf8f7",
+        "hex": "#fdf8f7",
         "cssVar": "--accent-orange-99"
       },
       {
@@ -434,38 +434,38 @@ export const tonalPalettes = [
       },
       {
         "value": 70,
-        "color": "#ffd94d",
-        "hex": "#ffd94d",
+        "color": "#ffd333",
+        "hex": "#ffd333",
         "cssVar": "--accent-yellow-70"
       },
       {
         "value": 80,
-        "color": "#ffe999",
-        "hex": "#ffe999",
+        "color": "#ffde66",
+        "hex": "#ffde66",
         "cssVar": "--accent-yellow-80"
       },
       {
         "value": 90,
-        "color": "#fdedb4",
-        "hex": "#fdedb4",
+        "color": "#fce283",
+        "hex": "#fce283",
         "cssVar": "--accent-yellow-90"
       },
       {
         "value": 95,
-        "color": "#fcf8e9",
-        "hex": "#fcf8e9",
+        "color": "#f2e2a6",
+        "hex": "#f2e2a6",
         "cssVar": "--accent-yellow-95"
       },
       {
         "value": 98,
-        "color": "#fdfbf7",
-        "hex": "#fdfbf7",
+        "color": "#f1ead0",
+        "hex": "#f1ead0",
         "cssVar": "--accent-yellow-98"
       },
       {
         "value": 99,
-        "color": "#fcfbf8",
-        "hex": "#fcfbf8",
+        "color": "#f7f5ee",
+        "hex": "#f7f5ee",
         "cssVar": "--accent-yellow-99"
       },
       {
