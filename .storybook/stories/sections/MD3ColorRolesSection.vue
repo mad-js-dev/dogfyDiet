@@ -169,7 +169,24 @@ const colorRows: Row[] = [
 
 // Helper function to resolve CSS variables to hex values
 function resolveCssVar(cssVar: string): string {
-  // Simply return the CSS variable name - let the browser resolve it to actual value
+  // Extract the CSS variable value from the generated CSS
+  if (!cssVar || typeof cssVar !== 'string') {
+    return '#000000'
+  }
+  
+  // If it's already a hex value, return it
+  if (cssVar.startsWith('#')) {
+    return cssVar
+  }
+  
+  // Extract variable name from var() syntax
+  const varMatch = cssVar.match(/var\(--([^)]+)\)/)
+  if (varMatch) {
+    const varName = varMatch[1]
+    const computedValue = getComputedStyle(document.documentElement).getPropertyValue(`--${varName}`).trim()
+    return computedValue || cssVar
+  }
+  
   return cssVar
 }
 

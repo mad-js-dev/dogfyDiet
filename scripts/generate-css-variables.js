@@ -10,91 +10,103 @@ const paletteData = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/s
 // Generate CSS variables
 let css = ':root {\n';
 
-// Generate base color variables from palette data
-css += '\n  /* Base color variables */\n';
-const baseColors = paletteData['base-brand-colors'];
-Object.entries(baseColors).forEach(([colorName, hexValue]) => {
-  // Generate tonal palette for each base color
-  const baseHex = hexValue;
-  css += `  --${colorName}-0: #000000;\n`;
-  css += `  --${colorName}-10: ${adjustColor(baseHex, -60, -10)};\n`;
-  css += `  --${colorName}-20: ${adjustColor(baseHex, -45, -5)};\n`;
-  css += `  --${colorName}-30: ${adjustColor(baseHex, -30, -2)};\n`;
-  css += `  --${colorName}-40: ${adjustColor(baseHex, -20, 0)};\n`;
-  css += `  --${colorName}-50: ${adjustColor(baseHex, -10, 0)};\n`;
-  css += `  --${colorName}-60: ${baseHex};\n`;
-  css += `  --${colorName}-70: ${adjustColor(baseHex, 15, 0)};\n`;
-  css += `  --${colorName}-80: ${adjustColor(baseHex, 30, 0)};\n`;
-  css += `  --${colorName}-90: ${adjustColor(baseHex, 50, 0)};\n`;
-  css += `  --${colorName}-95: ${adjustColor(baseHex, 65, -20)};\n`;
-  css += `  --${colorName}-98: ${adjustColor(baseHex, 80, -40)};\n`;
-  css += `  --${colorName}-99: ${adjustColor(baseHex, 90, -60)};\n`;
-  css += `  --${colorName}-100: #ffffff;\n`;
-});
-
-// Also generate semantic colors
-const semanticColors = paletteData['base-semantic-colors'];
-Object.entries(semanticColors).forEach(([colorName, hexValue]) => {
-  const baseHex = hexValue;
-  css += `  --${colorName}-0: #000000;\n`;
-  css += `  --${colorName}-10: ${adjustColor(baseHex, -60, -10)};\n`;
-  css += `  --${colorName}-20: ${adjustColor(baseHex, -45, -5)};\n`;
-  css += `  --${colorName}-30: ${adjustColor(baseHex, -30, -2)};\n`;
-  css += `  --${colorName}-40: ${adjustColor(baseHex, -20, 0)};\n`;
-  css += `  --${colorName}-50: ${adjustColor(baseHex, -10, 0)};\n`;
-  css += `  --${colorName}-60: ${baseHex};\n`;
-  css += `  --${colorName}-70: ${adjustColor(baseHex, 15, 0)};\n`;
-  css += `  --${colorName}-80: ${adjustColor(baseHex, 30, 0)};\n`;
-  css += `  --${colorName}-90: ${adjustColor(baseHex, 50, 0)};\n`;
-  css += `  --${colorName}-95: ${adjustColor(baseHex, 65, -20)};\n`;
-  css += `  --${colorName}-98: ${adjustColor(baseHex, 80, -40)};\n`;
-  css += `  --${colorName}-99: ${adjustColor(baseHex, 90, -60)};\n`;
-  css += `  --${colorName}-100: #ffffff;\n`;
-});
-
-// Generate neutral colors
-const neutralHex = paletteData['base-brand-colors']['neutral'];
-css += `  --neutral-0: #000000;\n`;
-css += `  --neutral-10: ${adjustColor(neutralHex, -60, -10)};\n`;
-css += `  --neutral-20: ${adjustColor(neutralHex, -45, -5)};\n`;
-css += `  --neutral-30: ${adjustColor(neutralHex, -30, -2)};\n`;
-css += `  --neutral-40: ${adjustColor(neutralHex, -20, 0)};\n`;
-css += `  --neutral-50: ${adjustColor(neutralHex, -10, 0)};\n`;
-css += `  --neutral-60: ${neutralHex};\n`;
-css += `  --neutral-70: ${adjustColor(neutralHex, 15, 0)};\n`;
-css += `  --neutral-80: ${adjustColor(neutralHex, 30, 0)};\n`;
-css += `  --neutral-85: ${adjustColor(neutralHex, 40, 0)};\n`;
-css += `  --neutral-90: ${adjustColor(neutralHex, 50, 0)};\n`;
-css += `  --neutral-95: ${adjustColor(neutralHex, 65, -20)};\n`;
-css += `  --neutral-98: ${adjustColor(neutralHex, 80, -40)};\n`;
-css += `  --neutral-99: ${adjustColor(neutralHex, 90, -60)};\n`;
-css += `  --neutral-100: #ffffff;\n`;
-
-// Helper function to generate a specific tone from a base color
-function adjustColor(hex, lightness, saturation) {
-  return generateTone(hex, getToneFromAdjustment(lightness, saturation));
+// Function to generate color variables using individual palette adjustments
+function generateColorVariables(colorData, category) {
+  css += `\n  /* ${category} color variables */\n`;
+  Object.entries(colorData).forEach(([colorName, colorConfig]) => {
+    const baseHex = colorConfig.color;
+    const palette = colorConfig.palette;
+    
+    css += `  --${colorName}-0: #000000;\n`;
+    
+    // Generate tones 0-100 using individual palette adjustments
+    const tones = ['10', '20', '30', '40', '50', '60', '70', '80', '90', '95', '98', '99'];
+    tones.forEach(tone => {
+      const adjustment = palette[tone];
+      if (adjustment) {
+        const lightness = parseInt(adjustment.lightness);
+        const saturation = adjustment.saturation ? parseInt(adjustment.saturation) : 0;
+        css += `  --${colorName}-${tone}: ${adjustColor(baseHex, lightness, saturation)};\n`;
+      }
+    });
+    
+    css += `  --${colorName}-100: #ffffff;\n`;
+  });
 }
 
-// Helper function to map lightness/saturation adjustments to tone numbers
-function getToneFromAdjustment(lightness, saturation) {
-  const toneMap = {
-    '-60,-10': 10,
-    '-45,-5': 20,
-    '-30,-2': 30,
-    '-20,0': 40,
-    '-10,0': 50,
-    '0,0': 60,
-    '15,0': 70,
-    '30,0': 80,
-    '50,0': 90,
-    '65,-20': 95,
-    '80,-40': 98,
-    '90,-60': 99,
-    '100,0': 100
+// Generate base brand colors
+generateColorVariables(paletteData['base-brand-colors'], 'Base brand');
+
+// Generate semantic colors  
+generateColorVariables(paletteData['base-semantic-colors'], 'Semantic');
+
+// Helper function to adjust color using percentage-based adjustments
+function adjustColor(hex, lightness, saturation) {
+  return generateToneFromAdjustment(hex, lightness, saturation);
+}
+
+// Function to generate tone from direct percentage adjustments
+function generateToneFromAdjustment(baseColor, lightnessAdj, saturationAdj) {
+  // Convert hex to RGB
+  const hex = baseColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+
+  // Calculate HSL
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h, s, l = (max + min) / (2 * 255);
+
+  if (max === min) {
+    h = s = 0; // achromatic
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (510 - max - min) : d / (max + min);
+    // Ensure saturation is non-negative
+    s = Math.max(0, s);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  // Apply direct percentage adjustments
+  let newL = Math.max(0, Math.min(1, l + lightnessAdj / 100));
+  let newS = Math.max(0, Math.min(1, s + saturationAdj / 100));
+
+  // Prevent colors from becoming pure white unless it's the 100 tone
+  if (newL > 0.98) {
+    newL = 0.98;
+  }
+
+  // Convert back to RGB
+  if (newS === 0) {
+    // For neutral colors, ensure proper differentiation between light tones
+    let grayValue = Math.round(newL * 255);
+    const result = `#${grayValue.toString(16).padStart(2, '0').repeat(3)}`;
+    return result;
+  }
+
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
   };
-  
-  const key = `${lightness},${saturation}`;
-  return toneMap[key] || 60;
+
+  const q = newL < 0.5 ? newL * (1 + newS) : newL + newS - newL * newS;
+  const p = 2 * newL - q;
+  const newR = Math.round(hue2rgb(p, q, h + 1/3) * 255);
+  const newG = Math.round(hue2rgb(p, q, h) * 255);
+  const newB = Math.round(hue2rgb(p, q, h - 1/3) * 255);
+
+  const result = `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+  return result;
 }
 
 // Function to generate a specific tone from a base color (replicating Sass logic)

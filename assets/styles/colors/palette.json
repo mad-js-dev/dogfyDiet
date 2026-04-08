@@ -1,30 +1,151 @@
 {
   "base-brand-colors": {
-    "primary-green": "#00B67A",
-    "accent-orange": "#EF6948",
-    "accent-yellow": "#ffc800",
-    "neutral": "#767676"
+    "primary-green": {
+      "color": "#00B67A",
+      "palette": {
+        "10": {"lightness": "-30%", "saturation": "0%"},
+        "20": {"lightness": "-25%", "saturation": "0%"},
+        "30": {"lightness": "-20%", "saturation": "0%"},
+        "40": {"lightness": "-15%"},
+        "50": {"lightness": "-10%"},
+        "60": {"lightness": "0%"},
+        "70": {"lightness": "15%"},
+        "80": {"lightness": "30%"},
+        "90": {"lightness": "35%", "saturation": "-5%"},
+        "95": {"lightness": "45%", "saturation": "-25%"},
+        "98": {"lightness": "52%", "saturation": "-45%"},
+        "99": {"lightness": "58%", "saturation": "-65%"},
+        "100": {"lightness": "100%"}
+      }
+    },
+    "accent-orange": {
+      "color": "#EF6948",
+      "palette": {
+        "10": {"lightness": "-30%", "saturation": "0%"},
+        "20": {"lightness": "-25%", "saturation": "0%"},
+        "30": {"lightness": "-20%", "saturation": "0%"},
+        "40": {"lightness": "-15%"},
+        "50": {"lightness": "-10%"},
+        "60": {"lightness": "0%"},
+        "70": {"lightness": "15%"},
+        "80": {"lightness": "30%"},
+        "90": {"lightness": "35%", "saturation": "-5%"},
+        "95": {"lightness": "45%", "saturation": "-25%"},
+        "98": {"lightness": "52%", "saturation": "-45%"},
+        "99": {"lightness": "58%", "saturation": "-65%"},
+        "100": {"lightness": "100%"}
+      }
+    },
+    "accent-yellow": {
+      "color": "#ffc800",
+      "palette": {
+        "10": {"lightness": "-30%", "saturation": "0%"},
+        "20": {"lightness": "-25%", "saturation": "0%"},
+        "30": {"lightness": "-20%", "saturation": "0%"},
+        "40": {"lightness": "-15%"},
+        "50": {"lightness": "-10%"},
+        "60": {"lightness": "0%"},
+        "70": {"lightness": "15%"},
+        "80": {"lightness": "30%"},
+        "90": {"lightness": "35%", "saturation": "-5%"},
+        "95": {"lightness": "45%", "saturation": "-25%"},
+        "98": {"lightness": "52%", "saturation": "-45%"},
+        "99": {"lightness": "58%", "saturation": "-65%"},
+        "100": {"lightness": "100%"}
+      }
+    },
+    "neutral": {
+      "color": "#767676",
+      "palette": {
+        "10": {"lightness": "-60%", "saturation": "-10%"},
+        "20": {"lightness": "-45%", "saturation": "-5%"},
+        "30": {"lightness": "-30%", "saturation": "-2%"},
+        "40": {"lightness": "-20%"},
+        "50": {"lightness": "-10%"},
+        "60": {"lightness": "0%"},
+        "70": {"lightness": "15%"},
+        "80": {"lightness": "30%"},
+        "90": {"lightness": "40%", "saturation": "-15%"},
+        "95": {"lightness": "48%", "saturation": "-35%"},
+        "98": {"lightness": "55%", "saturation": "-55%"},
+        "99": {"lightness": "60%", "saturation": "-75%"},
+        "100": {"lightness": "100%"}
+      }
+    }
   },
   "base-semantic-colors": {
-    "success": "#0aaa46",
-    "error": "#d80003",
-    "warning": "#ffc800",
-    "info": "#1976d2"
-  },
-  "palette-adjustments": {
-    "10": {"lightness": "-60%", "saturation": "-10%"},
-    "20": {"lightness": "-45%", "saturation": "-5%"},
-    "30": {"lightness": "-30%", "saturation": "-2%"},
-    "40": {"lightness": "-20%"},
-    "50": {"lightness": "-10%"},
-    "60": {"lightness": "0%"},
-    "70": {"lightness": "15%"},
-    "80": {"lightness": "30%"},
-    "90": {"lightness": "45%"},
-    "95": {"lightness": "55%"},
-    "98": {"lightness": "65%", "saturation": "-40%"},
-    "99": {"lightness": "75%", "saturation": "-60%"},
-    "100": {"lightness": "100%"}
+    "success": {
+      "color": "#0aaa46",
+      "palette": {
+        "10": {"lightness": "-60%", "saturation": "-10%"},
+        "20": {"lightness": "-45%", "saturation": "-5%"},
+        "30": {"lightness": "-30%", "saturation": "-2%"},
+        "40": {"lightness": "-20%"},
+        "50": {"lightness": "-10%"},
+        "60": {"lightness": "0%"},
+        "70": {"lightness": "15%"},
+        "80": {"lightness": "30%"},
+        "90": {"lightness": "40%", "saturation": "-15%"},
+        "95": {"lightness": "48%", "saturation": "-35%"},
+        "98": {"lightness": "55%", "saturation": "-55%"},
+        "99": {"lightness": "60%", "saturation": "-75%"},
+        "100": {"lightness": "100%"}
+      }
+    },
+    "error": {
+      "color": "#d80003",
+      "palette": {
+        "10": {"lightness": "-60%", "saturation": "-10%"},
+        "20": {"lightness": "-45%", "saturation": "-5%"},
+        "30": {"lightness": "-30%", "saturation": "-2%"},
+        "40": {"lightness": "-20%"},
+        "50": {"lightness": "-10%"},
+        "60": {"lightness": "0%"},
+        "70": {"lightness": "15%"},
+        "80": {"lightness": "30%"},
+        "90": {"lightness": "40%", "saturation": "-15%"},
+        "95": {"lightness": "48%", "saturation": "-35%"},
+        "98": {"lightness": "55%", "saturation": "-55%"},
+        "99": {"lightness": "60%", "saturation": "-75%"},
+        "100": {"lightness": "100%"}
+      }
+    },
+    "warning": {
+      "color": "#ffc800",
+      "palette": {
+        "10": {"lightness": "-60%", "saturation": "-10%"},
+        "20": {"lightness": "-45%", "saturation": "-5%"},
+        "30": {"lightness": "-30%", "saturation": "-2%"},
+        "40": {"lightness": "-20%"},
+        "50": {"lightness": "-10%"},
+        "60": {"lightness": "0%"},
+        "70": {"lightness": "15%"},
+        "80": {"lightness": "30%"},
+        "90": {"lightness": "40%", "saturation": "-15%"},
+        "95": {"lightness": "48%", "saturation": "-35%"},
+        "98": {"lightness": "55%", "saturation": "-55%"},
+        "99": {"lightness": "60%", "saturation": "-75%"},
+        "100": {"lightness": "100%"}
+      }
+    },
+    "info": {
+      "color": "#1976d2",
+      "palette": {
+        "10": {"lightness": "-60%", "saturation": "-10%"},
+        "20": {"lightness": "-45%", "saturation": "-5%"},
+        "30": {"lightness": "-30%", "saturation": "-2%"},
+        "40": {"lightness": "-20%"},
+        "50": {"lightness": "-10%"},
+        "60": {"lightness": "0%"},
+        "70": {"lightness": "15%"},
+        "80": {"lightness": "30%"},
+        "90": {"lightness": "40%", "saturation": "-15%"},
+        "95": {"lightness": "48%", "saturation": "-35%"},
+        "98": {"lightness": "55%", "saturation": "-55%"},
+        "99": {"lightness": "60%", "saturation": "-75%"},
+        "100": {"lightness": "100%"}
+      }
+    }
   },
   "light-roles": {
     "primary": {

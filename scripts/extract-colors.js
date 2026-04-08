@@ -1,19 +1,32 @@
-import * as sass from 'sass';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const paletteFile = path.join(process.cwd(), 'assets/styles/colors/_palette.scss');
+const paletteFile = path.join(process.cwd(), 'assets/styles/colors/palette.json');
 
-// Function to extract Sass maps from the file
+// Function to extract colors from the new JSON structure
 function extractColorMaps() {
   try {
-    // Read the palette file
+    // Read the JSON palette file
     const paletteContent = fs.readFileSync(paletteFile, 'utf-8');
+    const paletteData = JSON.parse(paletteContent);
 
-    // Extract the maps directly by parsing the content
-    const brandColors = extractMapFromContent(paletteContent, '$brand-colors');
-    const semanticColors = extractMapFromContent(paletteContent, '$semantic-colors');
-    const neutralColors = extractMapFromContent(paletteContent, '$neutral-colors');
+    // Extract colors from the new structure
+    const brandColors = {};
+    const semanticColors = {};
+    const neutralColors = {};
+
+    // Process brand colors
+    Object.entries(paletteData['base-brand-colors']).forEach(([key, config]) => {
+      brandColors[key] = config.color;
+      if (key === 'neutral') {
+        neutralColors[key] = config.color;
+      }
+    });
+
+    // Process semantic colors
+    Object.entries(paletteData['base-semantic-colors']).forEach(([key, config]) => {
+      semanticColors[key] = config.color;
+    });
 
     const colorData = {
       brand: brandColors,
@@ -327,19 +340,124 @@ function generateTonalPalette(baseColor, paletteKey) {
   })
 }
 
-// Function to generate all tonal palettes
+// Function to generate tonal palette using individual adjustments
+function generateTonalPaletteWithAdjustments(baseColor, paletteKey, adjustments) {
+  const tones = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100]
+  
+  return tones.map(tone => {
+    let hexColor
+    
+    if (tone === 0) {
+      hexColor = '#000000'
+    } else if (tone === 100) {
+      hexColor = '#ffffff'
+    } else if (adjustments[tone.toString()]) {
+      const adj = adjustments[tone.toString()]
+      const lightness = parseInt(adj.lightness)
+      const saturation = adj.saturation ? parseInt(adj.saturation) : 0
+      hexColor = generateToneFromAdjustment(baseColor, lightness, saturation)
+    } else {
+      // Fallback to default tone generation
+      hexColor = generateTone(baseColor, tone)
+    }
+    
+    return {
+      value: tone,
+      color: hexColor,
+      hex: hexColor,
+      cssVar: `--${paletteKey}-${tone}`
+    }
+  })
+}
+
+// Function to generate tone from direct percentage adjustments
+function generateToneFromAdjustment(baseColor, lightnessAdj, saturationAdj) {
+  // Convert hex to RGB
+  const hex = baseColor.replace('#', '')
+  const r = parseInt(hex.substr(0, 2), 16)
+  const g = parseInt(hex.substr(2, 2), 16)
+  const b = parseInt(hex.substr(4, 2), 16)
+
+  // Calculate HSL
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  let h, s, l = (max + min) / (2 * 255)
+
+  if (max === min) {
+    h = s = 0 // achromatic
+  } else {
+    const d = max - min
+    s = l > 0.5 ? d / (510 - max - min) : d / (max + min)
+    // Ensure saturation is non-negative
+    s = Math.max(0, s)
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break
+      case g: h = (b - r) / d + 2; break
+      case b: h = (r - g) / d + 4; break
+    }
+    h /= 6
+  }
+
+  // Apply direct percentage adjustments
+  let newL = Math.max(0, Math.min(1, l + lightnessAdj / 100))
+  let newS = Math.max(0, Math.min(1, s + saturationAdj / 100))
+
+  // Prevent colors from becoming pure white unless it's 100 tone
+  if (newL > 0.98) {
+    newL = 0.98
+  }
+
+  // Convert back to RGB
+  if (newS === 0) {
+    // For neutral colors, ensure proper differentiation between light tones
+    let grayValue = Math.round(newL * 255)
+    const result = `#${grayValue.toString(16).padStart(2, '0').repeat(3)}`
+    return result
+  }
+
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1
+    if (t > 1) t -= 1
+    if (t < 1/6) return p + (q - p) * 6 * t
+    if (t < 1/2) return q
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
+    return p
+  }
+
+  const q = newL < 0.5 ? newL * (1 + newS) : newL + newS - newL * newS
+  const p = 2 * newL - q
+  const newR = Math.round(hue2rgb(p, q, h + 1/3) * 255)
+  const newG = Math.round(hue2rgb(p, q, h) * 255)
+  const newB = Math.round(hue2rgb(p, q, h - 1/3) * 255)
+
+  const result = `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`
+  return result
+}
+
+// Function to generate all tonal palettes using individual adjustments
 function generateAllTonalPalettes(colorMaps) {
   const palettes = []
   
-  Object.entries(colorMaps).forEach(([category, colors]) => {
-    Object.entries(colors).forEach(([key, value]) => {
-      palettes.push({
-        key,
-        label: formatColorName(key),
-        category,
-        baseColor: value,
-        tones: generateTonalPalette(value, key)
-      })
+  // Read the JSON palette to get individual adjustments
+  const paletteContent = fs.readFileSync(paletteFile, 'utf-8');
+  const paletteData = JSON.parse(paletteContent);
+  
+  // Combine brand and semantic colors with their adjustments
+  const allColors = {
+    ...paletteData['base-brand-colors'],
+    ...paletteData['base-semantic-colors']
+  }
+  
+  Object.entries(allColors).forEach(([key, config]) => {
+    const category = colorMaps.brand[key] ? 'brand' : 
+                   colorMaps.semantic[key] ? 'semantic' : 'neutral'
+    
+    palettes.push({
+      key,
+      label: formatColorName(key),
+      category,
+      baseColor: config.color,
+      tones: generateTonalPaletteWithAdjustments(config.color, key, config.palette)
     })
   })
   
